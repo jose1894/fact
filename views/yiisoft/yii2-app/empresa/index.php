@@ -3,6 +3,10 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use yii\helpers\Url;
+use yii\web\View;
+
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\EmpresaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -17,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('empresa', 'Create Empresa'), ['create'], [ 'id' => 'create', 'class' => 'btn btn-success', "data-toggle" => "modal" , 'data-target' => 'modal-default']) ?>
+        <?= Html::a(Yii::t('empresa', 'Create Empresa'), ['create'], [ 'id' => 'create', 'class' => 'btn btn-success', "data-toggle" => "modal" , 'data-target' => '#modal-default']) ?>
     </p>
 
     <?= GridView::widget([
@@ -40,9 +44,6 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
     <?php Pjax::end(); ?>
 </div>
-<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
-                Launch Default Modal
-              </button>
 <div class="modal fade" id="modal-default" style="display: none;">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -64,9 +65,12 @@ $this->params['breadcrumbs'][] = $this->title;
   <!-- /.modal-dialog -->
 </div>
 <?php
+$this->registerJsVar( "url" ,  );
 $this->registerJs( <<<JS
   $( "#create" ).click( function ( e ) {
     e.preventDefault();
+
+    $( "#frame" ).attr( "src", )
   });
 JS
 );
