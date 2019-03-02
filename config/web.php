@@ -7,6 +7,8 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'language' => 'es-ES',
+    'sourceLanguage' => 'en-US',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -51,6 +53,41 @@ $config = [
             ],
         ],
         */
+        'view' => [
+             'theme' => [
+                 'pathMap' => [
+                    '@app/views' => '@app/views/yiisoft/yii2-app'
+                 ],
+             ],
+        ],
+        'assetManager' => [
+              'bundles' => [
+                  'dmstr\web\AdminLteAsset' => [
+                      'skin' => 'skin-blue',
+                  ],
+              ],
+          ],
+          'i18n' => [
+              'translations' => [
+                  'app*' => [
+                      'class' => 'yii\i18n\PhpMessageSource',
+                      //'basePath' => '@app/messages',
+                      //'sourceLanguage' => 'en-US',
+                      'fileMap' => [
+                          'app' => 'app.php',
+                          'app/error' => 'error.php',
+                      ],
+                  ],
+                  'empresa' => [
+                      'class' => 'yii\i18n\PhpMessageSource',
+                      'basePath' => '@app/messages',
+                      'sourceLanguage' => 'en-US',
+                      'fileMap' => [
+                          'empresa' => 'empresa.php',
+                      ],
+                  ],
+              ],
+          ],
     ],
     'params' => $params,
 ];
