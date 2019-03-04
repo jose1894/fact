@@ -5,9 +5,11 @@ namespace app\controllers;
 use Yii;
 use app\models\Empresa;
 use app\models\EmpresaSearch;
+use app\models\Sucursal;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\base\Model;
 
 /**
  * EmpresaController implements the CRUD actions for Empresa model.
@@ -66,13 +68,75 @@ class EmpresaController extends Controller
     {
         $model = new Empresa();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->dni_empresa]);
+        if ( Yii::$app->request->get( 'asDialog' ) )
+        {
+          $modelsSucursal = [new Sucursal];
+          $this->layout = "justStuff";
+
+          if ($model->load(Yii::$app->request->post())) {
+
+              $modelsSucursal = Model::createMultiple(Sucursal::classname());
+              Model::loadMultiple($modelsSucursal, Yii::$app->request->post());
+
+              // ajax validation
+              if (Yii::$app->request->isAjax) {
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  return ArrayHelper::merge(
+                      ActiveForm::validateMultiple($modelsSucursal),
+                      ActiveForm::validate($model)
+                  );
+              }
+
+              // validate all models
+              $valid = $model->validate();
+              $valid = Model::validateMultiple($modelsSucursal) && $valid;
+
+              if ($valid) {
+                  $transaction = \Yii::$app->db->beginTransaction();
+                  try {
+                      if ($flag = $model->save(false)) {
+                          foreach ($modelsSucursal as $modelSucursal) {
+                              $modelSucursal->empresa_suc = $model->id_empresa;
+                              if (! ($flag = $modelSucursal->save(false))) {
+                                  $transaction->rollBack();
+                                  break;
+                              }
+                          }
+                      }
+                      if ($flag) {
+                          $transaction->commit();
+                          //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                          Yii::$app->response->format = Response::FORMAT_JSON;
+                          $return = ['success' => true];
+                          return $return;
+                      }
+                  } catch (Exception $e) {
+                      $transaction->rollBack();
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      $return = ['success' => true];
+
+                      return $return;
+                  }
+              }
+          }
+
+          return $this->render('_frameForm', [
+              'model' => $model,
+              'modelsSucursal' => (empty($modelsSucursal)) ? [new Sucursal] : $modelsSucursal
+          ]);
+        }
+        else
+        {
+          if ($model->load(Yii::$app->request->post()) && $model->save()) {
+              return $this->redirect(['view', 'id' => $model->dni_empresa]);
+          }
+
+          return $this->render('create', [
+              'model' => $model,
+          ]);
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+
     }
 
     /**

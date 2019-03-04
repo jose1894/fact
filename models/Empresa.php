@@ -18,6 +18,7 @@ use Yii;
  */
 class Empresa extends \yii\db\ActiveRecord
 {
+    use \mootensai\relation\RelationTrait;
     /**
      * {@inheritdoc}
      */
@@ -29,33 +30,38 @@ class Empresa extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
-        return [
-            [['id_empresa', 'nombre_empresa', 'estatus_empresa', 'dni_empresa', 'ruc_empresa', 'tipopers_empresa', 'tlf_empresa', 'direcc_empresa'], 'required'],
-            [['id_empresa', 'estatus_empresa', 'tipopers_empresa'], 'integer'],
-            [['direcc_empresa'], 'string'],
-            [['nombre_empresa', 'tlf_empresa'], 'string', 'max' => 150],
-            [['dni_empresa'], 'string', 'max' => 20],
-            [['ruc_empresa'], 'string', 'max' => 11],
-            [['dni_empresa'], 'unique'],
-        ];
-    }
+     public function rules()
+     {
+         return [
+             [['id_empresa', 'nombre_empresa', 'estatus_empresa',  'ruc_empresa', 'tipopers_empresa'], 'required'],
+             [['id_empresa', 'estatus_empresa', 'tipopers_empresa'], 'integer'],
+             [['direcc_empresa'], 'string'],
+             [['nombre_empresa', 'tlf_empresa'], 'string', 'max' => 150],
+             [['dni_empresa'], 'string', 'max' => 20],
+             [['ruc_empresa'], 'string', 'max' => 11],
+             [['dni_empresa'], 'unique'],
+         ];
+     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
+     /**
+      * {@inheritdoc}
+      */
+     public function attributeLabels()
+     {
+         return [
+             'id_empresa' => Yii::t('empresa', 'Id'),
+             'nombre_empresa' => Yii::t('empresa', 'Name'),
+             'estatus_empresa' => Yii::t('empresa', 'Status'),
+             'dni_empresa' => Yii::t('empresa', 'Dni'),
+             'ruc_empresa' => Yii::t('empresa', 'Ruc'),
+             'tipopers_empresa' => Yii::t('empresa', 'Kind of person'),
+             'tlf_empresa' => Yii::t('empresa', 'Phone'),
+             'direcc_empresa' => Yii::t('empresa', 'Address'),
+         ];
+     }
+
+     public function getSucursales()
     {
-        return [
-            'id_empresa' => Yii::t('app', 'Id Empresa'),
-            'nombre_empresa' => Yii::t('app', 'Nombre Empresa'),
-            'estatus_empresa' => Yii::t('app', 'Estatus Empresa'),
-            'dni_empresa' => Yii::t('app', 'Dni Empresa'),
-            'ruc_empresa' => Yii::t('app', 'Ruc Empresa'),
-            'tipopers_empresa' => Yii::t('app', 'Tipopers Empresa'),
-            'tlf_empresa' => Yii::t('app', 'Tlf Empresa'),
-            'direcc_empresa' => Yii::t('app', 'Direcc Empresa'),
-        ];
+        return $this->hasMany(Sucursal::className(), ['empresa_suc' => 'id_empresa']);
     }
 }

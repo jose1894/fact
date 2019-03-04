@@ -9,8 +9,8 @@ class AdminLtePluginAsset extends AssetBundle
     public $js = [
         'datatables/dataTables.bootstrap.min.js',
         // more plugin Js here
-        'datatables/jquery.dataTables.min.js',
-        'datatables/a.js'
+        //'datatables/jquery.dataTables.min.js',
+        //'datatables/a.js'
     ];
     public $css = [
         'datatables/dataTables.bootstrap.css',
