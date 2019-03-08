@@ -10,6 +10,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\base\Model;
+use yii\web\Response;
+use yii\helpers\ArrayHelper;
+use kartik\widgets\ActiveForm;
 
 /**
  * EmpresaController implements the CRUD actions for Empresa model.
@@ -54,9 +57,24 @@ class EmpresaController extends Controller
      */
     public function actionView($id)
     {
+      /*if ( Yii::$app->request->get( 'asDialog' ) )
+      {
+        $this->layout = 'justStuff';
+
+        $model = $this->findModel($id);
+        $modelsSucursal = $model->sucursales;
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'modelsSucursal' => $modelsSucursal,
         ]);
+      }
+      else
+      {
+        return $this->render('view', [
+          'model' => $this->findModel($id),
+        ]);
+      }*/
     }
 
     /**
@@ -75,23 +93,26 @@ class EmpresaController extends Controller
 
           if ($model->load(Yii::$app->request->post())) {
 
-              $modelsSucursal = Model::createMultiple(Sucursal::classname());
+              //exit( "post aki" );
+              $modelsSucursal = Model::createMultiple(Sucursal::classname(),[],'id_suc');
               Model::loadMultiple($modelsSucursal, Yii::$app->request->post());
 
-              // ajax validation
-              if (Yii::$app->request->isAjax) {
-                  Yii::$app->response->format = Response::FORMAT_JSON;
-                  return ArrayHelper::merge(
-                      ActiveForm::validateMultiple($modelsSucursal),
-                      ActiveForm::validate($model)
-                  );
-              }
-
-              // validate all models
               $valid = $model->validate();
               $valid = Model::validateMultiple($modelsSucursal) && $valid;
 
-              if ($valid) {
+              // ajax validation
+              if (!$valid)
+              {
+                  if (Yii::$app->request->isAjax) {
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      return ArrayHelper::merge(
+                          ActiveForm::validateMultiple($modelsSucursal),
+                          ActiveForm::validate($model)
+                      );
+                  }
+              }
+              else
+              {
                   $transaction = \Yii::$app->db->beginTransaction();
                   try {
                       if ($flag = $model->save(false)) {
@@ -107,14 +128,24 @@ class EmpresaController extends Controller
                           $transaction->commit();
                           //return $this->redirect(['view', 'id' => $model->id_empresa]);
                           Yii::$app->response->format = Response::FORMAT_JSON;
-                          $return = ['success' => true];
+                          $return = [
+                            'success' => true,
+                            'title' => Yii::t('empresa', 'Company'),
+                            'message' => Yii::t('app','Record has been saved successfully!'),
+                            'type' => 'success'
+                          ];
                           return $return;
                       }
                   } catch (Exception $e) {
                       $transaction->rollBack();
                       Yii::$app->response->format = Response::FORMAT_JSON;
-                      $return = ['success' => true];
+                      $return = [
+                        'success' => false,
+                        'title' => Yii::t('empresa', 'Company'),
+                        'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                        'type' => 'error'
 
+                      ];
                       return $return;
                   }
               }
@@ -149,14 +180,88 @@ class EmpresaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        if ( Yii::$app->request->get( 'asDialog' ) )
+        {
+          $modelsSucursal = $model->sucursales;
+          $this->layout = "justStuff";
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->dni_empresa]);
+          if ($model->load(Yii::$app->request->post())) {
+
+              //exit( "post aki" );
+              $oldIDs = ArrayHelper::map($modelsSucursal, 'id_suc', 'id_suc');
+              $modelsSucursal = Model::createMultiple(Sucursal::classname(), $modelsSucursal,'id_suc');
+              Model::loadMultiple($modelsSucursal, Yii::$app->request->post());
+              $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsSucursal, 'id_suc', 'id_suc')));
+
+              $valid = $model->validate();
+              $valid = Model::validateMultiple($modelsSucursal) && $valid;
+
+              // ajax validation
+              if (!$valid)
+              {
+                  if (Yii::$app->request->isAjax) {
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      return ArrayHelper::merge(
+                          ActiveForm::validateMultiple($modelsSucursal),
+                          ActiveForm::validate($model)
+                      );
+                  }
+              }
+              else
+              {
+                  $transaction = \Yii::$app->db->beginTransaction();
+                  try {
+                      if ($flag = $model->save(false)) {
+                          foreach ($modelsSucursal as $modelSucursal) {
+                              $modelSucursal->empresa_suc = $model->id_empresa;
+                              if (! ($flag = $modelSucursal->save(false))) {
+                                  $transaction->rollBack();
+                                  break;
+                              }
+                          }
+                      }
+                      if ($flag) {
+                          $transaction->commit();
+                          //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                          Yii::$app->response->format = Response::FORMAT_JSON;
+                          $return = [
+                            'success' => true,
+                            'title' => Yii::t('empresa', 'Company'),
+                            'message' => Yii::t('app','Record has been saved successfully!'),
+                            'type' => 'success'
+                          ];
+                          return $return;
+                      }
+                  } catch (Exception $e) {
+                      $transaction->rollBack();
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      $return = [
+                        'success' => false,
+                        'title' => Yii::t('empresa', 'Company'),
+                        'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                        'type' => 'error'
+
+                      ];
+                      return $return;
+                  }
+              }
+          }
+
+          return $this->render('_frameForm', [
+              'model' => $model,
+              'modelsSucursal' => (empty($modelsSucursal)) ? [new Sucursal] : $modelsSucursal
+          ]);
         }
+        else
+        {
+          if ($model->load(Yii::$app->request->post()) && $model->save()) {
+              return $this->redirect(['view', 'id' => $model->dni_empresa]);
+          }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+          return $this->render('create', [
+              'model' => $model,
+          ]);
+        }
     }
 
     /**
@@ -168,7 +273,13 @@ class EmpresaController extends Controller
      */
     public function actionDelete($id)
     {
+
         $this->findModel($id)->delete();
+
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return 1;
+        }
 
         return $this->redirect(['index']);
     }

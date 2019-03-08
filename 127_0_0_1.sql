@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-03-2019 a las 23:14:52
+-- Tiempo de generación: 08-03-2019 a las 23:25:19
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 5.6.38
 
@@ -66,6 +66,13 @@ CREATE TABLE `empresa` (
   `direcc_empresa` text NOT NULL COMMENT 'DIRECCION EMPRESA'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `empresa`
+--
+
+INSERT INTO `empresa` (`id_empresa`, `nombre_empresa`, `estatus_empresa`, `dni_empresa`, `ruc_empresa`, `tipopers_empresa`, `tlf_empresa`, `direcc_empresa`) VALUES
+(1, 'MARVIG', 1, '', '20517053270', 1, '', 'scasdasd');
+
 -- --------------------------------------------------------
 
 --
@@ -96,6 +103,15 @@ CREATE TABLE `sucursal` (
   `estatus_suc` int(11) NOT NULL COMMENT 'ESTATUS SUCURSAL',
   `empresa_suc` int(11) NOT NULL COMMENT 'EMPRESA  DE LA SUCURSAL'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE SUCURSALES';
+
+--
+-- Volcado de datos para la tabla `sucursal`
+--
+
+INSERT INTO `sucursal` (`id_suc`, `nombre_suc`, `estatus_suc`, `empresa_suc`) VALUES
+(12, 'PRINCIPAL', 1, 1),
+(13, 'SECUNDARIA', 1, 1),
+(14, 'TERCERA', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -159,8 +175,7 @@ ALTER TABLE `cliente`
 -- Indices de la tabla `empresa`
 --
 ALTER TABLE `empresa`
-  ADD PRIMARY KEY (`id_empresa`),
-  ADD UNIQUE KEY `dni_empresa` (`dni_empresa`);
+  ADD PRIMARY KEY (`id_empresa`);
 
 --
 -- Indices de la tabla `producto`
@@ -213,13 +228,19 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `empresa`
 --
 ALTER TABLE `empresa`
-  MODIFY `id_empresa` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=4;
+  MODIFY `id_empresa` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
   MODIFY `id_pdcto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+
+--
+-- AUTO_INCREMENT de la tabla `sucursal`
+--
+ALTER TABLE `sucursal`
+  MODIFY `id_suc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_producto`
@@ -241,34 +262,25 @@ ALTER TABLE `vendedor`
 -- Filtros para la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  ADD CONSTRAINT `cliente_ibfk_1` FOREIGN KEY (`vendedor_clte`) REFERENCES `vendedor` (`id_vendedor`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `cliente_ibfk_2` FOREIGN KEY (`sucursal_clte`) REFERENCES `sucursal` (`id_suc`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `cliente_ibfk_1` FOREIGN KEY (`vendedor_clte`) REFERENCES `vendedor` (`id_vendedor`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `producto`
 --
 ALTER TABLE `producto`
-  ADD CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`tipo_pdcto`) REFERENCES `tipo_producto` (`id_tpdcto`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `producto_ibfk_2` FOREIGN KEY (`sucursal_pdcto`) REFERENCES `sucursal` (`id_suc`);
+  ADD CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`tipo_pdcto`) REFERENCES `tipo_producto` (`id_tpdcto`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `sucursal`
 --
 ALTER TABLE `sucursal`
-  ADD CONSTRAINT `sucursal_ibfk_1` FOREIGN KEY (`empresa_suc`) REFERENCES `empresa` (`id_empresa`);
+  ADD CONSTRAINT `sucursal_ibfk_1` FOREIGN KEY (`empresa_suc`) REFERENCES `empresa` (`id_empresa`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `vendedor`
 --
 ALTER TABLE `vendedor`
-  ADD CONSTRAINT `vendedor_ibfk_1` FOREIGN KEY (`zona_vend`) REFERENCES `zona` (`id_zona`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `vendedor_ibfk_2` FOREIGN KEY (`sucursal_vend`) REFERENCES `sucursal` (`id_suc`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `zona`
---
-ALTER TABLE `zona`
-  ADD CONSTRAINT `zona_ibfk_1` FOREIGN KEY (`sucursal_zona`) REFERENCES `sucursal` (`id_suc`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `vendedor_ibfk_1` FOREIGN KEY (`zona_vend`) REFERENCES `zona` (`id_zona`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

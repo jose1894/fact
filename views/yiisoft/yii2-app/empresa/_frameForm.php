@@ -15,6 +15,18 @@ if ( $model->isNewRecord ) {
 }
 
 $js = '
+jQuery(".dynamicform_wrapper").on("afterInsert", function(e, item) {
+    jQuery(".dynamicform_wrapper .panel-title-address").each(function(index) {
+        jQuery(this).html("'.Yii::t('sucursal','Branch office').': " + (index + 1))
+    });
+});
+
+jQuery(".dynamicform_wrapper").on("afterDelete", function(e) {
+    jQuery(".dynamicform_wrapper .panel-title-address").each(function(index) {
+        jQuery(this).html("'.Yii::t('sucursal','Branch office').': " + (index + 1))
+    });
+});
+
 $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
     console.log("beforeInsert");
 });
@@ -24,10 +36,28 @@ $(".dynamicform_wrapper").on("afterInsert", function(e, item) {
 });
 
 $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
-    if (! confirm("Are you sure you want to delete this item?")) {
-        return false;
-    }
-    return true;
+  debugger;
+  data  = {
+          title: "'.Yii::t('empresa','Company').'",
+          text: "'.Yii::t('sucursal','Are you sure to delete this Branch office?').'",
+          icon: "warning",
+          confirmButtonClass: "btn-danger",
+          confirmButtonText: "'.Yii::t('app','Confirm').'" ,
+          showCancelButton: true,
+          buttons: true,
+          dangerMode: true,
+      };
+
+  // Show the user a swal confirmation window
+  window.parent.swal( data ).
+  then( (willdelete) => {
+      if (willdelete) {
+          // This function will run ONLY if the user clicked "ok"
+          // Only here we want to send the request to the server!
+          return true;
+      }
+      return false;
+ });
 });
 
 $(".dynamicform_wrapper").on("afterDelete", function(e) {
@@ -48,7 +78,7 @@ $this->registerJs($js);
             </div>
             <div class="box-body">
                 <div class="container-fluid">
-                  <?php $form = ActiveForm::begin([ 'id' => $model->formName() ]); ?>
+                  <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true,  ]); ?>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -152,7 +182,7 @@ $this->registerJs($js);
                                                         // necessary for update action.
                                                         if (!$modelSucursal->isNewRecord) {
                                                             echo Html::activeHiddenInput($modelSucursal, "[{$index}]id_suc");
-                                                            $modelSucursal->empresa_suc[$index] = $model->id_empresa;
+                                                            //$modelSucursal->empresa_suc[$index] = $model->id_empresa;
                                                             echo Html::activeHiddenInput($modelSucursal, "[{$index}]empresa_suc");
                                                         }
                                                     ?>

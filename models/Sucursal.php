@@ -33,7 +33,7 @@ class Sucursal extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_suc', 'nombre_suc', 'empresa_suc'], 'required'],
+            [['nombre_suc','estatus_suc'], 'required'],
             [['id_suc', 'estatus_suc', 'empresa_suc'], 'integer'],
             [['nombre_suc'], 'string', 'max' => 50],
             [['id_suc'], 'unique'],
