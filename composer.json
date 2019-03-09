@@ -23,7 +23,8 @@
         "kartik-v/yii2-widget-activeform": "dev-master",
         "wbraganca/yii2-dynamicform": "dev-master",
         "kartik-v/yii2-grid": "dev-master",
-        "mootensai/yii2-relation-trait": "dev-master"
+        "mootensai/yii2-relation-trait": "dev-master",
+        "kartik-v/yii2-detail-view": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

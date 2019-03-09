@@ -13,7 +13,7 @@ use yii\web\JqueryAsset;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 JqueryAsset::register($this);
-$this->title = Yii::t('empresa', 'Empresas');
+$this->title = Yii::t('empresa', 'Company');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="empresa-index">
@@ -31,14 +31,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
-            'id_empresa',
+            [
+              'attribute'=>'id_empresa',
+              'width' => '5%'
+            ],
             [
               'attribute' => 'nombre_empresa',
             ],
             [
                 'class' => 'kartik\grid\BooleanColumn',
                 'attribute' => 'estatus_empresa',
-                'vAlign' => 'middle'
+                'vAlign' => 'middle',
+                'width' => '10%'
             ],
             //'dni_empresa',
             //'ruc_empresa',
@@ -54,6 +58,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'view' => function ($url, $model) {
                     return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
                                 'title' => Yii::t('app', 'View'),
+                                'class' => 'pjax-view',
+                                'data' => [
+                                  'id' => $model->id_empresa,
+                                ]
                     ]);
                 },
 
@@ -62,7 +70,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'title' => Yii::t('app', 'Update'),
                                 'class' => 'pjax-update',
                                 'data' => [
-                                  'url' => $url,
                                   'id' => $model->id_empresa,
                                 ]
                     ]);
@@ -75,7 +82,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'message' => Yii::t('app','Are you sure you want to delete this item?'),
                                     'succmessage' => Yii::t('app', 'Item deleted successfully!'),
                                     'method' => 'post',
-                                    'url' => $url,
                                     'pjax' => 0,
                                     'icon' => 'warning',
                                     'title' => Yii::t('empresa', 'Company'),
@@ -118,7 +124,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $this->registerJsVar( "buttonCreate", "#create" );
 $this->registerJsVar( "buttonSubmit", "#submit" );
-$this->registerJsVar( "buttonCancel", "#cancel" );
+$this->registerJsVar( "buttonCancel", ".close-btn" );
 $this->registerJsVar( "frame", "#frame" );
 $this->registerJsVar( "modal", "#modal" );
-echo   $this->render('_modalForm',[]);
+echo   $this->render('//site/_modalForm',[]);

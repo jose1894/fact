@@ -31,7 +31,19 @@
                 'options' => ['class' => 'sidebar-menu tree', 'data-widget'=> 'tree'],
                 'items' => [
                     ['label' => 'Menu Yii2', 'options' => ['class' => 'header']],
+                    [
+                      'label' => Yii::t('app','Set Up') , 'icon' => 'gears',
+                      'items' => [
+                        ['label' => Yii::t('empresa','Company'), 'url' => ['/empresa'], 'icon' => 'industry'],
+                        ['label' => Yii::t('app', 'Maintenance'),
+                          'items' => [
+                            ['label' => Yii::t('tipo_producto','Product types'), 'url' => ['/tipo-producto'], 'icon' => 'cube']
+                          ]
+                        ]
+                      ]
+                    ],
                     ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii']],
+
                     ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug']],
                     ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
                     [

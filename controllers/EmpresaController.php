@@ -57,7 +57,7 @@ class EmpresaController extends Controller
      */
     public function actionView($id)
     {
-      /*if ( Yii::$app->request->get( 'asDialog' ) )
+      if ( Yii::$app->request->get( 'asDialog' ) )
       {
         $this->layout = 'justStuff';
 
@@ -74,7 +74,7 @@ class EmpresaController extends Controller
         return $this->render('view', [
           'model' => $this->findModel($id),
         ]);
-      }*/
+      }
     }
 
     /**
@@ -151,7 +151,7 @@ class EmpresaController extends Controller
               }
           }
 
-          return $this->render('_frameForm', [
+          return $this->render('create', [
               'model' => $model,
               'modelsSucursal' => (empty($modelsSucursal)) ? [new Sucursal] : $modelsSucursal
           ]);
@@ -212,6 +212,10 @@ class EmpresaController extends Controller
                   $transaction = \Yii::$app->db->beginTransaction();
                   try {
                       if ($flag = $model->save(false)) {
+                        if (!empty($deletedIDs)) {
+                            Sucursal::deleteAll(['id_suc' => $deletedIDs]);
+                        }
+
                           foreach ($modelsSucursal as $modelSucursal) {
                               $modelSucursal->empresa_suc = $model->id_empresa;
                               if (! ($flag = $modelSucursal->save(false))) {
@@ -247,7 +251,7 @@ class EmpresaController extends Controller
               }
           }
 
-          return $this->render('_frameForm', [
+          return $this->render('update', [
               'model' => $model,
               'modelsSucursal' => (empty($modelsSucursal)) ? [new Sucursal] : $modelsSucursal
           ]);
@@ -258,7 +262,7 @@ class EmpresaController extends Controller
               return $this->redirect(['view', 'id' => $model->dni_empresa]);
           }
 
-          return $this->render('create', [
+          return $this->render('update', [
               'model' => $model,
           ]);
         }

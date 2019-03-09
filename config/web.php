@@ -94,13 +94,21 @@ $config = [
                         'sucursal' => 'sucursal.php',
                       ],
                   ],
+                  'tipo_producto' => [
+                      'class' => 'yii\i18n\PhpMessageSource',
+                      'basePath' => '@app/messages',
+                      'sourceLanguage' => 'en-US',
+                      'fileMap' => [
+                        'tipo_producto' => 'tipoProducto.php',
+                      ],
+                  ],
               ],
           ],
     ],
     'modules' =>[
       'gridview' =>  [
           'class' => '\kartik\grid\Module'
-          // enter optional module parameters below - only if you need to  
+          // enter optional module parameters below - only if you need to
           // use your own export download action or custom translation
           // message source
           // 'downloadAction' => 'gridview/export/download',

@@ -18,6 +18,7 @@ $( document ).ready( function( e ){
         'url'    : $( $form ).attr( 'action' ),
         'method' : $( $form ).attr( 'method' ),
         'data'   : $( $form ).serialize(),
+        'async'  : false,
         'success': function ( data ){
           if ( data.success )
           {
@@ -36,8 +37,10 @@ $( document ).ready( function( e ){
       });
   });
 
-  $( buttonCancel ).on( 'click', function(){
+  $( 'body' ).on( 'click', buttonCancel, function(){
+    $( frame ).attr( 'src', '#' );
     $( modal ).modal("hide");
+
   });
 
   $( 'body' ).on( 'click', '.pjax-delete', function( e ){
@@ -48,7 +51,7 @@ $( document ).ready( function( e ){
     var title = $( this ).data( 'title' );
     var icon =  $( this ).data( 'icon' );
     var ok =  $( this ).data( 'ok' );
-    var url =  $( this ).data( 'url' );
+    var url =  $( this ).attr( 'href' );
     var message = $( this ).data( 'message' );
     var succMessage = $( this ).data( 'succmessage' );
 
@@ -91,6 +94,17 @@ $( document ).ready( function( e ){
   });
 
   $( 'body' ).on( 'click', '.pjax-update', function( e ){
+    e.preventDefault();
+
+    $( frame ).attr( "src", $( this ).attr( 'href' ));
+    $( modal ).modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+    $( modal ).modal("show");
+  });
+
+  $( 'body' ).on( 'click', '.pjax-view', function( e ){
     e.preventDefault();
 
     $( frame ).attr( "src", $( this ).attr( 'href' ));
