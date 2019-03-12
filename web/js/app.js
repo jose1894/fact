@@ -1,7 +1,7 @@
 $( document ).ready( function( e ){
   var form = $( frame ).contents().find('form');
 
-  $( buttonCreate ).on('click', function ( e ) {
+  $( 'body' ).on('click', buttonCreate, function ( e ) {
     e.preventDefault();
     $( frame ).attr( "src", $( this ).attr( 'href' ));
     $( modal ).modal({
@@ -11,7 +11,7 @@ $( document ).ready( function( e ){
     $( modal ).modal("show");
   });
 
-  $( buttonSubmit ).on( 'click', function(){
+  $( 'body' ).on( 'click', buttonSubmit, function(){
     var $form = $( frame ).contents().find('form');
 
       $.ajax( {

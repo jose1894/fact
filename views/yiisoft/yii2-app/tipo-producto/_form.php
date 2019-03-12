@@ -1,7 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+//use yii\widgets\ActiveForm;
+use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
 
 /* @var $this yii\web\View */
 /* @var $model app\models\TipoProducto */
@@ -10,18 +11,22 @@ use yii\widgets\ActiveForm;
 
 <div class="tipo-producto-form">
 
-    <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'desc_tpdcto')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'status_tpdcto')->textInput() ?>
-
-    <?= $form->field($model, 'sucursal_tpdcto')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t('tipo_producto', 'Save'), ['class' => 'btn btn-success']) ?>
+    <?php $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientScript' => true]); ?>
+    <div class="row">
+      <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+        <?= $form->field($model, 'desc_tpdcto',[
+          'addClass' => 'form-control input-sm',
+          'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-edit"></i>']]])->textInput(['maxlength' => true]) ?>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <?= $form->field($model, 'status_tpdcto',[
+          'addClass' => 'form-control input-sm',
+          'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-ticket"></i>']]])->dropDownList(
+          [1 => 'Activo', 0 => 'Inactivo'],
+          ['custom' => true, 'prompt' => Yii::t('app','Select...')])  ?>
+      </div>
     </div>
-
+    
     <?php ActiveForm::end(); ?>
 
 </div>

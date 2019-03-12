@@ -8,7 +8,9 @@ use app\models\TipoProductoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\web\Response;
+use yii\helpers\ArrayHelper;
+use kartik\widgets\ActiveForm;
 /**
  * TipoProductoController implements the CRUD actions for TipoProducto model.
  */
@@ -73,8 +75,58 @@ class TipoProductoController extends Controller
         if (Yii::$app->request->get('asDialog'))
         {
           $this->layout = 'justStuff';
-        }
 
+
+
+          if ($model->load(Yii::$app->request->post())) {
+
+            $valid = $model->validate();
+
+            // ajax validation
+            if (!$valid)
+            {
+                if (Yii::$app->request->isAjax) {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ActiveForm::validate($model);
+
+                }
+            }
+            else
+            {
+                $transaction = \Yii::$app->db->beginTransaction();
+                try {
+                        $model->save();
+                        $transaction->commit();
+                        //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        $return = [
+                          'success' => true,
+                          'title' => Yii::t('tipo_producto', 'Product type'),
+                          'message' => Yii::t('app','Record has been saved successfully!'),
+                          'type' => 'success'
+                        ];
+                        return $return;
+
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    $return = [
+                      'success' => false,
+                      'title' => Yii::t('tipo_producto', 'Product type'),
+                      'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                      'type' => 'error'
+
+                    ];
+                    return $return;
+                }
+            }
+          }
+
+          return $this->render('create', [
+              'model' => $model,
+          ]);
+      }
+      else {
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_tpdcto]);
         }
@@ -82,6 +134,7 @@ class TipoProductoController extends Controller
         return $this->render('create', [
             'model' => $model,
         ]);
+      }
     }
 
     /**
@@ -94,6 +147,11 @@ class TipoProductoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+
+        if (Yii::$app->request->get('asDialog'))
+        {
+          $this->layout = 'justStuff';
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_tpdcto]);

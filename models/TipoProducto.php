@@ -30,7 +30,7 @@ class TipoProducto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['desc_tpdcto', 'status_tpdcto', 'sucursal_tpdcto'], 'required'],
+            [['desc_tpdcto', 'status_tpdcto'], 'required'],
             [['status_tpdcto', 'sucursal_tpdcto'], 'integer'],
             [['desc_tpdcto'], 'string', 'max' => 255],
         ];
@@ -42,10 +42,10 @@ class TipoProducto extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_tpdcto' => Yii::t('sucursal', 'Id Tpdcto'),
-            'desc_tpdcto' => Yii::t('sucursal', 'Desc Tpdcto'),
-            'status_tpdcto' => Yii::t('sucursal', 'Status Tpdcto'),
-            'sucursal_tpdcto' => Yii::t('sucursal', 'Sucursal Tpdcto'),
+            'id_tpdcto' => Yii::t('tipo_producto', 'Id'),
+            'desc_tpdcto' => Yii::t('tipo_producto', 'Description'),
+            'status_tpdcto' => Yii::t('tipo_producto', 'Status'),
+            'sucursal_tpdcto' => Yii::t('tipo_producto', 'Sucursal Tpdcto'),
         ];
     }
 

@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="tipo-producto-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(); ?>
+    <?php Pjax::begin([ 'id' => 'grid']); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -29,12 +29,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id_tpdcto',
             'desc_tpdcto',
-            'status_tpdcto',
-            'sucursal_tpdcto',
-
+            //'status_tpdcto',
+            [
+                'class' => 'kartik\grid\BooleanColumn',
+                'attribute' => 'status_tpdcto',
+                'vAlign' => 'middle',
+                'width' => '10%'
+            ],
+            //'sucursal_tpdcto',
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
@@ -102,7 +105,7 @@ $this->params['breadcrumbs'][] = $this->title;
              'neverTimeout'=>true,
           ],
           'krajeeDialogSettings' => ['overrideYiiConfirm' => false]
-        
+
     ]); ?>
     <?php Pjax::end(); ?>
 </div>
