@@ -35,9 +35,21 @@
                       'label' => Yii::t('app','Set Up') , 'icon' => 'gears',
                       'items' => [
                         ['label' => Yii::t('empresa','Company'), 'url' => ['/empresa'], 'icon' => 'industry'],
-                        ['label' => Yii::t('app', 'Maintenance'),
+                        ['label' => Yii::t('app', 'Maintenance'), 'icon' => 'gears',
                           'items' => [
-                            ['label' => Yii::t('tipo_producto','Product types'), 'url' => ['/tipo-producto'], 'icon' => 'cube']
+                            ['label' => Yii::t('tipo_producto','Product types'), 'url' => ['/tipo-producto'], 'icon' => 'cube'],
+                            ['label' => Yii::t('zona','Zone'), 'url' => ['/zona'], 'icon' => 'map-signs'],
+                            ['label' => Yii::t('vendedor','Seller'), 'url' => ['/vendedor'], 'icon' => 'user'],
+                            ['label' => Yii::t('cliente','Clients'), 'url' => ['/cliente'], 'icon' => 'users'],
+                            ['label' => Yii::t('condicionp','Payment condition'), 'url' => ['/cond-pago'], 'icon' => 'ticket'],
+                            ['label' => Yii::t('app', 'Ubication tables'), 'icon' => 'globe',
+                                'items' =>[
+                                            ['label' => Yii::t('pais','Country'), 'url' => ['/pais'], 'icon' => 'ticket'],
+                                            ['label' => Yii::t('provincia','Estate / Province'), 'url' => ['/provincia'], 'icon' => 'ticket'],
+                                            ['label' => Yii::t('departamento','Department / County / Municipality'), 'url' => ['/departamento'], 'icon' => 'ticket'],
+                                            ['label' => Yii::t('distrito','Disctrit / Parish '), 'url' => ['/distrito'], 'icon' => 'ticket'],
+                                          ]
+                            ]
                           ]
                         ]
                       ]

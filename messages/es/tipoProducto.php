@@ -4,10 +4,8 @@ return [
     'Status' => 'Estatus',
     'Description' => 'Descripción',
     'Input a name' => 'Ingrese un nombre',
-    'Branch office' => 'Sucursal',
-    'Branch offices' => 'Sucursales',
-    'Add branch office' => 'Agregar sucursal',
     'Product types' => 'Tipo de productos',
+    'Product type: <span class="label label-primary">{number}</span> {name}' => 'Tipo de producto: <span class="label label-primary">{number}</span> {name}',
     'Create product type' => 'Crear tipo de producto',
-    'Update product type: {name}' => 'Actualizar tipo de producto: {name}'
+    'Update product type: <span class="label label-primary">{number}</span> {name}' => 'Actualizar tipo de producto: <span class="label label-primary">{number}</span> {name}'
 ];

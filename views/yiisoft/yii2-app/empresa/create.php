@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="box-body">
         <div class="container-fluid">
-          <?= $this->render('_frameform', [
+          <?= $this->render('_frameForm', [
               'model' => $model,
               'modelsSucursal' => $modelsSucursal
           ]) ?>

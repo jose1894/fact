@@ -36,28 +36,14 @@ $(".dynamicform_wrapper").on("afterInsert", function(e, item) {
 });
 
 $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
-  data  = {
-          title: "'.Yii::t('empresa','Company').'",
-          text: "'.Yii::t('sucursal','Are you sure to delete this Branch office?').'",
-          icon: "warning",
-          confirmButtonClass: "btn-danger",
-          confirmButtonText: "'.Yii::t('app','Confirm').'" ,
-          showCancelButton: true,
-          buttons: true,
-          dangerMode: true,
-      };
+  if ( confirm("'.Yii::t('sucursal','Are you sure to delete this branch office?').'") ){
+    return true;
+  }
 
-  // Show the user a swal confirmation window
-  swal( data ).
-  then( (willdelete) => {
-      if (willdelete) {
-          // This function will run ONLY if the user clicked "ok"
-          // Only here we want to send the request to the server!
-          return true;
-      }
-      return false;
- });
+  return false;
+
 });
+
 
 $(".dynamicform_wrapper").on("afterDelete", function(e) {
     console.log("Deleted item!");
@@ -68,7 +54,7 @@ $(".dynamicform_wrapper").on("limitReached", function(e, item) {
 });
 ';
 
-$this->registerJs($js);
+$this->registerJs($js,View::POS_LOAD);
 ?>
 <div class="empresa-form">
       <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true,  ]); ?>
@@ -76,13 +62,13 @@ $this->registerJs($js);
       <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
           <?= $form->field($model, 'id_empresa',[
-            'addClass' => 'form-control input-sm',
+            'addClass' => 'form-control ',
             'addon' => ['prepend'=>['content'=>"#"]],
             ])->textInput(['readonly' => true]) ?>
         </div>
         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
           <?= $form->field($model, 'nombre_empresa',[
-            'addClass' => 'form-control input-sm',
+            'addClass' => 'form-control ',
             'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-trademark"></i>']]
             ])->textInput(['maxlength' => true,'placeholder' => Yii::t('empresa','Input a name')."..."]) ?>
         </div>
@@ -90,7 +76,7 @@ $this->registerJs($js);
       <div class="row">
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
           <?= $form->field($model, 'estatus_empresa',[
-            'addClass' => 'form-control input-sm'
+            'addClass' => 'form-control '
             ])->dropDownList(
               [1 => 'Activo', 0 => 'Inactivo'],
               ['custom' => true, 'prompt' => Yii::t('app','Select...')]) ?>
@@ -98,26 +84,26 @@ $this->registerJs($js);
 
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
           <?= $form->field($model, 'dni_empresa',[
-            'addClass' => 'form-control input-sm'
+            'addClass' => 'form-control '
             ])->widget('yii\widgets\MaskedInput', [
                   'mask' => '9999999999',
-                  'options'=> [ 'class' => 'form-control input-sm']
+                  'options'=> [ 'class' => 'form-control ']
               ]) ?>
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
           <?= $form->field($model, 'ruc_empresa',[
-            'addClass' => 'form-control input-sm'
+            'addClass' => 'form-control '
             ])->widget('yii\widgets\MaskedInput', [
                   'mask' => '99999999999',
-                  'options'=> [ 'class' => 'form-control input-sm']
+                  'options'=> [ 'class' => 'form-control ']
               ]) ?>
         </div>
       </div>
       <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
           <?= $form->field($model, 'tipopers_empresa',[
-            'addClass' => 'form-control input-sm'
+            'addClass' => 'form-control '
             ])->dropDownList(
             [
               1 => 'Registro único de contribuyente (RUC)',
@@ -129,7 +115,7 @@ $this->registerJs($js);
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
           <?= $form->field($model, 'tlf_empresa',[
-            'addClass' => 'form-control input-sm',
+            'addClass' => 'form-control ',
             'addon' => ['prepend'=> ['content'=>'<i class="fa fa-phone"></i>']]
             ])->textInput(['maxlength' => true,'placeholder' => Yii::t("empresa","Input a phone")."..."]) ?>
         </div>
@@ -137,7 +123,8 @@ $this->registerJs($js);
       <div class="row">
           <div class="col-lg-12">
             <?= $form->field($model, 'direcc_empresa',[
-              'addClass' => 'form-control input-sm'
+              'addClass' => 'form-control ',
+              'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-file-text"></i>']]
               ])->textarea(['rows' => 6,'placeholder' => Yii::t("empresa","Input an address")."..."]) ?>
           </div>
       </div>
@@ -187,12 +174,12 @@ $this->registerJs($js);
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <?= $form->field($modelSucursal, "[{$index}]nombre_suc",[
-                                                  'addClass' => 'form-control input-sm'
+                                                  'addClass' => 'form-control '
                                                   ])->textInput(['maxlength' => true]) ?>
                                             </div>
                                             <div class="col-sm-6">
                                                 <?= $form->field($modelSucursal, "[{$index}]estatus_suc",[
-                                                  'addClass' => 'form-control input-sm'
+                                                  'addClass' => 'form-control '
                                                   ])->dropDownList([1 => 'Activo', 0 => 'Inactivo'], ['prompt' => Yii::t('app','Select...')]) ?>
                                             </div>
                                         </div><!-- end:row -->

@@ -23,7 +23,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Ubication tables' => 'Tablas de ubicación',
     'Maintenance' => 'Mantenimiento',
+    'Set Up' => 'Configuración',
     'Select...' => 'Seleccione...',
     'Record has been saved successfully!' => '¡El registro ha sido guardado exitosamente!',
     'Record couldn´t be saved!' => '¡El registro no pudo ser guardado!',

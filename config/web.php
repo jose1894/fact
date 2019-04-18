@@ -2,6 +2,7 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$i18n = require __DIR__ . '/i18n.php';
 
 $config = [
     'id' => 'basic',
@@ -63,47 +64,12 @@ $config = [
         'assetManager' => [
               'bundles' => [
                   'dmstr\web\AdminLteAsset' => [
-                      'skin' => 'skin-blue',
+                      'skin' => 'skin-red',
                   ],
+                  
               ],
           ],
-          'i18n' => [
-              'translations' => [
-                  'app*' => [
-                      'class' => 'yii\i18n\PhpMessageSource',
-                      'basePath' => '@app/messages',
-                      'sourceLanguage' => 'en-US',
-                      'fileMap' => [
-                          'app' => 'app.php',
-                          'app/error' => 'error.php',
-                      ],
-                  ],
-                  'empresa' => [
-                      'class' => 'yii\i18n\PhpMessageSource',
-                      'basePath' => '@app/messages',
-                      'sourceLanguage' => 'en-US',
-                      'fileMap' => [
-                          'empresa' => 'empresa.php',
-                      ],
-                  ],
-                  'sucursal' => [
-                      'class' => 'yii\i18n\PhpMessageSource',
-                      'basePath' => '@app/messages',
-                      'sourceLanguage' => 'en-US',
-                      'fileMap' => [
-                        'sucursal' => 'sucursal.php',
-                      ],
-                  ],
-                  'tipo_producto' => [
-                      'class' => 'yii\i18n\PhpMessageSource',
-                      'basePath' => '@app/messages',
-                      'sourceLanguage' => 'en-US',
-                      'fileMap' => [
-                        'tipo_producto' => 'tipoProducto.php',
-                      ],
-                  ],
-              ],
-          ],
+          'i18n' => $i18n,
     ],
     'modules' =>[
       'gridview' =>  [

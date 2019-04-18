@@ -3,10 +3,13 @@ $( document ).ready( function( e ){
 
   $( 'body' ).on('click', buttonCreate, function ( e ) {
     e.preventDefault();
+    $( buttonSubmit ).css( 'display', 'block' );
+    $( buttonSubmit ).css( 'float', 'right' );
     $( frame ).attr( "src", $( this ).attr( 'href' ));
     $( modal ).modal({
       backdrop: 'static',
-      keyboard: false
+      keyboard: false,
+      height: '10%',
     });
     $( modal ).modal("show");
   });
@@ -38,9 +41,8 @@ $( document ).ready( function( e ){
   });
 
   $( 'body' ).on( 'click', buttonCancel, function(){
-    $( frame ).attr( 'src', '#' );
+    $( frame ).attr( 'src', 'about:blank' );
     $( modal ).modal("hide");
-
   });
 
   $( 'body' ).on( 'click', '.pjax-delete', function( e ){
@@ -85,21 +87,20 @@ $( document ).ready( function( e ){
                 }
             });
         }
-        /*function() {
-            // This function will run if the user clicked "cancel"
-            window.location.href = "<?php echo Yii::$app->request->baseUrl;?>/todo/index/";
-        }*/
     });
     return false;
   });
 
   $( 'body' ).on( 'click', '.pjax-update', function( e ){
     e.preventDefault();
-
+    $( buttonSubmit ).css( 'display', 'block' );
+    $( buttonSubmit ).css( 'float', 'right' );
     $( frame ).attr( "src", $( this ).attr( 'href' ));
     $( modal ).modal({
       backdrop: 'static',
-      keyboard: false
+      keyboard: false,
+      height: '50%',
+
     });
     $( modal ).modal("show");
   });
@@ -107,11 +108,18 @@ $( document ).ready( function( e ){
   $( 'body' ).on( 'click', '.pjax-view', function( e ){
     e.preventDefault();
 
+    $( buttonSubmit ).css( 'display', 'none' );
+
     $( frame ).attr( "src", $( this ).attr( 'href' ));
     $( modal ).modal({
       backdrop: 'static',
       keyboard: false
     });
     $( modal ).modal("show");
+  });
+
+  $( 'body' ).on("show.bs.modal",".modal-wide", function() {
+    var height = $(window).height() - 200;
+    $(this).find(".modal-body").css("max-height", height);
   });
 });

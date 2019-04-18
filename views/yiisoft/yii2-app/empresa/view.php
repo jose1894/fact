@@ -9,7 +9,8 @@ use app\models\SucursalSearch;
 /* @var $this yii\web\View */
 /* @var $model app\models\Empresa */
 
-$this->title = Yii::t('empresa', 'View company: {name}', [
+$this->title = Yii::t('empresa', 'View company: {numnber} {name}', [
+    'number' => $model->id_empresa,
     'name' => $model->nombre_empresa,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('empresa', 'Company'), 'url' => ['index']];
@@ -26,14 +27,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="box-body">
         <div class="container-fluid">
               <p>
-                  <?= Html::a(Yii::t('empresa', 'Update'), ['update', 'id' => $model->id_empresa, 'asDialog' => 1], ['class' => 'btn btn-primary']) ?>
+                  <?php /*Html::a(Yii::t('empresa', 'Update'), ['update', 'id' => $model->id_empresa, 'asDialog' => 1], ['class' => 'btn btn-primary']) ?>
                   <?= Html::a(Yii::t('empresa', 'Delete'), ['delete', 'id' => $model->id_empresa], [
                       'class' => 'btn btn-danger',
                       'data' => [
                           'confirm' => Yii::t('empresa', 'Are you sure you want to delete this item?'),
                           'method' => 'post',
                       ],
-                  ]) ?>
+                  ]) */ ?>
               </p>
 
               <?= DetailView::widget([

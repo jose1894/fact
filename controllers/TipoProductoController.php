@@ -148,18 +148,66 @@ class TipoProductoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if (Yii::$app->request->get('asDialog'))
+        if ( Yii::$app->request->get( 'asDialog' ) )
         {
-          $this->layout = 'justStuff';
-        }
+          $this->layout = "justStuff";
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_tpdcto]);
-        }
+          if ($model->load(Yii::$app->request->post())) {
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+              $valid = $model->validate();
+
+              // ajax validation
+              if (!$valid)
+              {
+                  if (Yii::$app->request->isAjax) {
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      return ActiveForm::validate($model);
+
+                  }
+              }
+              else
+              {
+                  $transaction = \Yii::$app->db->beginTransaction();
+                  try {
+                          $model->save();
+                          $transaction->commit();
+                          Yii::$app->response->format = Response::FORMAT_JSON;
+                          $return = [
+                            'success' => true,
+                            'title' => Yii::t('tipo_producto', 'Product type'),
+                            'message' => Yii::t('app','Record has been saved successfully!'),
+                            'type' => 'success'
+                          ];
+                          return $return;
+                  } catch (Exception $e) {
+                      $transaction->rollBack();
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      $return = [
+                        'success' => false,
+                        'title' => Yii::t('tipo_producto', 'Product type'),
+                        'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                        'type' => 'error'
+
+                      ];
+                      return $return;
+                  }
+              }
+          }
+
+          return $this->render('update', [
+              'model' => $model,
+          ]);
+        }
+        else
+        {
+          if ($model->load(Yii::$app->request->post()) && $model->save()) {
+              return $this->redirect(['view', 'id' => $model->dni_empresa]);
+          }
+
+          return $this->render('update', [
+              'model' => $model,
+          ]);
+        }
     }
 
     /**

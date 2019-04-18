@@ -54,7 +54,7 @@ class Empresa extends \yii\db\ActiveRecord
              'estatus_empresa' => Yii::t('empresa', 'Status'),
              'dni_empresa' => Yii::t('empresa', 'Dni'),
              'ruc_empresa' => Yii::t('empresa', 'Ruc'),
-             'tipopers_empresa' => Yii::t('empresa', 'Kind of person'),
+             'tipopers_empresa' => Yii::t('empresa', 'People type'),
              'tlf_empresa' => Yii::t('empresa', 'Phone'),
              'direcc_empresa' => Yii::t('empresa', 'Address'),
          ];

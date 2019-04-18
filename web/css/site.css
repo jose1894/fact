@@ -113,3 +113,10 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+.modal.modal-wide .modal-dialog {
+  width: 90%;
+  height: 30%;
+}
+.modal-wide .modal-body {
+  overflow-y: auto;
+}
