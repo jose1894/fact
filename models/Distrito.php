@@ -31,9 +31,12 @@ class Distrito extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['des_dtto', 'depto_dtto', 'status_dtto', 'sucursal_dtto'], 'required'],
+            [['des_dtto', 'depto_dtto', 'status_dtto'], 'required'],
             [['depto_dtto', 'status_dtto', 'sucursal_dtto'], 'integer'],
             [['des_dtto'], 'string', 'max' => 30],
+            [['prov_dtto' , 'pais_dtto', 'depto_dtto'], 'string'],
+            [['pais_dtto'], 'exist', 'skipOnError' => true, 'targetClass' => Pais::className(), 'targetAttribute' => ['pais_dtto' => 'id_pais']],
+            [['prov_dtto'], 'exist', 'skipOnError' => true, 'targetClass' => Provincia::className(), 'targetAttribute' => ['prov_dtto' => 'id_prov']],
             [['depto_dtto'], 'exist', 'skipOnError' => true, 'targetClass' => Departamento::className(), 'targetAttribute' => ['depto_dtto' => 'id_depto']],
         ];
     }
@@ -44,12 +47,27 @@ class Distrito extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_dtto' => Yii::t('distrito', 'Id Dtto'),
-            'des_dtto' => Yii::t('distrito', 'Des Dtto'),
-            'depto_dtto' => Yii::t('distrito', 'Depto Dtto'),
-            'status_dtto' => Yii::t('distrito', 'Status Dtto'),
+            'id_dtto' => Yii::t('distrito', 'Id'),
+            'des_dtto' => Yii::t('distrito', 'Name'),
+            'pais_dtto' => Yii::t('pais', 'Country'),
+            'depto_dtto' => Yii::t('departamento', 'Department / County / Municipality'),
+            'prov_dtto' => Yii::t('provincia', 'Estate / Province'),
+            'status_dtto' => Yii::t('distrito', 'Status'),
             'sucursal_dtto' => Yii::t('distrito', 'Sucursal Dtto'),
         ];
+    }
+
+    public function getPaisDtto()
+    {
+        return $this->hasOne(Pais::className(), ['id_pais' => 'pais_dtto']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProvDtto()
+    {
+        return $this->hasOne(Provincia::className(), ['id_prov' => 'prov_dtto']);
     }
 
     /**

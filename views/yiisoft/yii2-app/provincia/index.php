@@ -7,6 +7,10 @@ use yii\helpers\Url;
 use yii\web\View;
 use kartik\grid\GridView;
 use yii\web\JqueryAsset;
+use yii\helpers\ArrayHelper;
+use app\models\Pais;
+use kartik\select2\Select2;
+use kartik\depdrop\DepDrop;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ProvinciaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -38,7 +42,17 @@ $this->params['breadcrumbs'][] = $this->title;
               'attribute'=>'pais_prov',
               'value' => function($data){
                    return $data->paisProv->des_pais;
-              }
+              },
+              'filter'=>ArrayHelper::map(Pais::find()->where(['status_pais' => 1])->orderBy(['des_pais'=>SORT_ASC])->asArray()->all(), 'id_pais', 'des_pais'),
+              'filterType' => GridView::FILTER_SELECT2,
+              'filterWidgetOptions' => [
+                  'language' => Yii::$app->language,
+                  'theme' => Select2::THEME_DEFAULT,
+                  'pluginOptions' => ['allowClear' => true],
+                  'pluginEvents' =>[],
+                  'options' => ['prompt' => ''],
+              ],
+              'width' => '20%'
             ],
             [
                 'class' => 'kartik\grid\BooleanColumn',
@@ -47,7 +61,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'width' => '10%'
             ],
             //'sucursal_prov',
-
             [
               'class' => '\kartik\grid\ActionColumn',
               'headerOptions' => ['style' => 'color:#337ab7'],

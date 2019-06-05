@@ -13,7 +13,7 @@ use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
 
 <div class="provincia-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientScript' => true]); ?>
     <div class="row">
       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
         <?= $form->field($model, 'des_prov',[

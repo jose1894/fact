@@ -41,7 +41,7 @@ class ClienteSearch extends Cliente
     public function search($params)
     {
         $query = Cliente::find();
-
+        $query->joinWith(['provClte','paisClte','deptoClte','dttoClte','condpClte','vendedorClte']);
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

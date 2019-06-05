@@ -7,8 +7,8 @@ return [
     'Disctrit / Parish ' => 'Distrito / Parroquia',
     'Input a name' => 'Ingrese un nombre',
     'Input a code' => 'Ingrese un código',
-    'Create country' => 'Crear pais',
-    'Country: <span class="label label-primary">{number}</span> {name}' => 'País: <span class="label label-primary">{number}</span> {name}',
-    'Country' => 'País',
-    'Update country: {<span class="label label-primary">{number}</span> {name}' => 'Actualizar país: <span class="label label-primary">{number}</span> {name}'
+    'Create district / parish' => 'Crear distrito / parroquia',
+    'District / Parish: <span class="label label-primary">{number}</span> {name}' => 'Distrito / Parroquia: <span class="label label-primary">{number}</span> {name}',
+    'District / Parish' => 'Distrito / Parroquia',
+    'Update district / parish: {<span class="label label-primary">{number}</span> {name}' => 'Actualizar distrito / parroquia: <span class="label label-primary">{number}</span> {name}'
 ];

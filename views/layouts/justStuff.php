@@ -5,11 +5,15 @@
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\assets\AdminLtePluginAsset;
+use app\assets\AdminLteInitAsset;
 use yii\web\View;
 use dmstr\web\AdminLteAsset;
 
-AdminLteAsset::register($this);
 AppAsset::register($this);
+AdminLteAsset::register($this);
+AdminLtePluginAsset::register($this);
+AdminLteInitAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

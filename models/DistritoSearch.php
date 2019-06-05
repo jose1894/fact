@@ -17,8 +17,9 @@ class DistritoSearch extends Distrito
     public function rules()
     {
         return [
-            [['id_dtto', 'depto_dtto', 'status_dtto', 'sucursal_dtto'], 'integer'],
-            [['des_dtto'], 'safe'],
+            [['id_dtto', 'status_dtto', 'sucursal_dtto','pais_dtto','prov_dtto','depto_dtto'], 'integer'],
+            [['des_dtto','prov_dtto','pais_dtto'], 'safe'],
+            //[['prov_dtto','pais_dtto','depto_dtto'], 'string'],
         ];
     }
 
@@ -41,12 +42,14 @@ class DistritoSearch extends Distrito
     public function search($params)
     {
         $query = Distrito::find();
+        $query->joinWith(['provDtto','paisDtto','deptoDtto']);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
 
         $this->load($params);
 
@@ -59,13 +62,14 @@ class DistritoSearch extends Distrito
         // grid filtering conditions
         $query->andFilterWhere([
             'id_dtto' => $this->id_dtto,
+            'pais_dtto' => $this->pais_dtto,
+            'prov_dtto' => $this->prov_dtto,
             'depto_dtto' => $this->depto_dtto,
             'status_dtto' => $this->status_dtto,
             'sucursal_dtto' => $this->sucursal_dtto,
         ]);
 
         $query->andFilterWhere(['like', 'des_dtto', $this->des_dtto]);
-
         return $dataProvider;
     }
 }

@@ -14,7 +14,14 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+
     'components' => [
+        'formatter' => [
+             'thousandSeparator' => ',',
+             'currencyCode' => 'S',
+              'dateFormat' => 'dd/mm/yyyy',
+              'decimalSeparator' => '.',
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => '9fRwORR3FnWoOKVCtAHWK2vWzr2IQjQk',
@@ -24,7 +31,9 @@ $config = [
         ],
         'user' => [
             'identityClass' => 'app\models\User',
+            //'identityClass' => 'mdm\admin\models\User',
             'enableAutoLogin' => true,
+            //'enableAutoLogin' => 'admin/user/login'
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -66,10 +75,13 @@ $config = [
                   'dmstr\web\AdminLteAsset' => [
                       'skin' => 'skin-red',
                   ],
-                  
+
               ],
           ],
           'i18n' => $i18n,
+          'authManager' => [
+            'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\DbManager'
+          ]
     ],
     'modules' =>[
       'gridview' =>  [
@@ -79,8 +91,35 @@ $config = [
           // message source
           // 'downloadAction' => 'gridview/export/download',
           // 'i18n' => []
+      ],
+      'admin' => [
+            'class' => 'mdm\admin\Module',
+            'mainLayout' => '@app/views/layouts/main.php',
+            'layout' => 'left-menu',
+            'menus' => [
+                'assignment' => [
+                    'label' => 'Grant Access' // change label
+                ],
+                'route' => null, // disable menu
+            ],
       ]
+
     ],
+    /*'as access' => [
+        'class' => 'mdm\admin\components\AccessControl',
+        'allowActions' => [
+            'site/*',
+            'admin/*',
+            'some-controller/some-action',
+            'gii/*'
+            // The actions listed here will be allowed to everyone including guests.
+            // So, 'admin/*' should not appear here in the production, of course.
+            // But in the earlier stages of your development, you may probably want to
+            // add a lot of actions here until you finally completed setting up rbac,
+            // otherwise you may not even take a first step.
+        ]
+    ],*/
+
     'params' => $params,
 ];
 

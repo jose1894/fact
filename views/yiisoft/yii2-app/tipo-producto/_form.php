@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-//use yii\widgets\ActiveForm;
 use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
 
 /* @var $this yii\web\View */
@@ -10,7 +9,6 @@ use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
 ?>
 
 <div class="tipo-producto-form">
-
     <?php $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientScript' => true]); ?>
     <div class="row">
       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
@@ -26,7 +24,5 @@ use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
           ['custom' => true, 'prompt' => Yii::t('app','Select...')])  ?>
       </div>
     </div>
-    
     <?php ActiveForm::end(); ?>
-
 </div>

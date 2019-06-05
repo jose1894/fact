@@ -1,4 +1,5 @@
 $( document ).ready( function( e ){
+
   var form = $( frame ).contents().find('form');
 
   $( 'body' ).on('click', buttonCreate, function ( e ) {
@@ -9,12 +10,13 @@ $( document ).ready( function( e ){
     $( modal ).modal({
       backdrop: 'static',
       keyboard: false,
-      height: '10%',
     });
     $( modal ).modal("show");
   });
 
-  $( 'body' ).on( 'click', buttonSubmit, function(){
+  $( 'body' ).on( 'click', buttonSubmit, function( e ){
+    e.preventDefault();
+    e.stopPropagation();
     var $form = $( frame ).contents().find('form');
 
       $.ajax( {
@@ -27,18 +29,45 @@ $( document ).ready( function( e ){
           {
             swal(data.title, data.message, data.type);
             window.parent.$.pjax.reload( { container: '#grid' } );
-            $( $form ).trigger( 'reset' );
+
+            if ( $( $form ).attr('action').indexOf('create') != -1)
+            {
+              $( $form ).trigger( 'reset' );
+            }
+
+            $selects = window.frames[0].$($form).find('select');
+
+            if ( $selects.length )
+              $selects.trigger( 'change' );
+
             return;
           }
-          else if ( data.success === false )
-          {
-            swal(data.title, data.message, data.type);
-            return ;
-          }
+
           window.frames[0].$( $form ).yiiActiveForm( 'updateMessages', data);
+        },
+        error: function(data) {
+            let message;
+
+            if ( data.responseJSON )
+            {
+              let error = data.responseJSON;
+              message =   "Se ha encontrado un error: " +
+                "\n\nCode " + error.code +
+                "\n\nFile: " + error.file +
+                "\n\nLine: " + error.line +
+                "\n\nName: " + error.name +
+                "\n Message: " + error.message;
+            }
+            else
+            {
+                message = data.responseText;
+            }
+
+            swal('Oops!!!',message,"error" );
         }
       });
   });
+
 
   $( 'body' ).on( 'click', buttonCancel, function(){
     $( frame ).attr( 'src', 'about:blank' );
@@ -80,10 +109,30 @@ $( document ).ready( function( e ){
                 data: {id:id},
                 success: function (data) {
                     var res = $.parseJSON(data);
-                    if(res != false) {
+                    if(res !== false) {
                         swal(title, succMessage, "success")
                         window.parent.$.pjax.reload( { container: '#grid' } )
                     }
+                },
+                error: function(data) {
+                    let message;
+
+                    if ( data.responseJSON )
+                    {
+                      let error = data.responseJSON;
+                      message =   "Se ha encontrado un error: " +
+                        "\n\nCode " + error.code +
+                        "\n\nFile: " + error.file +
+                        "\n\nLine: " + error.line +
+                        "\n\nName: " + error.name +
+                        "\n Message: " + error.message;
+                    }
+                    else
+                    {
+                        message = data.responseText;
+                    }
+
+                    swal('Oops!!!',message,"error" );
                 }
             });
         }
@@ -118,8 +167,20 @@ $( document ).ready( function( e ){
     $( modal ).modal("show");
   });
 
-  $( 'body' ).on("show.bs.modal",".modal-wide", function() {
-    var height = $(window).height() - 200;
+  $( 'body' ).on("show.bs.modal","#frame", function() {
+    let height = $(window).height() - 200;
     $(this).find(".modal-body").css("max-height", height);
   });
+
 });
+
+function errorsCode( error ){
+  let message ="";
+  switch (error) {
+    case 1451:
+      message = "Verifique que no existan registros dependientes del registro que intenta eliminar";
+      break;
+  }
+
+  return message;
+}

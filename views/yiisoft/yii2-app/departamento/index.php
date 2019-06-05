@@ -7,6 +7,11 @@ use yii\helpers\Url;
 use yii\web\View;
 use kartik\grid\GridView;
 use yii\web\JqueryAsset;
+use yii\helpers\ArrayHelper;
+use app\models\Pais;
+use app\models\Provincia;
+use kartik\select2\Select2;
+use kartik\depdrop\DepDrop;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\DepartamentoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -37,13 +42,33 @@ $this->params['breadcrumbs'][] = $this->title;
               'attribute'=>'pais_depto',
               'value' => function($data){
                    return $data->paisDepto->des_pais;
-              }
+              },
+              'filter'=>ArrayHelper::map(Pais::find()->where(['status_pais' => 1])->orderBy(['des_pais'=>SORT_ASC])->asArray()->all(), 'id_pais', 'des_pais'),
+              'filterType' => GridView::FILTER_SELECT2,
+              'filterWidgetOptions' => [
+                  'language' => Yii::$app->language,
+                  'theme' => Select2::THEME_DEFAULT,
+                  'pluginOptions' => ['allowClear' => true],
+                  'pluginEvents' =>[],
+                  'options' => ['prompt' => ''],
+              ],
+              'width' => '20%'
             ],
             [
               'attribute'=>'prov_depto',
               'value' => function($data){
                    return $data->provDepto->des_prov;
-              }
+              },
+              'filter'=>ArrayHelper::map(Provincia::find()->where(['pais_prov' => $searchModel->pais_depto,'status_prov' => 1])->asArray()->all(), 'id_prov', 'des_prov'),
+              'filterType' => GridView::FILTER_SELECT2,
+              'filterWidgetOptions' => [
+                  'language' => Yii::$app->language,
+                  'theme' => Select2::THEME_DEFAULT,
+                  'pluginOptions' => ['allowClear' => true],
+                  'pluginEvents' =>[],
+                  'options' => ['prompt' => ''],
+              ],
+              'width' => '10%'
             ],
             [
                 'class' => 'kartik\grid\BooleanColumn',

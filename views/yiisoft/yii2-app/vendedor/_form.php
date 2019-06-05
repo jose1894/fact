@@ -13,7 +13,7 @@ use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
 
 <div class="vendedor-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientScript' => true]); ?>
     <div class="row">
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
         <?= $form->field($model, 'dni_vend',[

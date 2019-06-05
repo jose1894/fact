@@ -8,6 +8,10 @@ use app\models\ClienteSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
+use yii\helpers\ArrayHelper;
+use kartik\widgets\ActiveForm;
+use yii\db\Query;
 
 /**
  * ClienteController implements the CRUD actions for Cliente model.
@@ -100,7 +104,7 @@ class ClienteController extends Controller
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         $return = [
                           'success' => true,
-                          'title' => Yii::t('cliente', 'Client'),
+                          'title' => Yii::t('cliente', 'Customer'),
                           'message' => Yii::t('app','Record has been saved successfully!'),
                           'type' => 'success'
                         ];
@@ -111,7 +115,7 @@ class ClienteController extends Controller
                     Yii::$app->response->format = Response::FORMAT_JSON;
                     $return = [
                       'success' => false,
-                      'title' => Yii::t('cliente', 'Client'),
+                      'title' => Yii::t('cliente', 'Customer'),
                       'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
                       'type' => 'error'
 
@@ -172,7 +176,7 @@ class ClienteController extends Controller
                           Yii::$app->response->format = Response::FORMAT_JSON;
                           $return = [
                             'success' => true,
-                            'title' => Yii::t('cliente', 'Client'),
+                            'title' => Yii::t('cliente', 'Customer'),
                             'message' => Yii::t('app','Record has been saved successfully!'),
                             'type' => 'success'
                           ];
@@ -182,7 +186,7 @@ class ClienteController extends Controller
                       Yii::$app->response->format = Response::FORMAT_JSON;
                       $return = [
                         'success' => false,
-                        'title' => Yii::t('cliente', 'Client'),
+                        'title' => Yii::t('cliente', 'Customer'),
                         'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
                         'type' => 'error'
 
@@ -218,7 +222,10 @@ class ClienteController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        if (Yii::$app->request->isAjax) {
+             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+             return true;
+         }
         return $this->redirect(['index']);
     }
 
@@ -236,5 +243,29 @@ class ClienteController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('ciente', 'The requested page does not exist.'));
+    }
+
+    public function actionClienteList($q = null, $id = null) {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $out = ['results' => ['id' => '', 'text' => '']];
+        if (!is_null($q)) {
+            $query = new Query;
+            $query->select(['c.id_clte as id','c.vendedor_clte as vendedor', 'c.nombre_clte AS text','c.direcc_clte', 'condp_clte as condp','CONCAT(dt.des_dtto,\' - \', dp.des_depto,\' - \',pr.des_prov, \' - \',p.des_pais) as \'geo\'','lista_clte as tpl'])
+                ->from(['cliente as c'])
+                ->join('inner join ', ['distrito as dt'],' c.dtto_clte = dt.id_dtto and dt.status_dtto = 1 ')
+                ->join('inner join ', ['provincia as pr'] ,' c.provi_cte = pr.id_prov and pr.status_prov = 1 ')
+                ->join('inner join ',['departamento as dp'],' c.depto_cte = dp.id_depto and dp.status_depto = 1 ')
+                ->join('inner join ',['pais as p'],' c.pais_cte = p.id_pais and p.status_pais = 1')
+                ->where('c.estatus_ctle = 1')
+                ->andWhere(['like', 'c.nombre_clte', $q])
+                ->limit(20);
+            $command = $query->createCommand();
+            $data = $command->queryAll();
+            $out['results'] = array_values($data);
+        }
+        elseif ($id > 0) {
+            $out['results'] = ['id' => $id, 'text' => Cliente::find($id)->nombre_clte];
+        }
+        return $out;
     }
 }

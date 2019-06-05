@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 
 <div class="empresa-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientScript' => true]); ?>
 
     <?= $form->field($model, 'id_empresa')->textInput() ?>
 

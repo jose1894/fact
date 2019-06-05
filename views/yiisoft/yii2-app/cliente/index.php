@@ -6,21 +6,24 @@ use yii\helpers\Url;
 use yii\web\View;
 use kartik\grid\GridView;
 use yii\web\JqueryAsset;
+use yii\helpers\ArrayHelper;
+use app\models\Provincia;
+use kartik\select2\Select2;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ClienteSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('cliente', 'Clients');
+$this->title = Yii::t('cliente', 'Customer');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="cliente-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(); ?>
+    <?php Pjax::begin(['id'=>'grid']); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('cliente', 'Create client'), ['create','asDialog' => 1], ['id'=>'create', 'class' => 'btn btn-flat btn-success']) ?>
+        <?= Html::a(Yii::t('cliente', 'Create customer'), ['create','asDialog' => 1], ['id'=>'create', 'class' => 'btn btn-flat btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -39,7 +42,29 @@ $this->params['breadcrumbs'][] = $this->title;
               'contentOptions' => ['class' => 'text-wrap'],
               'width' => '50%'
             ],
-            'vendedor_clte',
+            //'vendedor_clte',
+            [
+              'attribute'=>'provi_cte',
+              'value' => function($data){
+                   return $data->provClte->des_prov;
+              },
+              'filter'=>$searchModel->pais_cte,
+              'filterType' => GridView::FILTER_SELECT2,
+              'filterWidgetOptions' => [
+                  'language' => Yii::$app->language,
+                  'theme' => Select2::THEME_DEFAULT,
+                  'pluginOptions' => ['allowClear' => true],
+                  'pluginEvents' =>[],
+                  'options' => ['prompt' => ''],
+              ],
+              'width' => '20%'
+            ],
+            [
+                'class' => 'kartik\grid\BooleanColumn',
+                'attribute' => 'estatus_ctle',
+                'vAlign' => 'middle',
+                'width' => '10%'
+            ],
             //'direcc_clte:ntext',
             //'depto_cte',
             //'provi_cte',
@@ -59,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                   'title' => Yii::t('app', 'View'),
                                   'class' => 'pjax-view',
                                   'data' => [
-                                    'id' => $model->id_cliente,
+                                    'id' => $model->id_clte,
                                   ]
                       ]);
                   },
@@ -69,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                   'title' => Yii::t('app', 'Update'),
                                   'class' => 'pjax-update',
                                   'data' => [
-                                    'id' => $model->id_cliente,
+                                    'id' => $model->id_clte,
                                   ]
                       ]);
                   },
@@ -83,10 +108,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                       'method' => 'post',
                                       'pjax' => 0,
                                       'icon' => 'warning',
-                                      'title' => Yii::t('cliente', 'Cliente'),
+                                      'title' => Yii::t('cliente', 'Customer'),
                                       'ok' => Yii::t('app', 'Confirm'),
                                       'cancel' => Yii::t('app', 'Cancel'),
-                                      'id' => $model->id_cliente
+                                      'id' => $model->id_clte
                                   ],
                       ]);
                   }
@@ -94,16 +119,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'view') {
-                      $url ='index.php?r=cliente/view&id='.$model->id_cliente.'&asDialog=1';
+                      $url ='index.php?r=cliente/view&id='.$model->id_clte.'&asDialog=1';
                       return $url;
                   }
 
                   if ($action === 'update') {
-                      $url ='index.php?r=cliente/update&id='.$model->id_cliente."&asDialog=1";
+                      $url ='index.php?r=cliente/update&id='.$model->id_clte."&asDialog=1";
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url ='index.php?r=cliente/delete&id='.$model->id_cliente;
+                      $url ='index.php?r=cliente/delete&id='.$model->id_clte;
                       return $url;
                   }
 

@@ -221,7 +221,10 @@ class PaisController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        if (Yii::$app->request->isAjax) {
+             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+             return  true;
+        }
         return $this->redirect(['index']);
     }
 

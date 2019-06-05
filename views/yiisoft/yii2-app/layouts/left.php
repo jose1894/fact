@@ -40,8 +40,10 @@
                             ['label' => Yii::t('tipo_producto','Product types'), 'url' => ['/tipo-producto'], 'icon' => 'cube'],
                             ['label' => Yii::t('zona','Zone'), 'url' => ['/zona'], 'icon' => 'map-signs'],
                             ['label' => Yii::t('vendedor','Seller'), 'url' => ['/vendedor'], 'icon' => 'user'],
-                            ['label' => Yii::t('cliente','Clients'), 'url' => ['/cliente'], 'icon' => 'users'],
                             ['label' => Yii::t('condicionp','Payment condition'), 'url' => ['/cond-pago'], 'icon' => 'ticket'],
+                            ['label' => Yii::t('unidad_medida','Unit of measurement'), 'url' => ['/unidad-medida'], 'icon' => 'balance-scale'],
+                            ['label' => Yii::t('moneda','Currency'), 'url' => ['/moneda'], 'icon' => 'money'],
+                            ['label' => Yii::t('almacen','Warehouse'), 'url' => ['/almacen'], 'icon' => 'archive'],
                             ['label' => Yii::t('app', 'Ubication tables'), 'icon' => 'globe',
                                 'items' =>[
                                             ['label' => Yii::t('pais','Country'), 'url' => ['/pais'], 'icon' => 'ticket'],
@@ -51,8 +53,28 @@
                                           ]
                             ]
                           ]
-                        ]
+                        ],
+                        ['label' => Yii::t('cliente','Customer'), 'url' => ['/cliente'], 'icon' => 'users'],
+                        ['label' => Yii::t('proveedor','Supplier'), 'url' => ['/proveedor'], 'icon' => 'suitcase'],
+                        ['label' => Yii::t('producto','Product'), 'url' => ['/producto'], 'icon' => 'tags'],
                       ]
+                    ],
+                    ['label' => Yii::t('pedido','Purchase order').'s', 'url' => '#', 'icon' => 'inbox',
+                      'items' => [
+                        ['label' => Yii::t('pedido','Purchase order list'), 'url' => ['/pedido'],'icon' => 'desktop'],
+                        ['label' => Yii::t('pedido','Create purchase order'),'url' => ['/pedido/create'], 'icon' => 'plus-square'],
+                      ]
+                    ],
+                    ['label' => 'Usuarios', 'options' => ['class' => 'header']],
+                    [ 'label' => 'Administracion de usuarios', 'icon' => 'users',
+                     'items' => [
+                              [ 'label' => 'Usuarios', 'url' => ['/admin/user']],
+                              [ 'label' => 'Rutas', 'url' => ['/admin/route']],
+                              [ 'label' => 'Permisos', 'url' => ['/admin/permission']],
+                              [ 'label' => 'Menus', 'url' => ['/admin/menu']],
+                              [ 'label' => 'Roles', 'url' => ['/admin/role']],
+                              [ 'label' => 'Asignaciones', 'url' => ['/admin/assignment']],
+                      ],
                     ],
                     ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii']],
 

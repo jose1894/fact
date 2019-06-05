@@ -26,6 +26,14 @@ $config = [
             ],
         ],
         'db' => $db,
+        'authManager' => [
+          'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\DbManager'
+        ],
+        /*'user' => [
+            'class' => 'mdm\admin\models\User',
+            'identityClass' => 'mdm\admin\models\User',
+            'loginUrl' => ['admin/user/login'],
+        ]*/
     ],
     'params' => $params,
     /*

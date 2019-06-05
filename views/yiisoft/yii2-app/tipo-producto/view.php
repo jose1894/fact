@@ -6,7 +6,10 @@ use kartik\detail\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\TipoProducto */
 
-$this->title = Yii::t('tipo_producto','Product type: <span class="label label-primary">{number}</span> {name}',[ 'number' => $model->id_tpdcto, 'name' => $model->desc_tpdcto]);
+$this->title = Yii::t('tipo_producto','Product type: <span class="label label-primary">{number}</span> {name}',[
+  'number' => $model->id_tpdcto,
+  'name' => $model->desc_tpdcto
+]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('tipo_producto', 'Product types'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -19,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
       </h3>
     </div>
     <div class="box-body">
-        <div class="container-fluid">          
+        <div class="container-fluid">
 
           <?= DetailView::widget([
               'model' => $model,

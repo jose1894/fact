@@ -33,8 +33,9 @@ class Sucursal extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nombre_suc','estatus_suc'], 'required'],
+            [['nombre_suc','impuesto_suc','estatus_suc'], 'required'],
             [['id_suc', 'estatus_suc', 'empresa_suc'], 'integer'],
+            [['impuesto_suc'], 'number'],
             [['nombre_suc'], 'string', 'max' => 50],
             [['id_suc'], 'unique'],
         ];
@@ -49,6 +50,7 @@ class Sucursal extends \yii\db\ActiveRecord
             'id_suc' => Yii::t('sucursal', 'Id'),
             'nombre_suc' => Yii::t('sucursal', 'Name'),
             'estatus_suc' => Yii::t('sucursal', 'Status'),
+            'impuesto_suc' => Yii::t('sucursal', 'Taxes'),
             'empresa_suc' => Yii::t('sucursal', 'Company'),
         ];
     }

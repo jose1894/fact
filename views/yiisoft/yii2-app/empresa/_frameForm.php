@@ -172,12 +172,17 @@ $this->registerJs($js,View::POS_LOAD);
                                             }
                                         ?>
                                         <div class="row">
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-4">
                                                 <?= $form->field($modelSucursal, "[{$index}]nombre_suc",[
                                                   'addClass' => 'form-control '
                                                   ])->textInput(['maxlength' => true]) ?>
                                             </div>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-4">
+                                                <?= $form->field($modelSucursal, "[{$index}]impuesto_suc",[
+                                                  'addClass' => 'form-control '
+                                                  ])->textInput(['type' => 'number','maxlength' => true,'style' => ['text-align' => 'right']]) ?>
+                                            </div>
+                                            <div class="col-sm-4">
                                                 <?= $form->field($modelSucursal, "[{$index}]estatus_suc",[
                                                   'addClass' => 'form-control '
                                                   ])->dropDownList([1 => 'Activo', 0 => 'Inactivo'], ['prompt' => Yii::t('app','Select...')]) ?>

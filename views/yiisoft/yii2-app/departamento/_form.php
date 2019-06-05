@@ -17,7 +17,7 @@ use yii\helpers\Url;
 
 <div class="departamento-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientScript' => true]); ?>
     <div class="row">
       <div class="form-group">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -46,17 +46,11 @@ use yii\helpers\Url;
             ->orderBy('des_prov')
             ->all();
             $provs = ArrayHelper::map($provs,'id_prov','des_prov');
-
-          /*  $data =[];
-
-            if ( $model->prov_depto )
-              $data = [$model->prov_depto => $model->provDepto->des_prov];
-*/
+            echo Html::hiddenInput('departamento-selected_provincia', $model->prov_depto, ['id' => 'departamento-selected_provincia']);
             ?>
             <?= $form->field($model, 'prov_depto',[
               'addClass' => 'form-control'
               ])->widget(DepDrop::classname(), [
-                  //'data' => $data,
                   'options' => ['placeholder' => Yii::t('app','Select...')],
                   'type' => DepDrop::TYPE_SELECT2,
                   'select2Options' => [
@@ -65,20 +59,13 @@ use yii\helpers\Url;
                       'theme' => Select2::THEME_DEFAULT,
                       'pluginOptions' => ['allowClear' => true],
                       'pluginEvents' =>[]
-                        /*  [
-                            "select2:select" => 'function() {
-                              $("#departamento-des_depto").attr("readonly",false)
-                            }',
-                            "select2:unselect" => 'function() {
-                              $("#departamento-des_depto").attr("readonly",true)
-                            }'
-                          ],*/
-
                   ],
                   'pluginOptions' => [
+                      'initialize' => true,
                       'depends' => ['departamento-pais_depto'],
                       'url' => Url::to(['/provincia/provincias']),
                       'loadingText' => Yii::t('provincia','Loading provinces').'...',
+                      'params' => ['departamento-selected_provincia']
                   ]
               ])?>
           </div>

@@ -10,6 +10,14 @@ return [
                 'app/error' => 'error.php',
             ],
         ],
+        'almacen' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+                'almacen' => 'almacen.php',
+            ],
+        ],
         'cliente' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',
@@ -50,12 +58,52 @@ return [
                 'empresa' => 'empresa.php',
             ],
         ],
+        'moneda' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+                'moneda' => 'moneda.php',
+            ],
+        ],
+        'lista_precios' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+                'lista_precios' => 'lista_precios.php',
+            ],
+        ],
         'pais' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',
             'sourceLanguage' => 'en-US',
             'fileMap' => [
               'pais' => 'pais.php',
+            ],
+        ],
+        'pedido' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'pedido' => 'pedido.php',
+            ],
+        ],
+        'producto' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'producto' => 'producto.php',
+            ],
+        ],
+        'proveedor' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'proveedor' => 'proveedor.php',
             ],
         ],
         'provincia' => [
@@ -80,6 +128,30 @@ return [
             'sourceLanguage' => 'en-US',
             'fileMap' => [
               'tipo_producto' => 'tipoProducto.php',
+            ],
+        ],
+        'tipo_proveedor' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'tipo_proveedor' => 'tipoproveedor.php',
+            ],
+        ],
+        'tipo_listap' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'tipo_listap' => 'tipo_listap.php',
+            ],
+        ],
+        'unidad_medida' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'unidad_medida' => 'unidadmedida.php',
             ],
         ],
         'vendedor' => [

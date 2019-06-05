@@ -18,9 +18,8 @@ class ProvinciaSearch extends Provincia
     public function rules()
     {
         return [
-            [['id_prov', 'status_prov', 'sucursal_prov'], 'integer'],
+            [['id_prov', 'status_prov', 'sucursal_prov','pais_prov'], 'integer'],
             [['des_prov','pais_prov'], 'safe'],
-            [['pais_prov'], 'string'],
         ];
     }
 
@@ -52,10 +51,6 @@ class ProvinciaSearch extends Provincia
             'query' => $query,
         ]);
 
-        $dataProvider->sort->attributes['paisProv.des_pais'] = [
-           'asc' => ['pais.des_pais' => SORT_ASC],
-           'desc' => ['pais.des_pais' => SORT_DESC],
-       ];
 
         $this->load($params);
 
@@ -70,11 +65,10 @@ class ProvinciaSearch extends Provincia
             'id_prov' => $this->id_prov,
             'status_prov' => $this->status_prov,
             'sucursal_prov' => $this->sucursal_prov,
-            //'pais_prov' => $this->pais_prov,
+            'pais_prov' => $this->pais_prov,
         ]);
 
-        $query->andFilterWhere(['like', 'des_prov', $this->des_prov])
-              ->andFilterWhere(['like', 'pais.des_pais', $this->pais_prov]);
+        $query->andFilterWhere(['like', 'des_prov', $this->des_prov]);
 
         return $dataProvider;
     }

@@ -33,6 +33,7 @@ class ProvinciaController extends Controller
         ];
     }
 
+
     /**
      * Lists all Provincia models.
      * @return mixed
@@ -219,9 +220,14 @@ class ProvinciaController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+      $this->findModel($id)->delete();
+      if (Yii::$app->request->isAjax) {
+           Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+           return  true;
+       }
+
+      return $this->redirect(['index']);
     }
 
     /**
@@ -241,24 +247,61 @@ class ProvinciaController extends Controller
     }
 
     public function actionProvincias() {
+      Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+      $out = [];
+      if (isset($_POST['depdrop_parents'])) {
+          $parents = $_POST['depdrop_parents'];
+          if ($parents != null) {
+              $cat_id = $parents[0];
+              $param1 = null;
+              $param2 = null;
+              //var_dump( $_POST['depdrop_params'] );
+              //exit();
+              if (!empty($_POST['depdrop_params'])) {
+                  $params = $_POST['depdrop_params'];
+                  $param1 = $params[0]; // get the value of input-type-1
+                  //$param2 = $params[1]; // get the value of input-type-2
+              }
+
+              $out = self::getProvincias($cat_id);
+
+              $selected = self::getSelectedProv($cat_id,$param1);
+              // the getDefaultSubCat function will query the database
+              // and return the default sub cat for the cat_id
+
+              return ['output' => $out, 'selected' => $selected];
+          }
+      }
+      return ['output' => '', 'selected' => ''];
+   }
+
+    public static function getProvincias($cat_id) {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $out = [];
-        if (isset($_POST['depdrop_parents'])) {
-            $id = end($_POST['depdrop_parents']);
-            $list = Provincia::find()->andWhere(['pais_prov' => $id])->asArray()->all();
-            $selected  = null;
-            if ($id != null && count($list) > 0) {
-                $selected = '';
-                foreach ($list as $i => $account) {
-                    $out[] = ['id' => $account['id_prov'], 'name' => $account['des_prov']];
-                    if ($i == 0) {
-                        $selected = $account['id_prov'];
-                    }
-                }
-                // Shows how you can preselect a value
-                return ['output' => $out, 'selected' => $selected];
+        $list = Provincia::find()->andWhere(['pais_prov' => $cat_id])->asArray()->all();
+
+        if (count($list) > 0) {
+            foreach ($list as $i => $provincias) {
+                $out[] = ['id' => $provincias['id_prov'], 'name' => $provincias['des_prov']];
             }
+            return $out ;
         }
-        return ['output' => '', 'selected' => ''];
+
+        return [];
+    }
+
+    public static function getSelectedProv($cat_id,$param1) {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $out = [];
+        $list = Provincia::find()->andWhere(['pais_prov' => $cat_id, 'id_prov' => $param1])->asArray()->all();
+
+        if (count($list) > 0) {
+            foreach ($list as $i => $provincias) {
+                $selected[] = ['id' => $provincias['id_prov'], 'name' => $provincias['des_prov']];
+            }
+            return $selected ;
+        }
+
+        return [];
     }
 }

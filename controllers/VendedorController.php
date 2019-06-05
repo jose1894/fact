@@ -39,7 +39,7 @@ class VendedorController extends Controller
     public function actionIndex()
     {
         $searchModel = new VendedorSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);        
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -218,7 +218,28 @@ class VendedorController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $transaction = \Yii::$app->db->beginTransaction();
+        try {
+                 $this->findModel($id)->delete();
+                 $transaction->commit();
+
+         } catch (Exception $e) {
+             $transaction->rollBack();
+             Yii::$app->response->format = Response::FORMAT_JSON;
+             $return = [
+               'success' => false,
+               'title' => Yii::t('vendedor', 'Seller'),
+               'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+               'type' => 'error'
+
+             ];
+             echo $return;
+         }
+
+         if (Yii::$app->request->isAjax) {
+              Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+              return  true;
+          }
 
         return $this->redirect(['index']);
     }

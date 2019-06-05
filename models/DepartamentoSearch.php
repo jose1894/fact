@@ -17,9 +17,9 @@ class DepartamentoSearch extends Departamento
     public function rules()
     {
         return [
-            [['id_depto', 'status_depto', 'sucursal_depto'], 'integer'],
+            [['id_depto', 'status_depto', 'sucursal_depto','prov_depto','pais_depto'], 'integer'],
             [['des_depto','prov_depto','pais_depto'], 'safe'],
-            [['prov_depto','pais_depto'], 'string'],
+
         ];
     }
 
@@ -51,16 +51,6 @@ class DepartamentoSearch extends Departamento
             'query' => $query,
         ]);
 
-        $dataProvider->sort->attributes['provDepto.des_prov'] = [
-           'asc' => ['provincia.des_prov' => SORT_ASC],
-           'desc' => ['provincia.des_prov' => SORT_DESC],
-       ];
-
-      $dataProvider->sort->attributes['paisDepto.des_pais'] = [
-           'asc' => ['pais.des_pais' => SORT_ASC],
-           'desc' => ['pais.des_pais' => SORT_DESC],
-       ];
-
         $this->load($params);
 
         if (!$this->validate()) {
@@ -72,14 +62,13 @@ class DepartamentoSearch extends Departamento
         // grid filtering conditions
         $query->andFilterWhere([
             'id_depto' => $this->id_depto,
-            //'prov_depto' => $this->prov_depto,
+            'prov_depto' => $this->prov_depto,
+            'pais_depto' => $this->pais_depto,
             'status_depto' => $this->status_depto,
             'sucursal_depto' => $this->sucursal_depto,
         ]);
 
-        $query->andFilterWhere(['like', 'des_depto', $this->des_depto])
-              ->andFilterWhere(['like', 'provincia.des_prov', $this->prov_depto])
-              ->andFilterWhere(['like', 'pais.des_pais', $this->pais_depto]);
+        $query->andFilterWhere(['like', 'des_depto', $this->des_depto]);
 
         return $dataProvider;
     }

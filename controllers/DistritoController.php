@@ -8,6 +8,9 @@ use app\models\DistritoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
+use yii\helpers\ArrayHelper;
+use kartik\widgets\ActiveForm;
 
 /**
  * DistritoController implements the CRUD actions for Distrito model.
@@ -52,6 +55,10 @@ class DistritoController extends Controller
      */
     public function actionView($id)
     {
+        if (Yii::$app->request->get('asDialog'))
+        {
+          $this->layout = 'justStuff';
+        }
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -65,14 +72,67 @@ class DistritoController extends Controller
     public function actionCreate()
     {
         $model = new Distrito();
+        if (Yii::$app->request->get('asDialog'))
+        {
+          $this->layout = 'justStuff';
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_dtto]);
+          if ($model->load(Yii::$app->request->post())) {
+
+            $valid = $model->validate();
+
+            // ajax validation
+            if (!$valid)
+            {
+                if (Yii::$app->request->isAjax) {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ActiveForm::validate($model);
+
+                }
+            }
+            else
+            {
+                $transaction = \Yii::$app->db->beginTransaction();
+                try {
+                        $model->save();
+                        $transaction->commit();
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        $return = [
+                          'success' => true,
+                          'title' => Yii::t('distrito', 'District / Parish'),
+                          'message' => Yii::t('app','Record has been saved successfully!'),
+                          'type' => 'success'
+                        ];
+                        return $return;
+
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    $return = [
+                      'success' => false,
+                      'title' => Yii::t('distrito', 'District / Parish'),
+                      'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                      'type' => 'error'
+
+                    ];
+                    return $return;
+                }
+            }
+          }
+
+          return $this->render('create', [
+              'model' => $model,
+          ]);
         }
+        else
+        {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id_depto]);
+            }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**
@@ -85,14 +145,66 @@ class DistritoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        if ( Yii::$app->request->get( 'asDialog' ) )
+        {
+          $this->layout = "justStuff";
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_dtto]);
+          if ($model->load(Yii::$app->request->post())) {
+
+              $valid = $model->validate();
+
+              // ajax validation
+              if (!$valid)
+              {
+                  if (Yii::$app->request->isAjax) {
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      return ActiveForm::validate($model);
+
+                  }
+              }
+              else
+              {
+                  $transaction = \Yii::$app->db->beginTransaction();
+                  try {
+                          $model->save();
+                          $transaction->commit();
+                          Yii::$app->response->format = Response::FORMAT_JSON;
+                          $return = [
+                            'success' => true,
+                            'title' => Yii::t('distrito', 'District / Parish'),
+                            'message' => Yii::t('app','Record has been saved successfully!'),
+                            'type' => 'success'
+                          ];
+                          return $return;
+                  } catch (Exception $e) {
+                      $transaction->rollBack();
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      $return = [
+                        'success' => false,
+                        'title' => Yii::t('distrito', 'District / Parish'),
+                        'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                        'type' => 'error'
+
+                      ];
+                      return $return;
+                  }
+              }
+          }
+
+          return $this->render('update', [
+              'model' => $model,
+          ]);
         }
+        else
+        {
+          if ($model->load(Yii::$app->request->post()) && $model->save()) {
+              return $this->redirect(['view', 'id' => $model->id_depto]);
+          }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+          return $this->render('update', [
+              'model' => $model,
+          ]);
+        }
     }
 
     /**
@@ -105,7 +217,10 @@ class DistritoController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        if (Yii::$app->request->isAjax) {
+           Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+           return  true;
+       }
         return $this->redirect(['index']);
     }
 
@@ -123,5 +238,64 @@ class DistritoController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('distrito', 'The requested page does not exist.'));
+    }
+
+    public function actionDistritos() {
+      Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+      $out = [];
+      if (isset($_POST['depdrop_parents'])) {
+          $parents = $_POST['depdrop_parents'];
+          if ($parents != null) {
+              $cat_id = $parents[0];
+              $param1 = null;
+              $param2 = null;
+              //var_dump( $_POST['depdrop_params'] );
+              //exit();
+              if (!empty($_POST['depdrop_params'])) {
+                  $params = $_POST['depdrop_params'];
+                  $param1 = $params[0]; // get the value of input-type-1
+                  //$param2 = $params[1]; // get the value of input-type-2
+              }
+
+              $out = self::getDistritos($cat_id);
+
+              $selected = self::getSelectedDttos($cat_id,$param1);
+              // the getDefaultSubCat function will query the database
+              // and return the default sub cat for the cat_id
+
+              return ['output' => $out, 'selected' => $selected];
+          }
+      }
+      return ['output' => '', 'selected' => ''];
+   }
+
+    public static function getDistritos($cat_id) {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $out = [];
+        $list = Distrito::find()->andWhere(['depto_dtto' => $cat_id])->asArray()->all();
+      //  echo $list->createCommand()->getRawSql();
+        if (count($list) > 0) {
+            foreach ($list as $i => $distrito) {
+                $out[] = ['id' => $distrito['id_dtto'], 'name' => $distrito['des_dtto']];
+            }
+            return $out ;
+        }
+
+        return [];
+    }
+
+    public static function getSelectedDttos($cat_id,$param1) {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $selected = [];
+        $list = Distrito::find()->andWhere(['depto_dtto' => $cat_id,'id_dtto' => $param1 ])->asArray()->all();
+
+        if (count($list) > 0) {
+            foreach ($list as $i => $distrito) {
+                $selected[] = ['id' => $distrito['id_dtto'], 'name' => $distrito['des_dtto']];
+            }
+            return $selected ;
+        }
+
+        return [];
     }
 }

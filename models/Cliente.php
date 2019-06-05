@@ -40,13 +40,19 @@ class Cliente extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['dni_clte', 'ruc_clte', 'nombre_clte', 'direcc_clte', 'pais_cte', 'depto_cte', 'provi_cte', 'dtto_clte', 'tlf_ctle', 'vendedor_clte', 'estatus_ctle', 'condp_clte', 'sucursal_clte'], 'required'],
+            [[ 'nombre_clte', 'direcc_clte','vendedor_clte', 'estatus_ctle', 'condp_clte','lista_clte'], 'required'],
             [['direcc_clte'], 'string'],
-            [['pais_cte', 'depto_cte', 'provi_cte', 'dtto_clte', 'vendedor_clte', 'estatus_ctle', 'condp_clte', 'sucursal_clte'], 'integer'],
+            [['pais_cte', 'depto_cte', 'provi_cte', 'dtto_clte', 'vendedor_clte', 'estatus_ctle', 'lista_clte','condp_clte', 'sucursal_clte'], 'integer'],
             [['dni_clte', 'ruc_clte'], 'string', 'max' => 20],
             [['nombre_clte'], 'string', 'max' => 150],
             [['tlf_ctle'], 'string', 'max' => 100],
             [['vendedor_clte'], 'exist', 'skipOnError' => true, 'targetClass' => Vendedor::className(), 'targetAttribute' => ['vendedor_clte' => 'id_vendedor']],
+            [['pais_cte'], 'exist', 'skipOnError' => true, 'targetClass' => Pais::className(), 'targetAttribute' => ['pais_cte' => 'id_pais']],
+            [['provi_cte'], 'exist', 'skipOnError' => true, 'targetClass' => Provincia::className(), 'targetAttribute' => ['provi_cte' => 'id_prov']],
+            [['depto_cte'], 'exist', 'skipOnError' => true, 'targetClass' => Departamento::className(), 'targetAttribute' => ['depto_cte' => 'id_depto']],
+            [['dtto_clte'], 'exist', 'skipOnError' => true, 'targetClass' => Distrito::className(), 'targetAttribute' => ['dtto_clte' => 'id_dtto']],
+            [['condp_clte'], 'exist', 'skipOnError' => true, 'targetClass' => CondPago::className(), 'targetAttribute' => ['condp_clte' => 'id_condp']],
+            [['lista_clte'], 'exist', 'skipOnError' => true, 'targetClass' => ListaPrecios::className(), 'targetAttribute' => ['lista_clte' => 'id_lista']],
         ];
     }
 
@@ -56,19 +62,20 @@ class Cliente extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_clte' => Yii::t('cliente', 'Id Clte'),
-            'dni_clte' => Yii::t('cliente', 'Dni Clte'),
-            'ruc_clte' => Yii::t('cliente', 'Ruc Clte'),
-            'nombre_clte' => Yii::t('cliente', 'Nombre Clte'),
-            'direcc_clte' => Yii::t('cliente', 'Direcc Clte'),
-            'pais_cte' => Yii::t('cliente', 'Pais Cte'),
-            'depto_cte' => Yii::t('cliente', 'Depto Cte'),
-            'provi_cte' => Yii::t('cliente', 'Provi Cte'),
-            'dtto_clte' => Yii::t('cliente', 'Dtto Clte'),
-            'tlf_ctle' => Yii::t('cliente', 'Tlf Ctle'),
-            'vendedor_clte' => Yii::t('cliente', 'Vendedor Clte'),
-            'estatus_ctle' => Yii::t('cliente', 'Estatus Ctle'),
-            'condp_clte' => Yii::t('cliente', 'Condp Clte'),
+            'id_clte' => Yii::t('cliente', 'Id'),
+            'dni_clte' => Yii::t('cliente', 'Dni'),
+            'ruc_clte' => Yii::t('cliente', 'Ruc'),
+            'nombre_clte' => Yii::t('cliente', 'Name'),
+            'direcc_clte' => Yii::t('cliente', 'Address'),
+            'pais_cte' => Yii::t('pais', 'Country'),
+            'depto_cte' => Yii::t('departamento', 'Department / County / Municipality'),
+            'provi_cte' => Yii::t('provincia', 'Estate / Province'),
+            'dtto_clte' => Yii::t('distrito', 'District / Parish'),
+            'tlf_ctle' => Yii::t('cliente', 'Phone'),
+            'vendedor_clte' => Yii::t('vendedor', 'Seller'),
+            'estatus_ctle' => Yii::t('cliente', 'Status'),
+            'condp_clte' => Yii::t('condicionp', 'Payment condition'),
+            'lista_clte' => Yii::t('tipo_listap','List price type'),
             'sucursal_clte' => Yii::t('cliente', 'Sucursal Clte'),
         ];
     }
@@ -79,5 +86,53 @@ class Cliente extends \yii\db\ActiveRecord
     public function getVendedorClte()
     {
         return $this->hasOne(Vendedor::className(), ['id_vendedor' => 'vendedor_clte']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPaisClte()
+    {
+        return $this->hasOne(Pais::className(), ['id_pais' => 'pais_cte']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProvClte()
+    {
+        return $this->hasOne(Provincia::className(), ['id_prov' => 'provi_cte']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDeptoClte()
+    {
+        return $this->hasOne(Departamento::className(), ['id_depto' => 'depto_cte']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDttoClte()
+    {
+        return $this->hasOne(Distrito::className(), ['id_dtto' => 'dtto_clte']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCondpClte()
+    {
+        return $this->hasOne(CondPago::className(), ['id_condp' => 'condp_clte']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTipoListaP()
+    {
+        return $this->hasOne(TipoListaP::className(), ['id_lista' => 'lista_clte']);
     }
 }
