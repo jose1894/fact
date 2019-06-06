@@ -43,6 +43,7 @@ class Pedido extends \yii\db\ActiveRecord
             [['fecha_pedido'], 'safe'],
             [['clte_pedido', 'vend_pedido', 'moneda_pedido', 'almacen_pedido', 'usuario_pedido', 'condp_pedido', 'estatus_pedido', 'tipo_pedido', 'sucursal_pedido'], 'integer'],
             [['cod_pedido'], 'string', 'max' => 7],
+            [['nrodoc_pedido'], 'string', 'max' => 12],
             [['cod_pedido'], 'unique'],
             [['clte_pedido'], 'exist', 'skipOnError' => true, 'targetClass' => Cliente::className(), 'targetAttribute' => ['clte_pedido' => 'id_clte']],
             [['vend_pedido'], 'exist', 'skipOnError' => true, 'targetClass' => Vendedor::className(), 'targetAttribute' => ['vend_pedido' => 'id_vendedor']],
@@ -59,6 +60,7 @@ class Pedido extends \yii\db\ActiveRecord
         return [
             'id_pedido' => Yii::t('pedido', 'Id'),
             'cod_pedido' => Yii::t('pedido', 'Code'),
+            'nrodoc_pedido' => Yii::t('pedido', 'N Doc'),
             'fecha_pedido' => Yii::t('pedido', 'Date'),
             'clte_pedido' => Yii::t('cliente', 'Customer'),
             'vend_pedido' => Yii::t('vendedor', 'Seller'),

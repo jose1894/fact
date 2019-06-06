@@ -62,7 +62,6 @@
                     ['label' => Yii::t('pedido','Purchase order').'s', 'url' => '#', 'icon' => 'inbox',
                       'items' => [
                         ['label' => Yii::t('pedido','Purchase order list'), 'url' => ['/pedido'],'icon' => 'desktop'],
-                        ['label' => Yii::t('pedido','Create purchase order'),'url' => ['/pedido/create'], 'icon' => 'plus-square'],
                       ]
                     ],
                     ['label' => 'Usuarios', 'options' => ['class' => 'header']],

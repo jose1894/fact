@@ -32,17 +32,16 @@ if ( $model->isNewRecord ) {
     <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true]); ?>
     <div class="row">
       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-        <?= $form->field($model, 'cod_pedido',['addClass' => 'form-control input-sm'])->textInput(['maxlength' => true,'readonly' => true]) ?>
+        <?= $form->field($model, 'cod_pedido',['addClass' => 'form-control '])->textInput(['maxlength' => true,'readonly' => true]) ?>
       </div>
 
       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
         <?php
           $model->fecha_pedido = date('d/m/Y');
           echo $form->field($model, 'fecha_pedido',[
-            'addClass' => 'form-control input-sm',
+            'addClass' => 'form-control ',
           ])->widget(DatePicker::classname(),[
                 'value' => date('d/m/Y'),
-                'size' => 'sm',
                 'type' => DatePicker::TYPE_COMPONENT_APPEND,
                 'pluginOptions' => [
                     'format' => 'dd/mm/yyyy',
@@ -58,11 +57,11 @@ if ( $model->isNewRecord ) {
         $cliente = empty($model->clte_pedido) ? '' : Cliente::findOne($model->clte_pedido)->nombre_clte;
 
         echo $form->field($model, 'clte_pedido',[
-          'addClass' => 'form-control input-sm',
+          'addClass' => 'form-control ',
           'hintType' => ActiveField::HINT_SPECIAL
           ])->widget(Select2::classname(), [
             'language' => Yii::$app->language,
-            'size' => Select2::SMALL,
+
             'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-users"></i>']],
             'initValueText' => $cliente, // set the initial display text
             'options' => ['placeholder' => Yii::t('cliente','Select a customer').'...'],
@@ -111,7 +110,7 @@ if ( $model->isNewRecord ) {
         <label for=""><?= Yii::t('cliente','Address') ?></label>
         <?= Html::textArea('pedido',"",[
           'id'=>'pedido-direccion_pedido',
-          'class' => 'form-control input-sm',
+          'class' => 'form-control ',
           'rows' => 1,
           'readonly' => true
         ]); ?>
@@ -133,10 +132,10 @@ if ( $model->isNewRecord ) {
         $vendedores = ArrayHelper::map($vendedores,'id_vendedor','nombre_vend');
         ?>
         <?= $form->field($model, 'vend_pedido',[
-          'addClass' => 'form-control input-sm',
+          'addClass' => 'form-control ',
           ])->widget(Select2::classname(), [
                     'data' => $vendedores,
-                    'size' => Select2::SMALL,
+
                     'language' => Yii::$app->language,
                     'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-users"></i>']],
                     'options' => ['placeholder' => Yii::t('vendedor','Select a seller').'...'],
@@ -147,18 +146,18 @@ if ( $model->isNewRecord ) {
             ])?>
       </div>
 
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
         <?php $monedas = Moneda::find()->where(['status_moneda' => 1])
         ->orderBy('des_moneda')
         ->all();
         $monedas = ArrayHelper::map( $monedas, 'id_moneda', 'des_moneda');
         ?>
         <?= $form->field($model, 'moneda_pedido',[
-        'addClass' => 'form-control input-sm',
+        'addClass' => 'form-control ',
           ])->widget(Select2::classname(), [
                     'data' => $monedas,
                     'language' => Yii::$app->language,
-                    'size' => Select2::SMALL,
+
                     'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-money"></i>']],
                     'options' => ['placeholder' => Yii::t('moneda','Select a currency').'...'],
                     'theme' => Select2::THEME_DEFAULT,
@@ -167,7 +166,13 @@ if ( $model->isNewRecord ) {
                     ],
             ])?>
       </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <?= $form->field($model, 'nrodoc_pedido',['addClass' => 'form-control '])->textInput(['maxlength' => true]) ?>
+      </div>
+
     </div>
+
 
     <div class="row">
       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -177,11 +182,11 @@ if ( $model->isNewRecord ) {
         $almacenes = ArrayHelper::map( $almacenes, 'id_almacen', 'des_almacen');
         ?>
         <?= $form->field($model, 'almacen_pedido',[
-          'addClass' => 'form-control input-sm',
+          'addClass' => 'form-control ',
           ])->widget(Select2::classname(), [
                     'data' => $almacenes,
                     'language' => Yii::$app->language,
-                    'size' => Select2::SMALL,
+
                     'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-archive"></i>']],
                     'options' => ['placeholder' => Yii::t('almacen','Select a warehouse').'...'],
                     'theme' => Select2::THEME_DEFAULT,
@@ -200,7 +205,7 @@ if ( $model->isNewRecord ) {
             'addClass' => 'form-control',
           ])->widget(Select2::classname(), [
                     'data' => $condiciones,
-                    'size' => Select2::SMALL,
+
                     'language' => Yii::$app->language,
                     'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-tag"></i>']],
                     'options' => ['placeholder' => Yii::t('condicionp','Select a payment condition').'...'],
@@ -260,7 +265,7 @@ if ( $model->isNewRecord ) {
             </tr>
             <tr>
               <td>
-                <div style="width:99.4%; height:400px; overflow-y:scroll;">
+                <div style="width:99.4%; height:300px; overflow-y:scroll;">
                   <table id="table" class="table table-fixed table-stripped" >
                     <tbody class="table-body"><!-- widgetContainer -->
                       <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
@@ -280,11 +285,11 @@ if ( $model->isNewRecord ) {
                                   $productos = empty($modelDetalle->prod_des) ? '' : Producto::findOne($modelDetalle->prod_pdetalle)->prod_des;
 
                                   echo $form->field($modelDetalle, "[{$index}]prod_pdetalle",[
-                                    'addClass' => 'form-control input-sm',
+                                    'addClass' => 'form-control ',
                                     ])->widget(Select2::classname(), [
                                       'language' => Yii::$app->language,
                                       'initValueText' => $productos, // set the initial display text
-                                      'size' => Select2::SMALL,
+
                                       'options' => ['placeholder' => Yii::t('producto','Select a product').'...'],
                                       'theme' => Select2::THEME_DEFAULT,
                                       'pluginOptions' => [
@@ -310,19 +315,19 @@ if ( $model->isNewRecord ) {
 
                                 </td>
                                 <td class="col-xs-1">
-                                  <?= $form->field($modelDetalle,"[{$index}]cant_pdetalle")->textInput([ 'class' => 'form-control input-sm','type' => 'number','maxlength' => true,'style' => ['text-align' => 'right']])->label(false)?>
+                                  <?= $form->field($modelDetalle,"[{$index}]cant_pdetalle")->textInput([ 'class' => 'form-control ','type' => 'number','maxlength' => true,'style' => ['text-align' => 'right']])->label(false)?>
                                 </td>
                                 <td class="col-xs-1">
-                                  <?= Html::input("text","yy","0.00",['class' => 'form-control input-sm','id'=> 'pedidodetalle-'.$index.'-precio_lista','style'=>[ 'text-align'=>'right'],'readonly' => true]) ?>
+                                  <?= Html::input("text","yy","0.00",['class' => 'form-control ','id'=> 'pedidodetalle-'.$index.'-precio_lista','style'=>[ 'text-align'=>'right'],'readonly' => true]) ?>
                                 </td>
                                 <td class="col-xs-1">
-                                  <?= $form->field($modelDetalle,"[{$index}]descu_pdetalle")->textInput(['class' => 'form-control input-sm','type'=>'number','maxlength' => true,'width' => '200px'])->label(false)?>
+                                  <?= $form->field($modelDetalle,"[{$index}]descu_pdetalle")->textInput(['class' => 'form-control ','type'=>'number','maxlength' => true,'width' => '200px'])->label(false)?>
                                 </td>
                                 <td class="col-xs-1">
-                                  <?= $form->field($modelDetalle,"[{$index}]precio_pdetalle")->textInput(['class' => 'form-control input-sm','type'=>'number','maxlength' => true,'width' => '200px'])->label(false)?>
+                                  <?= $form->field($modelDetalle,"[{$index}]precio_pdetalle")->textInput(['class' => 'form-control ','type'=>'number','maxlength' => true,'width' => '200px'])->label(false)?>
                                 </td>
                                 <td class="col-xs-1">
-                                  <?= Html::input("text","yy","0.00",['class' => 'form-control input-sm','id'=> 'pedidodetalle-'.$index.'-total','style'=>[ 'text-align'=>'right'],'readonly' => true]) ?>
+                                  <?= Html::input("text","yy","0.00",['class' => 'form-control ','id'=> 'pedidodetalle-'.$index.'-total','style'=>[ 'text-align'=>'right'],'readonly' => true]) ?>
                                 </td>
                                 <td class="col-xs-1">
 
@@ -341,6 +346,42 @@ if ( $model->isNewRecord ) {
         </tr>
         <tr>
           <td>
+            <div class="">
+              <table class="table table-fixed table-stripped">
+                <tr>
+                  <td class="col-xs-6" style="text-align:right;">
+                    Subtotal
+                  </td>
+                  <td class="col-xs-2">
+                    <input type="text" name="subtotal" class="form-control" value="">
+                  </td>
+                </tr>
+                <tr>
+                  <td class="col-xs-6" style="text-align:right;">
+                    Descuento
+                  </td>
+                  <td class="col-xs-2">
+                    <input type="text" name="descuento" class="form-control" value="">
+                  </td>
+                </tr>
+                <tr>
+                  <td class="col-xs-7" style="text-align:right;">
+                    I.G.V.
+                  </td>
+                  <td class="col-xs-2">
+                    <input type="text" name="impuesto" class="form-control" value="">
+                  </td>
+                </tr>
+                <tr>
+                  <td class="col-xs-6" style="text-align:right;">
+                    Total
+                  </td>
+                  <td class="col-xs-2">
+                    <input type="text" name="total" class="form-control" value="">
+                  </td>
+                </tr>
+              </table>
+            </div>
           </td>
         </tr>
       </table>
@@ -462,15 +503,33 @@ $( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ){
     let precio = $( "#pedidodetalle-" + row + "-precio_lista").val();
     let cant = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
     let total = 0;
+    let precioVenta = 0;
     if ( cant ){
       if ( descu ){
         total = ( cant * (precio - (precio * (descu /100))));
+        precioVenta = precio - (precio * (descu /100));
       }
       else
       {
         total = cant * precio;
       }
 
+      $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioVenta );
+      $( "#pedidodetalle-" + row + "-total" ).val( total );
+    }
+
+});
+
+$( '.table-body' ).on( 'change', 'input[id$="precio_pdetalle"]', function( e ){
+    let row = $( this ).attr( "id" ).split( "-" );
+
+    row = row[ 1 ];
+    let cant = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
+    let precio = $( this ).val();
+    let total = 0;
+
+    if ( cant ){
+      total = cant * precio;
       $( "#pedidodetalle-" + row + "-total" ).val( total );
     }
 
@@ -523,13 +582,10 @@ $( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ){
 
           $( '.add-item' ).trigger( 'click' );
           $( "#pedidodetalle-" + ( parseInt(row) + 1 ) + "-prod_pdetalle").focus();
-          $( "#pedidodetalle-" + ( parseInt(row) + 1 ) + "-prod_pdetalle").trigger('select2:opening');
+          $( "#pedidodetalle-" + ( parseInt(row) + 1 ) + "-prod_pdetalle").select2('open');
         }
       });
-
   }
-
-
 });
 
 function getRow( row = null ){
@@ -539,7 +595,6 @@ function getRow( row = null ){
     }
   }
 }
-
 
 function checkDuplicate( _currSelect, row ) {
   let band = false;

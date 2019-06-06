@@ -78,9 +78,9 @@ class PedidoController extends Controller
     public function actionCreate()
     {
         $model = new Pedido();
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
+      //  if (Yii::$app->request->get('asDialog'))
+        //{
+          //$this->layout = 'justStuff';
           $modelsDetalles = [new PedidoDetalle()];
 
           if ($model->load(Yii::$app->request->post())) {
@@ -162,7 +162,7 @@ class PedidoController extends Controller
               //'searchModel' => $searchModel,
               //'dataProvider' => $dataProvider,
           ]);
-        }
+        /*}
         else {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id_tpdcto]);
@@ -171,7 +171,7 @@ class PedidoController extends Controller
             return $this->render('create', [
                 'model' => $model,
             ]);
-        }
+        }*/
     }
 
     /**

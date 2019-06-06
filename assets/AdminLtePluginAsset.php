@@ -5,15 +5,15 @@ use yii\web\AssetBundle;
 
 class AdminLtePluginAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/almasaeed2010/adminlte/plugins';
+    public $sourcePath = '@vendor/almasaeed2010/adminlte/';
     public $js = [
-      'datatables/jquery.dataTables.min.js',
-      'datatables/dataTables.bootstrap.min.js',
-      'iCheck/icheck.min.js'
+      'bower_components/datatables.net/js/jquery.dataTables.min.js',
+      'bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js',
+      'bower_components/iCheck/icheck.min.js',
     ];
     public $css = [
-        'datatables/dataTables.bootstrap.min.css',
-        'iCheck/all.css',
+        'bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
+        'bower_components/iCheck/all.css',
         // more plugin CSS here
     ];
     public $depends = [
