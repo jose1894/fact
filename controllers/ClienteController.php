@@ -157,14 +157,13 @@ class ClienteController extends Controller
           if ($model->load(Yii::$app->request->post())) {
 
               $valid = $model->validate();
-
+              
               // ajax validation
               if (!$valid)
               {
                   if (Yii::$app->request->isAjax) {
                       Yii::$app->response->format = Response::FORMAT_JSON;
                       return ActiveForm::validate($model);
-
                   }
               }
               else

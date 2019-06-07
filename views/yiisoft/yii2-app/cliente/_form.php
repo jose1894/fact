@@ -8,7 +8,7 @@ use app\models\Departamento;
 use app\models\Distrito;
 use app\models\CondPago;
 use app\models\Vendedor;
-use app\models\TipoListaP;
+use app\models\TipoListap;
 use yii\web\View ;
 use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
 use kartik\select2\Select2;
@@ -203,7 +203,7 @@ use yii\helpers\Url;
     <div class="row">
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
           <?php
-            $tipolista = TipoListaP::find()->where(['estatus_lista' => 1])
+            $tipolista = TipoListap::find()->where(['estatus_lista' => 1])
             ->orderBy('desc_lista')
             ->all();
             $tipolista=ArrayHelper::map($tipolista,'id_lista','desc_lista');

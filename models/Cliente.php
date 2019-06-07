@@ -40,7 +40,7 @@ class Cliente extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'nombre_clte', 'direcc_clte','vendedor_clte', 'estatus_ctle', 'condp_clte','lista_clte'], 'required'],
+            [[ 'nombre_clte', 'direcc_clte','vendedor_clte', 'estatus_ctle','lista_clte', 'condp_clte'], 'required'],
             [['direcc_clte'], 'string'],
             [['pais_cte', 'depto_cte', 'provi_cte', 'dtto_clte', 'vendedor_clte', 'estatus_ctle', 'lista_clte','condp_clte', 'sucursal_clte'], 'integer'],
             [['dni_clte', 'ruc_clte'], 'string', 'max' => 20],
@@ -52,7 +52,7 @@ class Cliente extends \yii\db\ActiveRecord
             [['depto_cte'], 'exist', 'skipOnError' => true, 'targetClass' => Departamento::className(), 'targetAttribute' => ['depto_cte' => 'id_depto']],
             [['dtto_clte'], 'exist', 'skipOnError' => true, 'targetClass' => Distrito::className(), 'targetAttribute' => ['dtto_clte' => 'id_dtto']],
             [['condp_clte'], 'exist', 'skipOnError' => true, 'targetClass' => CondPago::className(), 'targetAttribute' => ['condp_clte' => 'id_condp']],
-            [['lista_clte'], 'exist', 'skipOnError' => true, 'targetClass' => ListaPrecios::className(), 'targetAttribute' => ['lista_clte' => 'id_lista']],
+            [['lista_clte'], 'exist', 'skipOnError' => true, 'targetClass' => TipoListap::className(), 'targetAttribute' => ['lista_clte' => 'id_lista']],
         ];
     }
 
@@ -131,8 +131,8 @@ class Cliente extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTipoListaP()
+    public function getTipoListap()
     {
-        return $this->hasOne(TipoListaP::className(), ['id_lista' => 'lista_clte']);
+        return $this->hasOne(TipoListap::className(), ['id_lista' => 'lista_clte']);
     }
 }

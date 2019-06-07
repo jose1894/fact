@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use yii\helpers\ArrayHelper;
@@ -18,7 +17,6 @@ use wbraganca\dynamicform\DynamicFormWidget;
 use kartik\select2\Select2;
 use app\base\Model;
 use app\components\AutoIncrement;
-
 /* @var $this yii\web\View */
 /* @var $model app\models\Pedido */
 /* @var $form yii\widgets\ActiveForm */
@@ -53,15 +51,12 @@ if ( $model->isNewRecord ) {
       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
         <?php
         $url = Url::to(['cliente/cliente-list']);
-
         $cliente = empty($model->clte_pedido) ? '' : Cliente::findOne($model->clte_pedido)->nombre_clte;
-
         echo $form->field($model, 'clte_pedido',[
           'addClass' => 'form-control ',
           'hintType' => ActiveField::HINT_SPECIAL
           ])->widget(Select2::classname(), [
             'language' => Yii::$app->language,
-
             'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-users"></i>']],
             'initValueText' => $cliente, // set the initial display text
             'options' => ['placeholder' => Yii::t('cliente','Select a customer').'...'],
@@ -87,14 +82,12 @@ if ( $model->isNewRecord ) {
                     condp = cliente.condp,
                     vendedor = cliente.vendedor,
                     tpl = cliente.tpl;
-
                 $( "#pedido-direccion_pedido" ).val( textDirecc );
                 $( "#pedido-condp_pedido" ).val( condp );
                 $( "#pedido-condp_pedido" ).trigger( "change" );
                 $( "#pedido-vend_pedido" ).val( vendedor );
                 $( "#pedido-vend_pedido" ).trigger( "change" );
                 $( "#pedido-tipo_listap" ).val( tpl );
-
                 return cliente.text;
               }'),
             ],
@@ -135,7 +128,6 @@ if ( $model->isNewRecord ) {
           'addClass' => 'form-control ',
           ])->widget(Select2::classname(), [
                     'data' => $vendedores,
-
                     'language' => Yii::$app->language,
                     'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-users"></i>']],
                     'options' => ['placeholder' => Yii::t('vendedor','Select a seller').'...'],
@@ -157,7 +149,6 @@ if ( $model->isNewRecord ) {
           ])->widget(Select2::classname(), [
                     'data' => $monedas,
                     'language' => Yii::$app->language,
-
                     'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-money"></i>']],
                     'options' => ['placeholder' => Yii::t('moneda','Select a currency').'...'],
                     'theme' => Select2::THEME_DEFAULT,
@@ -186,7 +177,6 @@ if ( $model->isNewRecord ) {
           ])->widget(Select2::classname(), [
                     'data' => $almacenes,
                     'language' => Yii::$app->language,
-
                     'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-archive"></i>']],
                     'options' => ['placeholder' => Yii::t('almacen','Select a warehouse').'...'],
                     'theme' => Select2::THEME_DEFAULT,
@@ -205,7 +195,6 @@ if ( $model->isNewRecord ) {
             'addClass' => 'form-control',
           ])->widget(Select2::classname(), [
                     'data' => $condiciones,
-
                     'language' => Yii::$app->language,
                     'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-tag"></i>']],
                     'options' => ['placeholder' => Yii::t('condicionp','Select a payment condition').'...'],
@@ -281,15 +270,12 @@ if ( $model->isNewRecord ) {
                                 <td class="col-xs-5">
                                   <?php
                                   $url = Url::to(['producto/producto-list']);
-
                                   $productos = empty($modelDetalle->prod_des) ? '' : Producto::findOne($modelDetalle->prod_pdetalle)->prod_des;
-
                                   echo $form->field($modelDetalle, "[{$index}]prod_pdetalle",[
                                     'addClass' => 'form-control ',
                                     ])->widget(Select2::classname(), [
                                       'language' => Yii::$app->language,
                                       'initValueText' => $productos, // set the initial display text
-
                                       'options' => ['placeholder' => Yii::t('producto','Select a product').'...'],
                                       'theme' => Select2::THEME_DEFAULT,
                                       'pluginOptions' => [
@@ -353,7 +339,7 @@ if ( $model->isNewRecord ) {
                     Subtotal
                   </td>
                   <td class="col-xs-2">
-                    <input type="text" name="subtotal" class="form-control" value="">
+                    <input type="text" id="subtotal" name="subtotal" class="form-control totales" value="">
                   </td>
                 </tr>
                 <tr>
@@ -361,7 +347,7 @@ if ( $model->isNewRecord ) {
                     Descuento
                   </td>
                   <td class="col-xs-2">
-                    <input type="text" name="descuento" class="form-control" value="">
+                    <input type="text" id="descuento" name="descuento" class="form-control totales" value="">
                   </td>
                 </tr>
                 <tr>
@@ -369,7 +355,7 @@ if ( $model->isNewRecord ) {
                     I.G.V.
                   </td>
                   <td class="col-xs-2">
-                    <input type="text" name="impuesto" class="form-control" value="">
+                    <input type="text" name="impuesto" id="impuesto" class="form-control totales" value="">
                   </td>
                 </tr>
                 <tr>
@@ -377,7 +363,7 @@ if ( $model->isNewRecord ) {
                     Total
                   </td>
                   <td class="col-xs-2">
-                    <input type="text" name="total" class="form-control" value="">
+                    <input type="text" name="total" id="total" class="form-control totales" value="">
                   </td>
                 </tr>
               </table>
@@ -396,12 +382,8 @@ if ( $model->isNewRecord ) {
     */
     // Campo de usuario
     $model->usuario_pedido = Yii::$app->user->id;
-
-
     //$form->field($model, 'usuario_pedido')->textInput()
-
     //$form->field($model, 'estatus_pedido')->textInput()
-
     //$form->field($model, 'sucursal_pedido')->textInput() */
      ?>
     <?php ActiveForm::end(); ?>
@@ -409,78 +391,57 @@ if ( $model->isNewRecord ) {
 </div>
 
 <?php
-
 $js = '
 $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
     console.log("beforeInsert");
 });
-
 $(".dynamicform_wrapper").on("afterInsert", function(e, item) {
     console.log("afterInsert");
 });
-
 $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
   if ( confirm("'.Yii::t('producto','Are you sure to delete this product?').'") ){
     return true;
   }
-
   return false;
-
 });
-
-
 $(".dynamicform_wrapper").on("afterDelete", function(e) {
     console.log("Deleted item!");
 });
-
 $(".dynamicform_wrapper").on("limitReached", function(e, item) {
     alert("Limit reached");
 });
 ';
-
 $this->registerJs($js,View::POS_LOAD);
-
-
 $this->registerJs(<<<JS
 $('#pedido_tipo  input[type="radio"]').iCheck({
   checkboxClass: 'icheckbox_flat-green',
   radioClass   : 'iradio_flat-green'
 });
-
 $( '#pedido-clte_pedido' ).on( 'select2:select',function (){
 });
-
 $( 'body' ).on('select2:select',"select[id$='prod_pdetalle']",function(){
 	let _currSelect = $( this );
-
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
-
   if ( checkDuplicate( _currSelect, row) )
   {
     _currSelect.val(null).trigger( 'change' );
     swal('Oops!!!',"El código no puede repetirse, ya está en la lista","error" );
     _currSelect.focus();
   }
-
   if ( _currSelect.val() )
   {
     setPrices( _currSelect.val(), row );
     $( '#pedidodetalle-' + row + '-cant_pdetalle' ).focus();
   }
-
-
 });
-
 $( '.table-body' ).on( 'change', 'input[id$="cant_pdetalle"]', function( e ){
     let row = $( this ).attr( "id" ).split( "-" );
-
     row = row[ 1 ];
     let cant = $( this ).val();
     let precio = $( "#pedidodetalle-" + row + "-precio_lista").val();
     let descu = $( "#pedidodetalle-" + row + "-descu_pdetalle").val();
     let total = 0;
-
     if ( cant ){
       if ( descu ){
         total = ( cant * (precio - (precio * (descu /100))));
@@ -489,15 +450,11 @@ $( '.table-body' ).on( 'change', 'input[id$="cant_pdetalle"]', function( e ){
       {
         total = cant * precio;
       }
-
       $( "#pedidodetalle-" + row + "-total" ).val( total );
     }
-
 });
-
 $( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ){
     let row = $( this ).attr( "id" ).split( "-" );
-
     row = row[ 1 ];
     let descu = $( this ).val();
     let precio = $( "#pedidodetalle-" + row + "-precio_lista").val();
@@ -513,73 +470,55 @@ $( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ){
       {
         total = cant * precio;
       }
-
       $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioVenta );
       $( "#pedidodetalle-" + row + "-total" ).val( total );
     }
-
 });
-
 $( '.table-body' ).on( 'change', 'input[id$="precio_pdetalle"]', function( e ){
     let row = $( this ).attr( "id" ).split( "-" );
-
     row = row[ 1 ];
     let cant = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
     let precio = $( this ).val();
     let total = 0;
-
     if ( cant ){
       total = cant * precio;
       $( "#pedidodetalle-" + row + "-total" ).val( total );
     }
-
 });
-
-
-
+$( '.table-body' ).on( 'blur', 'input[id$="precio_pdetalle"]', function( e ){
+  let sTotals = calculateTotals();
+  $( "#total" ).val( sTotals );
+});
 $( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ){
   if ( e.keyCode === 13 && $( this ).val() )
   {
     let row = $( this ).attr( "id" ).split( "-" );
-
     row = row[ 1 ];
-
     $( '#pedidodetalle-' + row + '-descu_pdetalle' ).focus();
-
   }
 });
-
 $( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ){
   console.log( e.keyCode );
   if ( e.keyCode === 13 && $( this ).val() )
   {
     let row = $( this ).attr( "id" ).split( "-" );
-
     row = row[ 1 ];
-
     $( '#pedidodetalle-' + row + '-precio_pdetalle' ).focus();
-
   }
 });
-
 $( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ){
-
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
-
   if ( e.keyCode === 13 && $( this ).val() && $( "#pedidodetalle-" + row + "-prod_pdetalle").val()  )  {
       let rowR = getRow( row );
-
       swal({
         title: "¿Deseas agregar un  nuevo item?",
         icon: "info",
         buttons: true,
       })
       .then((willDelete) => {
-
         if (willDelete) {
           let row =  rowR(1);
-
           $( '.add-item' ).trigger( 'click' );
           $( "#pedidodetalle-" + ( parseInt(row) + 1 ) + "-prod_pdetalle").focus();
           $( "#pedidodetalle-" + ( parseInt(row) + 1 ) + "-prod_pdetalle").select2('open');
@@ -587,7 +526,14 @@ $( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ){
       });
   }
 });
+function calculateTotals(){
+  let total = 0;
+  $( 'input[id$="-total"' ).each(function (i, element){
+    total += parseFloat(element.value);
+  });
 
+  return total;
+}
 function getRow( row = null ){
   if ( row ) {
     return function( ) {
@@ -595,13 +541,10 @@ function getRow( row = null ){
     }
   }
 }
-
 function checkDuplicate( _currSelect, row ) {
   let band = false;
   row = row[ 1 ];
-
   let selects = $("select[id$='prod_pdetalle']");
-
   for( let i = 0; i < selects.length - 1; i++)
   {
       if ( _currSelect.val() === $( selects[i] ).val() ){
@@ -611,7 +554,6 @@ function checkDuplicate( _currSelect, row ) {
   }
   return band;
 }
-
 function setPrices( value = null, row )
 {
   if ( value ){
@@ -632,7 +574,6 @@ function setPrices( value = null, row )
 }
 JS
 , VIEW::POS_END);
-
 $this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
 ['depends'=>[\yii\web\JqueryAsset::className()],
 'position'=>View::POS_END]);

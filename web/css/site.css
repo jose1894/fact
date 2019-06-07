@@ -120,3 +120,7 @@ a.desc:after {
 .modal-wide .modal-body {
   overflow-y: auto;
 }
+
+.totales{
+  text-align: right;
+}
