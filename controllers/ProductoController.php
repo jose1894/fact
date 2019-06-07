@@ -299,6 +299,7 @@ class ProductoController extends Controller
                 ->where('p.status_prod = 1')
                 ->andWhere(['like', 'p.texto', $desc])
                 ->andWhere('p.tipo_lista = :tipo_listap',[':tipo_listap' =>  $tipo_listap])
+                ->orderBy('p.cod_prod ASC')
                 ->limit(20);
             $command = $query->createCommand();
             $data = $command->queryAll();

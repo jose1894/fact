@@ -242,7 +242,6 @@ if ( $model->isNewRecord ) {
                       <th class="col-xs-1">Descuento</th>
                       <th class="col-xs-1">Precio venta</th>
                       <th class="col-xs-1">Total</th>
-                      <th class="col-xs-1">Status</th>
                       <th  class="col-xs-1">
                         <button type="button" class="pull-right add-item btn btn-success btn-xs"><i class="fa fa-plus"></i></button>
                         <div class="clearfix"></div>
@@ -316,9 +315,6 @@ if ( $model->isNewRecord ) {
                                   <?= Html::input("text","yy","0.00",['class' => 'form-control ','id'=> 'pedidodetalle-'.$index.'-total','style'=>[ 'text-align'=>'right'],'readonly' => true]) ?>
                                 </td>
                                 <td class="col-xs-1">
-
-                                </td>
-                                <td class="col-xs-1">
                                   <button type="button" class="pull-right remove-item btn btn-danger btn-xs"><i class="fa fa-minus"></i></button>
                                   <div class="clearfix"></div>
                               </td>
@@ -339,7 +335,7 @@ if ( $model->isNewRecord ) {
                     Subtotal
                   </td>
                   <td class="col-xs-2">
-                    <input type="text" id="subtotal" name="subtotal" class="form-control totales" value="">
+                    <input type="text" id="subtotal" name="subtotal" readonly class="form-control totales" value="">
                   </td>
                 </tr>
                 <tr>
@@ -347,7 +343,7 @@ if ( $model->isNewRecord ) {
                     Descuento
                   </td>
                   <td class="col-xs-2">
-                    <input type="text" id="descuento" name="descuento" class="form-control totales" value="">
+                    <input type="text" id="descuento" name="descuento" readonly class="form-control totales" value="">
                   </td>
                 </tr>
                 <tr>
@@ -355,7 +351,7 @@ if ( $model->isNewRecord ) {
                     I.G.V.
                   </td>
                   <td class="col-xs-2">
-                    <input type="text" name="impuesto" id="impuesto" class="form-control totales" value="">
+                    <input type="text" name="impuesto" id="impuesto" readonly class="form-control totales" value="">
                   </td>
                 </tr>
                 <tr>
@@ -363,7 +359,7 @@ if ( $model->isNewRecord ) {
                     Total
                   </td>
                   <td class="col-xs-2">
-                    <input type="text" name="total" id="total" class="form-control totales" value="">
+                    <input type="text" name="total" id="total" readonly  class="form-control totales" value="">
                   </td>
                 </tr>
               </table>
@@ -386,6 +382,10 @@ if ( $model->isNewRecord ) {
     //$form->field($model, 'estatus_pedido')->textInput()
     //$form->field($model, 'sucursal_pedido')->textInput() */
      ?>
+
+     <div class="form-group" style="float:right">
+         <button id="submit" type="button" class="btn btn-flat btn-success"><span class="fa fa-save"></span> <?= Yii::t('app','Save') ?></button>
+     </div>
     <?php ActiveForm::end(); ?>
 
 </div>
@@ -441,7 +441,7 @@ $( '.table-body' ).on( 'change', 'input[id$="cant_pdetalle"]', function( e ){
     let cant = $( this ).val();
     let precio = $( "#pedidodetalle-" + row + "-precio_lista").val();
     let descu = $( "#pedidodetalle-" + row + "-descu_pdetalle").val();
-    let total = 0;
+    let total = 0.00;
     if ( cant ){
       if ( descu ){
         total = ( cant * (precio - (precio * (descu /100))));
@@ -450,6 +450,7 @@ $( '.table-body' ).on( 'change', 'input[id$="cant_pdetalle"]', function( e ){
       {
         total = cant * precio;
       }
+      total = parseFloat(  total  ).toFixed( 2 );
       $( "#pedidodetalle-" + row + "-total" ).val( total );
     }
 });
@@ -459,8 +460,8 @@ $( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ){
     let descu = $( this ).val();
     let precio = $( "#pedidodetalle-" + row + "-precio_lista").val();
     let cant = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
-    let total = 0;
-    let precioVenta = 0;
+    let total = 0.00;
+    let precioVenta = 0.00;
     if ( cant ){
       if ( descu ){
         total = ( cant * (precio - (precio * (descu /100))));
@@ -470,6 +471,10 @@ $( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ){
       {
         total = cant * precio;
       }
+
+      precioVenta = parseFloat(  precioVenta  ).toFixed( 2 );
+      total = parseFloat(  total  ).toFixed( 2 );
+
       $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioVenta );
       $( "#pedidodetalle-" + row + "-total" ).val( total );
     }
@@ -482,12 +487,16 @@ $( '.table-body' ).on( 'change', 'input[id$="precio_pdetalle"]', function( e ){
     let total = 0;
     if ( cant ){
       total = cant * precio;
+      total = parseFloat(  total  ).toFixed( 2 );
       $( "#pedidodetalle-" + row + "-total" ).val( total );
     }
 });
 $( '.table-body' ).on( 'blur', 'input[id$="precio_pdetalle"]', function( e ){
-  let sTotals = calculateTotals();
-  $( "#total" ).val( sTotals );
+  let totals = calculateTotals();
+
+  $( "#subtotal" ).val( totals.subtotal );
+  $( "#impuesto" ).val( totals.impuesto );
+  $( "#total" ).val( totals.total );
 });
 $( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ){
   if ( e.keyCode === 13 && $( this ).val() )
@@ -526,15 +535,33 @@ $( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ){
       });
   }
 });
-function calculateTotals(){
-  let total = 0;
+
+function calculateTotals() {
+  let total = 0,
+      totalImp = 0,
+      subTotal = 0,
+      totals = {
+        subtotal: 0,
+        impuesto: 0,
+        total: 0
+      };
+
   $( 'input[id$="-total"' ).each(function (i, element){
     total += parseFloat(element.value);
   });
 
-  return total;
+  totalImp = ( total * 1.18 ) - total;
+
+  subTotal = total - totalImp;
+
+  totals.total = parseFloat(  total  ).toFixed( 2 );
+  totals.impuesto = parseFloat( totalImp  ).toFixed( 2 );
+  totals.subtotal = parseFloat( subTotal  ).toFixed( 2 );
+
+  return totals;
 }
-function getRow( row = null ){
+
+function getRow( row = null ) {
   if ( row ) {
     return function( ) {
       return row;
