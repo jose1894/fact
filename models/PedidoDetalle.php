@@ -20,6 +20,13 @@ use Yii;
  */
 class PedidoDetalle extends \yii\db\ActiveRecord
 {
+
+    public function init()
+    {
+      parent::init();
+      $this->impuesto_pdetalle = 18;
+
+    }
     /**
      * {@inheritdoc}
      */

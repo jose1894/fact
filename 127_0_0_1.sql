@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.6.6deb5
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 06-06-2019 a las 00:06:44
--- Versión del servidor: 10.1.38-MariaDB
--- Versión de PHP: 7.1.28
+-- Servidor: localhost:3306
+-- Tiempo de generación: 10-06-2019 a las 08:05:21
+-- Versión del servidor: 5.7.26-0ubuntu0.18.04.1
+-- Versión de PHP: 7.2.19-0ubuntu0.18.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -519,7 +517,7 @@ CREATE TABLE `cliente` (
 --
 
 INSERT INTO `cliente` (`id_clte`, `dni_clte`, `ruc_clte`, `nombre_clte`, `direcc_clte`, `pais_cte`, `depto_cte`, `provi_cte`, `dtto_clte`, `tlf_ctle`, `vendedor_clte`, `estatus_ctle`, `condp_clte`, `sucursal_clte`, `lista_clte`) VALUES
-(2, '', '', 'PEDRO PEREZ', 'JUAN IGNACIO LULA', 241, 133, 15, 133, '', 1, 1, 2, 0, 1),
+(2, '', '', 'PEDRO PEREZ', 'JUAN IGNACIO LULA', 241, 133, 15, 133, '', 1, 1, 2, 0, 2),
 (3, '', '', 'JUAN RENGIFO', 'ASDASDASVB DDFDFG', 241, 135, 15, 135, '', 3, 1, 2, 0, 1);
 
 -- --------------------------------------------------------
@@ -1591,31 +1589,21 @@ CREATE TABLE `pedido` (
   `moneda_pedido` int(11) NOT NULL COMMENT 'MONEDA PEDIDO',
   `almacen_pedido` int(11) NOT NULL COMMENT 'ALMACEN PEDIDO',
   `usuario_pedido` int(11) NOT NULL COMMENT 'USUARIO PEDIDO',
-  `estatus_pedido` int(11) NOT NULL COMMENT 'ESTATUS PEDIDO',
-  `sucursal_pedido` int(11) NOT NULL COMMENT 'SUCURSAL PEDIDO',
+  `estatus_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS PEDIDO',
+  `sucursal_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL PEDIDO',
   `condp_pedido` int(11) NOT NULL DEFAULT '0',
   `tipo_pedido` int(11) NOT NULL DEFAULT '0',
-  `edicion_pedido` varchar(1) DEFAULT 'N'
+  `edicion_pedido` varchar(1) DEFAULT 'N',
+  `nrodoc_pedido` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO PEDIDO'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA PEDIDOS';
 
 --
 -- Volcado de datos para la tabla `pedido`
 --
 
-INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, `vend_pedido`, `moneda_pedido`, `almacen_pedido`, `usuario_pedido`, `estatus_pedido`, `sucursal_pedido`, `condp_pedido`, `tipo_pedido`, `edicion_pedido`) VALUES
-(1, '0000001', '2019-05-14', 2, 1, 1, 1, 0, 0, 0, 2, 0, 'N'),
-(2, '0000002', '2019-05-14', 2, 1, 1, 1, 0, 0, 0, 2, 0, 'N'),
-(3, '0000003', '2019-05-14', 2, 1, 1, 1, 0, 0, 0, 2, 0, 'N'),
-(4, '0000004', '2019-05-14', 2, 1, 1, 1, 0, 0, 0, 2, 0, 'N'),
-(5, '0000005', '0000-00-00', 2, 1, 1, 1, 0, 0, 0, 2, 0, 'N'),
-(6, '0000006', '0000-00-00', 2, 1, 1, 1, 0, 0, 0, 2, 0, 'N'),
-(7, '0000007', '2019-05-14', 2, 1, 1, 1, 0, 0, 0, 2, 0, 'N'),
-(8, '0000008', '2019-05-14', 2, 1, 1, 1, 0, 0, 0, 2, 0, 'N'),
-(9, '0000009', '2019-05-14', 2, 1, 1, 1, 0, 0, 0, 2, 0, 'N'),
-(10, '0000010', '2019-05-14', 2, 1, 1, 1, 0, 0, 0, 2, 0, 'N'),
-(11, '0000011', '0000-00-00', 2, 1, 1, 1, 0, 0, 0, 2, 0, 'N'),
-(12, '0000012', '0000-00-00', 2, 1, 1, 1, 0, 0, 0, 2, 0, 'N'),
-(13, '0000013', '2019-05-14', 2, 1, 1, 1, 0, 0, 0, 2, 0, 'N');
+INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, `vend_pedido`, `moneda_pedido`, `almacen_pedido`, `usuario_pedido`, `estatus_pedido`, `sucursal_pedido`, `condp_pedido`, `tipo_pedido`, `edicion_pedido`, `nrodoc_pedido`) VALUES
+(20, '0000020', '2019-06-09', 3, 3, 1, 1, 1, 0, 0, 2, 0, 'N', ''),
+(21, '0000021', '2019-06-09', 3, 3, 1, 1, 1, 0, 0, 2, 0, 'N', '');
 
 -- --------------------------------------------------------
 
@@ -1640,17 +1628,10 @@ CREATE TABLE `pedido_detalle` (
 --
 
 INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `precio_pdetalle`, `descu_pdetalle`, `impuesto_pdetalle`, `status_pdetalle`, `pedido_pdetalle`) VALUES
-(1, 4, '10.000', '10.000', '10', '10', 1, 5),
-(2, 5, '5.000', '5.000', '0', '5', 1, 5),
-(3, 3, '3.000', '3.000', '0', '3', 1, 5),
-(4, 4, '5.000', '5.000', '0', '5', 1, 6),
-(5, 3, '10.000', '10.000', '0', '10', 1, 6),
-(6, 5, '3.000', '3.000', '0', '3', 1, 6),
-(7, 4, '10.000', '10.000', '0', '10', 1, 8),
-(8, 4, '3.000', '5.000', '0', '5', 1, 12),
-(9, 5, '4.000', '5.000', '0', '5', 1, 12),
-(10, 3, '10.000', '10.000', '0', '10', 1, 11),
-(11, 4, '20.000', '20.000', '0', '20', 1, 13);
+(3, 5, '1.000', '24.000', '0', '18', 1, 20),
+(4, 4, '1.000', '24.000', '0', '18', 1, 20),
+(5, 6, '1.000', '90.000', '0', '18', 1, 20),
+(6, 5, '1.000', '24.000', '0', '18', 1, 21);
 
 -- --------------------------------------------------------
 
@@ -1913,6 +1894,24 @@ INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `password_res
 -- --------------------------------------------------------
 
 --
+-- Estructura Stand-in para la vista `v_productos`
+-- (Véase abajo para la vista actual)
+--
+DROP VIEW IF EXISTS `v_productos`;
+CREATE TABLE `v_productos` (
+`id_prod` int(11)
+,`cod_prod` varchar(25)
+,`des_prod` varchar(70)
+,`texto` varchar(96)
+,`sucursal_prod` int(11)
+,`status_prod` int(11)
+,`precio_lista` decimal(18,2)
+,`tipo_lista` int(11)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `vendedor`
 --
 
@@ -1935,24 +1934,6 @@ INSERT INTO `vendedor` (`id_vendedor`, `dni_vend`, `nombre_vend`, `tlf_vend`, `e
 (1, '', 'IRWIN PEREZ', '', 1, 0, 2),
 (2, '', 'APP', '', 1, 0, 1),
 (3, '', 'MELIN HUAMAN', '', 1, 0, 1);
-
--- --------------------------------------------------------
-
---
--- Estructura Stand-in para la vista `v_productos`
--- (Véase abajo para la vista actual)
---
-DROP VIEW IF EXISTS `v_productos`;
-CREATE TABLE `v_productos` (
-`id_prod` int(11)
-,`cod_prod` varchar(25)
-,`des_prod` varchar(70)
-,`texto` varchar(96)
-,`sucursal_prod` int(11)
-,`status_prod` int(11)
-,`precio_lista` decimal(18,2)
-,`tipo_lista` int(11)
-);
 
 -- --------------------------------------------------------
 
@@ -2224,139 +2205,116 @@ ALTER TABLE `zona`
 --
 ALTER TABLE `almacen`
   MODIFY `id_almacen` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
 --
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
   MODIFY `id_clte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=4;
-
 --
 -- AUTO_INCREMENT de la tabla `cond_pago`
 --
 ALTER TABLE `cond_pago`
   MODIFY `id_condp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=4;
-
 --
 -- AUTO_INCREMENT de la tabla `departamento`
 --
 ALTER TABLE `departamento`
   MODIFY `id_depto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=216;
-
 --
 -- AUTO_INCREMENT de la tabla `distrito`
 --
 ALTER TABLE `distrito`
   MODIFY `id_dtto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=217;
-
 --
 -- AUTO_INCREMENT de la tabla `empresa`
 --
 ALTER TABLE `empresa`
   MODIFY `id_empresa` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
 --
 -- AUTO_INCREMENT de la tabla `lista_precios`
 --
 ALTER TABLE `lista_precios`
   MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=13;
-
 --
 -- AUTO_INCREMENT de la tabla `menu`
 --
 ALTER TABLE `menu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT de la tabla `moneda`
 --
 ALTER TABLE `moneda`
   MODIFY `id_moneda` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
 --
 -- AUTO_INCREMENT de la tabla `pais`
 --
 ALTER TABLE `pais`
   MODIFY `id_pais` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=242;
-
 --
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=14;
-
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT de la tabla `pedido_detalle`
 --
 ALTER TABLE `pedido_detalle`
-  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=12;
-
+  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
   MODIFY `id_prod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=7;
-
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
   MODIFY `id_prove` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
 --
 -- AUTO_INCREMENT de la tabla `provincia`
 --
 ALTER TABLE `provincia`
   MODIFY `id_prov` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=29;
-
 --
 -- AUTO_INCREMENT de la tabla `sucursal`
 --
 ALTER TABLE `sucursal`
   MODIFY `id_suc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=19;
-
 --
 -- AUTO_INCREMENT de la tabla `tipo_listap`
 --
 ALTER TABLE `tipo_listap`
   MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
-
 --
 -- AUTO_INCREMENT de la tabla `tipo_producto`
 --
 ALTER TABLE `tipo_producto`
   MODIFY `id_tpdcto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
-
 --
 -- AUTO_INCREMENT de la tabla `tipo_proveedor`
 --
 ALTER TABLE `tipo_proveedor`
   MODIFY `id_tprov` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
 --
 -- AUTO_INCREMENT de la tabla `unidad_medida`
 --
 ALTER TABLE `unidad_medida`
   MODIFY `id_und` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
-
 --
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
 --
 -- AUTO_INCREMENT de la tabla `vendedor`
 --
 ALTER TABLE `vendedor`
   MODIFY `id_vendedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=4;
-
 --
 -- AUTO_INCREMENT de la tabla `zona`
 --
 ALTER TABLE `zona`
   MODIFY `id_zona` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
-
 --
 -- Restricciones para tablas volcadas
 --
@@ -2429,7 +2387,7 @@ ALTER TABLE `pedido`
 -- Filtros para la tabla `pedido_detalle`
 --
 ALTER TABLE `pedido_detalle`
-  ADD CONSTRAINT `pedido_detalle_ibfk_1` FOREIGN KEY (`pedido_pdetalle`) REFERENCES `pedido` (`id_pedido`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `pedido_detalle_ibfk_1` FOREIGN KEY (`pedido_pdetalle`) REFERENCES `pedido` (`id_pedido`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `producto`
@@ -2464,7 +2422,6 @@ ALTER TABLE `sucursal`
 --
 ALTER TABLE `vendedor`
   ADD CONSTRAINT `vendedor_ibfk_1` FOREIGN KEY (`zona_vend`) REFERENCES `zona` (`id_zona`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

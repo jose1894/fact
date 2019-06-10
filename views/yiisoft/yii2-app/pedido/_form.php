@@ -203,6 +203,11 @@ if ( $model->isNewRecord ) {
                         'allowClear' => true,
                     ],
             ])?>
+            <?php
+            $model->usuario_pedido = 1;
+
+            echo Html::activeHiddenInput($model, "usuario_pedido");
+            ?>
       </div>
     </div>
 
@@ -239,6 +244,7 @@ if ( $model->isNewRecord ) {
                       <th class="col-xs-5">Producto</th>
                       <th class="col-xs-1">Cantidad</th>
                       <th class="col-xs-1">Precio</th>
+                      <th class="col-xs-1">I.G.V.</th>
                       <th class="col-xs-1">Descuento</th>
                       <th class="col-xs-1">Precio venta</th>
                       <th class="col-xs-1">Total</th>
@@ -258,6 +264,7 @@ if ( $model->isNewRecord ) {
                     <tbody class="table-body"><!-- widgetContainer -->
                       <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
                               <tr class="detalle-item"><!-- widgetBody -->
+                                <td class="col-xs-5">
                                 <?php
                                   // necessary for update action.
                                   if (!$modelDetalle->isNewRecord) {
@@ -265,9 +272,6 @@ if ( $model->isNewRecord ) {
                                       //$modelSucursal->empresa_suc[$index] = $model->id_empresa;
                                       echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle");
                                   }
-                                ?>
-                                <td class="col-xs-5">
-                                  <?php
                                   $url = Url::to(['producto/producto-list']);
                                   $productos = empty($modelDetalle->prod_des) ? '' : Producto::findOne($modelDetalle->prod_pdetalle)->prod_des;
                                   echo $form->field($modelDetalle, "[{$index}]prod_pdetalle",[
@@ -304,6 +308,14 @@ if ( $model->isNewRecord ) {
                                 </td>
                                 <td class="col-xs-1">
                                   <?= Html::input("text","yy","0.00",['class' => 'form-control ','id'=> 'pedidodetalle-'.$index.'-precio_lista','style'=>[ 'text-align'=>'right'],'readonly' => true]) ?>
+                                </td>
+                                <td class="col-xs-1">
+                                  <?= $form->field($modelDetalle,"[{$index}]impuesto_pdetalle")
+                                  ->textInput([
+                                    'class' => 'form-control ',
+                                    'style' => ['text-align' => 'right'],
+                                    'readonly' => true,
+                                  ])->label(false)?>
                                 </td>
                                 <td class="col-xs-1">
                                   <?= $form->field($modelDetalle,"[{$index}]descu_pdetalle")->textInput(['class' => 'form-control ','type'=>'number','maxlength' => true,'width' => '200px'])->label(false)?>
@@ -377,7 +389,7 @@ if ( $model->isNewRecord ) {
     * Campos ocultos pero necesarios
     */
     // Campo de usuario
-    $model->usuario_pedido = Yii::$app->user->id;
+
     //$form->field($model, 'usuario_pedido')->textInput()
     //$form->field($model, 'estatus_pedido')->textInput()
     //$form->field($model, 'sucursal_pedido')->textInput() */
@@ -461,20 +473,25 @@ $( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ){
     let precio = $( "#pedidodetalle-" + row + "-precio_lista").val();
     let cant = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
     let total = 0.00;
+    let descuento = 0;
     let precioVenta = 0.00;
+
     if ( cant ){
       if ( descu ){
         total = ( cant * (precio - (precio * (descu /100))));
         precioVenta = precio - (precio * (descu /100));
+        descuento = (precio * (descu /100));
       }
       else
       {
         total = cant * precio;
       }
 
+      descuento = parseFloat( descuento ).toFixed( 2 );
       precioVenta = parseFloat(  precioVenta  ).toFixed( 2 );
       total = parseFloat(  total  ).toFixed( 2 );
 
+      $( "#pedidodetalle-" + row + "-descu_pdetalle").data( "descuento", descuento);
       $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioVenta );
       $( "#pedidodetalle-" + row + "-total" ).val( total );
     }
@@ -497,6 +514,7 @@ $( '.table-body' ).on( 'blur', 'input[id$="precio_pdetalle"]', function( e ){
   $( "#subtotal" ).val( totals.subtotal );
   $( "#impuesto" ).val( totals.impuesto );
   $( "#total" ).val( totals.total );
+  $( "#descuento" ).val( totals.descuento );
 });
 $( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ){
   if ( e.keyCode === 13 && $( this ).val() )
@@ -507,11 +525,11 @@ $( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ){
   }
 });
 $( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ){
-  console.log( e.keyCode );
-  if ( e.keyCode === 13 && $( this ).val() )
+  let row = $( this ).attr( "id" ).split( "-" );
+  row = row[ 1 ];
+
+  if ( e.keyCode === 13 && $( "#pedidodetalle-" + row + "-cant_pdetalle" ).val() )
   {
-    let row = $( this ).attr( "id" ).split( "-" );
-    row = row[ 1 ];
     $( '#pedidodetalle-' + row + '-precio_pdetalle' ).focus();
   }
 });
@@ -540,8 +558,10 @@ function calculateTotals() {
   let total = 0,
       totalImp = 0,
       subTotal = 0,
+      descuento = 0,
       totals = {
         subtotal: 0,
+        descuento: 0,
         impuesto: 0,
         total: 0
       };
@@ -550,13 +570,23 @@ function calculateTotals() {
     total += parseFloat(element.value);
   });
 
-  totalImp = ( total * 1.18 ) - total;
+  $( 'input[id$="-precio_lista"' ).each(function (i, element){
+    subTotal += parseFloat(element.value);
+  });
 
-  subTotal = total - totalImp;
+  $( 'input[id$="-descu_pdetalle"' ).each(function (i, element){
+    descuento += parseFloat( $(element).data( "descuento" ) );
+  });
+
+  descuento = descuento ? descuento : 0;
+
+  totalImp = ( total * 1.18 ) - total;
+  subTotal = total - totalImp - descuento;
 
   totals.total = parseFloat(  total  ).toFixed( 2 );
   totals.impuesto = parseFloat( totalImp  ).toFixed( 2 );
   totals.subtotal = parseFloat( subTotal  ).toFixed( 2 );
+  totals.descuento = parseFloat( descuento  ).toFixed( 2 );
 
   return totals;
 }
@@ -593,12 +623,68 @@ function setPrices( value = null, row )
           if ( data.results )
           {
             $( '#pedidodetalle-' + row + '-precio_lista' ).val( data.results[ 0 ].precio );
+            $( '#pedidodetalle-' + row + '-impuesto_pdetalle' ).val( 18 );
+            $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( 0.00 );
             $( '#pedidodetalle-' + row + '-precio_pdetalle' ).val( data.results[ 0 ].precio );
           }
         }
     });
   }
 }
+
+
+$( "#submit" ).on( 'click', function(){
+  var form = $( "form#Pedido" );
+
+  $.ajax( {
+    'url'    : $( form ).attr( 'action' ),
+    'method' : $( form ).attr( 'method' ),
+    'data'   : $( form ).serialize(),
+    'async'  : false,
+    'success': function ( data ){
+      if ( data.success )
+      {
+        swal(data.title, data.message, data.type);
+
+        if ( $( form ).attr('action').indexOf('create') != -1)
+        {
+          $( form ).trigger( 'reset' );
+          selects = $(form).find('select');
+
+          if ( selects.length ){
+            selects.trigger( 'change' );
+          }
+
+          $( ".table-body" ).empty();
+        }
+
+        return;
+      }
+
+    },
+    error: function(data) {
+        let message;
+
+        if ( data.responseJSON )
+        {
+          let error = data.responseJSON;
+          message =   "Se ha encontrado un error: " +
+          "\\n\\nCode " + error.code +
+          "\\n\\nFile: " + error.file +
+          "\\n\\nLine: " + error.line +
+          "\\n\\nName: " + error.name +
+          "\\n Message: " + error.message;
+        }
+        else
+        {
+            message = data.responseText;
+        }
+
+        swal('Oops!!!',message,"error" );
+    }
+  });
+
+});
 JS
 , VIEW::POS_END);
 $this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',

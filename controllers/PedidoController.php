@@ -89,6 +89,7 @@ class PedidoController extends Controller
             Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
 
             // validate all models
+            $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'pedido' );
             $valid = $model->validate();
             $valid = Model::validateMultiple($modelsDetalles) && $valid;
             // ajax validation
@@ -104,7 +105,6 @@ class PedidoController extends Controller
             }
             else
             {
-                $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'pedido' );
                 $fecha = explode("/",$model->fecha_pedido);
                 $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
                 $model->fecha_pedido = $fecha;
@@ -116,6 +116,7 @@ class PedidoController extends Controller
                                 $modelDetalle->pedido_pdetalle = $model->id_pedido;
                                 if (! ($flag = $modelDetalle->save(false))) {
                                     $transaction->rollBack();
+                                    throw new \Exception("Error Processing Request", 1);
                                     break;
                                 }
                             }
@@ -127,9 +128,8 @@ class PedidoController extends Controller
                           $return = [
                             'success' => true,
                             'title' => Yii::t('pedido', 'Order'),
-                            'message' => Yii::t('app','Record saved successfully!') . " \nError: ". $e->errorMessage(),
+                            'message' => Yii::t('app','Record saved successfully!'),
                             'type' => 'success'
-
                           ];
                           return $return;
                         }
@@ -142,7 +142,6 @@ class PedidoController extends Controller
                       'title' => Yii::t('pedido', 'Order'),
                       'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
                       'type' => 'error'
-
                     ];
                     return $return;
                 }
