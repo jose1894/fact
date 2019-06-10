@@ -157,7 +157,7 @@ class ClienteController extends Controller
           if ($model->load(Yii::$app->request->post())) {
 
               $valid = $model->validate();
-              
+
               // ajax validation
               if (!$valid)
               {
@@ -249,7 +249,7 @@ class ClienteController extends Controller
         $out = ['results' => ['id' => '', 'text' => '']];
         if (!is_null($q)) {
             $query = new Query;
-            $query->select(['c.id_clte as id','c.vendedor_clte as vendedor', 'c.nombre_clte AS text','c.direcc_clte', 'condp_clte as condp','CONCAT(dt.des_dtto,\' - \', dp.des_depto,\' - \',pr.des_prov, \' - \',p.des_pais) as \'geo\'','lista_clte as tpl'])
+            $query->select(['c.id_clte as id', 'c.nombre_clte AS text'])
                 ->from(['cliente as c'])
                 ->join('inner join ', ['distrito as dt'],' c.dtto_clte = dt.id_dtto and dt.status_dtto = 1 ')
                 ->join('inner join ', ['provincia as pr'] ,' c.provi_cte = pr.id_prov and pr.status_prov = 1 ')
@@ -263,7 +263,18 @@ class ClienteController extends Controller
             $out['results'] = array_values($data);
         }
         elseif ($id > 0) {
-            $out['results'] = ['id' => $id, 'text' => Cliente::find($id)->nombre_clte];
+          $query = new Query;
+          $query->select(['c.id_clte as id','c.vendedor_clte as vendedor', 'c.nombre_clte AS text','c.direcc_clte', 'condp_clte as condp','CONCAT(dt.des_dtto,\' - \', dp.des_depto,\' - \',pr.des_prov, \' - \',p.des_pais) as \'geo\'','lista_clte as tpl'])
+              ->from(['cliente as c'])
+              ->join('inner join ', ['distrito as dt'],' c.dtto_clte = dt.id_dtto and dt.status_dtto = 1 ')
+              ->join('inner join ', ['provincia as pr'] ,' c.provi_cte = pr.id_prov and pr.status_prov = 1 ')
+              ->join('inner join ',['departamento as dp'],' c.depto_cte = dp.id_depto and dp.status_depto = 1 ')
+              ->join('inner join ',['pais as p'],' c.pais_cte = p.id_pais and p.status_pais = 1')
+              ->andWhere('c.id_clte = :id_clte', [':id_clte' => $id])
+              ->limit(1);
+          $command = $query->createCommand();
+          $data = $command->queryAll();
+          $out = array_values($data);
         }
         return $out;
     }

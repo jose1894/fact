@@ -22,8 +22,7 @@ $this->params['breadcrumbs'][] = Yii::t('pedido', 'Update');
     <div class="box-body">
     <?= $this->render('_form', [
         'model' => $model,
-        'searchModel' => $searchModel,
-        'dataProvider' => $dataProvider,
+        'modelsDetalles' => $modelsDetalles,        
     ]) ?>
     </div>
   </div>

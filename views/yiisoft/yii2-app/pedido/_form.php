@@ -16,12 +16,11 @@ use yii\web\View ;
 use wbraganca\dynamicform\DynamicFormWidget;
 use kartik\select2\Select2;
 use app\base\Model;
-use app\components\AutoIncrement;
 /* @var $this yii\web\View */
 /* @var $model app\models\Pedido */
 /* @var $form yii\widgets\ActiveForm */
 if ( $model->isNewRecord ) {
-  $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'pedido' );
+  $model->cod_pedido = "0000000";
 }
 ?>
 
@@ -76,6 +75,7 @@ if ( $model->isNewRecord ) {
             'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
             'templateResult' => new JsExpression('function(cliente) { return cliente.text; }'),
             'templateSelection' => new JsExpression('function (cliente) {
+              /*
                 let direccion = cliente.direcc_clte ? cliente.direcc_clte : " ",
                     geo = cliente.geo ? cliente.geo : " ",
                     textDirecc = direccion + " " + geo,
@@ -84,10 +84,10 @@ if ( $model->isNewRecord ) {
                     tpl = cliente.tpl;
                 $( "#pedido-direccion_pedido" ).val( textDirecc );
                 $( "#pedido-condp_pedido" ).val( condp );
-                $( "#pedido-condp_pedido" ).trigger( "change" );
                 $( "#pedido-vend_pedido" ).val( vendedor );
-                $( "#pedido-vend_pedido" ).trigger( "change" );
                 $( "#pedido-tipo_listap" ).val( tpl );
+                $( "#pedido-condp_pedido" ).trigger( "change" );
+                $( "#pedido-vend_pedido" ).trigger( "change" );     */
                 return cliente.text;
               }'),
             ],
@@ -119,7 +119,9 @@ if ( $model->isNewRecord ) {
 
     <div class="row">
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-        <?php $vendedores = Vendedor::find()->where(['estatus_vend' => 1])
+        <?php
+        $vendedor = empty($model->vend_pedido) ? '' : Vendedor::findOne($model->vend_pedido)->nombre_vend;
+        $vendedores = Vendedor::find()->where(['estatus_vend' => 1])
         ->orderBy('nombre_vend')
         ->all();
         $vendedores = ArrayHelper::map($vendedores,'id_vendedor','nombre_vend');
@@ -128,9 +130,12 @@ if ( $model->isNewRecord ) {
           'addClass' => 'form-control ',
           ])->widget(Select2::classname(), [
                     'data' => $vendedores,
+                    'initValueText' => $vendedor,
                     'language' => Yii::$app->language,
                     'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-users"></i>']],
-                    'options' => ['placeholder' => Yii::t('vendedor','Select a seller').'...'],
+                    'options' => [
+                      'placeholder' => Yii::t('vendedor','Select a seller').'...',
+                    ],
                     'theme' => Select2::THEME_DEFAULT,
                     'pluginOptions' => [
                         'allowClear' => true
@@ -273,7 +278,7 @@ if ( $model->isNewRecord ) {
                                       echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle");
                                   }
                                   $url = Url::to(['producto/producto-list']);
-                                  $productos = empty($modelDetalle->prod_des) ? '' : Producto::findOne($modelDetalle->prod_pdetalle)->prod_des;
+                                  $productos = empty($modelDetalle->prod_pdetalle) ? '' : Producto::findOne($modelDetalle->prod_pdetalle)->des_prod;
                                   echo $form->field($modelDetalle, "[{$index}]prod_pdetalle",[
                                     'addClass' => 'form-control ',
                                     ])->widget(Select2::classname(), [
@@ -403,6 +408,14 @@ if ( $model->isNewRecord ) {
 </div>
 
 <?php
+$jsTrigger = "";
+if ( !$model->isNewRecord ){
+  $jsTrigger = "
+  $( document ).ready( function(){
+    $('#pedido-clte_pedido').trigger('select2:select');
+  });";
+}
+
 $js = '
 $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
     console.log("beforeInsert");
@@ -423,14 +436,39 @@ $(".dynamicform_wrapper").on("limitReached", function(e, item) {
     alert("Limit reached");
 });
 ';
+
+$js .= $jsTrigger;
 $this->registerJs($js,View::POS_LOAD);
 $this->registerJs(<<<JS
+
 $('#pedido_tipo  input[type="radio"]').iCheck({
   checkboxClass: 'icheckbox_flat-green',
   radioClass   : 'iradio_flat-green'
 });
+
 $( '#pedido-clte_pedido' ).on( 'select2:select',function (){
+  $.ajax({
+    url: '?r=cliente/cliente-list',
+    method: 'GET',
+    data:{ id : $(this).val()},
+    success: function( cliente ){
+      cliente = cliente[0];
+      let direccion = cliente.direcc_clte ? cliente.direcc_clte : " ",
+          geo = cliente.geo ? cliente.geo : " ",
+          textDirecc = direccion + " " + geo,
+          condp = cliente.condp,
+          vendedor = cliente.vendedor,
+          tpl = cliente.tpl;
+      $( "#pedido-direccion_pedido" ).val( textDirecc );
+      $( "#pedido-condp_pedido" ).val( condp );
+      $( "#pedido-vend_pedido" ).val( vendedor );
+      $( "#pedido-tipo_listap" ).val( tpl );
+      $( "#pedido-condp_pedido" ).trigger( "change" );
+      $( "#pedido-vend_pedido" ).trigger( "change" );
+    }
+  });
 });
+
 $( 'body' ).on('select2:select',"select[id$='prod_pdetalle']",function(){
 	let _currSelect = $( this );
   let row = $( this ).attr( "id" ).split( "-" );
@@ -447,6 +485,7 @@ $( 'body' ).on('select2:select',"select[id$='prod_pdetalle']",function(){
     $( '#pedidodetalle-' + row + '-cant_pdetalle' ).focus();
   }
 });
+
 $( '.table-body' ).on( 'change', 'input[id$="cant_pdetalle"]', function( e ){
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
@@ -466,6 +505,7 @@ $( '.table-body' ).on( 'change', 'input[id$="cant_pdetalle"]', function( e ){
       $( "#pedidodetalle-" + row + "-total" ).val( total );
     }
 });
+
 $( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ){
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
@@ -496,6 +536,7 @@ $( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ){
       $( "#pedidodetalle-" + row + "-total" ).val( total );
     }
 });
+
 $( '.table-body' ).on( 'change', 'input[id$="precio_pdetalle"]', function( e ){
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
@@ -508,6 +549,7 @@ $( '.table-body' ).on( 'change', 'input[id$="precio_pdetalle"]', function( e ){
       $( "#pedidodetalle-" + row + "-total" ).val( total );
     }
 });
+
 $( '.table-body' ).on( 'blur', 'input[id$="precio_pdetalle"]', function( e ){
   let totals = calculateTotals();
 
@@ -516,6 +558,7 @@ $( '.table-body' ).on( 'blur', 'input[id$="precio_pdetalle"]', function( e ){
   $( "#total" ).val( totals.total );
   $( "#descuento" ).val( totals.descuento );
 });
+
 $( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ){
   if ( e.keyCode === 13 && $( this ).val() )
   {
@@ -524,6 +567,7 @@ $( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ){
     $( '#pedidodetalle-' + row + '-descu_pdetalle' ).focus();
   }
 });
+
 $( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ){
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
@@ -533,6 +577,7 @@ $( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ){
     $( '#pedidodetalle-' + row + '-precio_pdetalle' ).focus();
   }
 });
+
 $( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ){
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
@@ -642,8 +687,7 @@ $( "#submit" ).on( 'click', function(){
     'data'   : $( form ).serialize(),
     'async'  : false,
     'success': function ( data ){
-      if ( data.success )
-      {
+      if ( data.success ){
         swal(data.title, data.message, data.type);
 
         if ( $( form ).attr('action').indexOf('create') != -1)
@@ -659,6 +703,8 @@ $( "#submit" ).on( 'click', function(){
         }
 
         return;
+      } else {
+        $( form ).yiiActiveForm( 'updateMessages', data);
       }
 
     },

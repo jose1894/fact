@@ -99,7 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;
                   'update' => function ($url, $model) {
                       return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
                                   'title' => Yii::t('app', 'Update'),
-                                  'class' => 'pjax-update',
+                                  // 'class' => 'pjax-update',
                                   'data' => [
                                     'id' => $model->id_pedido,
                                   ]
@@ -131,7 +131,7 @@ $this->params['breadcrumbs'][] = $this->title;
                   }
 
                   if ($action === 'update') {
-                      $url ='index.php?r=pedido/update&id='.$model->id_pedido."&asDialog=1";
+                      $url ='index.php?r=pedido/update&id='.$model->id_pedido;
                       return $url;
                   }
                   if ($action === 'delete') {

@@ -183,75 +183,66 @@ class PedidoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ( Yii::$app->request->get( 'asDialog' ) )
-        {
-          $this->layout = "justStuff";
+        $modelsDetalles = $model->detalles;
 
-          if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
 
-              //exit( "post aki" );
+            $oldIDs = ArrayHelper::map($modelsDetalles, 'id_pedido', 'pedido_pdetalle');
+            $modelsDetalles = Model::createMultiple(PedidoDetalle::classname(), $modelsDetalles);
+            Model::loadMultiple($modelsDetalle, Yii::$app->request->post());
+            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsDetalles, 'id_pedido', 'pedido_pdetalle')));
 
-              $valid = $model->validate();
+            // validate all models
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsDetalles) && $valid;
 
-              // ajax validation
-              if (!$valid)
-              {
-                  if (Yii::$app->request->isAjax) {
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      return ActiveForm::validate($model);
+            if ($valid) {
+                $transaction = \Yii::$app->db->beginTransaction();
+                try {
+                    if ($flag = $model->save(false)) {
+                        if (!empty($deletedIDs)) {
+                            PedidoDetalle::deleteAll(['pedido_pdetalle' => $deletedIDs]);
+                        }
+                        foreach ($modelsDetalles as $modelDetalle) {
+                            $modelDetalle->pedido_pdetalle = $model->id_pedido;
+                            if (! ($flag = $modelDetalle->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                    }
+                    if ($flag) {
+                        $model->save();
+                        $transaction->commit();
+                        //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        $return = [
+                          'success' => true,
+                          'heading' => true,
+                          'id' => $model->id_pedido
+                        ];
+                        return $return;
+                    }
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    $return = [
+                      'success' => false,
+                      'title' => Yii::t('empresa', 'Company'),
+                      'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                      'type' => 'error'
 
-                  }
-              }
-              else
-              {
-                  $transaction = \Yii::$app->db->beginTransaction();
-                  try {
-                          $model->save();
-                          $transaction->commit();
-                          //return $this->redirect(['view', 'id' => $model->id_empresa]);
-                          Yii::$app->response->format = Response::FORMAT_JSON;
-                          $return = [
-                            'success' => true,
-                            'heading' => true,
-                            'id' => $model->id_pedido
-                          ];
-                          return $return;
-                  } catch (Exception $e) {
-                      $transaction->rollBack();
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      $return = [
-                        'success' => false,
-                        'title' => Yii::t('empresa', 'Company'),
-                        'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
-                        'type' => 'error'
-
-                      ];
-                      return $return;
-                  }
-              }
-          }
-
-          $searchModel = new PedidoDetalleSearch();
-          $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-          $dataProvider->query->andWhere('pedido_pdetalle=:pedido', [':pedido' => $model->id_pedido]);
-
-          return $this->render('update', [
-              'model' => $model,
-              'dataProvider' => $dataProvider,
-              'searchModel' => $searchModel,
-          ]);
+                    ];
+                    return $return;
+                }
+            }
         }
-        else
-        {
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              return $this->redirect(['view', 'id' => $model->dni_empresa]);
-          }
 
-          return $this->render('update', [
-              'model' => $model,
-          ]);
-        }
+        return $this->render('update', [
+            'model' => $model,
+            'modelsDetalles' => (empty($modelsDetalles)) ? [new PedidoDetalle] : $modelsDetalles
+        ]);
+
     }
 
     /**
