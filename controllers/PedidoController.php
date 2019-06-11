@@ -218,8 +218,9 @@ class PedidoController extends Controller
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         $return = [
                           'success' => true,
-                          'heading' => true,
-                          'id' => $model->id_pedido
+                          'title' => Yii::t('pedido', 'Order'),
+                          'message' => Yii::t('app','Record saved successfully!'),
+                          'type' => 'success'
                         ];
                         return $return;
                     }
