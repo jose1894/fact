@@ -325,12 +325,14 @@ class ProductoController extends Controller
       $out = ['results' => false];
       if (!is_null($id))
       {
+          $tipo_lista = Yii::$app->request->get( 'tipo_listap' );
           $query = new Query;
           $query->select(['p.precio_lista as precio'])
               ->from(['v_productos as p'])
               ->where('p.status_prod = 1')
               ->andWhere('p.id_prod = :id',['id' =>  $id])
-              ->limit(20);
+              ->andWhere('p.tipo_lista = :tipo_lista',['tipo_lista' =>  $tipo_lista])
+              ->limit(1);
           $command = $query->createCommand();
           $data = $command->queryAll();
           $out['results'] = $data;

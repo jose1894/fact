@@ -75,19 +75,6 @@ if ( $model->isNewRecord ) {
             'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
             'templateResult' => new JsExpression('function(cliente) { return cliente.text; }'),
             'templateSelection' => new JsExpression('function (cliente) {
-              /*
-                let direccion = cliente.direcc_clte ? cliente.direcc_clte : " ",
-                    geo = cliente.geo ? cliente.geo : " ",
-                    textDirecc = direccion + " " + geo,
-                    condp = cliente.condp,
-                    vendedor = cliente.vendedor,
-                    tpl = cliente.tpl;
-                $( "#pedido-direccion_pedido" ).val( textDirecc );
-                $( "#pedido-condp_pedido" ).val( condp );
-                $( "#pedido-vend_pedido" ).val( vendedor );
-                $( "#pedido-tipo_listap" ).val( tpl );
-                $( "#pedido-condp_pedido" ).trigger( "change" );
-                $( "#pedido-vend_pedido" ).trigger( "change" );     */
                 return cliente.text;
               }'),
             ],
@@ -278,7 +265,7 @@ if ( $model->isNewRecord ) {
                                       echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle");
                                   }
                                   $url = Url::to(['producto/producto-list']);
-                                  $productos = empty($modelDetalle->prod_pdetalle) ? '' : Producto::findOne($modelDetalle->prod_pdetalle)->des_prod;
+                                  $productos = empty($modelDetalle->prod_pdetalle) ? '' : Producto::findOne($modelDetalle->prod_pdetalle)->cod_prod.' '.Producto::findOne($modelDetalle->prod_pdetalle)->des_prod;
                                   echo $form->field($modelDetalle, "[{$index}]prod_pdetalle",[
                                     'addClass' => 'form-control ',
                                     ])->widget(Select2::classname(), [
@@ -408,13 +395,7 @@ if ( $model->isNewRecord ) {
 </div>
 
 <?php
-$jsTrigger = "";
-if ( !$model->isNewRecord ){
-  $jsTrigger = "
-  $( document ).ready( function(){
-    $('#pedido-clte_pedido').trigger('select2:select');
-  });";
-}
+
 
 $js = '
 $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
@@ -436,8 +417,6 @@ $(".dynamicform_wrapper").on("limitReached", function(e, item) {
     alert("Limit reached");
 });
 ';
-
-$js .= $jsTrigger;
 $this->registerJs($js,View::POS_LOAD);
 $this->registerJs(<<<JS
 
@@ -451,6 +430,7 @@ $( '#pedido-clte_pedido' ).on( 'select2:select',function (){
     url: '?r=cliente/cliente-list',
     method: 'GET',
     data:{ id : $(this).val()},
+    async: false,
     success: function( cliente ){
       cliente = cliente[0];
       let direccion = cliente.direcc_clte ? cliente.direcc_clte : " ",
@@ -481,7 +461,7 @@ $( 'body' ).on('select2:select',"select[id$='prod_pdetalle']",function(){
   }
   if ( _currSelect.val() )
   {
-    setPrices( _currSelect.val(), row );
+    setPrices( _currSelect.val(), row,   $( "#pedido-tipo_listap" ).val() );
     $( '#pedidodetalle-' + row + '-cant_pdetalle' ).focus();
   }
 });
@@ -656,12 +636,15 @@ function checkDuplicate( _currSelect, row ) {
   }
   return band;
 }
-function setPrices( value = null, row )
+function setPrices( value = null, row, tipo_lista )
 {
   if ( value ){
     $.ajax({
         url:'?r=producto/product-price',
-        data:{id: value},
+        data:{
+          id: value,
+          tipo_listap: tipo_lista
+        },
         async:false,
         success: function( data )
         {
@@ -669,7 +652,11 @@ function setPrices( value = null, row )
           {
             $( '#pedidodetalle-' + row + '-precio_lista' ).val( data.results[ 0 ].precio );
             $( '#pedidodetalle-' + row + '-impuesto_pdetalle' ).val( 18 );
-            $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( 0.00 );
+
+            let descuDetalle = $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( );
+            descuDetalle = descuDetalle ? descuDetalle : 0;
+            $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( descuDetalle );
+
             $( '#pedidodetalle-' + row + '-precio_pdetalle' ).val( data.results[ 0 ].precio );
           }
         }
@@ -733,6 +720,26 @@ $( "#submit" ).on( 'click', function(){
 });
 JS
 , VIEW::POS_END);
+
+$jsTrigger = "";
+if ( !$model->isNewRecord ){
+  $jsTrigger = "
+    
+    $('#pedido-clte_pedido').trigger('select2:select');
+    $('select[id$=\"prod_pdetalle\"]').trigger('change');
+
+    $('select[id$=\"prod_pdetalle\"]').each(function( i ){
+
+      let row = $( this ).attr( \"id\" ).split( \"-\" );
+      row = row[ 1 ];
+
+      setPrices( $( this ).val(), row,   $( \"#pedido-tipo_listap\" ).val() );
+    });
+  ";
+  $this->registerJs($jsTrigger,View::POS_END);
+}
+
+
 $this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
 ['depends'=>[\yii\web\JqueryAsset::className()],
 'position'=>View::POS_END]);
