@@ -188,7 +188,7 @@ class PedidoController extends Controller
         if ($model->load(Yii::$app->request->post())) {
 
             $oldIDs = ArrayHelper::map($modelsDetalles, 'pedido_pdetalle', 'pedido_pdetalle');
-            $modelsDetalles = Model::createMultiple(PedidoDetalle::classname(), $modelsDetalles, 'pedido_pdetalle');
+            $modelsDetalles = Model::createMultiple(PedidoDetalle::classname(), $modelsDetalles, 'id_pdetalle');
             Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
             $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsDetalles, 'pedido_pdetalle', 'pedido_pdetalle')));
 

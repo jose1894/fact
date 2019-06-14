@@ -33,7 +33,8 @@
         "yiisoft/yii2-bootstrap": "@dev",
         "kartik-v/yii2-number": "dev-master",
         "wbraganca/yii2-dynamicform": "dev-master",
-        "kartik-v/yii2-builder": "@dev"
+        "kartik-v/yii2-builder": "@dev",
+        "kartik-v/yii2-mpdf": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

@@ -724,7 +724,7 @@ JS
 $jsTrigger = "";
 if ( !$model->isNewRecord ){
   $jsTrigger = "
-    
+
     $('#pedido-clte_pedido').trigger('select2:select');
     $('select[id$=\"prod_pdetalle\"]').trigger('change');
 
@@ -734,6 +734,9 @@ if ( !$model->isNewRecord ){
       row = row[ 1 ];
 
       setPrices( $( this ).val(), row,   $( \"#pedido-tipo_listap\" ).val() );
+      //debugger;
+      $('#pedidodetalle-' + row + '-descu_pdetalle').trigger( 'change' );
+      $('#pedidodetalle-' + row + '-precio_pdetalle').trigger( 'blur' );
     });
   ";
   $this->registerJs($jsTrigger,View::POS_END);
