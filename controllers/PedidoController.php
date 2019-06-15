@@ -17,6 +17,7 @@ use kartik\widgets\ActiveForm;
 use app\components\AutoIncrement;
 use app\base\Model;
 use yii\helpers\ArrayHelper;
+use kartik\mpdf\Pdf;
 
 /**
  * PedidoController implements the CRUD actions for Pedido model.
@@ -198,6 +199,11 @@ class PedidoController extends Controller
 
             if ($valid) {
                 $transaction = \Yii::$app->db->beginTransaction();
+
+                $fecha = explode("/",$model->fecha_pedido);
+                $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
+                $model->fecha_pedido = $fecha;
+
                 try {
                     if ($flag = $model->save(false)) {
                         if (!empty($deletedIDs)) {
@@ -277,6 +283,43 @@ class PedidoController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('pedido', 'The requested page does not exist.'));
+    }
+
+    public function actionPedidoRpt( $id ) {
+      Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+      $modelPedido = Pedido::findOne($id);
+      //$modelDetalle = $modelPedido->detalles;
+
+
+
+      $content = $this->renderPartial('pedidoRpt',[
+        'pedido'=> $modelPedido
+      ]);
+      $pdf = new Pdf([
+        // set to use core fonts only
+               'mode' => Pdf::MODE_CORE,
+               // A4 paper format
+               'format' => Pdf::FORMAT_A4,
+               // portrait orientation
+               'orientation' => Pdf::ORIENT_PORTRAIT,
+               // stream to browser inline
+               'destination' => Pdf::DEST_BROWSER,
+               // your html content input
+               'content' => $content,
+               // format content from your own css file if needed or use the
+               // enhanced bootstrap css built by Krajee for mPDF formatting
+               'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
+               // any css to be embedded if required
+               'cssInline' => '.kv-heading-1{font-size:18px}',
+                // set mPDF properties on the fly
+               'options' => ['title' => 'Krajee Report Title'],
+                // call mPDF methods on the fly
+               'methods' => [
+                   'SetHeader'=>['Krajee Report Header'],
+                   'SetFooter'=>['{PAGENO}'],
+                 ]
+      ]);
+      return $pdf->render();
     }
 
 

@@ -37,13 +37,9 @@ if ( $model->isNewRecord ) {
           $model->fecha_pedido = date('d/m/Y');
           echo $form->field($model, 'fecha_pedido',[
             'addClass' => 'form-control ',
-          ])->widget(DatePicker::classname(),[
+          ])->textInput([
                 'value' => date('d/m/Y'),
-                'type' => DatePicker::TYPE_COMPONENT_APPEND,
-                'pluginOptions' => [
-                    'format' => 'dd/mm/yyyy',
-                    'autoclose' => true,
-                ]
+                'readonly' => 'readonly'
             ]) ?>
       </div>
 

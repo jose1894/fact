@@ -76,4 +76,11 @@ class PedidoDetalle extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Pedido::className(), ['id_pedido' => 'pedido_pdetalle']);
     }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProductoPdetalle()
+    {
+        return $this->hasOne(Producto::className(), ['id_prod' => 'prod_pdetalle']);
+    }
 }
