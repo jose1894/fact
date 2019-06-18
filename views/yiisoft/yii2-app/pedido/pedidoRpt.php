@@ -1,25 +1,35 @@
 <?php
-use kartik\mpdf\Pdf;
-$pdf = Yii::$app->pdf; // or new Pdf();
-$pdf->cssFile = '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css';
-$mpdf = $pdf->api; // fetches mpdf api
+use yii\helpers\Html;
+?>
+<table class="table">
+  <thead>
+    <td><?= Yii::t('pedido','Code')?></td>
+    <td><?= Yii::t('pedido','Description')?></td>
+    <td><?= Yii::t('pedido','Quantity')?></td>
+    <td><?= Yii::t('pedido','List price')?></td>
+    <td><?= Yii::t('pedido','Discount')?></td>
+    <td><?= Yii::t('pedido','Price')?></td>
+    <td><?= Yii::t('pedido','Total')?></td>
+  </thead>
+  <tbody>
 
-$mpdf->SetHTMLHeader('
-<div class="row">
-  <div class="col-lg-4">
-    <img src="img/MARVIG.JPG" height="124" width="154">
-  </div>
-  <div class="col-lg-4">
-
-  </div>
-  <div class="col-lg-4">
-
-  </div>
-</div>');
-foreach ($pedido->detalles as $key => $value) {
-  // code...
-  $producto = $value->productoPdetalle;
-  echo $producto->cod_prod." ".$producto->des_prod."<br>";
-}
-
-echo $mpdf->Output('filename.pdf', 'I'); // call the mpdf api output as needed
+  <?php
+    foreach ($pedido->detalles as $key => $value) {
+      // code...
+      $precioT = $value->precio_pdetalle - ( $value->precio_pdetalle * ( $value->descu_pdetalle / 100 ) );
+      $precioT = Yii::$app->formatter->format($precioT, ['decimal', 2]);
+      $total = $precioT * $value->cant_pdetalle;
+      $total = Yii::$app->formatter->format($total, ['decimal', 2]);
+      echo "<tr>";
+      echo "<td>{$value->productoPdetalle->cod_prod }</td>";
+      echo "<td style='width:300px;word-wrap: break-word'>{$value->productoPdetalle->des_prod }</td>";
+      echo "<td>{$value->cant_pdetalle }</td>";
+      echo "<td>{$value->precio_pdetalle }</td>";
+      echo "<td>{$value->descu_pdetalle }</td>";
+      echo "<td>{$precioT }</td>";
+      echo "<td>{$total}</td>";
+      echo "</tr>";
+    }
+  ?>
+  </tbody>
+</table>

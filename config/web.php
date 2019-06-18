@@ -20,8 +20,8 @@ $config = [
         'formatter' => [
              'thousandSeparator' => ',',
              'currencyCode' => 'S',
-              'dateFormat' => 'dd/mm/yyyy',
-              'decimalSeparator' => '.',
+             'dateFormat' => 'dd/mm/yyyy',
+             'decimalSeparator' => '.',
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation

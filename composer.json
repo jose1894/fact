@@ -32,8 +32,6 @@
         "kartik-v/yii2-builder": "dev-master",
         "yiisoft/yii2-bootstrap": "@dev",
         "kartik-v/yii2-number": "dev-master",
-        "wbraganca/yii2-dynamicform": "dev-master",
-        "kartik-v/yii2-builder": "@dev",
         "kartik-v/yii2-mpdf": "dev-master"
     },
     "require-dev": {
