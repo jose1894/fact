@@ -1,0 +1,32 @@
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+.left {
+  text-transform: left;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.datos-cliente {
+  font-size: 0.65rem;
+  border-bottom:1px solid black;
+}
+
+.celdas {
+  padding: 3px 5px;
+}
+
+.mayus {
+  text-transform: uppercase;
+}
+
+table {
+  width: 100%;
+}

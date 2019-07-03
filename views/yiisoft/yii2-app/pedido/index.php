@@ -33,15 +33,31 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             [
+              'attribute'=>'tipo_pedido',
+              'value' => function($data){
+                   return $data->tipo_pedido > 0 ? $data->tipo_pedido == 1 ? 'PROFORMA' : 'COTIZACION' : 'PEDIDO' ;
+              },
+              'filter'=>[ 0 => 'PEDIDO', 1 => 'PROFORMA', 2=> 'COTIZACION' ],
+              'filterType' => GridView::FILTER_SELECT2,
+              'filterWidgetOptions' => [
+                  'language' => Yii::$app->language,
+                  'theme' => Select2::THEME_DEFAULT,
+                  'pluginOptions' => ['allowClear' => true],
+                  'pluginEvents' =>[],
+                  'options' => ['prompt' => ''],
+              ],
+              'width' => '12%'
+            ],
+            [
               'attribute'=>'cod_pedido',
-              'width' => '5%'
+              'width' => '7%'
             ],
             [
               'attribute'=>'fecha_pedido',
               'value' => function($data){
                    return Yii::$app->formatter->asDate($data->fecha_pedido, 'dd/MM/yyyy');
               },
-              'width' => '7%'
+              'width' => '8%'
             ],
             [
               'attribute'=>'clte_pedido',
@@ -57,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
                   'pluginEvents' =>[],
                   'options' => ['prompt' => ''],
               ],
-              'width' => '65%'
+              'width' => '50%'
             ],
             [
               'attribute'=>'vend_pedido',

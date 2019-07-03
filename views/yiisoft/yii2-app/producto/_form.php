@@ -13,6 +13,8 @@ use yii\helpers\Url;
 use kartik\checkbox\CheckboxX;
 use wbraganca\dynamicform\DynamicFormWidget;
 use app\base\Model;
+use kartik\number\NumberControl;
+
 
 
 /* @var $this yii\web\View */
@@ -138,7 +140,8 @@ use app\base\Model;
       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
         <?= $form->field($model, 'stockmax_prod',[
           'addClass' => 'form-control ',
-          'addon' => [ 'prepend' => ['content'=>'#']]])->textInput(['type' => 'number', 'style'=>'text-align:right']) ?>
+          'addon' => [ 'prepend' => ['content'=>'#']]
+        ])->textInput(['type' => 'number', 'style'=>'text-align:right']) ?>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
         <?= $form->field($model, 'status_prod',[
@@ -178,10 +181,14 @@ use app\base\Model;
 
                 <table class="table table-stripped" style="width:100%">
                   <thead>
-                    <label><?= Yii::t('lista_precios','List price') ?></label>
+                    <label><?= Yii::t('lista_precios','List prices') ?></label>
                     <tr>
                       <td><label><?= Yii::t('tipo_listap','List price type') ?></label></td>
-                      <td><label><?= Yii::t('lista_precios','Price') ?></label></td>
+                      <td><label><?= Yii::t('lista_precios','Local currency price') ?></label></td>
+                      <td><label><?= Yii::t('lista_precios','Foreign exchange price') ?></label></td>
+                      <td><label><?= Yii::t('lista_precios','Utility 1') ?></label></td>
+                      <td><label><?= Yii::t('lista_precios','Utility 2') ?></label></td>
+                      <td><label><?= Yii::t('lista_precios','List price') ?></label></td>
                       <td>
                         <button type="button" class="pull-right add-item btn btn-success btn-xs"><i class="fa fa-plus"></i></button>
                         <div class="clearfix"></div>
@@ -210,7 +217,46 @@ use app\base\Model;
 
                               </td>
                               <td>
-                                <?= $form->field($modelListaP,"[{$index}]precio_lista")->textInput(['type'=>'number','maxlength' => true,'width' => '200px'])->label(false)?>
+                                <?= $form->field($modelListaP,"[{$index}]preciom_lista")
+                                ->widget(NumberControl::classname(), [
+                                      'maskedInputOptions' => [
+                                          'allowMinus' => false
+                                      ]
+                                  ])->label(false)?>
+                              </td>
+                              <td>
+                                <?= $form->field($modelListaP,"[{$index}]preciod_lista")->widget(NumberControl::classname(), [
+                                      'maskedInputOptions' => [
+                                          'allowMinus' => false
+                                      ]
+                                  ])->label(false)?>
+                              </td>
+                              <td>
+                                <?= $form->field($modelListaP,"[{$index}]utilidad1_lista",[
+                                  'addClass' => 'form-control ',
+                                  'addon' => [ 'prepend' => ['content'=>'%']]
+                                ])->widget(NumberControl::classname(), [
+                                      'maskedInputOptions' => [
+                                          'allowMinus' => false
+                                      ]
+                                  ])->label(false)?>
+                              </td>
+                              <td>
+                                <?= $form->field($modelListaP,"[{$index}]utilidad2_lista",[
+                                  'addClass' => 'form-control ',
+                                  'addon' => [ 'prepend' => ['content'=>'%']]
+                                ])->widget(NumberControl::classname(), [
+                                      'maskedInputOptions' => [
+                                          'allowMinus' => false
+                                      ]
+                                  ])->label(false)?>
+                              </td>
+                              <td>
+                                <?= $form->field($modelListaP,"[{$index}]precio_lista")->widget(NumberControl::classname(), [
+                                      'maskedInputOptions' => [
+                                          'allowMinus' => false
+                                      ]
+                                  ])->label(false)?>
                               </td>
                               <td>
                                 <button type="button" class="pull-right remove-item btn btn-danger btn-xs"><i class="fa fa-minus"></i></button>
@@ -227,3 +273,73 @@ use app\base\Model;
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+$js = "
+$( 'select[id$=\"-tipo_lista\"]' ).on( 'change', function( e ) {
+  let row = $( this ).attr( \"id\" ).split( \"-\" );
+  row = row[ 1 ];
+
+  $( '#listaprecios-' + row + '-preciom_lista-disp').val( 0 );
+  $( '#listaprecios-' + row + '-preciod_lista-disp').val( 0 );
+  $( '#listaprecios-' + row + '-utilidad1_lista-disp').val( 0 );
+  $( '#listaprecios-' + row + '-utilidad2_lista-disp').val( 0 );
+  $( '#listaprecios-' + row + '-precio_lista-disp').val( 0 );
+});
+
+$( 'input[id$=\"-preciom_lista-disp\"]').on( 'change',  function() {
+  let row = $( this ).attr( \"id\" ).split( \"-\" );
+  row = row[ 1 ];
+
+  //let util1 = $( '#listaprecios-' + row + '-utilidad1_lista-disp' ).val( );
+  //let util2 = $( '#listaprecios-' + row + '-utilidad2_lista-disp' ).val( );
+  let precioLista = $( this ).val( );
+  /*
+  if ( util1 ) {
+    precioLista = ( ( precioLista * util1 ) / 100) + precioLista;
+  }
+
+  if ( util2 ) {
+    precioLista = ( ( precioLista * util2 ) / 100) + precioLista;
+  }*/
+
+  precioLista = parseFloat( precioLista ).toFixed(2);
+  $( '#listaprecios-' + row + '-precio_lista-disp' ).val( precioLista )
+});
+
+$( 'input[id$=\"-utility1_lista-disp\"]').on( 'change',  function() {
+  let row = $( this ).attr( \"id\" ).split( \"-\" );
+  row = row[ 1 ];
+
+  let util1 = $( this ).val();
+  let precioLista = $( '#listaprecios-' + row + '-preciom_lista-disp' ).val();
+  if ( util1 ) {
+    precioLista = ( ( precioLista * util1 ) / 100) + precioLista;
+  }
+
+  precioLista = parseFloat( precioLista ).toFixed(2);
+  $( '#listaprecios-' + row + '-precio_lista-disp' ).val( precioLista );
+});
+
+$( 'input[id$=\"-utility2_lista-disp\"]').on( 'change',  function() {
+  let row = $( this ).attr( \"id\" ).split( \"-\" );
+  row = row[ 1 ];
+
+  let util1 = $( '#listaprecios-' + row + '-utilidad1_lista-disp' ).val( );
+  let util2 = $( this ).val();
+
+  let precioLista = $( '#listaprecios-' + row + '-preciom_lista-disp' ).val();
+
+  if ( util1 ) {
+    precioLista = ( ( precioLista * util1 ) / 100) + precioLista;
+  }
+
+  if ( util2 ) {
+    precioLista = ( ( precioLista * util2 ) / 100) + precioLista;
+  }
+  precioLista = parseFloat( precioLista ).toFixed(2);
+  $( '#listaprecios-' + row + '-precio_lista-disp' ).val( precioLista );
+});
+
+";
+
+$this->registerJs( $js, View::POS_LOAD);

@@ -90,7 +90,7 @@ class PedidoController extends Controller
             Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
 
             // validate all models
-            $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'pedido' );
+            $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'pedido', 'tipo_pedido', $model->tipo_pedido );
             $valid = $model->validate();
             $valid = Model::validateMultiple($modelsDetalles) && $valid;
             // ajax validation
@@ -156,6 +156,7 @@ class PedidoController extends Controller
 
           $model->moneda_pedido = Moneda::findOne(['status_moneda' => 1, 'tipo_moneda' => 'N']);
           $model->almacen_pedido = Almacen::findOne(['status_almacen' => 1]);
+          $model->tipo_pedido = 0;
           return $this->render('create', [
               'model' => $model,
               'modelsDetalles' => (empty($modelsDetalles)) ? [new PedidoDetalle] : $modelsDetalles,
@@ -288,41 +289,108 @@ class PedidoController extends Controller
     public function actionPedidoRpt( $id ) {
       Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
       $modelPedido = Pedido::findOne($id);
+      $this->layout = 'reports';
       //$modelDetalle = $modelPedido->detalles;
-
-
-      $content =  $this->renderPartial('pedidoRpt',[
-        'pedido'=> $modelPedido
+      $content = $this->render('pedidoRpt', [
+          'pedido' => $modelPedido,
       ]);
 
-    // setup kartik\mpdf\Pdf component
-    $pdf = new Pdf([
-        // set to use core fonts only
-        'mode' => Pdf::MODE_CORE,
-        // A4 paper format
-        'format' => Pdf::FORMAT_A4,
-        // portrait orientation
-        'orientation' => Pdf::ORIENT_PORTRAIT,
-        // stream to browser inline
-        'destination' => Pdf::DEST_BROWSER,
-        // your html content input
-        'content' => $content,
-        // format content from your own css file if needed or use the
-        // enhanced bootstrap css built by Krajee for mPDF formatting
-        'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
-        // any css to be embedded if required
-        'cssInline' => '.kv-heading-1{font-size:18px}',
-         // set mPDF properties on the fly
-        'options' => ['title' => 'Krajee Report Title'],
-         // call mPDF methods on the fly
-        'methods' => [
-            'SetHeader'=>['Krajee Report Header'],
-            'SetFooter'=>['{PAGENO}'],
-        ]
-    ]);
 
-    // return the pdf output as per the destination setting
-    return $pdf->render();
+      $pdf = Yii::$app->pdf; // or new Pdf();
+      //$pdf->cssFile = "@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css";
+      $pdf->marginTop = 60;
+      $mpdf = $pdf->api; // fetches mpdf api
+
+      $proforma = Yii::t('pedido','PROFORMA');
+      $cotizacion = Yii::t('pedido','QUOTATION');
+      $pedido = Yii::t('pedido','ORDER');
+
+      $tipopedido  = $modelPedido->tipo_pedido > 0 ?  $modelPedido->tipo_pedido == 1 ? $proforma : $cotizacion : $pedido;
+
+      $f = Yii::$app->formatter;
+      $date = $f->asDate($modelPedido->fecha_pedido, 'php:j/m/Y');
+
+      $header = '
+      <table>
+          <tr>
+              <td width="33%" class="center">MARVIG<!-- *-empresa-* --></td>
+              <td width="33%" class="center"></td>
+              <td width="33%" style="font-size:0.65rem" class="right">
+                ' . Yii::t('app','Date') . ': {DATE j/m/Y}
+                <br>
+                ' . Yii::t('app','Hour') . ': {DATE H:i:s}
+                <br>
+                ' . Yii::t('app','Page') . ': {PAGENO}/{nbpg}
+              </td>
+          </tr>
+      </table>
+      <br>
+      <table >
+        <tr>
+          <td class="center bold" > ' . $tipopedido . ': ' . $modelPedido->cod_pedido . ' </td>
+        </tr>
+      </table>
+      <br>
+      <table class="datos-cliente">
+        <tr>
+          <td class="left celdas"><span class="bold">' . Yii::t( 'cliente', 'Customer') . ' :</span> ' . $modelPedido->cltePedido->nombre_clte . '</td>
+          <td>&nbsp;</td>
+          <td class="right celdas"><span class="bold">' . Yii::t('app','Date') . ' :</span> ' . $date  . '</td>
+        </tr>
+        <tr>
+          <td class="left celdas"><span class="bold">' . Yii::t( 'cliente', 'Address') . ' :</span> ' . $modelPedido->cltePedido->direcc_clte . '
+          ' . $modelPedido->cltePedido->provClte->des_prov. ' - ' . $modelPedido->cltePedido->deptoClte->des_depto . '
+          - ' . $modelPedido->cltePedido->dttoClte->des_dtto . '
+          </td>
+          <td>&nbsp;</td>
+          <td class="right celdas"><span class="bold">' . Yii::t('condicionp','Payment condition') . ':</span> ' . $modelPedido->condpPedido->desc_condp . ' </td>
+        </tr>
+        <tr>
+          <td class="left celdas"><span class="bold">' . Yii::t( 'cliente', 'RUC') . ' :</span> ' . $modelPedido->cltePedido->ruc_clte . '</td>
+          <td>&nbsp;</td>
+          <td class="right celdas"><span class="bold">' . Yii::t('moneda','Currency') . ' :</span> ' . $modelPedido->monedaPedido->des_moneda  . '</td>
+        </tr>
+        <tr>
+          <td class="left celdas"><span class="bold">' . Yii::t( 'vendedor', 'Seller') . ' :</span> ' . $modelPedido->vendPedido->nombre_vend . '</td>
+          <td>&nbsp;</td>
+          <td class="right celdas">&nbsp;</td>
+        </tr>
+      </table>
+      ';
+      $subtotal = 0;
+
+      foreach ( $modelPedido->detalles as $value ) {
+        $subtotal += $value->precio_pdetalle / 1.18;
+      }
+
+      $footer = '
+      <table>
+        <tr>
+          <td style="width:80%" class="right">
+          Subtotal
+          </td>
+          <td style="width:20%">
+          ' . $subtotal . '
+          </td>
+        </tr>
+        <tr>
+          <td>
+          </td>
+          <td>
+          </td>
+        </tr>
+      </table>
+      ';
+
+      $sheet = file_get_contents( Yii::getAlias( '@rptcss' ).'/rptCss.css' );
+      $mpdf->WriteHTML( $sheet, 1 );
+
+      $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
+      $mpdf->WriteHtml( $content ); // call mpdf write html
+      $mpdf->SetHTMLFooter( $footer );
+
+
+      $mpdf->Output('filename.pdf', 'I'); // call the mpdf api output as needed
     }
 
 

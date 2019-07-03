@@ -2,6 +2,8 @@
 return [
     'Name' => 'Nombre',
     'Status' => 'Estatus',
+    'Type' => 'Tipo',
+    'Document' => 'Documento',
     'Code' => 'Código',
     'Input a code' => 'Ingrese un código',
     'Description' => 'Descripción',
@@ -18,7 +20,18 @@ return [
     'Product for purchase' => 'Producto para la compra',
     'Product for sale' => 'Producto para la venta',
     'Content' => 'Contenido',
-    'Min stock' => 'Estock mínimo',
-    'Max stock' => 'Estock máximo',
-    'Initial stock' => 'Estock inicial'
+    'Min stock' => 'Stock mínimo',
+    'Max stock' => 'Stock máximo',
+    'Initial stock' => 'Stock inicial',
+    'Discount' => 'Descuento',
+    'Qtty' => 'Cant',
+    'L. price' => 'Prec. Lista',
+    'Tax' => 'I.G.V.',
+    'Disc' => 'Desc',
+    'Price' => 'Precio',
+    'Total' => 'Total',
+    'PROFORMA' => 'PROFORMA',
+    'QUOTATION' => 'COTIZACION',
+    'ORDER' => 'PEDIDO',
+    'Order' => 'Pedido'
 ];

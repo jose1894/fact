@@ -23,6 +23,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Print' => 'Imprimir',
+    'Page' => 'Página',
+    'Date' => 'Fecha',
+    'Hour' => 'Hora',
     'Ubication tables' => 'Tablas de ubicación',
     'Maintenance' => 'Mantenimiento',
     'Set Up' => 'Configuración',

@@ -1,12 +1,11 @@
 <?php
 return [
-    'Name' => 'Nombre',
-    'Status' => 'Estatus',
-    'Company' => 'Empresa',
-    'Input a name' => 'Ingrese un nombre',
     'List prices' => 'Lista de precios',
+    'List price' => 'Precio de lista',
     'Taxes' => 'I.G.V.',
-    'Branch offices' => 'Sucursales',
-    'Add branch office' => 'Agregar sucursal',
-    'Are you sure to delete this branch office?' => '¿Esta seguro de eliminar esta sucursal?'
+    'List type' => 'Tipo de lista',
+    'Foreign exchange price' => 'Precio en divisas',
+    'Local currency price' => 'Precio en moneda local',
+    'Utility 1' => 'Utilidad 1',
+    'Utility 2' => 'Utilidad 2',
 ];

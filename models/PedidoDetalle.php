@@ -44,7 +44,7 @@ class PedidoDetalle extends \yii\db\ActiveRecord
             [['prod_pdetalle','precio_pdetalle','prod_pdetalle','impuesto_pdetalle','cant_pdetalle'], 'required'],
             [['prod_pdetalle', 'status_pdetalle', 'pedido_pdetalle'], 'integer'],
             [['prod_pdetalle'], 'unique', 'targetAttribute' => ['pedido_pdetalle','prod_pdetalle']],
-            [['cant_pdetalle', 'precio_pdetalle', 'descu_pdetalle', 'impuesto_pdetalle'], 'number'],
+            [['cant_pdetalle', 'precio_pdetalle', 'descu_pdetalle', 'impuesto_pdetalle','plista_pdetalle','total_pdetalle'], 'number'],
             [['cant_pdetalle','precio_pdetalle'],'number','min' => 1],
              ['cant_pdetalle', 'default', 'value' => 0],
             [['impuesto_pdetalle','descu_pdetalle'],'number','min' => 0],
@@ -66,6 +66,8 @@ class PedidoDetalle extends \yii\db\ActiveRecord
             'impuesto_pdetalle' => Yii::t('pedido', 'Impuesto Pdetalle'),
             'status_pdetalle' => Yii::t('pedido', 'Status Pdetalle'),
             'pedido_pdetalle' => Yii::t('pedido', 'Pedido Pdetalle'),
+            'plista_pdetalle' => Yii::t('pedido', 'List price'),
+            'total_pdetalle' => Yii::t('pedido', 'Total'),
         ];
     }
 
