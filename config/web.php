@@ -105,23 +105,23 @@ $config = [
       ],
       'admin' => [
             'class' => 'mdm\admin\Module',
-            'mainLayout' => '@app/views/layouts/main.php',
+            //'mainLayout' => '@app/views/yiisoft/yii2-app/layouts/left.php',
             'layout' => 'left-menu',
             'menus' => [
                 'assignment' => [
                     'label' => 'Grant Access' // change label
                 ],
-                'route' => null, // disable menu
+                //'route' => null, // disable menu
             ],
       ]
 
     ],
-    /*'as access' => [
+    'as access' => [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             'site/*',
             'admin/*',
-            'some-controller/some-action',
+            //'some-controller/some-action',
             'gii/*'
             // The actions listed here will be allowed to everyone including guests.
             // So, 'admin/*' should not appear here in the production, of course.
@@ -129,7 +129,7 @@ $config = [
             // add a lot of actions here until you finally completed setting up rbac,
             // otherwise you may not even take a first step.
         ]
-    ],*/
+    ],
 
     'params' => $params,
 ];

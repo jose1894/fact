@@ -4,7 +4,7 @@ return [
     'Name' => 'Nombre',
     'Status' => 'Estatus',
     'Name' => 'Nombre',
-    'Disctrit / Parish ' => 'Distrito / Parroquia',
+    'Disctrit / Parish' => 'Distrito / Parroquia',
     'Input a name' => 'Ingrese un nombre',
     'Input a code' => 'Ingrese un código',
     'Create district / parish' => 'Crear distrito / parroquia',
