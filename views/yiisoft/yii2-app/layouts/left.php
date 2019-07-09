@@ -27,107 +27,88 @@
         <!-- /.search form -->
         <?php
           use mdm\admin\components\MenuHelper;
-          $callback = function($menu){
-              $data = eval($menu['data']);
-              //if have syntax error, unexpected 'fa' (T_STRING)  Errorexception,can use
-             //$data = $menu['data'];
-              return [
-                  'label' => $menu['name'].' '.$menu['data'],
-                  'url' => [$menu['route']],
-                  'option' => $data,
-                  //'icon' => $menu['data'],
-                  'items' => $menu['children'],
-              ];
-          };
-
-          $items = MenuHelper::getAssignedMenu(Yii::$app->user->id, null, $callback, true);
-          /*
-
-          [
-              ['label' => 'Menu Yii2', 'options' => ['class' => 'header']],
-              [
-                'label' => Yii::t('app','Set Up') , 'icon' => 'gears',
-                'items' => [
-                  ['label' => Yii::t('empresa','Company'), 'url' => ['/empresa'], 'icon' => 'industry'],
-                  ['label' => Yii::t('app', 'Maintenance'), 'icon' => 'gears',
-                    'items' => [
-                      ['label' => Yii::t('tipo_producto','Product types'), 'url' => ['/tipo-producto'], 'icon' => 'cube'],
-                      ['label' => Yii::t('zona','Zone'), 'url' => ['/zona'], 'icon' => 'map-signs'],
-                      ['label' => Yii::t('vendedor','Seller'), 'url' => ['/vendedor'], 'icon' => 'user'],
-                      ['label' => Yii::t('condicionp','Payment condition'), 'url' => ['/cond-pago'], 'icon' => 'ticket'],
-                      ['label' => Yii::t('unidad_medida','Unit of measurement'), 'url' => ['/unidad-medida'], 'icon' => 'balance-scale'],
-                      ['label' => Yii::t('moneda','Currency'), 'url' => ['/moneda'], 'icon' => 'money'],
-                      ['label' => Yii::t('almacen','Warehouse'), 'url' => ['/almacen'], 'icon' => 'archive'],
-                      ['label' => Yii::t('app', 'Ubication tables'), 'icon' => 'globe',
-                          'items' =>[
-                                      ['label' => Yii::t('pais','Country'), 'url' => ['/pais'], 'icon' => 'ticket'],
-                                      ['label' => Yii::t('provincia','Estate / Province'), 'url' => ['/provincia'], 'icon' => 'ticket'],
-                                      ['label' => Yii::t('departamento','Department / County / Municipality'), 'url' => ['/departamento'], 'icon' => 'ticket'],
-                                      ['label' => Yii::t('distrito','Disctrit / Parish'), 'url' => ['/distrito'], 'icon' => 'ticket'],
-                                    ]
-                      ]
-                    ]
-                  ],
-                  ['label' => Yii::t('cliente','Customer'), 'url' => ['/cliente'], 'icon' => 'users'],
-                  ['label' => Yii::t('proveedor','Supplier'), 'url' => ['/proveedor'], 'icon' => 'suitcase'],
-                  ['label' => Yii::t('producto','Product'), 'url' => ['/producto'], 'icon' => 'tags'],
-                ]
-              ],
-              ['label' => Yii::t('pedido','Purchase order').'s', 'url' => '#', 'icon' => 'inbox',
-                'items' => [
-                  ['label' => Yii::t('pedido','Purchase order list'), 'url' => ['/pedido'],'icon' => 'desktop'],
-                ]
-              ],
-              ['label' => 'Usuarios', 'options' => ['class' => 'header']],
-              [ 'label' => 'Administracion de usuarios', 'icon' => 'users',
-               'items' => [
-                        [ 'label' => 'Usuarios', 'url' => ['/admin/user']],
-                        [ 'label' => 'Rutas', 'url' => ['/admin/route']],
-                        [ 'label' => 'Permisos', 'url' => ['/admin/permission']],
-                        [ 'label' => 'Menus', 'url' => ['/admin/menu']],
-                        [ 'label' => 'Roles', 'url' => ['/admin/role']],
-                        [ 'label' => 'Asignaciones', 'url' => ['/admin/assignment']],
-                ],
-              ],
-              ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii']],
-
-              ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug']],
-              ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
-              [
-                  'label' => 'Some tools',
-                  'icon' => 'share',
-                  'url' => '#',
-                  'items' => [
-                      ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii'],],
-                      ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],],
-                      [
-                          'label' => 'Level One',
-                          'icon' => 'circle-o',
-                          'url' => '#',
-                          'items' => [
-                              ['label' => 'Level Two', 'icon' => 'circle-o', 'url' => '#',],
-                              [
-                                  'label' => 'Level Two',
-                                  'icon' => 'circle-o',
-                                  'url' => '#',
-                                  'items' => [
-                                      ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
-                                      ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
-                                  ],
-                              ],
-                          ],
-                      ],
-                  ],
-              ],
-          ],
-
-          */
         ?>
 
         <?= dmstr\widgets\Menu::widget(
             [
                 'options' => ['class' => 'sidebar-menu tree', 'data-widget'=> 'tree'],
-                'items' => $items
+                'items' => [
+                    ['label' => 'Menu Yii2', 'options' => ['class' => 'header']],
+                    [
+                      'label' => Yii::t('app','Set Up') , 'icon' => 'gears',
+                      'items' => [
+                        ['label' => Yii::t('empresa','Company'), 'url' => ['/empresa'], 'icon' => 'industry'],
+                        ['label' => Yii::t('app', 'Maintenance'), 'icon' => 'gears',
+                          'items' => [
+                            ['label' => Yii::t('tipo_producto','Product types'), 'url' => ['/tipo-producto'], 'icon' => 'cube'],
+                            ['label' => Yii::t('zona','Zone'), 'url' => ['/zona'], 'icon' => 'map-signs'],
+                            ['label' => Yii::t('vendedor','Seller'), 'url' => ['/vendedor'], 'icon' => 'user'],
+                            ['label' => Yii::t('condicionp','Payment condition'), 'url' => ['/cond-pago'], 'icon' => 'ticket'],
+                            ['label' => Yii::t('unidad_medida','Unit of measurement'), 'url' => ['/unidad-medida'], 'icon' => 'balance-scale'],
+                            ['label' => Yii::t('moneda','Currency'), 'url' => ['/moneda'], 'icon' => 'money'],
+                            ['label' => Yii::t('almacen','Warehouse'), 'url' => ['/almacen'], 'icon' => 'archive'],
+                            ['label' => Yii::t('app', 'Ubication tables'), 'icon' => 'globe',
+                                'items' =>[
+                                            ['label' => Yii::t('pais','Country'), 'url' => ['/pais'], 'icon' => 'ticket'],
+                                            ['label' => Yii::t('provincia','Estate / Province'), 'url' => ['/provincia'], 'icon' => 'ticket'],
+                                            ['label' => Yii::t('departamento','Department / County / Municipality'), 'url' => ['/departamento'], 'icon' => 'ticket'],
+                                            ['label' => Yii::t('distrito','Disctrit / Parish'), 'url' => ['/distrito'], 'icon' => 'ticket'],
+                                          ]
+                            ]
+                          ]
+                        ],
+                        ['label' => Yii::t('cliente','Customer'), 'url' => ['/cliente'], 'icon' => 'users'],
+                        ['label' => Yii::t('proveedor','Supplier'), 'url' => ['/proveedor'], 'icon' => 'suitcase'],
+                        ['label' => Yii::t('producto','Product'), 'url' => ['/producto'], 'icon' => 'tags'],
+                      ]
+                    ],
+                    ['label' => Yii::t('pedido','Purchase order').'s', 'url' => '#', 'icon' => 'inbox',
+                      'items' => [
+                        ['label' => Yii::t('pedido','Purchase order list'), 'url' => ['/pedido'],'icon' => 'desktop'],
+                      ]
+                    ],
+                    ['label' => 'Usuarios', 'options' => ['class' => 'header']],
+                    [ 'label' => 'Administracion de usuarios', 'icon' => 'users',
+                     'items' => [
+                              [ 'label' => 'Usuarios', 'url' => ['/admin/user']],
+                              [ 'label' => 'Rutas', 'url' => ['/admin/route']],
+                              [ 'label' => 'Permisos', 'url' => ['/admin/permission']],
+                              [ 'label' => 'Menus', 'url' => ['/admin/menu']],
+                              [ 'label' => 'Roles', 'url' => ['/admin/role']],
+                              [ 'label' => 'Asignaciones', 'url' => ['/admin/assignment']],
+                      ],
+                    ],
+                    ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii']],
+
+                    ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug']],
+                    ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
+                    [
+                        'label' => 'Some tools',
+                        'icon' => 'share',
+                        'url' => '#',
+                        'items' => [
+                            ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii'],],
+                            ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],],
+                            [
+                                'label' => 'Level One',
+                                'icon' => 'circle-o',
+                                'url' => '#',
+                                'items' => [
+                                    ['label' => 'Level Two', 'icon' => 'circle-o', 'url' => '#',],
+                                    [
+                                        'label' => 'Level Two',
+                                        'icon' => 'circle-o',
+                                        'url' => '#',
+                                        'items' => [
+                                            ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
+                                            ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ]
         ) ?>
 
