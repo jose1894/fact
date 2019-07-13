@@ -53,6 +53,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            [['empresa', 'sucursal'], 'integer'],
         ];
     }
 
@@ -162,6 +163,30 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProfiles()
+    {
+        return $this->hasMany(Profile::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEmpresa0()
+    {
+        return $this->hasOne(Empresa::className(), ['id_empresa' => 'empresa']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSucursal0()
+    {
+        return $this->hasOne(Sucursal::className(), ['id_suc' => 'sucursal']);
     }
 
 }

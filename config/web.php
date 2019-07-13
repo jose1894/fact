@@ -43,8 +43,8 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             //'identityClass' => 'mdm\admin\models\User',
-            'enableAutoLogin' => true,
-            //'eableAutoLogin' => 'admin/user/login'
+            //'enableAutoLogin' => true,
+            'enableAutoLogin' => 'admin/user/login'
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -90,6 +90,9 @@ $config = [
               ],
           ],
           'i18n' => $i18n,
+          'authManager' => [
+              'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\PhpManager'
+          ]
     ],
     'modules' =>[
       'gridview' =>  [
@@ -99,7 +102,67 @@ $config = [
           // message source
           // 'downloadAction' => 'gridview/export/download',
           // 'i18n' => []
-      ],    
+      ],
+      'admin' => [
+            'class' => 'mdm\admin\Module',
+            //'layout' => 'left-menu',
+            'mainLayout' => '@app/views/yiisoft/yii2-app/layouts/main.php',
+            'controllerMap' => [
+                 'assignment' => [
+                    'class' => 'mdm\admin\controllers\AssignmentController',
+                    'userClassName' => 'app\models\User',
+                    'idField' => 'user_id',
+                    'usernameField' => 'username',
+                    /*'extraColumns' => [
+                        [
+                            'attribute' => 'Nombre',
+                            'label' => 'Nombre',
+                            'value' => function($model, $key, $index, $column) {
+                                //print_r($model); exit;
+                                return $model->profile->nombre;
+                            },
+                        ],
+                        [
+                            'attribute' => 'Apellido',
+                            'label' => 'Apellido',
+                            'value' => function($model, $key, $index, $column) {
+                                return $model->profile->apellido;
+                            },
+                        ],
+                        [
+                            'attribute' => 'dept_name',
+                            'label' => 'Department',
+                            'value' => function($model, $key, $index, $column) {
+                                return $model->profile->dept->name;
+                            },
+                        ],
+                        [
+                            'attribute' => 'post_name',
+                            'label' => 'Post',
+                            'value' => function($model, $key, $index, $column) {
+                                return $model->profile->post->name;
+                            },
+                        ],
+                    ],
+                    'searchClass' => 'mdm\admin\models\searchs\User'*/
+                    //'searchClass' => 'app\models\User'
+                ],
+            ],
+        ]
+    ],
+    'as access' => [
+        'class' => 'mdm\admin\components\AccessControl',
+        'allowActions' => [
+            'site/*',
+            'admin/*',
+            //'empresa/*'
+            //'some-controller/some-action',
+            // The actions listed here will be allowed to everyone including guests.
+            // So, 'admin/*' should not appear here in the production, of course.
+            // But in the earlier stages of your development, you may probably want to
+            // add a lot of actions here until you finally completed setting up rbac,
+            // otherwise you may not even take a first step.
+        ]
     ],
 
 
