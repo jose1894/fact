@@ -96,6 +96,10 @@ class ClienteController extends Controller
             }
             else
             {
+                $user = User::findOne(Yii::$app->user->id);
+                $sucursal = $user->sucursal0->id_suc;
+
+                $model->sucursal_clte = $sucursal;
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
                         $model->save();
@@ -168,6 +172,10 @@ class ClienteController extends Controller
               }
               else
               {
+                  $user = User::findOne(Yii::$app->user->id);
+                  $sucursal = $user->sucursal0->id_suc;
+
+                  $model->sucursal_clte = $sucursal;
                   $transaction = \Yii::$app->db->beginTransaction();
                   try {
                           $model->save();

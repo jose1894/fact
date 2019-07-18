@@ -303,4 +303,32 @@ class EmpresaController extends Controller
 
         throw new NotFoundHttpException(Yii::t('empresa', 'The requested page does not exist.'));
     }
+
+    public function actionSucursales()
+    {
+      Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+      $out = ['output' => '', 'selected' => ''];
+      $parent = Yii::$app->request->post('depdrop_parents');
+
+      if ( isset( $parent[0] ) ) {
+        $param = Yii::$app->request->post('depdrop_params');
+        $selected = [];
+        $sucursales = $this->findModel( $parent )->sucursales;
+
+        foreach ($sucursales as $key => $sucursal) {
+          $arrSucursales[] = ['id' => $sucursal->id_suc, 'name' => $sucursal->nombre_suc];
+
+          if ( !empty( $param )){
+            if ( $sucursal->id_suc === (int) $param){
+              $selected = ['id' => $sucursal->id_suc, 'name' => $sucursal->nombre_suc];
+            }
+          }
+        }
+        
+        $out =  ['output' => $arrSucursales, 'selected' => $selected];
+      }
+
+      return $out;
+   }
 }

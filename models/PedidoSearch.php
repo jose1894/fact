@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Pedido;
@@ -40,8 +41,11 @@ class PedidoSearch extends Pedido
      */
     public function search($params)
     {
-        $query = Pedido::find();
-
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = Pedido::find()
+                 ->where('sucursal_pedido = :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

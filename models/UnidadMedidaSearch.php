@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\UnidadMedida;
@@ -40,7 +41,12 @@ class UnidadMedidaSearch extends UnidadMedida
      */
     public function search($params)
     {
-        $query = UnidadMedida::find();
+
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = UnidadMedida::find()
+                 ->where('sucursal_und = :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
 

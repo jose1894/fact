@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Departamento;
@@ -41,7 +42,11 @@ class DepartamentoSearch extends Departamento
      */
     public function search($params)
     {
-        $query = Departamento::find();
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = Departamento::find()
+                 ->where('sucursal_depto = :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
 

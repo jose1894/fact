@@ -12,5 +12,6 @@ return [
     'Create company' => 'Crear empresa',
     'Update company: {name}' => 'Actualizar empresa: {name}',
     'Company: {number} {name}' => 'Empresa: {number} {name}',
-    'Company' => 'Empresa'
+    'Company' => 'Empresa',
+    'Loading branches' => 'Cargando sucursales',
 ];

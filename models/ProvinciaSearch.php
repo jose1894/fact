@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Provincia;
@@ -41,7 +42,11 @@ class ProvinciaSearch extends Provincia
      */
     public function search($params)
     {
-        $query = Provincia::find();
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = Provincia::find()
+                 ->where('sucursal_prov = :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
 

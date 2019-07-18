@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Vendedor;
@@ -42,7 +43,12 @@ class VendedorSearch extends Vendedor
      */
     public function search($params)
     {
-        $query = Vendedor::find();
+
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = Vendedor::find()
+                 ->where('sucursal_vend = :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);
 
         $query->joinWith(['zonaVend']);
 

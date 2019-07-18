@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Proveedor;
@@ -40,7 +41,11 @@ class ProveedorSearch extends Proveedor
      */
     public function search($params)
     {
-        $query = Proveedor::find();
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = Proveedor::find()
+                 ->where('sucursal_prov = :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);
         $query->joinWith(['proviProve','paisProve','deptoProve','dttoProve',]);
 
         // add conditions that should always apply here

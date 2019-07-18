@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\TipoProveedor;
@@ -40,7 +41,12 @@ class TipoProveedorSearch extends TipoProveedor
      */
     public function search($params)
     {
-        $query = TipoProveedor::find();
+
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = TipoProveedor::find()
+                 ->where('sucursal_tprov = :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);        
 
         // add conditions that should always apply here
 

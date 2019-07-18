@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Cliente;
@@ -40,7 +41,12 @@ class ClienteSearch extends Cliente
      */
     public function search($params)
     {
-        $query = Cliente::find();
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+
+        $query = Cliente::find()
+                ->where('sucursal_clte = :sucursal')
+                ->addParams([':sucursal' => $sucursal]);
         $query->joinWith(['provClte','paisClte','deptoClte','dttoClte','condpClte','vendedorClte']);
         // add conditions that should always apply here
 

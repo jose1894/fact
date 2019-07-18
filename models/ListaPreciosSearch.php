@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\ListaPrecios;
@@ -40,7 +41,11 @@ class ListaPreciosSearch extends ListaPrecios
      */
     public function search($params)
     {
-        $query = ListaPrecios::find();
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = ListaPrecios::find()
+                 ->where('sucursal_lista = :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
 

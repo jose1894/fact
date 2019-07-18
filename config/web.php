@@ -86,6 +86,12 @@ $config = [
                   'dmstr\web\AdminLteAsset' => [
                       'skin' => 'skin-red',
                   ],
+                  'wbraganca\dynamicform\DynamicFormAsset' => [
+                    'sourcePath' => '@app/web/js',
+                    'js' => [
+                        'yii2-dynamic-form.js'
+                    ],
+                ],
 
               ],
           ],

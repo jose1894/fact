@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
+use app\models\User;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\TipoProducto */
@@ -9,6 +10,9 @@ use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
 ?>
 
 <div class="tipo-producto-form">
+  <?php $modeluser = User::findOne(Yii::$app->user->id);
+  print_r($modeluser->sucursal0->id_suc);?>
+  <h1></h1>
     <?php $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientScript' => true]); ?>
     <div class="row">
       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">

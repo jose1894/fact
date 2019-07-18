@@ -1,7 +1,7 @@
 <?php
 
 namespace app\models;
-
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\TipoProducto;
@@ -40,7 +40,11 @@ class TipoProductoSearch extends TipoProducto
      */
     public function search($params)
     {
-        $query = TipoProducto::find();
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = TipoProducto::find()
+                 ->where('sucursal_tpdcto = :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
 

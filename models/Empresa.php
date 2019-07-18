@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use yii\helpers\ArrayHelper;
+
 use Yii;
 
 /**
@@ -63,5 +65,15 @@ class Empresa extends \yii\db\ActiveRecord
      public function getSucursales()
     {
         return $this->hasMany(Sucursal::className(), ['empresa_suc' => 'id_empresa']);
+    }
+
+    public static function empresaList()
+    {
+      $empresas = self::find()->where(['estatus_empresa' => 1])
+      ->orderBy('nombre_empresa')
+      ->all();
+
+      return ArrayHelper::map($empresas,'id_empresa','nombre_empresa');
+
     }
 }

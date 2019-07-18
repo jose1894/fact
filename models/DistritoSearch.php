@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Distrito;
@@ -41,7 +42,11 @@ class DistritoSearch extends Distrito
      */
     public function search($params)
     {
-        $query = Distrito::find();
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = Distrito::find()
+                 ->where('sucursal_dtto= :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);
         $query->joinWith(['provDtto','paisDtto','deptoDtto']);
 
         // add conditions that should always apply here

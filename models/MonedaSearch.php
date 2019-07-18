@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Moneda;
@@ -40,7 +41,11 @@ class MonedaSearch extends Moneda
      */
     public function search($params)
     {
-        $query = Moneda::find();
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = Moneda::find()
+                 ->where('sucursal_moneda= :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
 

@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Zona;
@@ -40,7 +41,12 @@ class ZonaSearch extends Zona
      */
     public function search($params)
     {
-        $query = Zona::find();
+
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = Zona::find()
+                 ->where('sucursal_zona = :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
 
