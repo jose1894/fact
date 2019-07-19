@@ -109,7 +109,9 @@ class PedidoController extends Controller
                 $fecha = explode("/",$model->fecha_pedido);
                 $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
                 $model->fecha_pedido = $fecha;
+                $model->sucursal_pedido = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
+
                 try {
 
                           if ($flag = $model->save(false)) {
@@ -204,6 +206,7 @@ class PedidoController extends Controller
                 $fecha = explode("/",$model->fecha_pedido);
                 $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
                 $model->fecha_pedido = $fecha;
+                $model->sucursal_pedido = SiteController::getSucursal();
 
                 try {
                     if ($flag = $model->save(false)) {

@@ -93,6 +93,7 @@ class DepartamentoController extends Controller
             }
             else
             {
+                $model->sucursal_depto = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
                         $model->save();
@@ -166,7 +167,9 @@ class DepartamentoController extends Controller
               }
               else
               {
+                  $model->sucursal_depto = SiteController::getSucursal();
                   $transaction = \Yii::$app->db->beginTransaction();
+                  
                   try {
                           $model->save();
                           $transaction->commit();
@@ -217,7 +220,7 @@ class DepartamentoController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
-    {        
+    {
         $this->findModel($id)->delete();
 
         if (Yii::$app->request->isAjax) {

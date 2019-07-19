@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "moneda".
@@ -48,5 +49,17 @@ class Moneda extends \yii\db\ActiveRecord
             'status_moneda' => Yii::t('moneda', 'Status'),
             'sucursal_moneda' => Yii::t('moneda', 'Sucursal Moneda'),
         ];
+    }
+
+    public static function getMonedasList()
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      $monedas = Moneda::find()
+                 ->where('status_moneda = :status and sucursal_moneda = :sucursal',[':status' => 1, ':sucursal' => $sucursal])
+                ->orderBy('des_moneda')
+                ->all();
+      return  ArrayHelper::map( $monedas, 'id_moneda', 'des_moneda');
     }
 }

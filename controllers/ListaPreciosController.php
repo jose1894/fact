@@ -90,6 +90,7 @@ class ListaPreciosController extends Controller
             }
             else
             {
+                $model->sucursal_lista = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
                         $model->save();
@@ -163,7 +164,9 @@ class ListaPreciosController extends Controller
               }
               else
               {
+                  $model->sucursal_lista = SiteController::getSucursal();
                   $transaction = \Yii::$app->db->beginTransaction();
+
                   try {
                           $model->save();
                           $transaction->commit();

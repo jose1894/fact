@@ -95,7 +95,9 @@ class PaisController extends Controller
             }
             else
             {
+                $model->sucursal_pais = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
+
                 try {
                         $model->save();
                         $transaction->commit();
@@ -168,6 +170,7 @@ class PaisController extends Controller
               }
               else
               {
+                  $model->sucursal_pais = SiteController::getSucursal();
                   $transaction = \Yii::$app->db->beginTransaction();
                   try {
                           $model->save();

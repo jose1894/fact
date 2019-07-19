@@ -93,7 +93,9 @@ class UnidadMedidaController extends Controller
             }
             else
             {
+                $model->sucursal_und = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
+
                 try {
                         $model->save();
                         $transaction->commit();
@@ -167,7 +169,9 @@ class UnidadMedidaController extends Controller
                       }
                       else
                       {
+                          $model->sucursal_und = SiteController::getSucursal();
                           $transaction = \Yii::$app->db->beginTransaction();
+
                           try {
                                   $model->save();
                                   $transaction->commit();

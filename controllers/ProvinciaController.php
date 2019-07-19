@@ -95,7 +95,9 @@ class ProvinciaController extends Controller
             }
             else
             {
+                $model->sucursal_prov = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
+
                 try {
                         $model->save();
                         $transaction->commit();
@@ -168,7 +170,9 @@ class ProvinciaController extends Controller
               }
               else
               {
+                  $model->sucursal_prov = SiteController::getSucursal();
                   $transaction = \Yii::$app->db->beginTransaction();
+
                   try {
                           $model->save();
                           $transaction->commit();

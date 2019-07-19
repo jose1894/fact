@@ -92,7 +92,9 @@ class TipoListapController extends Controller
             }
             else
             {
+                $model->sucursal_lista = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
+
                 try {
                         $model->save();
                         $transaction->commit();
@@ -165,7 +167,9 @@ class TipoListapController extends Controller
               }
               else
               {
+                  $model->sucursal_lista = SiteController::getSucursal();
                   $transaction = \Yii::$app->db->beginTransaction();
+                  
                   try {
                           $model->save();
                           $transaction->commit();

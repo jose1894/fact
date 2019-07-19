@@ -106,10 +106,7 @@ if ( $model->isNewRecord ) {
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
           <?php
           $vendedor = empty($model->vend_pedido) ? '' : Vendedor::findOne($model->vend_pedido)->nombre_vend;
-          $vendedores = Vendedor::find()->where(['estatus_vend' => 1])
-          ->orderBy('nombre_vend')
-          ->all();
-          $vendedores = ArrayHelper::map($vendedores,'id_vendedor','nombre_vend');
+          $vendedores = Vendedor::getVendedoresList();
           ?>
           <?= $form->field($model, 'vend_pedido',[
             'addClass' => 'form-control ',
@@ -129,10 +126,8 @@ if ( $model->isNewRecord ) {
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-          <?php $monedas = Moneda::find()->where(['status_moneda' => 1])
-          ->orderBy('des_moneda')
-          ->all();
-          $monedas = ArrayHelper::map( $monedas, 'id_moneda', 'des_moneda');
+          <?php
+            $monedas = Moneda::getMonedasList();
           ?>
           <?= $form->field($model, 'moneda_pedido',[
           'addClass' => 'form-control ',
@@ -157,10 +152,8 @@ if ( $model->isNewRecord ) {
 
       <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-          <?php $almacenes = Almacen::find()->where(['status_almacen' => 1])
-          ->orderBy('des_almacen')
-          ->all();
-          $almacenes = ArrayHelper::map( $almacenes, 'id_almacen', 'des_almacen');
+          <?php
+            $almacenes = Almacen::getAlmacenList();
           ?>
           <?= $form->field($model, 'almacen_pedido',[
             'addClass' => 'form-control ',
@@ -272,7 +265,7 @@ if ( $model->isNewRecord ) {
                                         'options' => ['placeholder' => Yii::t('producto','Select a product').'...'],
                                         'theme' => Select2::THEME_DEFAULT,
                                         'pluginOptions' => [
-                                            'allowClear' => true,
+                                            //'allowClear' => true,
                                             'minimumInputLength' => 3,
                                             'language' => [
                                                 'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
@@ -425,68 +418,76 @@ $('#pedido_tipo  input[type="radio"]').iCheck({
   radioClass   : 'iradio_flat-green'
 });
 
-$( '#pedido-clte_pedido' ).on( 'select2:select',function (){
+$( '#pedido-clte_pedido' ).on( 'select2:select',function () {
+
   $.ajax({
     url: '?r=cliente/cliente-list',
     method: 'GET',
     data:{ id : $(this).val()},
     async: false,
-    success: function( cliente ){
-      cliente = cliente[0];
+    success: function( cliente ) {
+
+      cliente = cliente[ 0 ];
       let direccion = cliente.direcc_clte ? cliente.direcc_clte : " ",
           geo = cliente.geo ? cliente.geo : " ",
           textDirecc = direccion + " " + geo,
           condp = cliente.condp,
           vendedor = cliente.vendedor,
           tpl = cliente.tpl;
+
       $( "#pedido-direccion_pedido" ).val( textDirecc );
       $( "#pedido-condp_pedido" ).val( condp );
       $( "#pedido-vend_pedido" ).val( vendedor );
       $( "#pedido-tipo_listap" ).val( tpl );
       $( "#pedido-condp_pedido" ).trigger( "change" );
       $( "#pedido-vend_pedido" ).trigger( "change" );
+
     }
   });
+
 });
 
-$( 'body' ).on('select2:select',"select[id$='prod_pdetalle']",function(){
+$( 'body' ).on('select2:select',"select[id$='prod_pdetalle']",function() {
 	let _currSelect = $( this );
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
-  if ( checkDuplicate( _currSelect, row) )
-  {
-    _currSelect.val(null).trigger( 'change' );
-    swal('Oops!!!',"El código no puede repetirse, ya está en la lista","error" );
+
+  if ( checkDuplicate( _currSelect, row) ) {
+    _currSelect.val( null ).trigger( 'change' );
+    swal( 'Oops!!!',"El código no puede repetirse, ya está en la lista","error" );
     _currSelect.focus();
   }
-  if ( _currSelect.val() )
-  {
+
+  if ( _currSelect.val() ) {
     setPrices( _currSelect.val(), row,   $( "#pedido-tipo_listap" ).val() );
     $( '#pedidodetalle-' + row + '-cant_pdetalle' ).focus();
   }
+
 });
 
-$( '.table-body' ).on( 'change', 'input[id$="cant_pdetalle"]', function( e ){
+$( '.table-body' ).on( 'change', 'input[id$="cant_pdetalle"]', function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     let cant = $( this ).val();
     let precio = $( "#pedidodetalle-" + row + "-plista_pdetalle").val();
     let descu = $( "#pedidodetalle-" + row + "-descu_pdetalle").val();
     let total = 0.00;
-    if ( cant ){
-      if ( descu ){
-        total = ( cant * (precio - (precio * (descu /100))));
-      }
-      else
-      {
+
+    if ( cant ) {
+
+      if ( descu ) {
+        total = ( cant * ( precio - (precio * ( descu / 100 ) ) ) );
+      } else {
         total = cant * precio;
       }
+
       total = parseFloat(  total  ).toFixed( 2 );
       $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
+
     }
 });
 
-$( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ){
+$( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     let descu = $( this ).val();
@@ -496,14 +497,13 @@ $( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ){
     let descuento = 0;
     let precioVenta = 0.00;
 
-    if ( cant ){
-      if ( descu ){
-        total = ( cant * (precio - (precio * (descu /100))));
-        precioVenta = precio - (precio * (descu /100));
-        descuento = (precio * (descu /100));
-      }
-      else
-      {
+    if ( cant ) {
+
+      if ( descu ) {
+        total = ( cant * ( precio - ( precio * ( descu / 100 ) ) ) );
+        precioVenta = precio - ( precio * ( descu / 100 ) );
+        descuento = ( precio * ( descu / 100 ) );
+      } else {
         total = cant * precio;
       }
 
@@ -517,20 +517,22 @@ $( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ){
     }
 });
 
-$( '.table-body' ).on( 'change', 'input[id$="precio_pdetalle"]', function( e ){
+$( '.table-body' ).on( 'change', 'input[id$="precio_pdetalle"]', function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     let cant = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
     let precio = $( this ).val();
     let total = 0;
-    if ( cant ){
+
+    if ( cant ) {
       total = cant * precio;
       total = parseFloat(  total  ).toFixed( 2 );
       $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
     }
+
 });
 
-$( '.table-body' ).on( 'blur', 'input[id$="precio_pdetalle"]', function( e ){
+$( '.table-body' ).on( 'blur', 'input[id$="precio_pdetalle"]', function( e ) {
   let totals = calculateTotals();
 
   $( "#subtotal" ).val( totals.subtotal );
@@ -539,37 +541,39 @@ $( '.table-body' ).on( 'blur', 'input[id$="precio_pdetalle"]', function( e ){
   $( "#descuento" ).val( totals.descuento );
 });
 
-$( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ){
-  if ( e.keyCode === 13 && $( this ).val() )
-  {
+$( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ) {
+
+  if ( e.keyCode === 13 && $( this ).val() ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     $( '#pedidodetalle-' + row + '-descu_pdetalle' ).focus();
   }
+
 });
 
 $( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ){
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
 
-  if ( e.keyCode === 13 && $( "#pedidodetalle-" + row + "-cant_pdetalle" ).val() )
-  {
+  if ( e.keyCode === 13 && $( "#pedidodetalle-" + row + "-cant_pdetalle" ).val() ) {
     $( '#pedidodetalle-' + row + '-precio_pdetalle' ).focus();
   }
 });
 
-$( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ){
+$( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ) {
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
-  if ( e.keyCode === 13 && $( this ).val() && $( "#pedidodetalle-" + row + "-prod_pdetalle").val()  )  {
+
+  if ( e.keyCode === 13 && $( this ).val() &&
+       $( "#pedidodetalle-" + row + "-prod_pdetalle").val()  )  {
       let rowR = getRow( row );
+
       swal({
         title: "¿Deseas agregar un  nuevo item?",
         icon: "info",
         buttons: true,
-      })
-      .then((willDelete) => {
-        if (willDelete) {
+      }).then( ( willDelete ) => {
+        if ( willDelete ) {
           let row =  rowR(1);
           $( '.add-item' ).trigger( 'click' );
           $( "#pedidodetalle-" + ( parseInt(row) + 1 ) + "-prod_pdetalle").focus();
@@ -591,15 +595,15 @@ function calculateTotals() {
         total: 0
       };
 
-  $( 'input[id$="-total_pdetalle"]' ).each(function (i, element){
+  $( 'input[id$="-total_pdetalle"]' ).each(function (i, element) {
     total += parseFloat(element.value);
   });
 
-  $( 'input[id$="-plista_pdetalle"]' ).each(function (i, element){
+  $( 'input[id$="-plista_pdetalle"]' ).each(function (i, element) {
     subTotal += parseFloat(element.value);
   });
 
-  $( 'input[id$="-descu_pdetalle"]' ).each(function (i, element){
+  $( 'input[id$="-descu_pdetalle"]' ).each(function (i, element) {
     descuento += parseFloat( $(element).data( "descuento" ) );
   });
 
@@ -623,22 +627,22 @@ function getRow( row = null ) {
     }
   }
 }
+
 function checkDuplicate( _currSelect, row ) {
   let band = false;
-  row = row[ 1 ];
   let selects = $("select[id$='prod_pdetalle']");
-  for( let i = 0; i < selects.length - 1; i++)
-  {
-      if ( _currSelect.val() === $( selects[i] ).val() ){
+  row = row[ 1 ];
+
+  for( let i = 0; i < selects.length - 1; i++) {
+      if ( _currSelect.val() === $( selects[i] ).val() ) {
         band = true;
         break;
       }
   }
   return band;
 }
-function setPrices( value = null, row, tipo_lista )
-{
-  if ( value ){
+function setPrices( value = null, row, tipo_lista ) {
+  if ( value ) {
     $.ajax({
         url:'?r=producto/product-price',
         data:{
@@ -646,10 +650,8 @@ function setPrices( value = null, row, tipo_lista )
           tipo_listap: tipo_lista
         },
         async:false,
-        success: function( data )
-        {
-          if ( data.results )
-          {
+        success: function( data ) {
+          if ( data.results ) {
             let precioLista = data.results[ 0 ].precio / 1.18 ;
             let impuestoDetalle = data.results[ 0 ].precio - data.results[ 0 ].precio / 1.18;
 
@@ -671,7 +673,7 @@ function setPrices( value = null, row, tipo_lista )
 }
 
 
-$( "#submit" ).on( 'click', function(){
+$( "#submit" ).on( 'click', function() {
   var form = $( "form#Pedido" );
 
   $.ajax( {
@@ -679,12 +681,11 @@ $( "#submit" ).on( 'click', function(){
     'method' : $( form ).attr( 'method' ),
     'data'   : $( form ).serialize(),
     'async'  : false,
-    'success': function ( data ){
-      if ( data.success ){
+    'success': function ( data ) {
+      if ( data.success ) {
         swal(data.title, data.message, data.type);
 
-        if ( $( form ).attr('action').indexOf('create') != -1)
-        {
+        if ( $( form ).attr('action').indexOf('create') != -1) {
           $( form ).trigger( 'reset' );
           selects = $(form).find('select');
 
@@ -704,8 +705,7 @@ $( "#submit" ).on( 'click', function(){
     error: function(data) {
         let message;
 
-        if ( data.responseJSON )
-        {
+        if ( data.responseJSON ) {
           let error = data.responseJSON;
           message =   "Se ha encontrado un error: " +
           "\\n\\nCode " + error.code +
@@ -713,9 +713,7 @@ $( "#submit" ).on( 'click', function(){
           "\\n\\nLine: " + error.line +
           "\\n\\nName: " + error.name +
           "\\n Message: " + error.message;
-        }
-        else
-        {
+        } else {
             message = data.responseText;
         }
 

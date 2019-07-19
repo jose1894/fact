@@ -93,7 +93,9 @@ class TipoProductoController extends Controller
             }
             else
             {
+                $model->sucursal_tpdcto = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
+
                 try {
                         $model->save();
                         $transaction->commit();
@@ -167,7 +169,9 @@ class TipoProductoController extends Controller
               }
               else
               {
+                  $model->sucursal_tpdcto = SiteController::getSucursal();
                   $transaction = \Yii::$app->db->beginTransaction();
+                  
                   try {
                           $model->save();
                           $transaction->commit();

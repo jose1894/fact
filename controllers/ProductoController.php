@@ -102,7 +102,9 @@ class ProductoController extends Controller
               }
               else
               {
-                  $transaction = \Yii::$app->db->beginTransaction();
+                $model->sucursal_producto = SiteController::getSucursal();
+                $transaction = \Yii::$app->db->beginTransaction();
+
                   try {
                       if ($flag = $model->save(false)) {
                           foreach ($modelsListaP as $modelListaP) {
@@ -196,7 +198,9 @@ class ProductoController extends Controller
               }
               else
               {
+                  $model->sucursal_producto = SiteController::getSucursal();
                   $transaction = \Yii::$app->db->beginTransaction();
+
                   try {
                       if ($flag = $model->save(false)) {
                         if (!empty($deletedIDs)) {
@@ -288,55 +292,71 @@ class ProductoController extends Controller
         throw new NotFoundHttpException(Yii::t('producto', 'The requested page does not exist.'));
     }
 
-    public function actionProductoList($q = null, $id = null,$desc = null,$tipo_listap = null) {
+    public function actionProductoList($q = null, $id = null,$desc = null,$tipo_listap = null)
+    {
+
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $out = ['results' => ['id' => '', 'text' => '']];
-        if (!is_null($desc))
-        {
+
+        $sucursal = SiteController::getSucursal();
+
+        if ( !is_null( $desc ) ) {
             $query = new Query;
+
             $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio'])
                 ->from(['v_productos as p'])
                 ->where('p.status_prod = 1')
                 ->andWhere(['like', 'p.texto', $desc])
-                ->andWhere('p.tipo_lista = :tipo_listap',[':tipo_listap' =>  $tipo_listap])
+                ->andWhere('p.tipo_lista = :tipo_listap and p.sucursal_prod = :sucursal',[':tipo_listap' =>  $tipo_listap, ':sucursal' => $sucursal])
                 ->orderBy('p.cod_prod ASC')
                 ->limit(20);
+
             $command = $query->createCommand();
             $data = $command->queryAll();
-            $out['results'] = array_values($data);
-        }
-        elseif ($id > 0) {
+
+            $out['results'] = array_values( $data );
+        } elseif ( $id > 0 ) {
           $query = new Query;
+
           $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio'])
               ->from(['v_productos as p'])
               ->where('p.status_prod = 1')
               ->andWhere(['p.id_prod = :id',['id' =>  $id]])
               ->limit(20);
+
           $command = $query->createCommand();
           $data = $command->queryAll();
+
           $out['results'] = array_values($data);
         }
+
         return $out;
     }
 
     public function actionProductPrice( $id )
     {
+
       \Yii::$app->response->format = Response::FORMAT_JSON;
       $out = ['results' => false];
-      if (!is_null($id))
-      {
+      $sucursal = SiteController::getSucursal();
+
+      if ( !is_null( $id ) ) {
           $tipo_lista = Yii::$app->request->get( 'tipo_listap' );
+
           $query = new Query;
           $query->select(['p.precio_lista as precio'])
               ->from(['v_productos as p'])
               ->where('p.status_prod = 1')
               ->andWhere('p.id_prod = :id',['id' =>  $id])
-              ->andWhere('p.tipo_lista = :tipo_lista',['tipo_lista' =>  $tipo_lista])
+              ->andWhere('p.tipo_lista = :tipo_lista and p.sucursal_prod = :sucursal' , [':tipo_lista' =>  $tipo_lista, ':sucursal' => $sucursal])
               ->limit(1);
+
           $command = $query->createCommand();
           $data = $command->queryAll();
-          $out['results'] = $data;
+
+          $out[ 'results' ] = $data;
       }
+
       return $out;
      }
 }

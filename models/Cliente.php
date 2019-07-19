@@ -40,7 +40,7 @@ class Cliente extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'nombre_clte', 'direcc_clte','vendedor_clte', 'estatus_ctle','lista_clte', 'condp_clte'], 'required'],
+            [[ 'nombre_clte', 'direcc_clte','vendedor_clte', 'estatus_ctle','lista_clte', 'condp_clte', 'pais_cte', 'depto_cte', 'provi_cte', 'dtto_clte'], 'required'],
             [['direcc_clte'], 'string'],
             [['pais_cte', 'depto_cte', 'provi_cte', 'dtto_clte', 'vendedor_clte', 'estatus_ctle', 'lista_clte','condp_clte', 'sucursal_clte'], 'integer'],
             [['dni_clte', 'ruc_clte'], 'string', 'max' => 20],

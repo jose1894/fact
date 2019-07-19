@@ -91,6 +91,7 @@ class DistritoController extends Controller
             }
             else
             {
+                $model->sucursal_dtto = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
                         $model->save();
@@ -164,7 +165,9 @@ class DistritoController extends Controller
               }
               else
               {
+                  $model->sucursal_dtto = SiteController::getSucursal();
                   $transaction = \Yii::$app->db->beginTransaction();
+                  
                   try {
                           $model->save();
                           $transaction->commit();

@@ -93,6 +93,7 @@ class CondPagoController extends Controller
             }
             else
             {
+                $model->sucursal_condp = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
                         $model->save();
@@ -167,7 +168,9 @@ class CondPagoController extends Controller
               }
               else
               {
+                  $model->sucursal_condp = SiteController::getSucursal();
                   $transaction = \Yii::$app->db->beginTransaction();
+                  
                   try {
                           $model->save();
                           $transaction->commit();

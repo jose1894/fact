@@ -177,4 +177,11 @@ class SiteController extends Controller
             }
         }
     }
+
+    public static function getSucursal()
+    {
+      $user = User::findOne(Yii::$app->user->id);
+
+      return $user->sucursal0->id_suc;
+    }
 }

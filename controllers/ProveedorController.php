@@ -93,7 +93,9 @@ class ProveedorController extends Controller
             }
             else
             {
+                $model->sucursal_prove = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
+
                 try {
                         $model->save();
                         $transaction->commit();
@@ -166,7 +168,9 @@ class ProveedorController extends Controller
               }
               else
               {
+                  $model->sucursal_prove = SiteController::getSucursal();
                   $transaction = \Yii::$app->db->beginTransaction();
+
                   try {
                           $model->save();
                           $transaction->commit();

@@ -217,7 +217,10 @@ use kartik\number\NumberControl;
 
                               </td>
                               <td>
-                                <?= $form->field($modelListaP,"[{$index}]preciom_lista")
+                                <?= $form->field($modelListaP,"[{$index}]preciom_lista",[
+                                  'addClass' => 'form-control',
+                                  'addon' => [ 'prepend' => [ 'content' => '<i class="fa fa-money"> </i>']]
+                                ])
                                 ->widget(NumberControl::classname(), [
                                       'maskedInputOptions' => [
                                           'allowMinus' => false
@@ -225,7 +228,10 @@ use kartik\number\NumberControl;
                                   ])->label(false)?>
                               </td>
                               <td>
-                                <?= $form->field($modelListaP,"[{$index}]preciod_lista")->widget(NumberControl::classname(), [
+                                <?= $form->field($modelListaP,"[{$index}]preciod_lista",[
+                                  'addClass' => 'form-control',
+                                  'addon' => [ 'prepend' => [ 'content' => '<i class="fa fa-usd"> </i>']]
+                                  ])->widget(NumberControl::classname(), [
                                       'maskedInputOptions' => [
                                           'allowMinus' => false
                                       ]
@@ -275,35 +281,45 @@ use kartik\number\NumberControl;
 </div>
 <?php
 $js = "
+
+
+$( 'input[type=\"text\"]' ).focus( function() {
+  this.select();
+});
+
 $( 'select[id$=\"-tipo_lista\"]' ).on( 'change', function( e ) {
   let row = $( this ).attr( \"id\" ).split( \"-\" );
   row = row[ 1 ];
 
-  $( '#listaprecios-' + row + '-preciom_lista-disp').val( 0 );
-  $( '#listaprecios-' + row + '-preciod_lista-disp').val( 0 );
-  $( '#listaprecios-' + row + '-utilidad1_lista-disp').val( 0 );
-  $( '#listaprecios-' + row + '-utilidad2_lista-disp').val( 0 );
-  $( '#listaprecios-' + row + '-precio_lista-disp').val( 0 );
+  $( '#listaprecios-' + row + '-preciom_lista-disp' ).val( 0 );
+  $( '#listaprecios-' + row + '-preciod_lista-disp' ).val( 0 );
+  $( '#listaprecios-' + row + '-utilidad1_lista-disp' ).val( 0 );
+  $( '#listaprecios-' + row + '-utilidad2_lista-disp' ).val( 0 );
+  $( '#listaprecios-' + row + '-precio_lista-disp' ).val( 0 );
+
+  $( '#listaprecios-' + row +'-preciom_lista-disp' ).focus();
 });
 
 $( 'input[id$=\"-preciom_lista-disp\"]').on( 'change',  function() {
-  let row = $( this ).attr( \"id\" ).split( \"-\" );
-  row = row[ 1 ];
+  if ( $( this ).val() !== 0 ){
+    let row = $( this ).attr( \"id\" ).split( \"-\" );
+    row = row[ 1 ];
 
-  //let util1 = $( '#listaprecios-' + row + '-utilidad1_lista-disp' ).val( );
-  //let util2 = $( '#listaprecios-' + row + '-utilidad2_lista-disp' ).val( );
-  let precioLista = $( this ).val( );
-  /*
-  if ( util1 ) {
-    precioLista = ( ( precioLista * util1 ) / 100) + precioLista;
+    //let util1 = $( '#listaprecios-' + row + '-utilidad1_lista-disp' ).val( );
+    //let util2 = $( '#listaprecios-' + row + '-utilidad2_lista-disp' ).val( );
+    let precioLista = $( this ).val( );
+    /*
+    if ( util1 ) {
+      precioLista = ( ( precioLista * util1 ) / 100) + precioLista;
+    }
+
+    if ( util2 ) {
+      precioLista = ( ( precioLista * util2 ) / 100) + precioLista;
+    }*/
+
+    precioLista = parseFloat( precioLista ).toFixed(2);
+    $( '#listaprecios-' + row + '-precio_lista-disp' ).val( precioLista )
   }
-
-  if ( util2 ) {
-    precioLista = ( ( precioLista * util2 ) / 100) + precioLista;
-  }*/
-
-  precioLista = parseFloat( precioLista ).toFixed(2);
-  $( '#listaprecios-' + row + '-precio_lista-disp' ).val( precioLista )
 });
 
 $( 'input[id$=\"-utility1_lista-disp\"]').on( 'change',  function() {
@@ -318,6 +334,7 @@ $( 'input[id$=\"-utility1_lista-disp\"]').on( 'change',  function() {
 
   precioLista = parseFloat( precioLista ).toFixed(2);
   $( '#listaprecios-' + row + '-precio_lista-disp' ).val( precioLista );
+
 });
 
 $( 'input[id$=\"-utility2_lista-disp\"]').on( 'change',  function() {

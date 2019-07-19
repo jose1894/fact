@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "cond_pago".
@@ -45,5 +46,17 @@ class CondPago extends \yii\db\ActiveRecord
             'status_condp' => Yii::t('condicionp', 'Status'),
             'sucursal_condp' => Yii::t('condicionp', 'Sucursal Condp'),
         ];
+    }
+
+    public static function getCondPagoList()
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      $condiciones = CondPago::find()
+                     ->where('status_condp = :status and sucursal_condp = :sucursal',[':status' => 1, ':sucursal' => $sucursal])
+                     ->orderBy('desc_condp')
+                     ->all();
+      return ArrayHelper::map( $condiciones, 'id_condp', 'desc_condp');
     }
 }

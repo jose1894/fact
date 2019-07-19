@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "almacen".
@@ -45,5 +46,17 @@ class Almacen extends \yii\db\ActiveRecord
             'status_almacen' => Yii::t('almacen', 'Status'),
             'sucursal_almacen' => Yii::t('almacen', 'Sucursal Almacen'),
         ];
+    }
+
+    public static function getAlmacenList()
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      $almacenes = Almacen::find()
+                   ->where('status_almacen = :status and sucursal_almacen = :sucursal', [':status' => 1, ':sucursal' => $sucursal])
+                   ->orderBy('des_almacen')
+                   ->all();
+      return ArrayHelper::map( $almacenes, 'id_almacen', 'des_almacen');
     }
 }

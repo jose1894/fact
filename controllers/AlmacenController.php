@@ -93,12 +93,9 @@ class AlmacenController extends Controller
             }
             else
             {
-                $user = User::findOne(Yii::$app->user->id);
-                $sucursal = $user->sucursal0->id_suc;
-
-                $model->sucursal_almacen = $sucursal;
-
+                $model->sucursal_almacen = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
+
                 try {
                         $model->save();
                         $transaction->commit();
@@ -173,11 +170,9 @@ class AlmacenController extends Controller
                       }
                       else
                       {
-                          $user = User::findOne(Yii::$app->user->id);
-                          $sucursal = $user->sucursal0->id_suc;
-
-                          $model->sucursal_almacen = $sucursal;
+                          $model->sucursal_almacen = SiteController::getSucursal();
                           $transaction = \Yii::$app->db->beginTransaction();
+                          
                           try {
                                   $model->save();
                                   $transaction->commit();

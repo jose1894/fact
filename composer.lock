@@ -1657,12 +1657,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-widget-select2.git",
-                "reference": "56ab85f7f742c756d17952790a63a4129e15e5e5"
+                "reference": "986bf38df30a4d3c45efd948f7333681dc1ff578"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-widget-select2/zipball/56ab85f7f742c756d17952790a63a4129e15e5e5",
-                "reference": "56ab85f7f742c756d17952790a63a4129e15e5e5",
+                "url": "https://api.github.com/repos/kartik-v/yii2-widget-select2/zipball/986bf38df30a4d3c45efd948f7333681dc1ff578",
+                "reference": "986bf38df30a4d3c45efd948f7333681dc1ff578",
                 "shasum": ""
             },
             "require": {
@@ -1702,7 +1702,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2019-06-19T07:42:57+00:00"
+            "time": "2019-07-19T17:25:48+00:00"
         },
         {
             "name": "kartik-v/yii2-widget-sidenav",

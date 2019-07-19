@@ -95,7 +95,9 @@ class ZonaController extends Controller
             }
             else
             {
+                $model->sucursal_zona = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
+
                 try {
                         $model->save();
                         $transaction->commit();
@@ -169,7 +171,9 @@ class ZonaController extends Controller
               }
               else
               {
+                  $model->sucursal_zona = SiteController::getSucursal();
                   $transaction = \Yii::$app->db->beginTransaction();
+
                   try {
                           $model->save();
                           $transaction->commit();

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "vendedor".
@@ -75,5 +76,17 @@ class Vendedor extends \yii\db\ActiveRecord
     public function getZonaVend()
     {
         return $this->hasOne(Zona::className(), ['id_zona' => 'zona_vend']);
+    }
+
+    public static function getVendedoresList()
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      $vendedores = Vendedor::find()
+                    ->where('estatus_vend = :status and sucursal_vend = :sucursal',[':status' => 1,':sucursal' => $sucursal])
+                    ->orderBy('nombre_vend')
+                    ->all();
+      return ArrayHelper::map($vendedores,'id_vendedor','nombre_vend');
     }
 }
