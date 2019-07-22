@@ -39,7 +39,7 @@ use yii\web\View;
   </div>
   <!-- /.modal-dialog -->
 </div>
-<?php
+<?php /*
 $this->registerJsFile(
     '@web/js/app.js',
     ['depends' => [\yii\web\JqueryAsset::className()]]);

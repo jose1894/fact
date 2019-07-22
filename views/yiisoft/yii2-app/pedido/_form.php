@@ -447,7 +447,7 @@ $( '#pedido-clte_pedido' ).on( 'select2:select',function () {
 
 });
 
-$( 'body' ).on('select2:select',"select[id$='prod_pdetalle']",function() {
+$( '.table-body' ).on('select2:select',"select[id$='prod_pdetalle']",function() {
 	let _currSelect = $( this );
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
