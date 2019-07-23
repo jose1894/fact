@@ -344,7 +344,7 @@ class ProductoController extends Controller
           $tipo_lista = Yii::$app->request->get( 'tipo_listap' );
 
           $query = new Query;
-          $query->select(['p.precio_lista as precio'])
+          $query->select(['p.precio_lista as precio, p.impuesto_suc'])
               ->from(['v_productos as p'])
               ->where('p.status_prod = 1')
               ->andWhere('p.id_prod = :id',['id' =>  $id])

@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 4.6.6deb5
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 19-07-2019 a las 00:06:58
--- Versión del servidor: 10.1.36-MariaDB
--- Versión de PHP: 7.2.10
+-- Servidor: localhost:3306
+-- Tiempo de generación: 22-07-2019 a las 22:11:50
+-- Versión del servidor: 5.7.26-0ubuntu0.18.04.1
+-- Versión de PHP: 7.2.19-0ubuntu0.18.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -322,6 +320,60 @@ CREATE TABLE `auth_item_child` (
 
 INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('Administradores', '/*'),
+('SuperSU', '/*'),
+('SuperSU', '/admin/*'),
+('SuperSU', '/admin/assignment/*'),
+('SuperSU', '/admin/assignment/assign'),
+('SuperSU', '/admin/assignment/index'),
+('SuperSU', '/admin/assignment/revoke'),
+('SuperSU', '/admin/assignment/view'),
+('SuperSU', '/admin/default/*'),
+('SuperSU', '/admin/default/index'),
+('SuperSU', '/admin/menu/*'),
+('SuperSU', '/admin/menu/create'),
+('SuperSU', '/admin/menu/delete'),
+('SuperSU', '/admin/menu/index'),
+('SuperSU', '/admin/menu/update'),
+('SuperSU', '/admin/menu/view'),
+('SuperSU', '/admin/permission/*'),
+('SuperSU', '/admin/permission/assign'),
+('SuperSU', '/admin/permission/create'),
+('SuperSU', '/admin/permission/delete'),
+('SuperSU', '/admin/permission/index'),
+('SuperSU', '/admin/permission/remove'),
+('SuperSU', '/admin/permission/update'),
+('SuperSU', '/admin/permission/view'),
+('SuperSU', '/admin/role/*'),
+('SuperSU', '/admin/role/assign'),
+('SuperSU', '/admin/role/create'),
+('SuperSU', '/admin/role/delete'),
+('SuperSU', '/admin/role/index'),
+('SuperSU', '/admin/role/remove'),
+('SuperSU', '/admin/role/update'),
+('SuperSU', '/admin/role/view'),
+('SuperSU', '/admin/route/*'),
+('SuperSU', '/admin/route/assign'),
+('SuperSU', '/admin/route/create'),
+('SuperSU', '/admin/route/index'),
+('SuperSU', '/admin/route/refresh'),
+('SuperSU', '/admin/route/remove'),
+('SuperSU', '/admin/rule/*'),
+('SuperSU', '/admin/rule/create'),
+('SuperSU', '/admin/rule/delete'),
+('SuperSU', '/admin/rule/index'),
+('SuperSU', '/admin/rule/update'),
+('SuperSU', '/admin/rule/view'),
+('SuperSU', '/admin/user/*'),
+('SuperSU', '/admin/user/activate'),
+('SuperSU', '/admin/user/change-password'),
+('SuperSU', '/admin/user/delete'),
+('SuperSU', '/admin/user/index'),
+('SuperSU', '/admin/user/login'),
+('SuperSU', '/admin/user/logout'),
+('SuperSU', '/admin/user/request-password-reset'),
+('SuperSU', '/admin/user/reset-password'),
+('SuperSU', '/admin/user/signup'),
+('SuperSU', '/admin/user/view'),
 ('Administradores', '/almacen/*'),
 ('Administradores', '/almacen/create'),
 ('Administradores', '/almacen/delete'),
@@ -406,12 +458,19 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('Administradores', '/pedido-detalle/update'),
 ('Administradores', '/pedido-detalle/view'),
 ('Administradores', '/pedido/*'),
+('Usuarios', '/pedido/*'),
 ('Administradores', '/pedido/create'),
+('Usuarios', '/pedido/create'),
 ('Administradores', '/pedido/delete'),
+('Usuarios', '/pedido/delete'),
 ('Administradores', '/pedido/index'),
+('Usuarios', '/pedido/index'),
 ('Administradores', '/pedido/pedido-rpt'),
+('Usuarios', '/pedido/pedido-rpt'),
 ('Administradores', '/pedido/update'),
+('Usuarios', '/pedido/update'),
 ('Administradores', '/pedido/view'),
+('Usuarios', '/pedido/view'),
 ('Administradores', '/producto/*'),
 ('Administradores', '/producto/create'),
 ('Administradores', '/producto/delete'),
@@ -479,68 +538,7 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('Administradores', '/zona/index'),
 ('Administradores', '/zona/update'),
 ('Administradores', '/zona/view'),
-('SuperSU', '/*'),
-('SuperSU', '/admin/*'),
-('SuperSU', '/admin/assignment/*'),
-('SuperSU', '/admin/assignment/assign'),
-('SuperSU', '/admin/assignment/index'),
-('SuperSU', '/admin/assignment/revoke'),
-('SuperSU', '/admin/assignment/view'),
-('SuperSU', '/admin/default/*'),
-('SuperSU', '/admin/default/index'),
-('SuperSU', '/admin/menu/*'),
-('SuperSU', '/admin/menu/create'),
-('SuperSU', '/admin/menu/delete'),
-('SuperSU', '/admin/menu/index'),
-('SuperSU', '/admin/menu/update'),
-('SuperSU', '/admin/menu/view'),
-('SuperSU', '/admin/permission/*'),
-('SuperSU', '/admin/permission/assign'),
-('SuperSU', '/admin/permission/create'),
-('SuperSU', '/admin/permission/delete'),
-('SuperSU', '/admin/permission/index'),
-('SuperSU', '/admin/permission/remove'),
-('SuperSU', '/admin/permission/update'),
-('SuperSU', '/admin/permission/view'),
-('SuperSU', '/admin/role/*'),
-('SuperSU', '/admin/role/assign'),
-('SuperSU', '/admin/role/create'),
-('SuperSU', '/admin/role/delete'),
-('SuperSU', '/admin/role/index'),
-('SuperSU', '/admin/role/remove'),
-('SuperSU', '/admin/role/update'),
-('SuperSU', '/admin/role/view'),
-('SuperSU', '/admin/route/*'),
-('SuperSU', '/admin/route/assign'),
-('SuperSU', '/admin/route/create'),
-('SuperSU', '/admin/route/index'),
-('SuperSU', '/admin/route/refresh'),
-('SuperSU', '/admin/route/remove'),
-('SuperSU', '/admin/rule/*'),
-('SuperSU', '/admin/rule/create'),
-('SuperSU', '/admin/rule/delete'),
-('SuperSU', '/admin/rule/index'),
-('SuperSU', '/admin/rule/update'),
-('SuperSU', '/admin/rule/view'),
-('SuperSU', '/admin/user/*'),
-('SuperSU', '/admin/user/activate'),
-('SuperSU', '/admin/user/change-password'),
-('SuperSU', '/admin/user/delete'),
-('SuperSU', '/admin/user/index'),
-('SuperSU', '/admin/user/login'),
-('SuperSU', '/admin/user/logout'),
-('SuperSU', '/admin/user/request-password-reset'),
-('SuperSU', '/admin/user/reset-password'),
-('SuperSU', '/admin/user/signup'),
-('SuperSU', '/admin/user/view'),
-('SuperSU', 'Administradores'),
-('Usuarios', '/pedido/*'),
-('Usuarios', '/pedido/create'),
-('Usuarios', '/pedido/delete'),
-('Usuarios', '/pedido/index'),
-('Usuarios', '/pedido/pedido-rpt'),
-('Usuarios', '/pedido/update'),
-('Usuarios', '/pedido/view');
+('SuperSU', 'Administradores');
 
 -- --------------------------------------------------------
 
@@ -1993,6 +1991,26 @@ INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `password_res
 -- --------------------------------------------------------
 
 --
+-- Estructura Stand-in para la vista `v_productos`
+-- (Véase abajo para la vista actual)
+--
+DROP VIEW IF EXISTS `v_productos`;
+CREATE TABLE `v_productos` (
+`id_prod` int(11)
+,`cod_prod` varchar(25)
+,`des_prod` varchar(70)
+,`texto` varchar(96)
+,`sucursal_prod` int(11)
+,`status_prod` int(11)
+,`precio_lista` decimal(18,2)
+,`tipo_lista` int(11)
+,`id_suc` int(11)
+,`impuesto_suc` decimal(7,2)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `vendedor`
 --
 
@@ -2015,24 +2033,6 @@ INSERT INTO `vendedor` (`id_vendedor`, `dni_vend`, `nombre_vend`, `tlf_vend`, `e
 (1, '', 'IRWIN PEREZ', '', 1, 1, 2),
 (2, '', 'APP', '', 1, 1, 1),
 (3, '', 'MELIN HUAMAN', '', 1, 1, 1);
-
--- --------------------------------------------------------
-
---
--- Estructura Stand-in para la vista `v_productos`
--- (Véase abajo para la vista actual)
---
-DROP VIEW IF EXISTS `v_productos`;
-CREATE TABLE `v_productos` (
-`id_prod` int(11)
-,`cod_prod` varchar(25)
-,`des_prod` varchar(70)
-,`texto` varchar(96)
-,`sucursal_prod` int(11)
-,`status_prod` int(11)
-,`precio_lista` decimal(18,2)
-,`tipo_lista` int(11)
-);
 
 -- --------------------------------------------------------
 
@@ -2066,7 +2066,7 @@ INSERT INTO `zona` (`id_zona`, `nombre_zona`, `desc_zona`, `estatus_zona`, `sucu
 --
 DROP TABLE IF EXISTS `v_productos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,concat(`producto`.`cod_prod`,' ',`producto`.`des_prod`) AS `texto`,`producto`.`sucursal_prod` AS `sucursal_prod`,`producto`.`status_prod` AS `status_prod`,`lista_precios`.`precio_lista` AS `precio_lista`,`lista_precios`.`tipo_lista` AS `tipo_lista` from (`producto` join `lista_precios` on((`producto`.`id_prod` = `lista_precios`.`prod_lista`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,concat(`producto`.`cod_prod`,' ',`producto`.`des_prod`) AS `texto`,`producto`.`sucursal_prod` AS `sucursal_prod`,`producto`.`status_prod` AS `status_prod`,`lista_precios`.`precio_lista` AS `precio_lista`,`lista_precios`.`tipo_lista` AS `tipo_lista`,`sucursal`.`id_suc` AS `id_suc`,`sucursal`.`impuesto_suc` AS `impuesto_suc` from ((`producto` join `lista_precios` on((`producto`.`id_prod` = `lista_precios`.`prod_lista`))) join `sucursal` on((`producto`.`sucursal_prod` = `sucursal`.`id_suc`))) ;
 
 --
 -- Índices para tablas volcadas
@@ -2313,145 +2313,121 @@ ALTER TABLE `zona`
 --
 ALTER TABLE `almacen`
   MODIFY `id_almacen` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
 --
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
   MODIFY `id_clte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
-
 --
 -- AUTO_INCREMENT de la tabla `cond_pago`
 --
 ALTER TABLE `cond_pago`
   MODIFY `id_condp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=4;
-
 --
 -- AUTO_INCREMENT de la tabla `departamento`
 --
 ALTER TABLE `departamento`
   MODIFY `id_depto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=216;
-
 --
 -- AUTO_INCREMENT de la tabla `distrito`
 --
 ALTER TABLE `distrito`
   MODIFY `id_dtto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=217;
-
 --
 -- AUTO_INCREMENT de la tabla `empresa`
 --
 ALTER TABLE `empresa`
   MODIFY `id_empresa` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
 --
 -- AUTO_INCREMENT de la tabla `lista_precios`
 --
 ALTER TABLE `lista_precios`
   MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=13;
-
 --
 -- AUTO_INCREMENT de la tabla `menu`
 --
 ALTER TABLE `menu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT de la tabla `moneda`
 --
 ALTER TABLE `moneda`
   MODIFY `id_moneda` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
 --
 -- AUTO_INCREMENT de la tabla `pais`
 --
 ALTER TABLE `pais`
   MODIFY `id_pais` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=242;
-
 --
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
   MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=6;
-
 --
 -- AUTO_INCREMENT de la tabla `pedido_detalle`
 --
 ALTER TABLE `pedido_detalle`
   MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
-
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
   MODIFY `id_prod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=7;
-
 --
 -- AUTO_INCREMENT de la tabla `profile`
 --
 ALTER TABLE `profile`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
-
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
   MODIFY `id_prove` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
 --
 -- AUTO_INCREMENT de la tabla `provincia`
 --
 ALTER TABLE `provincia`
   MODIFY `id_prov` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=29;
-
 --
 -- AUTO_INCREMENT de la tabla `sucursal`
 --
 ALTER TABLE `sucursal`
   MODIFY `id_suc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
 --
 -- AUTO_INCREMENT de la tabla `tipo_listap`
 --
 ALTER TABLE `tipo_listap`
   MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
-
 --
 -- AUTO_INCREMENT de la tabla `tipo_producto`
 --
 ALTER TABLE `tipo_producto`
   MODIFY `id_tpdcto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
-
 --
 -- AUTO_INCREMENT de la tabla `tipo_proveedor`
 --
 ALTER TABLE `tipo_proveedor`
   MODIFY `id_tprov` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
 --
 -- AUTO_INCREMENT de la tabla `unidad_medida`
 --
 ALTER TABLE `unidad_medida`
   MODIFY `id_und` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
-
 --
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
 --
 -- AUTO_INCREMENT de la tabla `vendedor`
 --
 ALTER TABLE `vendedor`
   MODIFY `id_vendedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=4;
-
 --
 -- AUTO_INCREMENT de la tabla `zona`
 --
 ALTER TABLE `zona`
   MODIFY `id_zona` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
-
 --
 -- Restricciones para tablas volcadas
 --
@@ -2565,7 +2541,6 @@ ALTER TABLE `sucursal`
 --
 ALTER TABLE `vendedor`
   ADD CONSTRAINT `vendedor_ibfk_1` FOREIGN KEY (`zona_vend`) REFERENCES `zona` (`id_zona`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
