@@ -124,3 +124,7 @@ a.desc:after {
 .totales{
   text-align: right;
 }
+
+.number-decimals{
+  text-align: right;
+}

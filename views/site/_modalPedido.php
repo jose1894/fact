@@ -42,4 +42,4 @@ use yii\web\View;
 <?php /*
 $this->registerJsFile(
     '@web/js/app.js',
-    ['depends' => [\yii\web\JqueryAsset::className()]]);
+    ['depends' => [\yii\web\JqueryAsset::className()]]); */

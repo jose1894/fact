@@ -131,6 +131,7 @@ class PedidoController extends Controller
                           $return = [
                             'success' => true,
                             'title' => Yii::t('pedido', 'Order'),
+                            'id' => $model->id_pedido,
                             'message' => Yii::t('app','Record saved successfully!'),
                             'type' => 'success'
                           ];
@@ -162,7 +163,7 @@ class PedidoController extends Controller
           return $this->render('create', [
               'model' => $model,
               'modelsDetalles' => (empty($modelsDetalles)) ? [new PedidoDetalle] : $modelsDetalles,
-              //'searchModel' => $searchModel,
+              'IMPUESTO' => SiteController::getImpuesto(),
               //'dataProvider' => $dataProvider,
           ]);
         /*}
@@ -251,7 +252,8 @@ class PedidoController extends Controller
 
         return $this->render('update', [
             'model' => $model,
-            'modelsDetalles' => (empty($modelsDetalles)) ? [new PedidoDetalle] : $modelsDetalles
+            'modelsDetalles' => (empty($modelsDetalles)) ? [new PedidoDetalle] : $modelsDetalles,
+            'IMPUESTO' => SiteController::getImpuesto(),
         ]);
 
     }
@@ -318,7 +320,7 @@ class PedidoController extends Controller
           <tr>
               <td width="33%" class="center">MARVIG<!-- *-empresa-* --></td>
               <td width="33%" class="center"></td>
-              <td width="33%" style="font-size:0.65rem" class="right">
+              <td width="33%" style="font-size:0.75rem" class="right">
                 ' . Yii::t('app','Date') . ': {DATE j/m/Y}
                 <br>
                 ' . Yii::t('app','Hour') . ': {DATE H:i:s}
@@ -334,7 +336,7 @@ class PedidoController extends Controller
         </tr>
       </table>
       <br>
-      <table class="datos-cliente">
+      <table class="datos-cliente" style="font-size:0.75rem">
         <tr>
           <td class="left celdas"><span class="bold">' . Yii::t( 'cliente', 'Customer') . ' :</span> ' . $modelPedido->cltePedido->nombre_clte . '</td>
           <td>&nbsp;</td>
@@ -360,26 +362,53 @@ class PedidoController extends Controller
         </tr>
       </table>
       ';
+      $total = 0;
       $subtotal = 0;
+      $descuento = 0;
+      $impuesto = 0;
 
       foreach ( $modelPedido->detalles as $value ) {
-        $subtotal += $value->precio_pdetalle / 1.18;
+        $total += $value->total_pdetalle;
+        $descUnit = $value->plista_pdetalle - $value->total_pdetalle;
+        $descuento += $descUnit;
+        $impUnit = ( $value->impuesto_pdetalle / 100 ) + 1;
+        $impuesto += $value->total_pdetalle - ( $value->total_pdetalle / $impUnit );
+        $subtotal += $value->total_pdetalle - $descUnit - $impUnit;
       }
 
+
       $footer = '
-      <table>
+      <table style="font-size:0.78rem">
         <tr>
           <td style="width:80%" class="right">
           Subtotal
           </td>
-          <td style="width:20%">
-          ' . $subtotal . '
+          <td style="width:20%" class="right">
+          ' . Yii::$app->formatter->asDecimal($subtotal) . '
           </td>
         </tr>
         <tr>
-          <td>
+          <td class="right">
+          Descuento
           </td>
-          <td>
+          <td class="right">
+          '.Yii::$app->formatter->asDecimal($descuento).'
+          </td>
+        </tr>
+        <tr>
+          <td class="right">
+          Impuesto
+          </td>
+          <td class="right">
+          '.Yii::$app->formatter->asDecimal($impuesto).'
+          </td>
+        </tr>
+        <tr>
+          <td class="right">
+          Total
+          </td>
+          <td class="right">
+          '.Yii::$app->formatter->asDecimal($total).'
           </td>
         </tr>
       </table>

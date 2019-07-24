@@ -18,14 +18,12 @@ $this->params['breadcrumbs'][] = Yii::t('pedido', 'Update');
       <h3 class="box-title">
         <?= Html::encode($this->title) ?>
       </h3>
-      <span style="text-align: right;float: right">
-          <button type="button" name="button" id="imprimir" data-toggle="modal" class="btn btn-app btn-primary"><span class="fa fa-print"></span> <?= Yii::t('app', 'Print')?></button>      
-      </span>
     </div>
     <div class="box-body">
     <?= $this->render('_form', [
         'model' => $model,
         'modelsDetalles' => $modelsDetalles,
+        'IMPUESTO' => $IMPUESTO
     ]) ?>
     </div>
   </div>

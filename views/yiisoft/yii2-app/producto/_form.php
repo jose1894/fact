@@ -21,11 +21,6 @@ use kartik\number\NumberControl;
 /* @var $model app\models\Producto */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-<style>
-.number-decimals{
-  text-align: right;
-}
-</style>
 
 <div class="producto-form">
 

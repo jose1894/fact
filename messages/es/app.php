@@ -23,6 +23,9 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Subtotal' => 'Subtotal',
+    'Tax' => 'I.G.V.',
+    'Discount' => 'Descuento',
     'Print' => 'Imprimir',
     'Page' => 'Página',
     'Date' => 'Fecha',

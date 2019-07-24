@@ -184,4 +184,11 @@ class SiteController extends Controller
 
       return $user->sucursal0->id_suc;
     }
+
+    public static function getImpuesto()
+    {
+      $user = User::findOne(Yii::$app->user->id);
+
+      return $user->sucursal0->impuesto_suc;
+    }
 }
