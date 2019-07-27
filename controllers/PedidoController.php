@@ -192,14 +192,15 @@ class PedidoController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
 
-            $oldIDs = ArrayHelper::map($modelsDetalles, 'pedido_pdetalle', 'pedido_pdetalle');
+            $oldIDs = ArrayHelper::map($modelsDetalles, 'id_pdetalle', 'id_pdetalle');
             $modelsDetalles = Model::createMultiple(PedidoDetalle::classname(), $modelsDetalles, 'id_pdetalle');
             Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
-            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsDetalles, 'pedido_pdetalle', 'pedido_pdetalle')));
+            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsDetalles, 'id_pdetalle', 'id_pdetalle')));
 
             // validate all models
             $valid = $model->validate();
             $valid = Model::validateMultiple($modelsDetalles) && $valid;
+
 
             if ($valid) {
                 $transaction = \Yii::$app->db->beginTransaction();
@@ -212,7 +213,7 @@ class PedidoController extends Controller
                 try {
                     if ($flag = $model->save(false)) {
                         if (!empty($deletedIDs)) {
-                            PedidoDetalle::deleteAll(['pedido_pdetalle' => $deletedIDs]);
+                            PedidoDetalle::deleteAll(['id_pdetalle' => $deletedIDs]);
                         }
                         foreach ($modelsDetalles as $modelDetalle) {
                             $modelDetalle->pedido_pdetalle = $model->id_pedido;
@@ -363,22 +364,29 @@ class PedidoController extends Controller
       </table>
       ';
       $total = 0;
+      $subt = 0;
       $subtotal = 0;
       $descuento = 0;
-      $impuesto = 0;
+      $totalImp = 0;
+      $impuesto = SiteController::getImpuesto() / 100;
 
       foreach ( $modelPedido->detalles as $value ) {
         $total += $value->total_pdetalle;
-        $descUnit = $value->plista_pdetalle - $value->total_pdetalle;
-        $descuento += $descUnit;
-        $impUnit = ( $value->impuesto_pdetalle / 100 ) + 1;
-        $impuesto += $value->total_pdetalle - ( $value->total_pdetalle / $impUnit );
-        $subtotal += $value->total_pdetalle - $descUnit - $impUnit;
+        $desc = ( ( $value->plista_pdetalle  *  $value->descu_pdetalle ) / 100 ) * $value->cant_pdetalle / ( ( $value->impuesto_pdetalle / 100 ) + 1)  ;
+        $descuento += $desc;
+        $subt = ( $value->plista_pdetalle * $value->cant_pdetalle  ) / ( ( $value->impuesto_pdetalle / 100 ) + 1) ;
+        $subtotal += $subt;
       }
 
 
+      $descuento =  $descuento > 0  ? $descuento : 0;
+      $precioNeto = $total / ( $impuesto + 1);
+      $totalImp = $total - $precioNeto;
+      $subtotal2 = $precioNeto;
+
+
       $footer = '
-      <table style="font-size:0.78rem">
+      <table style="font-size:0.78rem" class="table table-stripped">
         <tr>
           <td style="width:80%" class="right">
           Subtotal
@@ -396,11 +404,19 @@ class PedidoController extends Controller
           </td>
         </tr>
         <tr>
+          <td style="width:80%" class="right">
+          Subtotal
+          </td>
+          <td style="width:20%" class="right">
+          ' . Yii::$app->formatter->asDecimal($subtotal2) . '
+          </td>
+        </tr>
+        <tr>
           <td class="right">
           Impuesto
           </td>
           <td class="right">
-          '.Yii::$app->formatter->asDecimal($impuesto).'
+          '.Yii::$app->formatter->asDecimal($totalImp).'
           </td>
         </tr>
         <tr>
@@ -421,8 +437,11 @@ class PedidoController extends Controller
       $mpdf->WriteHtml( $content ); // call mpdf write html
       $mpdf->SetHTMLFooter( $footer );
 
+      $tipo = ($modelPedido->tipo_pedido === 1) ? 'PEDIDO' : ($modelPedido->tipo_pedido === 2) ? 'PROFORMA' : 'COTIZACION';
+      $titulo = $modelPedido->cod_pedido. '-'. $tipo .'-'.$modelPedido->cltePedido->nombre_clte.'.pdf';
 
-      $mpdf->Output('filename.pdf', 'I'); // call the mpdf api output as needed
+      $mpdf->SetTitle($titulo);
+      $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
     }
 
 

@@ -357,7 +357,7 @@ if ( $model->isNewRecord ) {
                       <?= Yii::t('app', 'Subtotal') ?>
                     </td>
                     <td class="col-xs-2">
-                      <input type="text" id="subtotal" name="subtotal" readonly class="form-control totales" value="">
+                      <input type="text" id="subtotal1" name="subtotal" readonly class="form-control totales" value="">
                     </td>
                   </tr>
                   <tr>
@@ -366,6 +366,14 @@ if ( $model->isNewRecord ) {
                     </td>
                     <td class="col-xs-2">
                       <input type="text" id="descuento" name="descuento" readonly class="form-control totales" value="">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="col-xs-6" style="text-align:right;">
+                      <?= Yii::t('app', 'Subtotal') ?>
+                    </td>
+                    <td class="col-xs-2">
+                      <input type="text" id="subtotal2" name="subtotal" readonly class="form-control totales" value="">
                     </td>
                   </tr>
                   <tr>
@@ -637,10 +645,14 @@ function calculateTotals( IMPUESTO ) {
   let total = 0,
       totalImp = 0,
       precioNeto = 0,
-      subTotal = 0,
+      subTotal1 = 0,
+      subTotal2 = 0,
       descuento = 0,
+      desc = 0;
+      subT = 0,
       totals = {
-        subtotal: 0,
+        subtotal1: 0,
+        subtotal2: 0,
         descuento: 0,
         impuesto: 0,
         total: 0
@@ -650,22 +662,26 @@ function calculateTotals( IMPUESTO ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     total += parseFloat(element.value);
-    subTotal += parseFloat( $( '#pedidodetalle-' + row + '-plista_pdetalle' ).val() );
-    descuento += parseFloat( $( '#pedidodetalle-' + row + '-descu_pdetalle' ).data( "descuento" ) );
+    subT = $( '#pedidodetalle-' + row + '-plista_pdetalle' ).val()  *  $( '#pedidodetalle-' + row + '-cant_pdetalle' ).val() / ( IMPUESTO + 1 ) ;
+    desc = parseFloat( $( '#pedidodetalle-' + row + '-descu_pdetalle' ).data( "descuento" ) * $( '#pedidodetalle-' + row + '-cant_pdetalle' ).val()   / ( IMPUESTO + 1 ) );
+    subTotal1 += subT;
+    descuento += desc;
   });
 
   descuento = descuento ? descuento : 0;
 
   precioNeto = ( total / ( IMPUESTO + 1 ) );
   totalImp = total - precioNeto;
-  subTotal = precioNeto - descuento;
+  subTotal2 = precioNeto;
 
   totals.total = parseFloat(  total  ).toFixed( 2 );
   totals.impuesto = parseFloat( totalImp  ).toFixed( 2 );
-  totals.subtotal = parseFloat( subTotal  ).toFixed( 2 );
+  totals.subtotal1 = parseFloat( subTotal1  ).toFixed( 2 );
+  totals.subtotal2 = parseFloat( subTotal2  ).toFixed( 2 );
   totals.descuento = parseFloat( descuento  ).toFixed( 2 );
 
-  $( "#subtotal" ).val( totals.subtotal );
+  $( "#subtotal1" ).val( totals.subtotal1 );
+  $( "#subtotal2" ).val( totals.subtotal2 );
   $( "#impuesto" ).val( totals.impuesto );
   $( "#total" ).val( totals.total );
   $( "#descuento" ).val( totals.descuento );
@@ -786,13 +802,12 @@ JS
               if (willIssue) {
                 window.open('".Url::to(['pedido/pedido-rpt'])."&id=' + data.id,'_blank');
               }
-              swal(data.title, data.message, data.type);
             });
 
             $( '.table-body' ).empty();
-
-
           }
+
+          swal(data.title, data.message, data.type);
 
           return;
         } else {

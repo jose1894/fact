@@ -1,7 +1,7 @@
 <?php
 use yii\web\View;
 ?>
-<div class="modal modal-info fade" id="modal-rpt" style="display: none;">
+<div class="modal modal-info fade modal-wide" id="modal-rpt" style="display: none;">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
