@@ -90,7 +90,7 @@ class PedidoController extends Controller
             Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
 
             // validate all models
-            $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'pedido', 'tipo_pedido', $model->tipo_pedido );
+            $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'id_pedido', 'pedido', 'tipo_pedido', $model->tipo_pedido );
             $valid = $model->validate();
             $valid = Model::validateMultiple($modelsDetalles) && $valid;
             // ajax validation
@@ -160,6 +160,7 @@ class PedidoController extends Controller
           $model->moneda_pedido = Moneda::findOne(['status_moneda' => 1, 'tipo_moneda' => 'N']);
           $model->almacen_pedido = Almacen::findOne(['status_almacen' => 1]);
           $model->tipo_pedido = 0;
+          $model->usuario_pedido = Yii::$app->user->id;
           return $this->render('create', [
               'model' => $model,
               'modelsDetalles' => (empty($modelsDetalles)) ? [new PedidoDetalle] : $modelsDetalles,
@@ -397,7 +398,7 @@ class PedidoController extends Controller
         </tr>
         <tr>
           <td class="right">
-          Descuento
+          ' . Yii::t('pedido', 'Discount') . '
           </td>
           <td class="right">
           '.Yii::$app->formatter->asDecimal($descuento).'
@@ -413,7 +414,7 @@ class PedidoController extends Controller
         </tr>
         <tr>
           <td class="right">
-          Impuesto
+          ' . Yii::t('pedido','Tax'). ' ' . SiteController::getImpuesto() .'%
           </td>
           <td class="right">
           '.Yii::$app->formatter->asDecimal($totalImp).'

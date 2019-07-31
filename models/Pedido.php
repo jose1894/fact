@@ -77,6 +77,14 @@ class Pedido extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getAlmacenPedido()
+    {
+        return $this->hasOne(Almacen::className(), ['id_almacen' => 'almacen_pedido']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getCltePedido()
     {
         return $this->hasOne(Cliente::className(), ['id_clte' => 'clte_pedido']);

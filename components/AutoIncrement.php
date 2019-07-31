@@ -15,9 +15,9 @@ class AutoIncrement extends BaseObject
     return !($res['Auto_increment']) ? 1 : $res['Auto_increment']++;
   }
 
-  public function getAutoIncrementPad( $table, $field, $value ){
+  public function getAutoIncrementPad( $maxField, $table, $field, $value ){
 
-    $command = Yii::$app->db->createCommand("SELECT MAX(id_pedido) AS maximo FROM {$table} WHERE $field = {$value}");
+    $command = Yii::$app->db->createCommand("SELECT MAX({$maxField}) AS maximo FROM {$table} WHERE $field = {$value}");
 
     $res=$command->queryOne();
 

@@ -62,7 +62,8 @@
                         ['label' => Yii::t('producto','Product'), 'url' => ['/producto'], 'icon' => 'tags'],
                       ]
                     ],
-                    ['label' => Yii::t('pedido','Purchase order').'s', 'url' => ['/pedido'], 'icon' => 'inbox'],
+                    ['label' => Yii::t('pedido','Order').'s', 'url' => ['/pedido'], 'icon' => 'inbox'],
+                    ['label' => Yii::t('compra','Purchase order').'s', 'url' => ['/compra'], 'icon' => 'shopping-cart'],
                     ['label' => 'Usuarios', 'options' => ['class' => 'header']],
                     [ 'label' => 'Administracion de usuarios', 'icon' => 'users',
                      'items' => [

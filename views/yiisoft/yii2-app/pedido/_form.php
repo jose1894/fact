@@ -180,10 +180,8 @@ if ( $model->isNewRecord ) {
               ])?>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-          <?php $condiciones = CondPago::find()->where(['status_condp' => 1])
-          ->orderBy('desc_condp')
-          ->all();
-          $condiciones = ArrayHelper::map( $condiciones, 'id_condp', 'desc_condp');
+          <?php
+          $condiciones = CondPago::getCondPagoList();
           ?>
           <?= $form->field($model, 'condp_pedido',[
               'addClass' => 'form-control',
@@ -213,7 +211,7 @@ if ( $model->isNewRecord ) {
                 'widgetBody' => '.table-body', // required: css class selector
                 'widgetItem' => '.detalle-item', // required: css class
                 //'limit' => 10, // the maximum times, an element can be cloned (default 999)
-                'min' => 0, // 0 or 1 (default 1)
+                'min' => 1, // 0 or 1 (default 1)
                 'insertButton' => '.add-item', // css class
                 'deleteButton' => '.remove-item', // css class
                 'model' => $modelsDetalles[0],
@@ -378,7 +376,7 @@ if ( $model->isNewRecord ) {
                   </tr>
                   <tr>
                     <td class="col-xs-7" style="text-align:right;">
-                      <?= Yii::t('app', 'Tax')?>
+                      <?= Yii::t('app', 'Tax')?> <?= $IMPUESTO ?>%
                     </td>
                     <td class="col-xs-2">
                       <input type="text" name="impuesto" id="impuesto" readonly class="form-control totales" value="">

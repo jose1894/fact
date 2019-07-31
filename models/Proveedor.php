@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "proveedor".
@@ -107,5 +108,17 @@ class Proveedor extends \yii\db\ActiveRecord
     public function getDttoProve()
     {
         return $this->hasOne(Distrito::className(), ['id_dtto' => 'dtto_prove']);
+    }
+
+    public static function getProveedorList()
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      $condiciones = Proveedor::find()
+                     ->where('status_prove = :status and sucursal_prove = :sucursal',[':status' => 1, ':sucursal' => $sucursal])
+                     ->orderBy('nombre_prove')
+                     ->all();
+      return ArrayHelper::map( $condiciones, 'id_prove', 'nombre_prove');
     }
 }

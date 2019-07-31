@@ -299,15 +299,15 @@ class ProductoController extends Controller
         $out = ['results' => ['id' => '', 'text' => '']];
 
         $sucursal = SiteController::getSucursal();
-
-        if ( !is_null( $desc ) ) {
+        if ( !is_null( $desc ) && is_null( $tipo_listap ) ) {
             $query = new Query;
 
-            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio'])
+            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text'])
                 ->from(['v_productos as p'])
                 ->where('p.status_prod = 1')
                 ->andWhere(['like', 'p.texto', $desc])
-                ->andWhere('p.tipo_lista = :tipo_listap and p.sucursal_prod = :sucursal',[':tipo_listap' =>  $tipo_listap, ':sucursal' => $sucursal])
+                ->andWhere('p.sucursal_prod = :sucursal',[':sucursal' => $sucursal])
+                ->groupBy(['p.id_prod','p.cod_prod','p.des_prod', 'p.texto'])
                 ->orderBy('p.cod_prod ASC')
                 ->limit(20);
 
@@ -315,6 +315,21 @@ class ProductoController extends Controller
             $data = $command->queryAll();
 
             $out['results'] = array_values( $data );
+        } elseif ( !is_null( $desc ) && !is_null( $tipo_listap ) ) {
+          $query = new Query;
+
+          $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio'])
+              ->from(['v_productos as p'])
+              ->where('p.status_prod = 1')
+              ->andWhere(['like', 'p.texto', $desc])
+              ->andWhere('p.tipo_lista = :tipo_listap and p.sucursal_prod = :sucursal',[':tipo_listap' =>  $tipo_listap, ':sucursal' => $sucursal])
+              ->orderBy('p.cod_prod ASC')
+              ->limit(20);
+
+          $command = $query->createCommand();
+          $data = $command->queryAll();
+
+          $out['results'] = array_values( $data );
         } elseif ( $id > 0 ) {
           $query = new Query;
 

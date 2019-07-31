@@ -26,6 +26,14 @@ return [
               'cliente' => 'cliente.php',
             ],
         ],
+        'compra' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'compra' => 'compra.php',
+            ],
+        ],
         'condicionp' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',

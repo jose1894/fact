@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "cliente".
@@ -134,5 +135,17 @@ class Cliente extends \yii\db\ActiveRecord
     public function getTipoListap()
     {
         return $this->hasOne(TipoListap::className(), ['id_lista' => 'lista_clte']);
+    }
+
+    public static function getClienteList()
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      $condiciones = Cliente::find()
+                     ->where('estatus_ctle = :status and sucursal_clte = :sucursal',[':status' => 1, ':sucursal' => $sucursal])
+                     ->orderBy('nombre_clte')
+                     ->all();
+      return ArrayHelper::map( $condiciones, 'id_clte', 'nombre_clte');
     }
 }

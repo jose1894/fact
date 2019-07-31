@@ -30,20 +30,21 @@ $( document ).ready( function( e ){
             swal(data.title, data.message, data.type);
             window.parent.$.pjax.reload( { container: '#grid' } );
 
-            if ( $( $form ).attr('action').indexOf('create') != -1)
-            {
+            if ( $( $form ).attr( 'action' ).indexOf( 'create' ) != -1) {
               $( $form ).trigger( 'reset' );
+              $selects = window.frames[ 0 ].$( $form ).find( 'select' );
+
+              if ( $selects.length ) {
+                $selects.trigger( 'change' );
+              }
             }
 
-            $selects = window.frames[0].$($form).find('select');
 
-            if ( $selects.length )
-              $selects.trigger( 'change' );
 
             return;
           }
 
-          window.frames[0].$( $form ).yiiActiveForm( 'updateMessages', data);
+          window.frames[ 0 ].$( $form ).yiiActiveForm( 'updateMessages', data);
         },
         error: function(data) {
             let message;

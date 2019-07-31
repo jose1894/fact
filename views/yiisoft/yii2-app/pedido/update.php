@@ -5,12 +5,13 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Pedido */
 
-$this->title = Yii::t('pedido', 'Update Pedido: {name}', [
-    'name' => $model->id_pedido,
+$this->title = Yii::t('pedido', 'Update order: {number} / {name}', [
+    'number' => $model->id_pedido,
+    'name' => $model->cltePedido->nombre_clte,
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('pedido', 'Pedidos'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('pedido', 'Order'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id_pedido, 'url' => ['view', 'id' => $model->id_pedido]];
-$this->params['breadcrumbs'][] = Yii::t('pedido', 'Update');
+$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="pedido-update">
   <div class="box box-success">
