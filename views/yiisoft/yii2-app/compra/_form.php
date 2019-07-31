@@ -262,3 +262,7 @@ if ( $model->isNewRecord ) {
     <?php ActiveForm::end(); ?>
   </div>
 </div>
+<?php
+$this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
+['depends'=>[\yii\web\JqueryAsset::className()],
+'position'=>View::POS_END]);
