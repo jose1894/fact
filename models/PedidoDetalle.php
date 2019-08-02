@@ -58,12 +58,12 @@ class PedidoDetalle extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_pdetalle' => Yii::t('pedido', 'Id Pdetalle'),
-            'prod_pdetalle' => Yii::t('pedido', 'Prod Pdetalle'),
-            'cant_pdetalle' => Yii::t('pedido', 'Cant Pdetalle'),
-            'precio_pdetalle' => Yii::t('pedido', 'Precio Pdetalle'),
-            'descu_pdetalle' => Yii::t('pedido', 'Descu Pdetalle'),
-            'impuesto_pdetalle' => Yii::t('pedido', 'Impuesto Pdetalle'),
+            'id_pdetalle' => Yii::t('pedido', 'Id'),
+            'prod_pdetalle' => Yii::t('pedido', 'Product'),
+            'cant_pdetalle' => Yii::t('pedido', 'Quantity'),
+            'precio_pdetalle' => Yii::t('pedido', 'Price'),
+            'descu_pdetalle' => Yii::t('pedido', 'Discount'),
+            'impuesto_pdetalle' => Yii::t('pedido', 'Tax'),
             'status_pdetalle' => Yii::t('pedido', 'Status Pdetalle'),
             'pedido_pdetalle' => Yii::t('pedido', 'Pedido Pdetalle'),
             'plista_pdetalle' => Yii::t('pedido', 'List price'),

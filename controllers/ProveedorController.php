@@ -11,7 +11,7 @@ use yii\filters\VerbFilter;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\ActiveForm;
-
+use yii\db\Query;
 /**
  * ProveedorController implements the CRUD actions for Proveedor model.
  */
@@ -244,5 +244,43 @@ class ProveedorController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('proveedor', 'The requested page does not exist.'));
+    }
+
+    public function actionProveedorList($q = null, $id = null) {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $sucursal = SiteController::getSucursal();
+        $out = ['results' => ['id' => '', 'text' => '']];
+
+        if ( !is_null( $q ) ) {
+            $query = new Query;
+
+            $query->select(['p.id_prove as id', 'p.nombre_prove AS text'])
+                ->from(['proveedor as p'])
+                ->where('p.status_prove = 1')
+                ->andWhere(['like', 'p.nombre_prove', $q])
+                ->andWhere('p.sucursal_prove = :sucursal', [':sucursal' => $sucursal])
+                ->limit(20);
+
+            $command = $query->createCommand();
+            $data = $command->queryAll();
+
+            $out[ 'results' ] = array_values( $data );
+        } elseif ( $id > 0 ) {
+          $query = new Query;
+
+          $query->select(['p.id_prove as id', 'p.nombre_prove AS text'])
+              ->from(['proveedor as p'])
+              ->where('p.status_prove = 1')
+              ->andWhere('p.id_prove = :id_prove and p.sucursal_prove = :sucursal', [':id_prove' => $id, ':sucursal' => $sucursal ] )
+              ->limit(1);
+
+          $command = $query->createCommand();
+          $data = $command->queryAll();
+
+          $out = array_values( $data  );
+
+        }
+
+        return $out;
     }
 }

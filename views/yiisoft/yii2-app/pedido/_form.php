@@ -23,14 +23,6 @@ if ( $model->isNewRecord ) {
   $model->cod_pedido = "0000000000";
 }
 ?>
-<style>
-  .form-group{
-    position:-webkit-sticky;
-    position:sticky;
-    bottom:90;
-    border-color:red;
-  }
-</style>
 
 <div class="pedido-form">
 
@@ -205,13 +197,13 @@ if ( $model->isNewRecord ) {
 
       <!-- Articulos -->
       <div class="row">
-        <div class="col-lg-12">
+        <div class="container-fluid">
           <?php DynamicFormWidget::begin([
                 'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
                 'widgetBody' => '.table-body', // required: css class selector
                 'widgetItem' => '.detalle-item', // required: css class
                 //'limit' => 10, // the maximum times, an element can be cloned (default 999)
-                'min' => 1, // 0 or 1 (default 1)
+                'min' => 0, // 0 or 1 (default 1)
                 'insertButton' => '.add-item', // css class
                 'deleteButton' => '.remove-item', // css class
                 'model' => $modelsDetalles[0],
@@ -227,174 +219,150 @@ if ( $model->isNewRecord ) {
                 ],
             ]); ?>
 
-            <table cellspacing="0" cellpadding="0" border="0" style="width:100%">
-              <tr>
-                <td>
-                  <table id="table" class="table table-fixed table-stripped" style="width:98%" >
-                    <thead>
-                      <tr>
-                        <th class="col-xs-5"><?= Yii::t( 'pedido', 'Product')?></th>
-                        <th class="col-xs-1"><?= Yii::t( 'pedido', 'Qtty')?></th>
-                        <th class="col-xs-1"><?= Yii::t( 'pedido', 'L. price')?></th>
-                        <!--th class="col-xs-1"><?= Yii::t( 'pedido', 'Tax')?></th-->
-                        <th class="col-xs-1"><?= Yii::t( 'pedido', 'Disc.')?></th>
-                        <th class="col-xs-1"><?= Yii::t( 'pedido', 'Price')?></th>
-                        <th class="col-xs-1"><?= Yii::t( 'pedido', 'Total')?></th>
-                        <th  class="col-xs-1">
-                          <button type="button" class="pull-right add-item btn btn-success btn-xs"><i class="fa fa-plus"></i></button>
-                          <div class="clearfix"></div>
-                        </th>
-                      </tr>
-                    </thead>
-                  </table>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div style="width:99.4%; height:300px; overflow-y:scroll;">
-                    <table id="table" class="table table-fixed table-stripped" >
-                      <tbody class="table-body"><!-- widgetContainer -->
-                        <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
-                                <tr class="detalle-item"><!-- widgetBody -->
-                                  <td class="col-xs-5">
-                                  <?php
-                                    // necessary for update action.
-                                    if (!$modelDetalle->isNewRecord) {
-                                        echo Html::activeHiddenInput($modelDetalle, "[{$index}]id_pdetalle");
-                                        //$modelSucursal->empresa_suc[$index] = $model->id_empresa;
-                                        echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle");
-                                    }
-                                    $url = Url::to(['producto/producto-list']);
-                                    $productos = empty($modelDetalle->prod_pdetalle) ? '' : Producto::findOne($modelDetalle->prod_pdetalle)->cod_prod.' '.Producto::findOne($modelDetalle->prod_pdetalle)->des_prod;
-                                    echo $form->field($modelDetalle, "[{$index}]prod_pdetalle",[
-                                      'addClass' => 'form-control ',
-                                      ])->widget(Select2::classname(), [
-                                        'language' => Yii::$app->language,
-                                        'initValueText' => $productos, // set the initial display text
-                                        'options' => ['placeholder' => Yii::t('producto','Select a product').'...'],
-                                        'theme' => Select2::THEME_DEFAULT,
-                                        'pluginOptions' => [
-                                            //'allowClear' => true,
-                                            'minimumInputLength' => 3,
-                                            'language' => [
-                                                'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
-                                                'inputTooShort' => new JsExpression("function() {  return '".Yii::t('app','Please input {number} or more characters', [ 'number'=> 3 ])."';}"),
-                                            ],
-                                        'ajax' => [
-                                            'url' => $url,
-                                            'dataType' => 'json',
-                                            'data' => new JsExpression('function(params) { return {desc:params.term,tipo_listap: $("#pedido-tipo_listap").val()}; }')
-                                        ],
-                                        'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-                                        'templateResult' => new JsExpression('function(cliente) { return cliente.text; }'),
-                                        'templateSelection' => new JsExpression('function (cliente) {
-                                            return cliente.text;
-                                          }'),
-                                        ],
-                                    ])->label(false);
-                                    ?>
-
-                                  </td>
-                                  <td class="col-xs-1">
-                                    <?= $form
-                                    ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control number-decimals'])
-                                    ->textInput(['type' => 'number','min' => 0, 'step' => 1])
-                                    ->label(false)?>
-                                  </td>
-                                  <td class="col-xs-1">
-                                    <?= $form
-                                    ->field($modelDetalle,"[{$index}]plista_pdetalle", [ 'addClass' => 'form-control number-decimals'])
-                                    ->textInput([ 'type' => 'number','readonly' => true])
-                                    ->label(false)?>
-                                    <?php echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle"); ?>
-                                  </td>
-                                  <!--td class="col-xs-1">
-                                    <?= $form->field($modelDetalle,"[{$index}]impuesto_pdetalle")
-                                    ->textInput([
-                                      'class' => 'form-control ',
-                                      'style' => ['text-align' => 'right'],
-                                      'readonly' => true,
-                                    ])->label(false)?>
-                                  </td-->
-                                  <td class="col-xs-1">
-                                    <?= $form
-                                    ->field($modelDetalle,"[{$index}]descu_pdetalle", [ 'addClass' => 'form-control number-decimals'])
-                                    ->textInput([ 'type'=>'number','width' => '200px'])
-                                    ->label(false)?>
-                                  </td>
-                                  <td class="col-xs-1">
-                                    <?= $form
-                                    ->field($modelDetalle,"[{$index}]precio_pdetalle",[ 'addClass' => 'form-control number-decimals'])
-                                    ->textInput(['type'=>'number','width' => '200px'])
-                                    ->label(false)?>
-                                  </td>
-                                  <td class="col-xs-1">
-                                    <?= $form
-                                    ->field($modelDetalle,"[{$index}]total_pdetalle",[ 'addClass' => 'form-control number-decimals'])
-                                    ->textInput(['type'=>'number','readonly' => true])
-                                    ->label(false)?>
-                                  </td>
-                                  <td class="col-xs-1">
-                                    <button type="button" class="pull-right remove-item btn btn-danger btn-xs"><i class="fa fa-minus"></i></button>
-                                    <div class="clearfix"></div>
-                                </td>
-                                </tr>
-                        <?php endforeach; ?>
-                      </tbody>
-                    </table>
+            <div class="row">
+                <div class="col-sm-5 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
+                <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
+                <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'L. price')?></div>
+                <!--th class="col-xs-1"><?= Yii::t( 'pedido', 'Tax')?></th-->
+                <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Disc.')?></div>
+                <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Price')?></div>
+                <div class="col-sm-2 col-xs-12"><?= Yii::t( 'pedido', 'Total')?></div>
+                <div class="col-sm-1 col-xs-12">
+                  <button type="button" class="add-item btn btn-success btn-flat btn-md" style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"><i class="fa fa-plus"></i></button>
                 </div>
-            <?php DynamicFormWidget::end(); ?>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="">
-                <table class="table table-fixed table-stripped">
-                  <tr>
-                    <td class="col-xs-6" style="text-align:right;">
-                      <?= Yii::t('app', 'Subtotal') ?>
-                    </td>
-                    <td class="col-xs-2">
-                      <input type="text" id="subtotal1" name="subtotal" readonly class="form-control totales" value="">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="col-xs-6" style="text-align:right;">
-                      <?= Yii::t('app', 'Discount') ?>
-                    </td>
-                    <td class="col-xs-2">
-                      <input type="text" id="descuento" name="descuento" readonly class="form-control totales" value="">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="col-xs-6" style="text-align:right;">
-                      <?= Yii::t('app', 'Subtotal') ?>
-                    </td>
-                    <td class="col-xs-2">
-                      <input type="text" id="subtotal2" name="subtotal" readonly class="form-control totales" value="">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="col-xs-7" style="text-align:right;">
-                      <?= Yii::t('app', 'Tax')?> <?= $IMPUESTO ?>%
-                    </td>
-                    <td class="col-xs-2">
-                      <input type="text" name="impuesto" id="impuesto" readonly class="form-control totales" value="">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="col-xs-6" style="text-align:right;">
-                      <?= Yii::t('app', 'Total')?>
-                    </td>
-                    <td class="col-xs-2">
-                      <input type="text" name="total" id="total" readonly  class="form-control totales" value="">
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </td>
-          </tr>
-        </table>
+            </div>
+            <hr>
+            <div class="table-body"><!-- widgetContainer -->
+            <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
+                    <div class="row detalle-item"><!-- widgetBody -->
+                      <div class="col-sm-5 col-xs-12">
+                      <?php
+                        // necessary for update action.
+                        if (!$modelDetalle->isNewRecord) {
+                            echo Html::activeHiddenInput($modelDetalle, "[{$index}]id_pdetalle");
+                            //$modelSucursal->empresa_suc[$index] = $model->id_empresa;
+                            echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle");
+                        }
+                        $url = Url::to(['producto/producto-list']);
+                        $productos = empty($modelDetalle->prod_pdetalle) ? '' : Producto::findOne($modelDetalle->prod_pdetalle)->cod_prod.' '.Producto::findOne($modelDetalle->prod_pdetalle)->des_prod;
+                        echo $form->field($modelDetalle, "[{$index}]prod_pdetalle",[
+                          'addClass' => 'form-control ',
+                          ])->widget(Select2::classname(), [
+                            'language' => Yii::$app->language,
+                            'initValueText' => $productos, // set the initial display text
+                            'options' => ['placeholder' => Yii::t('producto','Select a product').'...'],
+                            'theme' => Select2::THEME_DEFAULT,
+                            'pluginOptions' => [
+                                //'allowClear' => true,
+                                'minimumInputLength' => 3,
+                                'language' => [
+                                    'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+                                    'inputTooShort' => new JsExpression("function() {  return '".Yii::t('app','Please input {number} or more characters', [ 'number'=> 3 ])."';}"),
+                                ],
+                            'ajax' => [
+                                'url' => $url,
+                                'dataType' => 'json',
+                                'data' => new JsExpression('function(params) { return {desc:params.term,tipo_listap: $("#pedido-tipo_listap").val()}; }')
+                            ],
+                            'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                            'templateResult' => new JsExpression('function(cliente) { return cliente.text; }'),
+                            'templateSelection' => new JsExpression('function (cliente) {
+                                return cliente.text;
+                              }'),
+                            ],
+                        ])->label(false);
+                        ?>
+
+                      </div>
+                      <div class="col-sm-1 col-xs-12">
+                        <?= $form
+                        ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control number-decimals'])
+                        ->textInput(['type' => 'number','min' => 0, 'step' => 1])
+                        ->label(false)?>
+                      </div>
+                      <div class="col-sm-1 col-xs-12">
+                        <?= $form
+                        ->field($modelDetalle,"[{$index}]plista_pdetalle", [ 'addClass' => 'form-control number-decimals'])
+                        ->textInput([ 'type' => 'number','readonly' => true])
+                        ->label(false)?>
+                        <?php echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle"); ?>
+                      </div>
+                      <!--div class="col-xs-1 col-xs-12">
+                        <?= $form->field($modelDetalle,"[{$index}]impuesto_pdetalle")
+                        ->textInput([
+                          'class' => 'form-control ',
+                          'style' => ['text-align' => 'right'],
+                          'readonly' => true,
+                        ])->label(false)?>
+                      </div-->
+                      <div class="col-sm-1 col-xs-12">
+                        <?= $form
+                        ->field($modelDetalle,"[{$index}]descu_pdetalle", [ 'addClass' => 'form-control number-decimals'])
+                        ->textInput([ 'type'=>'number','width' => '200px'])
+                        ->label(false)?>
+                      </div>
+                      <div class="col-sm-1 col-xs-12">
+                        <?= $form
+                        ->field($modelDetalle,"[{$index}]precio_pdetalle",[ 'addClass' => 'form-control number-decimals'])
+                        ->textInput(['type'=>'number','width' => '200px'])
+                        ->label(false)?>
+                      </div>
+                      <div class="col-sm-2 col-xs-12">
+                        <?= $form
+                        ->field($modelDetalle,"[{$index}]total_pdetalle",[ 'addClass' => 'form-control number-decimals'])
+                        ->textInput(['type'=>'number','readonly' => true])
+                        ->label(false)?>
+                      </div>
+                      <div class="col-sm-1 col-xs-12">
+                        <button type="button" class="remove-item btn btn-danger btn-flat btn-sm" style="width:100%" data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Delete item')?>"><i class="fa fa-trash"></i></button>
+                    </div>
+                  </div>
+            <?php endforeach; ?>
+          </div>
+          <?php DynamicFormWidget::end(); ?>
+          <hr>
+          <table class="table table-fixed table-stripped">
+            <tr>
+              <td class="col-xs-6" style="text-align:right;">
+                <?= Yii::t('app', 'Subtotal') ?>
+              </td>
+              <td class="col-xs-2">
+                <input type="text" id="subtotal1" name="subtotal" readonly class="form-control totales" value="">
+              </td>
+            </tr>
+            <tr>
+              <td class="col-xs-6" style="text-align:right;">
+                <?= Yii::t('app', 'Discount') ?>
+              </td>
+              <td class="col-xs-2">
+                <input type="text" id="descuento" name="descuento" readonly class="form-control totales" value="">
+              </td>
+            </tr>
+            <tr>
+              <td class="col-xs-6" style="text-align:right;">
+                <?= Yii::t('app', 'Subtotal') ?>
+              </td>
+              <td class="col-xs-2">
+                <input type="text" id="subtotal2" name="subtotal" readonly class="form-control totales" value="">
+              </td>
+            </tr>
+            <tr>
+              <td class="col-xs-7" style="text-align:right;">
+                <?= Yii::t('app', 'Tax')?> <?= $IMPUESTO ?>%
+              </td>
+              <td class="col-xs-2">
+                <input type="text" name="impuesto" id="impuesto" readonly class="form-control totales" value="">
+              </td>
+            </tr>
+            <tr>
+              <td class="col-xs-6" style="text-align:right;">
+                <?= Yii::t('app', 'Total')?>
+              </td>
+              <td class="col-xs-2">
+                <input type="text" name="total" id="total" readonly  class="form-control totales" value="">
+              </td>
+            </tr>
+          </table>
         </div>
       </div>
       <!-- Articulos -->
@@ -427,10 +395,10 @@ if ( $model->isNewRecord ) {
 Yii::$app->view->registerJs('const IMPUESTO = '. $IMPUESTO .' / 100;',  \yii\web\View::POS_HEAD);
 $js = '
 $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
-    console.log("beforeInsert");
+    //console.log("beforeInsert");
 });
 $(".dynamicform_wrapper").on("afterInsert", function(e, item) {
-    console.log("afterInsert");
+    //console.log("afterInsert");
 });
 $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
   if ( confirm("'.Yii::t('producto','Are you sure to delete this product?').'") ) {
@@ -499,7 +467,9 @@ $( '.table-body' ).on('select2:select',"select[id$='prod_pdetalle']",function() 
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
 
-  if ( checkDuplicate( _currSelect, row) ) {
+  let selects = $("select[id$='prod_pdetalle']");
+
+  if ( checkDuplicate( _currSelect, row, selects) ) {
     _currSelect.val( null ).trigger( 'change' );
     swal( 'Oops!!!',"El código no puede repetirse, ya está en la lista","error" );
     _currSelect.focus();
@@ -687,27 +657,6 @@ function calculateTotals( IMPUESTO ) {
   //return totals;
 }
 
-function getRow( row = null ) {
-  if ( row ) {
-    return function( ) {
-      return row;
-    }
-  }
-}
-
-function checkDuplicate( _currSelect, row ) {
-  let band = false;
-  let selects = $("select[id$='prod_pdetalle']");
-  row = row[ 1 ];
-
-  for( let i = 0; i < selects.length - 1; i++) {
-      if ( _currSelect.val() === $( selects[i] ).val() ) {
-        band = true;
-        break;
-      }
-  }
-  return band;
-}
 function setPrices( value = null, row, tipo_lista ) {
   if ( value ) {
     $.ajax({
@@ -766,7 +715,7 @@ JS
   $( '#submit' ).on( 'click', function() {
     let form = $( 'form#Pedido' );
 
-    let rows = $('.table-body > tr').length;
+    let rows = $('.table-body > .detalle-item').length;
 
     if ( !rows ) {
       swal('".Yii::t('pedido','Order')."', '".Yii::t('pedido','The order must have at least one item to be saved')."', 'info');

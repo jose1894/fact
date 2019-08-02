@@ -12,7 +12,7 @@ return [
     'Product' => 'Producto',
     'Purchase order' => 'Pedido',
     'Purchase order list' => 'Lista de pedido',
-    'Create purchase order' => 'Crear pedido',
+    'Create order' => 'Crear pedido',
     'Order: {number} / {name}' => 'Pedido: {number} / {name}',
     'Create product' => 'Crear producto',
     'Update order: {number} / {name}' => 'Actualizar pedido: {number} / {name}',

@@ -5,19 +5,27 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Compra */
 
-$this->title = Yii::t('compra', 'Update Compra: {name}', [
-    'name' => $model->id_compra,
+$this->title = Yii::t('compra', 'Update purchase order: {number} / {name}', [
+    'number' => $model->id_compra,
+    'name' => $model->proveeCompra->nombre_prove,
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('compra', 'Compras'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('compra', 'Purchase order'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id_compra, 'url' => ['view', 'id' => $model->id_compra]];
-$this->params['breadcrumbs'][] = Yii::t('compra', 'Update');
+$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="compra-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
+<div class="pedido-update">
+  <div class="box box-success">
+    <div class="box-header with-border">
+      <h3 class="box-title">
+        <?= Html::encode($this->title) ?>
+      </h3>
+    </div>
+    <div class="box-body">
     <?= $this->render('_form', [
         'model' => $model,
+        'modelsDetalles' => $modelsDetalles,
+        //'IMPUESTO' => $IMPUESTO
     ]) ?>
-
+    </div>
+  </div>
 </div>

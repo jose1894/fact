@@ -149,7 +149,7 @@ class CompraController extends Controller
         return $this->render('create', [
             'model' => $model,
             'modelsDetalles' => (empty($modelsDetalles)) ? [new CompraDetalle] : $modelsDetalles,
-            //'IMPUESTO' => SiteController::getImpuesto(),
+            'IMPUESTO' => SiteController::getImpuesto(),
             //'dataProvider' => $dataProvider,
         ]);
       /*}

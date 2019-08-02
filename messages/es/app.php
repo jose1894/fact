@@ -23,6 +23,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Do you want to add a new item?' => '¿Deseas agregar un  nuevo item?',
+    'Code can´t be repeated, it is already in the list' => 'El código no puede repetirse, ya está en la lista',
     'Subtotal' => 'Subtotal',
     'Tax' => 'I.G.V.',
     'Discount' => 'Descuento',

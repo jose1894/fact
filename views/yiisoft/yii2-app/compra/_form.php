@@ -134,129 +134,171 @@ if ( $model->isNewRecord ) {
 
     <!-- Articulos -->
     <div class="row">
-      <div class="col-lg-12">
+      <div class="container-fluid">
         <?php  DynamicFormWidget::begin([
-              'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
-              'widgetBody' => '.detalle-body', // required: css class selector
-              'widgetItem' => '.detalle-item', // required: css class
-              //'limit' => 10, // the maximum times, an element can be cloned (default 999)
-              'min' => 0, // 0 or 1 (default 1)
-              'insertButton' => '.add-item', // css class
-              'deleteButton' => '.remove-item', // css class
-              'model' => $modelsDetalles[0],
-              'formId' => $model->formName(),
-              'formFields' => [
-                  'id_cdetalle',
-                  'prod_cdetalle',
-                  'cant_cdetalle',
-                  'precio_cdetalle',
-                  'descu_cdetalle',
-                  'impuesto_cdetalle',
-                  'status_cdetalle'
-              ],
-          ]); ?>
-          <div class="row">
-            <div class="col-xs-5">
-              <h5>Producto</H5>
-            </div>
-            <div class="col-xs-2">
-              <h5>Cantidad</h5>
-            </div>
-            <div class="col-xs-1">
-              <h5>Descuento</h5>
-            </div>
-            <div class="col-xs-1">
-              <h5>Precio</h5>
-            </div>
-            <div class="col-xs-2">
-              <h5>Total</h5>
-            </div>
-            <div class="col-xs-1">
-              <button type="button" class="pull-right add-item btn btn-success btn-xs"><i class="fa fa-plus"></i></button>
-              <div class="clearfix"></div>
-            </div>
+          'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
+          'widgetBody' => '.table-body', // required: css class selector
+          'widgetItem' => '.detalle-item', // required: css class
+          //'limit' => 10, // the maximum times, an element can be cloned (default 999)
+          'min' => 0, // 0 or 1 (default 1)
+          'insertButton' => '.add-item', // css class
+          'deleteButton' => '.remove-item', // css class
+          'model' => $modelsDetalles[0],
+          'formId' => $model->formName(),
+          'formFields' => [
+            'id_cdetalle',
+            'prod_cdetalle',
+            'cant_cdetalle',
+            'precio_cdetalle',
+            'descu_cdetalle',
+            'impuesto_cdetalle',
+            'status_cdetalle'
+          ],
+        ]); ?>
+        <div class="row">
+          <div class="col-sm-6 col-xs-12">
+            <h5>Producto</H5>
           </div>
-          <div class="detalle-body">
-            <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
-              <div class="detalle-item">
-                <div class="col-sm-5">
-                  <?php
-                    // necessary for update action.
-                    if (!$modelDetalle->isNewRecord) {
-                        echo Html::activeHiddenInput($modelDetalle, "[{$index}]id_cdetalle");
-                        //$modelSucursal->empresa_suc[$index] = $model->id_empresa;
-                        echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_cdetalle");
-                    }
-                    $url = Url::to(['producto/producto-list']);
-                    $productos = empty($modelDetalle->prod_cdetalle) ? '' : Producto::findOne($modelDetalle->prod_cdetalle)->cod_prod.' '.Producto::findOne($modelDetalle->prod_cdetalle)->des_prod;
-                    echo $form->field($modelDetalle, "[{$index}]prod_cdetalle",[
-                      'addClass' => 'form-control ',
-                      ])->widget(Select2::classname(), [
-                        'language' => Yii::$app->language,
-                        'initValueText' => $productos, // set the initial display text
-                        'options' => ['placeholder' => Yii::t('producto','Select a product').'...'],
-                        'theme' => Select2::THEME_DEFAULT,
-                        'pluginOptions' => [
-                            //'allowClear' => true,
-                            'minimumInputLength' => 3,
-                            'language' => [
-                                'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
-                                'inputTooShort' => new JsExpression("function() {  return '".Yii::t('app','Please input {number} or more characters', [ 'number'=> 3 ])."';}"),
-                            ],
-                        'ajax' => [
-                            'url' => $url,
-                            'dataType' => 'json',
-                            'data' => new JsExpression('function(params) { return {desc:params.term,tipo_listap: $("#pedido-tipo_listap").val()}; }')
-                        ],
-                        'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-                        'templateResult' => new JsExpression('function(producto) { return producto.text; }'),
-                        'templateSelection' => new JsExpression('function (producto) {
-                            return producto.text;
-                          }'),
-                        ],
-                    ])->label(false);
-                    ?>
-                </div>
-                <div class="col-sm-2">
-                  <?= $form
-                  ->field($modelDetalle,"[{$index}]cant_cdetalle",[ 'addClass' => 'form-control number-decimals'])
-                  ->textInput(['type' => 'number','min' => 0, 'step' => 1])
-                  ->label(false)?>
-                </div>
-                <div class="col-sm-1">
-                  <?= $form
-                  ->field($modelDetalle,"[{$index}]precio_cdetalle",[ 'addClass' => 'form-control number-decimals'])
-                  ->textInput(['type' => 'number','min' => 0, 'step' => 1])
-                  ->label(false)?>
-                </div>
-                <div class="col-sm-1">
-                  <?= $form
-                  ->field($modelDetalle,"[{$index}]descu_cdetalle",[ 'addClass' => 'form-control number-decimals'])
-                  ->textInput(['type' => 'number','min' => 0, 'step' => 1])
-                  ->label(false)?>
-                </div>
-                <div class="col-sm-2">
-                  <?= $form
-                  ->field($modelDetalle,"[{$index}]total_cdetalle",[ 'addClass' => 'form-control number-decimals'])
-                  ->textInput(['type' => 'number','min' => 0, 'step' => 1])
-                  ->label(false)?>
-                </div>
-                <div class="col-sm-1">
-                  <button type="button" class="pull-right remove-item btn btn-danger btn-xs"><i class="fa fa-minus"></i></button>
-                  <div class="clearfix"></div>
-                </div>
+          <div class="col-sm-1 col-xs-12">
+            <h5>Cantidad</h5>
+          </div>
+          <div class="col-sm-1 col-xs-12">
+            <h5>Precio</h5>
+          </div>
+          <div class="col-sm-1 col-xs-12">
+            <h5>Descuento</h5>
+          </div>
+          <div class="col-sm-2 col-xs-12">
+            <h5>Total</h5>
+          </div>
+          <div class="col-sm-1 col-xs-12">
+            <button type="button" class="pull-right add-item btn-flat btn btn-success btn-md" style="width:100%"><i class="fa fa-plus"></i></button>
+          </div>
+        </div>
+        <hr>
+        <div class="table-body">
+          <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
+            <div class="row detalle-item">
+              <div class="col-sm-6 col-xs-12">
+                <?php
+                  // necessary for update action.
+                  if (!$modelDetalle->isNewRecord) {
+                      echo Html::activeHiddenInput($modelDetalle, "[{$index}]id_cdetalle");
+                      //$modelSucursal->empresa_suc[$index] = $model->id_empresa;
+                      echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_cdetalle");
+                  }
+                  $url = Url::to(['producto/producto-list']);
+                  $productos = empty($modelDetalle->prod_cdetalle) ? '' : Producto::findOne($modelDetalle->prod_cdetalle)->cod_prod.' '.Producto::findOne($modelDetalle->prod_cdetalle)->des_prod;
+                  echo $form->field($modelDetalle, "[{$index}]prod_cdetalle",[
+                    'addClass' => 'form-control input-sm',
+                    ])->widget(Select2::classname(), [
+                      'language' => Yii::$app->language,
+                      'initValueText' => $productos, // set the initial display text
+                      'options' => ['placeholder' => Yii::t('producto','Select a product').'...'],
+                      'theme' => Select2::THEME_DEFAULT,
+                      'pluginOptions' => [
+                          //'allowClear' => true,
+                          'minimumInputLength' => 3,
+                          'language' => [
+                              'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+                              'inputTooShort' => new JsExpression("function() {  return '".Yii::t('app','Please input {number} or more characters', [ 'number'=> 3 ])."';}"),
+                          ],
+                      'ajax' => [
+                          'url' => $url,
+                          'dataType' => 'json',
+                          'data' => new JsExpression('function(params) { return {desc:params.term,tipo_listap: $("#pedido-tipo_listap").val()}; }')
+                      ],
+                      'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                      'templateResult' => new JsExpression('function(producto) { return producto.text; }'),
+                      'templateSelection' => new JsExpression('function (producto) {
+                          return producto.text;
+                        }'),
+                      ],
+                  ])->label(false);
+                  ?>
               </div>
-            <?php endforeach; ?>
-          </div>
-          <?php DynamicFormWidget::end(); ?>
+              <div class="col-sm-1 col-xs-12">
+                <?= $form
+                ->field($modelDetalle,"[{$index}]cant_cdetalle",[ 'addClass' => 'form-control b number-decimals'])
+                ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'placeholder' => Yii::t('compra' , 'Quantity')])
+                ->label(false)?>
+              </div>
+              <div class="col-sm-1 col-xs-12">
+                <?= $form
+                ->field($modelDetalle,"[{$index}]precio_cdetalle",[ 'addClass' => 'form-control number-decimals'])
+                ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'placeholder' => Yii::t('compra' , 'Price')])
+                ->label(false)?>
+              </div>
+              <div class="col-sm-1 col-xs-12">
+                <?= $form
+                ->field($modelDetalle,"[{$index}]descu_cdetalle",[ 'addClass' => 'form-control number-decimals'])
+                ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'placeholder' => Yii::t('compra' ,  'Discount')])
+                ->label(false)?>
+              </div>
+              <div class="col-sm-2 col-xs-12">
+                <?= $form
+                ->field($modelDetalle,"[{$index}]total_cdetalle",[ 'addClass' => 'form-control number-decimals'])
+                ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'readonly'=> true,'placeholder' => Yii::t('compra', 'Total')])
+                ->label(false)?>
+              </div>
+              <div class="col-sm-1 col-xs-12">
+                <button type="button" class="remove-item btn btn-danger btn-flat btn-sm" style="width:100%"><i class="fa fa-trash"></i></button>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+        <?php DynamicFormWidget::end(); ?>
+        <hr>
+        <table class="table table-fixed table-stripped">
+          <tr>
+            <td class="col-xs-6" style="text-align:right;">
+              <?= Yii::t('app', 'Subtotal') ?>
+            </td>
+            <td class="col-xs-2">
+              <input type="text" id="subtotal1" name="subtotal" readonly class="form-control totales" value="">
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-6" style="text-align:right;">
+              <?= Yii::t('app', 'Discount') ?>
+            </td>
+            <td class="col-xs-2">
+              <input type="text" id="descuento" name="descuento" readonly class="form-control totales" value="">
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-6" style="text-align:right;">
+              <?= Yii::t('app', 'Subtotal') ?>
+            </td>
+            <td class="col-xs-2">
+              <input type="text" id="subtotal2" name="subtotal" readonly class="form-control totales" value="">
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-7" style="text-align:right;">
+              <?= Yii::t('app', 'Tax')?> <?= $IMPUESTO ?>%
+            </td>
+            <td class="col-xs-2">
+              <input type="text" name="impuesto" id="impuesto" readonly class="form-control totales" value="">
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-6" style="text-align:right;">
+              <?= Yii::t('app', 'Total')?>
+            </td>
+            <td class="col-xs-2">
+              <input type="text" name="total" id="total" readonly  class="form-control totales" value="">
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
     <!-- Articulos -->
 
-
-
-    <div class="form-group">
+    <div class="row">
+      <div class="form-group">
         <?= Html::submitButton(Yii::t('compra', 'Save'), ['class' => 'btn btn-success']) ?>
+      </div>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -266,3 +308,111 @@ if ( $model->isNewRecord ) {
 $this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
 ['depends'=>[\yii\web\JqueryAsset::className()],
 'position'=>View::POS_END]);
+
+$this->registerJsVar( "buttonPrint", "#imprimir" );
+$this->registerJsVar( "frameRpt", "#frame-rpt" );
+$this->registerJsVar( "buttonCancel", ".close-btn" );
+$this->registerJsVar( "modalRpt", "#modal-rpt" );
+echo   $this->render('//site/_modalRpt',[]);
+
+Yii::$app->view->registerJs('const IMPUESTO = '. $IMPUESTO .' / 100;',  \yii\web\View::POS_HEAD);
+$js = '
+$(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
+    //console.log("beforeInsert");
+});
+$(".dynamicform_wrapper").on("afterInsert", function(e, item) {
+    //console.log("afterInsert");
+});
+$(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
+  if ( confirm("'.Yii::t('producto','Are you sure to delete this product?').'") ) {
+    return true;
+  }
+  return false;
+});
+
+$(".dynamicform_wrapper").on("afterDelete", function(e) {
+    console.log("Deleted item!");
+    calculateTotals( IMPUESTO );
+});
+$(".dynamicform_wrapper").on("limitReached", function(e, item) {
+    alert("Limit reached");
+});
+
+$( buttonPrint ).on( "click", function(){
+  $( frameRpt ).attr( "src", "'.Url::to(['compra/compra-rpt', 'id' => $model->id_compra]).'");
+  $( modalRpt ).modal({
+    backdrop: "static",
+    keyboard: false,
+  });
+  $( modalRpt ).modal("show");
+});
+
+$( "#compra-provee_compra" ).on( "select2:select",function (e) {
+  if (e.keyCode == 13) {
+      $("#compra-moneda_compra").focus();
+      $("#compra-moneda_compra").select2("open");
+      e.preventDefault();
+  }
+});
+
+$( ".table-body" ).on("select2:select","select[id$=\'prod_cdetalle\']",function() {
+	let _currSelect = $( this );
+  let row = $( this ).attr( "id" ).split( "-" );
+  row = row[ 1 ];
+
+  let selects = $("select[id$=\'prod_cdetalle\']");
+
+  if ( checkDuplicate( _currSelect, row, selects) ) {
+    _currSelect.val( null ).trigger( "change" );
+    swal( "Oops!!!","'. Yii::t('app','Code can´t be repeated, it is already in the list') .'","error" );
+    _currSelect.focus();
+  }
+
+  $( "#compradetalle-" + row + "-cant_cdetalle" ).focus();
+
+});
+
+$( ".table-body" ).on( "keyup","input[id$=\'cant_cdetalle\']",function( e ) {
+  if ( e.keyCode === 13 && $( this ).val() ) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+
+    $( "#compradetalle-" + row + "-precio_cdetalle" ).focus();
+
+  }
+});
+
+$( ".table-body" ).on( "keyup","input[id$=\'precio_cdetalle\']",function( e ) {
+  if ( e.keyCode === 13 && $( this ).val() ) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+    $( "#compradetalle-" + row + "-descu_cdetalle" ).focus();
+
+  }
+});
+
+$( ".table-body" ).on( "keyup", "input[id$=\'descu_cdetalle\']", function( e ) {
+  let row = $( this ).attr( "id" ).split( "-" );
+  row = row[ 1 ];
+
+  if ( e.keyCode === 13 && $( this ).val() &&
+      $( "#compradetalle-" + row + "-prod_cdetalle").val()  )  {
+      let rowR = getRow( row );
+
+      swal({
+        title: "' . Yii::t( 'app','Do you want to add a new item?') . '",
+        icon: "info",
+        buttons: true,
+      }).then( ( willDelete ) => {
+        if ( willDelete ) {
+          let row =  rowR(1);
+          $( ".add-item" ).trigger( "click" );
+          $( "#compradetalle-" + ( parseInt(row) + 1 ) + "-prod_cdetalle").focus();
+          $( "#compradetalle-" + ( parseInt(row) + 1 ) + "-prod_cdetalle").select2("open");
+        }
+      });
+  }
+});
+
+';
+$this->registerJs($js,View::POS_LOAD);

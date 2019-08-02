@@ -1,4 +1,5 @@
 $( document ).ready( function( e ){
+  $('[data-toggle="tooltip"]').tooltip();
 
   var form = $( frame ).contents().find('form');
 
