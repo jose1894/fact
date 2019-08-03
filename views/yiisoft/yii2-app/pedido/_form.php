@@ -587,7 +587,6 @@ $( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ) {
 
   if ( e.keyCode === 13 && $( this ).val() &&
        $( "#pedidodetalle-" + row + "-prod_pdetalle").val()  )  {
-      let rowR = getRow( row );
 
       swal({
         title: "¿Deseas agregar un  nuevo item?",
@@ -595,10 +594,10 @@ $( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ) {
         buttons: true,
       }).then( ( willDelete ) => {
         if ( willDelete ) {
-          let row =  rowR(1);
+          let row = $( ".detalle-item" ).length;
           $( '.add-item' ).trigger( 'click' );
-          $( "#pedidodetalle-" + ( parseInt(row) + 1 ) + "-prod_pdetalle").focus();
-          $( "#pedidodetalle-" + ( parseInt(row) + 1 ) + "-prod_pdetalle").select2('open');
+          $( "#pedidodetalle-" + row + "-prod_pdetalle").focus();
+          $( "#pedidodetalle-" + row + "-prod_pdetalle").select2('open');
         }
       });
   }

@@ -90,7 +90,7 @@ if ( $model->isNewRecord ) {
 
       </div>
       <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
           <?php
             $monedas = Moneda::getMonedasList();
           ?>
@@ -107,7 +107,7 @@ if ( $model->isNewRecord ) {
                       // ],
               ])?>
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
           <?php
             $condiciones = CondPago::getCondPagoList();
           ?>
@@ -125,10 +125,19 @@ if ( $model->isNewRecord ) {
               ])?>
 
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
           <?= $form->field($model, 'nrodoc_compra',[
               'addClass' => 'form-control'
             ])->textInput(['maxlength' => true]) ?>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+          <label><?= Yii::t('app', 'Tax exemption')?></label>
+          <?php
+            echo $form->field($model, 'excento_compra',[
+               'addClass' => 'form-control'
+             ])->checkbox(['maxlength' => true])->label(false);
+            ?>
         </div>
     </div>
 
@@ -317,6 +326,13 @@ echo   $this->render('//site/_modalRpt',[]);
 
 Yii::$app->view->registerJs('const IMPUESTO = '. $IMPUESTO .' / 100;',  \yii\web\View::POS_HEAD);
 $js = '
+
+//Flat red color scheme for iCheck
+$("#compra-excento_compra").iCheck({
+  checkboxClass: "icheckbox_flat-green",
+  radioClass   : "iradio_flat-green"
+});
+
 $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
     //console.log("beforeInsert");
 });
@@ -382,6 +398,32 @@ $( ".table-body" ).on( "keyup","input[id$=\'cant_cdetalle\']",function( e ) {
   }
 });
 
+$( ".table-body" ).on( "change", "input[id$=\'cant_cdetalle\']", function( e ) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+    let cant = $( this ).val();
+    let precio = $( "#compradetalle-" + row + "-precio_cdetalle").val();
+    let descu = $( "#compradetalle-" + row + "-descu_cdetalle").val();
+    let total = 0.00;
+    let descuento = 0;
+
+    if ( cant ) {
+
+      if ( descu ) {
+        total = ( cant * ( precio - (precio * ( descu / 100 ) ) ) );
+        descuento = ( precio * ( descu / 100 ) );
+      } else {
+        total = cant * precio;
+      }
+
+      total = parseFloat(  total  ).toFixed( 2 );
+      $( "#compradetalle-" + row + "-total_cdetalle" ).val( total );
+      $( "#compradetalle-" + row + "-descu_cdetalle").data( "descuento", descuento);
+
+      calculateTotals( IMPUESTO );
+    }
+});
+
 $( ".table-body" ).on( "keyup","input[id$=\'precio_cdetalle\']",function( e ) {
   if ( e.keyCode === 13 && $( this ).val() ) {
     let row = $( this ).attr( "id" ).split( "-" );
@@ -391,13 +433,40 @@ $( ".table-body" ).on( "keyup","input[id$=\'precio_cdetalle\']",function( e ) {
   }
 });
 
+
+$( ".table-body" ).on( "change", "input[id$=\'precio_cdetalle\']", function( e ) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+    let cant = $( "#compradetalle-" + row + "-cant_cdetalle").val();
+    let descu = $( "#compradetalle-" + row + "-descu_cdetalle").val();
+    let precio = $( this ).val();
+    let total = 0;
+    let descuento = 0;
+
+    if ( cant ) {
+
+      if ( descu ) {
+        total = ( cant * ( precio - (precio * ( descu / 100 ) ) ) );
+        descuento = ( precio * ( descu / 100 ) );
+      } else {
+        total = cant * precio;
+      }
+
+      total = parseFloat(  total  ).toFixed( 2 );
+      $( "#compradetalle-" + row + "-total_cdetalle" ).val( total );
+      $( "#compradetalle-" + row + "-descu_cdetalle").data( "descuento", descuento);
+
+      calculateTotals( IMPUESTO );
+    }
+
+});
+
 $( ".table-body" ).on( "keyup", "input[id$=\'descu_cdetalle\']", function( e ) {
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
 
-  if ( e.keyCode === 13 && $( this ).val() &&
+  if ( e.keyCode === 13 &&
       $( "#compradetalle-" + row + "-prod_cdetalle").val()  )  {
-      let rowR = getRow( row );
 
       swal({
         title: "' . Yii::t( 'app','Do you want to add a new item?') . '",
@@ -405,14 +474,105 @@ $( ".table-body" ).on( "keyup", "input[id$=\'descu_cdetalle\']", function( e ) {
         buttons: true,
       }).then( ( willDelete ) => {
         if ( willDelete ) {
-          let row =  rowR(1);
+          let row = $( ".detalle-item" ).length;
+
           $( ".add-item" ).trigger( "click" );
-          $( "#compradetalle-" + ( parseInt(row) + 1 ) + "-prod_cdetalle").focus();
-          $( "#compradetalle-" + ( parseInt(row) + 1 ) + "-prod_cdetalle").select2("open");
+          $( "#compradetalle-" + row + "-prod_cdetalle").focus();
+          $( "#compradetalle-" + row + "-prod_cdetalle").select2("open");
         }
       });
   }
 });
+
+
+$( ".table-body" ).on( "change", "input[id$=\'descu_cdetalle\']", function( e ) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+    let descu = $( this ).val();
+    let precio = $( "#compradetalle-" + row + "-precio_cdetalle").val();
+    let cant = $( "#compradetalle-" + row + "-cant_cdetalle").val();
+    let total = 0.00;
+    let descuento = 0;
+
+    if ( cant ) {
+
+      if ( descu ) {
+        total = ( cant * ( precio - ( precio * ( descu / 100 ) ) ) );
+        descuento = ( precio * ( descu / 100 ) );
+      } else {
+        total = cant * precio;
+      }
+
+      total = parseFloat(  total  ).toFixed( 2 );
+      $( "#compradetalle-" + row + "-total_cdetalle" ).val( total );
+      $( "#compradetalle-" + row + "-descu_cdetalle").data( "descuento", descuento);
+
+      calculateTotals( IMPUESTO );
+    }
+});
+
+function calculateTotals( IMPUESTO ) {
+  let total = 0,
+      totalImp = 0,
+      precioNeto = 0,
+      subTotal1 = 0,
+      subTotal2 = 0,
+      descuento = 0,
+      desc = 0;
+      subT = 0,
+      totals = {
+        subtotal1: 0,
+        subtotal2: 0,
+        descuento: 0,
+        impuesto: 0,
+        total: 0
+      };
+
+  $( "input[id$=\'-total_cdetalle\']" ).each(function (i, element) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+    total += parseFloat(element.value);
+
+    if ( $("#compra-excento_compra").prop( "checked" ) ) {
+      subT = $( "#compradetalle-" + row + "-precio_cdetalle" ).val()  *  $( "#compradetalle-" + row + "-cant_cdetalle" ).val();
+      desc = parseFloat( $( "#compradetalle-" + row + "-descu_cdetalle" ).data( "descuento" ) * $( "#compradetalle-" + row + "-cant_cdetalle" ).val() );
+    } else {
+      subT = $( "#compradetalle-" + row + "-precio_cdetalle" ).val()  *  $( "#compradetalle-" + row + "-cant_cdetalle" ).val() / ( IMPUESTO + 1 ) ;
+      desc = parseFloat( $( "#compradetalle-" + row + "-descu_cdetalle" ).data( "descuento" ) * $( "#compradetalle-" + row + "-cant_cdetalle" ).val()   / ( IMPUESTO + 1 ) );
+    }
+
+    subTotal1 += subT;
+    descuento += desc;
+  });
+
+  descuento = descuento ? descuento : 0;
+
+
+  precioNeto = total;
+  subTotal2 = precioNeto;
+
+  if ( !$("#compra-excento_compra").prop( "checked" ) ) {
+    precioNeto = ( total / ( IMPUESTO + 1 ) );
+    totalImp = total - precioNeto;
+    subTotal2 = precioNeto;
+  }
+
+  totals.total = parseFloat(  total  ).toFixed( 2 );
+  totals.impuesto = parseFloat( totalImp  ).toFixed( 2 );
+  totals.subtotal1 = parseFloat( subTotal1  ).toFixed( 2 );
+  totals.subtotal2 = parseFloat( subTotal2  ).toFixed( 2 );
+  totals.descuento = parseFloat( descuento  ).toFixed( 2 );
+
+  $( "#subtotal1" ).val( totals.subtotal1 );
+  $( "#subtotal2" ).val( totals.subtotal2 );
+  $( "#impuesto" ).val( totals.impuesto );
+  $( "#total" ).val( totals.total );
+  $( "#descuento" ).val( totals.descuento );
+
+  //return totals;
+}
+
+
 
 ';
 $this->registerJs($js,View::POS_LOAD);

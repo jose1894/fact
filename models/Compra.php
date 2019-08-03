@@ -42,11 +42,12 @@ class Compra extends \yii\db\ActiveRecord
         return [
             [['cod_compra', 'fecha_compra', 'provee_compra', 'moneda_compra', 'condp_compra', 'usuario_compra'], 'required'],
             [['fecha_compra'], 'safe'],
-            [['provee_compra', 'moneda_compra', 'condp_compra', 'usuario_compra', 'estatus_compra', 'sucursal_compra'], 'integer'],
+            [['provee_compra', 'moneda_compra', 'condp_compra', 'excento_compra', 'usuario_compra', 'estatus_compra', 'sucursal_compra'], 'integer'],
             [['cod_compra'], 'string', 'max' => 10],
             [['edicion_compra'], 'string', 'max' => 1],
             [['nrodoc_compra'], 'string', 'max' => 25],
             [['cod_compra'], 'unique'],
+            [['excento_compra'], 'default', 'value'=> 0],
             [['provee_compra'], 'exist', 'skipOnError' => true, 'targetClass' => Proveedor::className(), 'targetAttribute' => ['provee_compra' => 'id_prove']],
             [['moneda_compra'], 'exist', 'skipOnError' => true, 'targetClass' => Moneda::className(), 'targetAttribute' => ['moneda_compra' => 'id_moneda']],
             [['condp_compra'], 'exist', 'skipOnError' => true, 'targetClass' => CondPago::className(), 'targetAttribute' => ['condp_compra' => 'id_condp']],
@@ -70,6 +71,7 @@ class Compra extends \yii\db\ActiveRecord
             'edicion_compra' => Yii::t('compra', 'Edicion Compra'),
             'nrodoc_compra' => Yii::t('compra', 'Nro. Doc'),
             'sucursal_compra' => Yii::t('compra', 'Sucursal Compra'),
+            'excento_compra' => Yii::t('app','Tax exemption')
         ];
     }
 

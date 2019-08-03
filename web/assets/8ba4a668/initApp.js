@@ -37,3 +37,25 @@ function isNumber(evt, element) {
 
     return true;
 }
+
+function checkDuplicate( _currSelect, row, selects ) {
+  let band = false;
+  row = row[ 1 ];
+
+  for( let i = 0; i < selects.length - 1; i++) {
+      if ( _currSelect.val() === $( selects[i] ).val() ) {
+        band = true;
+        break;
+      }
+  }
+
+  return band;
+}
+
+function getRow( row = null ) {
+  if ( row ) {
+    return function( ) {
+      return row;
+    }
+  }
+}
