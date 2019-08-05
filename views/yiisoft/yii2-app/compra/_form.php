@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use yii\helpers\ArrayHelper;
 use app\models\Cliente;
-use app\models\Vendedor;
+use app\models\Proveedor;
 use app\models\Moneda;
 use app\models\Almacen;
 use app\models\CondPago;
@@ -53,8 +53,9 @@ if ( $model->isNewRecord ) {
 
         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
           <?php
+          echo Html::activeHiddenInput($model, "usuario_compra");
           $url = Url::to(['proveedor/proveedor-list']);
-          $proveedor = empty($model->provee_compra) ? '' : Proveedor::findOne($model->provee_compra)->nombre_prov;
+          $proveedor = empty($model->provee_compra) ? '' : Proveedor::findOne($model->provee_compra)->nombre_prove;
           echo $form->field($model, 'provee_compra',[
             'addClass' => 'form-control ',
             'hintType' => ActiveField::HINT_SPECIAL
@@ -131,13 +132,24 @@ if ( $model->isNewRecord ) {
             ])->textInput(['maxlength' => true]) ?>
         </div>
 
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
           <label><?= Yii::t('app', 'Tax exemption')?></label>
           <?php
             echo $form->field($model, 'excento_compra',[
                'addClass' => 'form-control'
-             ])->checkbox(['maxlength' => true])->label(false);
+             ])->checkbox()->label(false);
             ?>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
+          <label><?= Yii::t('app', 'Affect warehouse')?></label>
+          <?php
+            echo $form->field($model, 'afectaalm_compra',[
+               'addClass' => 'form-control'
+             ])->checkbox()->label(false);
+            ?>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
+          <div class="clearfix"></div>
         </div>
     </div>
 
@@ -194,7 +206,7 @@ if ( $model->isNewRecord ) {
                   if (!$modelDetalle->isNewRecord) {
                       echo Html::activeHiddenInput($modelDetalle, "[{$index}]id_cdetalle");
                       //$modelSucursal->empresa_suc[$index] = $model->id_empresa;
-                      echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_cdetalle");
+                      echo Html::activeHiddenInput($modelDetalle, "[{$index}]compra_cdetalle");
                   }
                   $url = Url::to(['producto/producto-list']);
                   $productos = empty($modelDetalle->prod_cdetalle) ? '' : Producto::findOne($modelDetalle->prod_cdetalle)->cod_prod.' '.Producto::findOne($modelDetalle->prod_cdetalle)->des_prod;
@@ -305,8 +317,11 @@ if ( $model->isNewRecord ) {
     <!-- Articulos -->
 
     <div class="row">
-      <div class="form-group">
-        <?= Html::submitButton(Yii::t('compra', 'Save'), ['class' => 'btn btn-success']) ?>
+      <div class="form-group" style="float:right">
+       <?php if ( !$model->isNewRecord ) { ?>
+          <button type="button" name="button" id="imprimir" data-toggle="modal" class="btn btn-flat btn-primary "><span class="fa fa-print"></span> <?= Yii::t('app', 'Print')?></button>
+       <?php } ?>
+          <button id="submit" type="button" class="btn btn-flat btn-success"><span class="fa fa-save"></span> <?= Yii::t('app','Save') ?></button>
       </div>
     </div>
 
@@ -325,10 +340,24 @@ $this->registerJsVar( "modalRpt", "#modal-rpt" );
 echo   $this->render('//site/_modalRpt',[]);
 
 Yii::$app->view->registerJs('const IMPUESTO = '. $IMPUESTO .' / 100;',  \yii\web\View::POS_HEAD);
+
+$jsTrigger = "";
+if ( !$model->isNewRecord ){
+  $jsTrigger = '
+    $( ".table-body input[id$=\'cant_cdetalle\']" ).trigger( "change" );
+    calculateTotals( IMPUESTO );
+  ';
+}
+
 $js = '
 
 //Flat red color scheme for iCheck
 $("#compra-excento_compra").iCheck({
+  checkboxClass: "icheckbox_flat-green",
+  radioClass   : "iradio_flat-green"
+});
+
+$("#compra-afectaalm_compra").iCheck({
   checkboxClass: "icheckbox_flat-green",
   radioClass   : "iradio_flat-green"
 });
@@ -573,6 +602,87 @@ function calculateTotals( IMPUESTO ) {
 }
 
 
+$( "#submit" ).on( "click", function() {
+  let form = $( "form#Compra" );
 
+  let rows = $(".table-body > .detalle-item").length;
+
+  if ( !rows ) {
+    swal("'.Yii::t('compra','Purchase order').'", "'.Yii::t('compra','The order must have at least one item to be saved').'", "info");
+    return false;
+  }
+
+  $.ajax( {
+    "url"    : $( form ).attr( "action" ),
+    "method" : $( form ).attr( "method" ),
+    "data"   : $( form ).serialize(),
+    "async"  : false,
+    "success": function ( data ) {
+      if ( data.success ) {
+
+
+        if ( $( form ).attr("action").indexOf("create") != -1) {
+          $( form ).trigger( "reset" );
+          selects = $(form).find("select");
+
+          if ( selects.length ){
+            selects.trigger( "change" );
+          }
+
+          swal({
+            title: "'.Yii::t("compra","Do you want to issue the document?").'",
+            icon: "info",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willIssue) => {
+            if (willIssue) {
+              window.open("'.Url::to(['pedido/pedido-rpt']).'&id=" + data.id,"_blank");
+            }
+          });
+
+          $( ".table-body" ).empty();
+        }
+
+        swal(data.title, data.message, data.type);
+
+        return;
+      } else {
+        $( form ).yiiActiveForm( "updateMessages", data);
+      }
+
+    },
+    error: function(data) {
+        let message;
+
+        if ( data.responseJSON ) {
+          let error = data.responseJSON;
+          message =   "Se ha encontrado un error: " +
+          "\\n\\nCode " + error.code +
+          "\\n\\nFile: " + error.file +
+          "\\n\\nLine: " + error.line +
+          "\\n\\nName: " + error.name +
+          "\\n Message: " + error.message;
+        } else {
+            message = data.responseText;
+        }
+
+        swal("Oops!!!",message,"error" );
+    }
+  });
+
+
+});
+
+$( "body" ).on( "click", buttonCancel, function(){
+  $( frameRpt ).attr( "src", "about:blank" );
+  $( modalRpt ).modal("hide");
+});
 ';
-$this->registerJs($js,View::POS_LOAD);
+$this->registerJs($js.$jsTrigger,View::POS_LOAD);
+
+$this->registerJsVar( "buttonPrint", "#imprimir" );
+$this->registerJsVar( "frameRpt", "#frame-rpt" );
+$this->registerJsVar( "buttonCancel", ".close-btn" );
+$this->registerJsVar( "modalRpt", "#modal-rpt" );
+echo   $this->render('//site/_modalRpt',[]);

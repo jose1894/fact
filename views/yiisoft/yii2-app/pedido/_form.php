@@ -188,7 +188,7 @@ if ( $model->isNewRecord ) {
                       // ],
               ])?>
               <?php
-              $model->usuario_pedido = 1;
+            //  $model->usuario_pedido = 1;
 
               echo Html::activeHiddenInput($model, "usuario_pedido");
               ?>

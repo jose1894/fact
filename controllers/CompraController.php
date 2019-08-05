@@ -6,10 +6,17 @@ use Yii;
 use app\models\Compra;
 use app\models\Moneda;
 use app\models\CompraDetalle;
+use app\models\CompraDetalleSearch;
 use app\models\CompraSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
+use kartik\widgets\ActiveForm;
+use app\components\AutoIncrement;
+use app\base\Model;
+use yii\helpers\ArrayHelper;
+use kartik\mpdf\Pdf;
 
 /**
  * CompraController implements the CRUD actions for Compra model.
@@ -95,6 +102,7 @@ class CompraController extends Controller
             $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
             $model->fecha_compra = $fecha;
             $model->sucursal_compra = SiteController::getSucursal();
+            $model->usuario_compra = Yii::$app->user->id;
             $transaction = \Yii::$app->db->beginTransaction();
 
             try {
@@ -173,15 +181,75 @@ class CompraController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+      $model = $this->findModel($id);
+      $modelsDetalles = $model->detalles;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_compra]);
-        }
+      if ($model->load(Yii::$app->request->post())) {
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+          $oldIDs = ArrayHelper::map($modelsDetalles, 'id_cdetalle', 'id_cdetalle');
+          $modelsDetalles = Model::createMultiple(compraDetalle::classname(), $modelsDetalles, 'id_cdetalle');
+          Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
+          $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsDetalles, 'id_cdetalle', 'id_cdetalle')));
+
+          // validate all models
+          $valid = $model->validate();
+          $valid = Model::validateMultiple($modelsDetalles) && $valid;
+
+
+          if ($valid) {
+              $transaction = \Yii::$app->db->beginTransaction();
+
+              $fecha = explode("/",$model->fecha_compra);
+              $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
+              $model->fecha_compra = $fecha;
+              $model->sucursal_compra = SiteController::getSucursal();
+
+              try {
+                  if ($flag = $model->save(false)) {
+                      if (!empty($deletedIDs)) {
+                          CompraDetalle::deleteAll(['id_cdetalle' => $deletedIDs]);
+                      }
+                      foreach ($modelsDetalles as $modelDetalle) {
+                          $modelDetalle->compra_pdetalle = $model->id_compra;
+                          if (! ($flag = $modelDetalle->save(false))) {
+                              $transaction->rollBack();
+                              break;
+                          }
+                      }
+                  }
+                  if ($flag) {
+                      $model->save();
+                      $transaction->commit();
+                      //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      $return = [
+                        'success' => true,
+                        'title' => Yii::t('compra', 'Order'),
+                        'message' => Yii::t('app','Record saved successfully!'),
+                        'type' => 'success'
+                      ];
+                      return $return;
+                  }
+              } catch (Exception $e) {
+                  $transaction->rollBack();
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  $return = [
+                    'success' => false,
+                    'title' => Yii::t('empresa', 'Company'),
+                    'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                    'type' => 'error'
+
+                  ];
+                  return $return;
+              }
+          }
+      }
+
+      return $this->render('update', [
+          'model' => $model,
+          'modelsDetalles' => (empty($modelsDetalles)) ? [new CompraDetalle] : $modelsDetalles,
+          'IMPUESTO' => SiteController::getImpuesto(),
+      ]);
     }
 
     /**

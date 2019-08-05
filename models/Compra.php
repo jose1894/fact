@@ -47,7 +47,7 @@ class Compra extends \yii\db\ActiveRecord
             [['edicion_compra'], 'string', 'max' => 1],
             [['nrodoc_compra'], 'string', 'max' => 25],
             [['cod_compra'], 'unique'],
-            [['excento_compra'], 'default', 'value'=> 0],
+            [['excento_compra', 'afectaalm_compra'], 'default', 'value'=> 0],
             [['provee_compra'], 'exist', 'skipOnError' => true, 'targetClass' => Proveedor::className(), 'targetAttribute' => ['provee_compra' => 'id_prove']],
             [['moneda_compra'], 'exist', 'skipOnError' => true, 'targetClass' => Moneda::className(), 'targetAttribute' => ['moneda_compra' => 'id_moneda']],
             [['condp_compra'], 'exist', 'skipOnError' => true, 'targetClass' => CondPago::className(), 'targetAttribute' => ['condp_compra' => 'id_condp']],
@@ -71,7 +71,8 @@ class Compra extends \yii\db\ActiveRecord
             'edicion_compra' => Yii::t('compra', 'Edicion Compra'),
             'nrodoc_compra' => Yii::t('compra', 'Nro. Doc'),
             'sucursal_compra' => Yii::t('compra', 'Sucursal Compra'),
-            'excento_compra' => Yii::t('app','Tax exemption')
+            'excento_compra' => Yii::t('app','Tax exemption'),
+            'afectaalm_compra' => Yii::t('app','Affect warehouse'),
         ];
     }
 
@@ -102,7 +103,7 @@ class Compra extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCompraDetalles()
+    public function getDetalles()
     {
         return $this->hasMany(CompraDetalle::className(), ['compra_cdetalle' => 'id_compra']);
     }
