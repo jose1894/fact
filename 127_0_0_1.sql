@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-08-2019 a las 19:36:12
+-- Tiempo de generación: 09-08-2019 a las 00:33:08
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -602,9 +602,17 @@ CREATE TABLE `compra` (
   `estatus_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS COMPRA',
   `edicion_compra` varchar(1) DEFAULT 'N' COMMENT 'EDICION COMPRA',
   `excento_compra` int(11) NOT NULL DEFAULT '1' COMMENT 'EXCENTO DE IMPUESTO 1=EXCENTO, 0=APLICA IMPUESTO',
+  `afectaalm_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'AFECTA ALMACEN COMPRA',
   `nrodoc_compra` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO COMPRA',
   `sucursal_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL COMPRA'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA ORDEN DE COMPRAS';
+
+--
+-- Volcado de datos para la tabla `compra`
+--
+
+INSERT INTO `compra` (`id_compra`, `cod_compra`, `fecha_compra`, `provee_compra`, `moneda_compra`, `condp_compra`, `usuario_compra`, `estatus_compra`, `edicion_compra`, `excento_compra`, `afectaalm_compra`, `nrodoc_compra`, `sucursal_compra`) VALUES
+(1, '0000000001', '2019-08-05', 1, 1, 1, 2, 0, 'N', 0, 0, '58', 1);
 
 -- --------------------------------------------------------
 
@@ -624,6 +632,13 @@ CREATE TABLE `compra_detalle` (
   `plista_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA COMPRA DETALLE',
   `total_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL COMPRA DETALLE'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE COMPRAS';
+
+--
+-- Volcado de datos para la tabla `compra_detalle`
+--
+
+INSERT INTO `compra_detalle` (`id_cdetalle`, `prod_cdetalle`, `cant_cdetalle`, `precio_cdetalle`, `descu_cdetalle`, `impuesto_cdetalle`, `status_cdetalle`, `compra_cdetalle`, `plista_cdetalle`, `total_cdetalle`) VALUES
+(1, 5, '1.00', '5.00', '5.00', '0', 1, 1, '0.00', '4.75');
 
 -- --------------------------------------------------------
 
@@ -1725,7 +1740,8 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (5, '0000000005', '2019-07-26', 4, 2, 1, 1, 1, 0, 1, 2, 0, 'N', '78943'),
 (6, '0000000006', '2019-07-24', 2, 1, 1, 1, 1, 0, 1, 2, 0, 'N', ''),
 (7, '0000000007', '2019-07-24', 3, 3, 1, 1, 1, 0, 1, 2, 0, 'N', ''),
-(8, '0000000008', '2019-07-24', 3, 3, 1, 1, 1, 0, 1, 2, 0, 'N', '');
+(8, '0000000008', '2019-07-24', 3, 3, 1, 1, 1, 0, 1, 2, 0, 'N', ''),
+(9, '0000000009', '2019-08-05', 3, 3, 1, 1, 1, 0, 1, 2, 0, 'N', '254');
 
 -- --------------------------------------------------------
 
@@ -1762,7 +1778,10 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 (17, 4, '1.00', '19.73', '3.00', '18', 1, 8, '20.34', '19.73'),
 (20, 5, '2.00', '23.52', '2.00', '18', 1, 5, '24.00', '47.04'),
 (21, 4, '2.00', '22.80', '5.00', '18', 1, 5, '24.00', '45.60'),
-(22, 4, '1.00', '22.80', '5.00', '18', 1, 1, '24.00', '22.80');
+(22, 4, '1.00', '22.80', '5.00', '18', 1, 1, '24.00', '22.80'),
+(23, 5, '5.00', '23.28', '3.00', '18', 1, 9, '24.00', '116.40'),
+(24, 4, '5.00', '23.28', '3.00', '18', 1, 9, '24.00', '116.40'),
+(25, 3, '5.00', '60.00', '0.00', '18', 1, 9, '60.00', '300.00');
 
 -- --------------------------------------------------------
 
@@ -2389,13 +2408,13 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `compra_detalle`
 --
 ALTER TABLE `compra_detalle`
-  MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+  MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `cond_pago`
@@ -2455,13 +2474,13 @@ ALTER TABLE `pais`
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=9;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `pedido_detalle`
 --
 ALTER TABLE `pedido_detalle`
-  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=23;
+  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
