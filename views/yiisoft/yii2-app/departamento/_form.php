@@ -22,10 +22,7 @@ use yii\helpers\Url;
       <div class="form-group">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <?php
-            $paises = Pais::find()->where(['status_pais' => 1])
-            ->orderBy('des_pais')
-            ->all();
-            $paises=ArrayHelper::map($paises,'id_pais','des_pais');
+            $paises=Pais::getPaisList();
             ?>
             <?= $form->field($model, 'pais_depto',[
               'addClass' => 'form-control'
@@ -42,10 +39,8 @@ use yii\helpers\Url;
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <?php
-            $provs = Provincia::find()->where(['status_prov' => 1])
-            ->orderBy('des_prov')
-            ->all();
-            $provs = ArrayHelper::map($provs,'id_prov','des_prov');
+
+            $provs = Provincia::getProvinciaList( $model->pais_depto );
             echo Html::hiddenInput('departamento-selected_provincia', $model->prov_depto, ['id' => 'departamento-selected_provincia']);
             ?>
             <?= $form->field($model, 'prov_depto',[

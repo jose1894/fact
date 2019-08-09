@@ -66,6 +66,22 @@ return [
                 'empresa' => 'empresa.php',
             ],
         ],
+        'ingreso' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+                'ingreso' => 'ingreso.php',
+            ],
+        ],
+        'inventario' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+                'inventario' => 'inventario.php',
+            ],
+        ],
         'moneda' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',
@@ -122,12 +138,28 @@ return [
               'provincia' => 'provincia.php',
             ],
         ],
+        'salida' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'salida' => 'salida.php',
+            ],
+        ],
         'sucursal' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',
             'sourceLanguage' => 'en-US',
             'fileMap' => [
               'sucursal' => 'sucursal.php',
+            ],
+        ],
+        'tipo_movimiento' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'tipo_movimiento' => 'tipoMovimiento.php',
             ],
         ],
         'tipo_producto' => [

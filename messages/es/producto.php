@@ -18,5 +18,6 @@ return [
     'Min stock' => 'Estock mínimo',
     'Max stock' => 'Estock máximo',
     'Initial stock' => 'Estock inicial',
-    'Select a product' => 'Seleccione un producto'
+    'Select a product' => 'Seleccione un producto',
+    'Factory code' => 'Código de fábrica'
 ];

@@ -20,7 +20,7 @@ class ProductoSearch extends Producto
     {
         return [
             [['id_prod', 'tipo_prod', 'umed_prod', 'contenido_prod', 'exctoigv_prod', 'compra_prod', 'venta_prod', 'stockini_prod', 'stockmax_prod', 'stockmin_prod', 'status_prod', 'sucursal_prod'], 'integer'],
-            [['cod_prod', 'des_prod'], 'safe'],
+            [['cod_prod', 'codfab_prod', 'des_prod'], 'safe'],
         ];
     }
 
@@ -79,6 +79,7 @@ class ProductoSearch extends Producto
         ]);
 
         $query->andFilterWhere(['like', 'cod_prod', $this->cod_prod])
+            ->andFilterWhere(['like', 'codfab_prod', $this->codfab_prod])
             ->andFilterWhere(['like', 'des_prod', $this->des_prod]);
 
         return $dataProvider;

@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Cliente */
 
-$this->title = Yii::t('cliente', 'Update customer: <span class="badge bg-primary">{number}</span> {name}', [
+$this->title = Yii::t('cliente', 'Customer: <span class="label label-primary">{number}</span> {name}', [
     'number' => $model->id_clte,
     'name' => $model->nombre_clte
 ]);

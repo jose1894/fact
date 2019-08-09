@@ -41,6 +41,7 @@
                         ['label' => Yii::t('app', 'Maintenance'), 'icon' => 'gears',
                           'items' => [
                             ['label' => Yii::t('tipo_producto','Product types'), 'url' => ['/tipo-producto'], 'icon' => 'cube'],
+                            ['label' => Yii::t('tipo_movimiento','Movement type'), 'url' => ['/tipo-movimiento'], 'icon' => 'exchange'],
                             ['label' => Yii::t('zona','Zone'), 'url' => ['/zona'], 'icon' => 'map-signs'],
                             ['label' => Yii::t('condicionp','Payment condition'), 'url' => ['/cond-pago'], 'icon' => 'ticket'],
                             ['label' => Yii::t('unidad_medida','Unit of measurement'), 'url' => ['/unidad-medida'], 'icon' => 'balance-scale'],
@@ -64,6 +65,12 @@
                     ],
                     ['label' => Yii::t('pedido','Order').'s', 'url' => ['/pedido'], 'icon' => 'inbox'],
                     ['label' => Yii::t('compra','Purchase order').'s', 'url' => ['/compra'], 'icon' => 'shopping-cart'],
+                    ['label' => Yii::t('inventario','Inventory'), 'icon' => 'university',
+                      'items' =>[
+                            [ 'label' => Yii::t('ingreso','Entry note'), 'url' => ['#']],
+                            [ 'label' => Yii::t('salida','Exit note'), 'url' => ['#']],
+                          ]
+                    ],
                     ['label' => 'Usuarios', 'options' => ['class' => 'header']],
                     [ 'label' => 'Administracion de usuarios', 'icon' => 'users',
                      'items' => [

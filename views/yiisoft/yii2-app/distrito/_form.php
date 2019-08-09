@@ -22,10 +22,7 @@ use yii\helpers\Url;
     <div class="row">
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
           <?php
-          $paises = Pais::find()->where(['status_pais' => 1])
-          ->orderBy('des_pais')
-          ->all();
-          $paises=ArrayHelper::map($paises,'id_pais','des_pais');
+          $paises=Pais::getPaisList();
           ?>
           <?= $form->field($model, 'pais_dtto',[
             'addClass' => 'form-control'
@@ -42,10 +39,7 @@ use yii\helpers\Url;
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
           <?php
-          $provs = Provincia::find()->where(['status_prov' => 1])
-          ->orderBy('des_prov')
-          ->all();
-          $provs = ArrayHelper::map($provs,'id_prov','des_prov');
+          $provs = Provincia::getProvinciaList( $model->pais_dtto );
           echo Html::hiddenInput('distrito-selected_provincia', $model->prov_dtto, ['id' => 'distrito-selected_provincia']);
           ?>
           <?= $form->field($model, 'prov_dtto',[
@@ -71,10 +65,8 @@ use yii\helpers\Url;
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
           <?php
-          $provs = Departamento::find()->where(['status_depto' => 1])
-          ->orderBy('des_depto')
-          ->all();
-          $deptos = ArrayHelper::map($provs,'id_depto','des_depto');
+
+          $deptos = Departamento::getDeptoList($model->pais_dtto, $model->prov_dtto);
           echo Html::hiddenInput('distrito-selected_depatamento', $model->depto_dtto, ['id' => 'distrito-selected_depatamento']);
           ?>
           <?= $form->field($model, 'depto_dtto',[

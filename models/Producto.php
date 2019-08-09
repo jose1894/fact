@@ -44,6 +44,7 @@ class Producto extends \yii\db\ActiveRecord
             [['cod_prod', 'des_prod', 'tipo_prod', 'umed_prod', 'contenido_prod', 'status_prod', ], 'required'],
             [['tipo_prod', 'umed_prod', 'contenido_prod', 'exctoigv_prod', 'compra_prod', 'venta_prod', 'stockini_prod', 'stockmax_prod', 'stockmin_prod', 'status_prod', 'sucursal_prod'], 'integer'],
             [['cod_prod'], 'string', 'max' => 25],
+            [['codfab_prod'], 'string', 'max' => 45],
             [['des_prod'], 'string', 'max' => 70],
             [['cod_prod'], 'unique'],
             [['tipo_prod'], 'exist', 'skipOnError' => true, 'targetClass' => TipoProducto::className(), 'targetAttribute' => ['tipo_prod' => 'id_tpdcto']],
@@ -59,6 +60,7 @@ class Producto extends \yii\db\ActiveRecord
         return [
             'id_prod' => Yii::t('producto', 'Id'),
             'cod_prod' => Yii::t('producto', 'Code'),
+            'codfab_prod' => Yii::t('producto', 'Factory code'),
             'des_prod' => Yii::t('producto', 'Description'),
             'tipo_prod' => Yii::t('tipo_producto', 'Product type'),
             'umed_prod' => Yii::t('unidad_medida', 'Unit of measurement'),

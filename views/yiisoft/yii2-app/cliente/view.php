@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
               ],
               [
                 'attribute' => 'condp_clte',
-                'value' => $model->condpClte->desc_condp
+                'value' => ( $model->condp_clte > 0 ) ? $model->condpClte->desc_condp : '',
               ],
               [
                 'attribute' => 'estatus_ctle',

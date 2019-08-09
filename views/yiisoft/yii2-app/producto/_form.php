@@ -31,7 +31,12 @@ use kartik\number\NumberControl;
           'addClass' => 'form-control ',
           'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-barcode"></i>']]])->textInput(['maxlength' => true,'placeholder' => Yii::t('producto','Input a code')]) ?>
       </div>
-      <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+        <?= $form->field($model, 'codfab_prod',[
+          'addClass' => 'form-control ',
+          'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-barcode"></i>']]])->textInput(['maxlength' => true,'placeholder' => Yii::t('producto','Input a code')]) ?>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
         <?= $form->field($model, 'des_prod',[
           'addClass' => 'form-control ',
           'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-edit"></i>']]])->textInput(['maxlength' => true,'placeholder' => Yii::t('producto','Input a description')]) ?>

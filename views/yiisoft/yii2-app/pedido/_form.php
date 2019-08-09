@@ -445,7 +445,8 @@ $( '#pedido-clte_pedido' ).on( 'select2:select',function () {
       cliente = cliente[ 0 ];
       let direccion = cliente.direcc_clte ? cliente.direcc_clte : " ",
           geo = cliente.geo ? cliente.geo : " ",
-          textDirecc = direccion + " " + geo,
+          //textDirecc = direccion + " " + geo,
+          textDirecc = direccion,
           condp = cliente.condp,
           vendedor = cliente.vendedor,
           tpl = cliente.tpl;

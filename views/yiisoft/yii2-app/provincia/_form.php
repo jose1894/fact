@@ -22,11 +22,8 @@ use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
           )->textInput(['maxlength' => true, 'placeholder' => Yii::t('provincia','Input a name')]) ?>
       </div>
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-        <?php
-        $paises = Pais::find()->where(['status_pais' => 1])
-        ->orderBy('des_pais')
-        ->all();
-        $paises=ArrayHelper::map($paises,'id_pais','des_pais');
+        <?php        
+        $paises=Pais::getPaisList();
         ?>
         <?= $form->field($model, 'pais_prov',[
           'addClass' => 'form-control ',

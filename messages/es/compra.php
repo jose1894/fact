@@ -33,5 +33,5 @@ return [
     'The order must have at least one item to be saved' => 'El pedido debe tener almenos un artículo para poder ser guardado',
     'Do you want to issue the document?' => '¿Quieres emitir el documento?',
     'N.Price' => 'P.Neto',
-    'G.Price' => 'P.Bruto'
+    'G.Price' => 'P.Bruto',    
 ];

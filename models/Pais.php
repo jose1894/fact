@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "pais".
@@ -48,5 +49,17 @@ class Pais extends \yii\db\ActiveRecord
             'status_pais' => Yii::t('pais', 'Status'),
             /*'sucursal_pais' => Yii::t('pais', 'Sucursal Pais'),*/
         ];
+    }
+
+    public static function getPaisList()
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      $condiciones = Pais::find()
+                     ->where('status_pais = :status and sucursal_pais = :sucursal',[':status' => 1, ':sucursal' => $sucursal])
+                     ->orderBy('des_pais')
+                     ->all();
+      return ArrayHelper::map( $condiciones, 'id_pais', 'des_pais');
     }
 }

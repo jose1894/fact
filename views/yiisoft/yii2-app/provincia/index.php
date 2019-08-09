@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'value' => function($data){
                    return $data->paisProv->des_pais;
               },
-              'filter'=>ArrayHelper::map(Pais::find()->where(['status_pais' => 1])->orderBy(['des_pais'=>SORT_ASC])->asArray()->all(), 'id_pais', 'des_pais'),
+              'filter'=>Pais::getPaisList(),
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "provincia".
@@ -70,4 +71,17 @@ class Provincia extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Pais::className(), ['id_pais' => 'pais_prov']);
     }
+
+    public static function getProvinciaList( $pais )
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      $condiciones = Provincia::find()
+                     ->where('status_prov = :status and sucursal_prov = :sucursal and pais_prov = :pais',[':status' => 1, ':sucursal' => $sucursal, ':pais' => $pais])
+                     ->orderBy('des_prov')
+                     ->all();
+      return ArrayHelper::map( $condiciones, 'id_prov', 'des_prov');
+    }
+
 }

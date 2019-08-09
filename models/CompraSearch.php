@@ -40,7 +40,11 @@ class CompraSearch extends Compra
      */
     public function search($params)
     {
-        $query = Compra::find();
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = Compra::find()
+                 ->where('sucursal_compra = :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
 

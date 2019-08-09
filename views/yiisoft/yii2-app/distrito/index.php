@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'value' => function($data){
                    return $data->paisDtto->des_pais;
               },
-              'filter'=>ArrayHelper::map(Pais::find()->where(['status_pais' => 1])->orderBy(['des_pais'=>SORT_ASC])->asArray()->all(), 'id_pais', 'des_pais'),
+              'filter'=>Pais::getPaisList(),
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,
@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'value' => function($data){
                    return $data->provDtto->des_prov;
               },
-              'filter'=>ArrayHelper::map(Provincia::find()->where(['pais_prov' => $searchModel->pais_dtto,'status_prov' => 1])->asArray()->all(), 'id_prov', 'des_prov'),
+              'filter'=>Provincia::getProvinciaList( $searchModel->pais_dtto ) ,
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,
@@ -79,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'value' => function($data){
                    return $data->deptoDtto->des_depto;
               },
-              'filter'=>ArrayHelper::map(Departamento::find()->where(['pais_depto' => $searchModel->pais_dtto,'prov_depto' => $searchModel->prov_dtto,'status_depto' => 1])->asArray()->all(), 'id_depto', 'des_depto'),
+              'filter'=>Departamento::getDeptoList($searchModel->pais_dtto, $searchModel->prov_dtto),
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,

@@ -43,12 +43,12 @@ $this->params['breadcrumbs'][] = $this->title;
               'width' => '50%'
             ],
             //'vendedor_clte',
-            [
+          /*  [
               'attribute'=>'provi_cte',
               'value' => function($data){
                    return $data->provClte->des_prov;
               },
-              'filter'=>$searchModel->pais_cte,
+              'filter'=>Provincia::getProvinciaList($searchModel->pais_cte),
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,
@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                   'options' => ['prompt' => ''],
               ],
               'width' => '20%'
-            ],
+            ],*/
             [
                 'class' => 'kartik\grid\BooleanColumn',
                 'attribute' => 'estatus_ctle',

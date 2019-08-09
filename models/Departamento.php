@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "departamento".
@@ -78,5 +79,19 @@ class Departamento extends \yii\db\ActiveRecord
     public function getDistritos()
     {
         return $this->hasMany(Distrito::className(), ['depto_dtto' => 'id_depto']);
+    }
+
+    public static function getDeptoList( $pais, $provincia )
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      $condiciones = Departamento::find()
+                     ->where(
+                       'status_depto = :status and sucursal_depto = :sucursal and pais_depto = :pais and prov_depto = :provincia',
+                       [':status' => 1, ':sucursal' => $sucursal, ':pais' => $pais, ':provincia' => $provincia])
+                     ->orderBy('des_depto')
+                     ->all();
+      return ArrayHelper::map( $condiciones, 'id_depto', 'des_depto');
     }
 }

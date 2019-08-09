@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'value' => function($data){
                    return $data->paisDepto->des_pais;
               },
-              'filter'=>ArrayHelper::map(Pais::find()->where(['status_pais' => 1])->orderBy(['des_pais'=>SORT_ASC])->asArray()->all(), 'id_pais', 'des_pais'),
+              'filter'=>Pais::getPaisList(),
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,
@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'value' => function($data){
                    return $data->provDepto->des_prov;
               },
-              'filter'=>ArrayHelper::map(Provincia::find()->where(['pais_prov' => $searchModel->pais_depto,'status_prov' => 1])->asArray()->all(), 'id_prov', 'des_prov'),
+              'filter'=>Provincia::getProvinciaList($searchModel->pais_depto),
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,

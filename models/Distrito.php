@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "distrito".
@@ -76,5 +77,19 @@ class Distrito extends \yii\db\ActiveRecord
     public function getDeptoDtto()
     {
         return $this->hasOne(Departamento::className(), ['id_depto' => 'depto_dtto']);
+    }
+
+    public static function getDttoList( $pais, $provincia, $departamento )
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      $condiciones = Distrito::find()
+                     ->where(
+                       'status_dtto = :status and sucursal_dtto = :sucursal and pais_dtto = :pais and prov_dtto = :provincia and depto_dtto = :departtamento',
+                       [':status' => 1, ':sucursal' => $sucursal, ':pais' => $pais, ':provincia' => $provincia, ':departamento' => $departamento])
+                     ->orderBy('des_dtto')
+                     ->all();
+      return ArrayHelper::map( $condiciones, 'id_dtto', 'des_dtto');
     }
 }
