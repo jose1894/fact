@@ -11,10 +11,17 @@ use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
 <div class="tipo-movimiento-form">
     <?php $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientScript' => true]); ?>
     <div class="row">
-      <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
         <?= $form->field($model, 'des_tipom',[
           'addClass' => 'form-control ',
           'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-edit"></i>']]])->textInput(['maxlength' => true]) ?>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <?= $form->field($model, 'tipo_tipom',[
+          'addClass' => 'form-control ',
+          'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-ticket"></i>']]])->dropDownList(
+          ['E' => 'ENTRADA', 'S' => 'SALIDA'],
+          ['custom' => true, 'prompt' => Yii::t('app','Select...')])  ?>
       </div>
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
         <?= $form->field($model, 'status_tipom',[

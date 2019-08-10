@@ -170,7 +170,7 @@ class TipoMovimientoController extends Controller
               }
               else
               {
-                  $model->sucursal_tpdcto = SiteController::getSucursal();
+                  $model->sucursal_tipom = SiteController::getSucursal();
                   $transaction = \Yii::$app->db->beginTransaction();
 
                   try {

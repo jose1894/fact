@@ -23,6 +23,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Inventory' => 'Inventario',
     'Affect warehouse' => 'Afecta almacén',
     'Tax exemption' => 'Excento de I.G.V.',
     'Do you want to add a new item?' => '¿Deseas agregar un  nuevo item?',

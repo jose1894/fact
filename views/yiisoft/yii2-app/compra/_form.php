@@ -47,7 +47,7 @@ if ( $model->isNewRecord ) {
             ])->textInput([
                   'value' => date('d/m/Y'),
                   'readonly' => 'readonly',
-                  'style' => ['text-align','rigth']
+                  'style' => ['text-aling' => 'right']
               ]) ?>
         </div>
 

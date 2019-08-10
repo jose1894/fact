@@ -65,10 +65,10 @@
                     ],
                     ['label' => Yii::t('pedido','Order').'s', 'url' => ['/pedido'], 'icon' => 'inbox'],
                     ['label' => Yii::t('compra','Purchase order').'s', 'url' => ['/compra'], 'icon' => 'shopping-cart'],
-                    ['label' => Yii::t('inventario','Inventory'), 'icon' => 'university',
+                    ['label' => Yii::t('app','Inventory'), 'icon' => 'archive',
                       'items' =>[
-                            [ 'label' => Yii::t('ingreso','Entry note'), 'url' => ['#']],
-                            [ 'label' => Yii::t('salida','Exit note'), 'url' => ['#']],
+                            [ 'label' => Yii::t('ingreso','Entry note'), 'url' => ['/nota-ingreso'],'icon' => 'download'],
+                            [ 'label' => Yii::t('salida','Exit note'), 'url' => ['/nota-salida'],'icon' => 'upload'],
                           ]
                     ],
                     ['label' => 'Usuarios', 'options' => ['class' => 'header']],

@@ -1,6 +1,5 @@
 <?php
 return [
-  'Date' => 'Fecha',
     'Name' => 'Nombre',
     'Status' => 'Estatus',
     'Type' => 'Tipo',
@@ -35,4 +34,5 @@ return [
     'Do you want to issue the document?' => '¿Quieres emitir el documento?',
     'N.Price' => 'P.Neto',
     'G.Price' => 'P.Bruto',
+    'Exit note' => 'Nota de salida'
 ];

@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Compra;
+use app\models\NotaSalida;
 
 /**
- * CompraSearch represents the model behind the search form of `app\models\Compra`.
+ * NotaSalidaSearch represents the model behind the search form of `app\models\NotaSalida`.
  */
-class CompraSearch extends Compra
+class NotaSalidaSearch extends NotaSalida
 {
     /**
      * {@inheritdoc}
@@ -18,8 +18,8 @@ class CompraSearch extends Compra
     public function rules()
     {
         return [
-            [['id_compra', 'provee_compra', 'moneda_compra', 'condp_compra', 'usuario_compra', 'estatus_compra', 'sucursal_compra'], 'integer'],
-            [['cod_compra', 'fecha_compra', 'edicion_compra', 'nrodoc_compra'], 'safe'],
+            [['id_trans', 'tipo_trans', 'almacen_trans'], 'integer'],
+            [['codigo_trans', 'fecha_trans', 'obsv_trans', 'docref_trans'], 'safe'],
         ];
     }
 
@@ -43,10 +43,9 @@ class CompraSearch extends Compra
     {
         $user = User::findOne(Yii::$app->user->id);
         $sucursal = $user->sucursal0->id_suc;
-        $query = Compra::find()
-                 ->where('sucursal_compra = :sucursal')
+        $query = NotaSalida::find()
+                 ->where('sucursal_trans = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);
-
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -63,19 +62,16 @@ class CompraSearch extends Compra
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_compra' => $this->id_compra,
-            'fecha_compra' => $this->fecha_compra,
-            'provee_compra' => $this->provee_compra,
-            'moneda_compra' => $this->moneda_compra,
-            'condp_compra' => $this->condp_compra,
-            'usuario_compra' => $this->usuario_compra,
-            'estatus_compra' => $this->estatus_compra,
-            'sucursal_compra' => $this->sucursal_compra,
+            'id_trans' => $this->id_trans,
+            'fecha_trans' => $this->fecha_trans,
+            'tipo_trans' => $this->tipo_trans,
+            'almacen_trans' => $this->almacen_trans,
+            'sucursal_trans' => $this->sucursal_trans,
         ]);
 
-        $query->andFilterWhere(['like', 'cod_compra', $this->cod_compra])
-            ->andFilterWhere(['like', 'edicion_compra', $this->edicion_compra])
-            ->andFilterWhere(['like', 'nrodoc_compra', $this->nrodoc_compra]);
+        $query->andFilterWhere(['like', 'codigo_trans', $this->codigo_trans])
+            ->andFilterWhere(['like', 'obsv_trans', $this->obsv_trans])
+            ->andFilterWhere(['like', 'docref_trans', $this->docref_trans]);
 
         return $dataProvider;
     }

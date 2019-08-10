@@ -29,7 +29,11 @@ $this->params['breadcrumbs'][] = $this->title;
               'attributes' => [
                   'id_tipom',
                   'des_tipom',
-                  //'status_tipom',
+                  [
+                    'attribute' => 'tipo_tipom',
+                    'format' => 'raw',
+                    'value' => $model->tipo_tipom == 'E' ? Yii::t('tipo_movimiento', 'Entry') : Yii::t('tipo_movimiento', 'Exit')
+                  ],
                   [
                     'attribute' => 'status_tipom',
                     'format' => 'raw',

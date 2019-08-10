@@ -1,9 +1,9 @@
 <?php
 return [
-  'Date' => 'Fecha',
+    'Comments' => 'Observaciones',
     'Name' => 'Nombre',
     'Status' => 'Estatus',
-    'Type' => 'Tipo',
+    'Type movement' => 'Tipo movimiento',
     'Document' => 'Documento',
     'Code' => 'Código',
     'Input a code' => 'Ingrese un código',
@@ -35,4 +35,5 @@ return [
     'Do you want to issue the document?' => '¿Quieres emitir el documento?',
     'N.Price' => 'P.Neto',
     'G.Price' => 'P.Bruto',
+    'Entry note' => 'Nota de ingreso'
 ];
