@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Pedido */
 
-$this->title = Yii::t('ingreso', 'Update entry note: {number} / {name}', [
+$this->title = Yii::t('ingreso', 'Update entry note: {number}', [
     'number' => $model->id_trans,
     //'name' => $model->nombre_trans,
 ]);

@@ -123,7 +123,15 @@ if ( $model->isNewRecord ) {
                               echo Html::activeHiddenInput($modelDetalle, "[{$index}]trans_detalle");
                           }
                           $url = Url::to(['producto/producto-list']);
-                          $productos = empty($modelDetalle->prod_detalle) ? '' : Producto::findOne($modelDetalle->prod_detalle)->cod_prod.' '.Producto::findOne($modelDetalle->prod_detalle)->des_prod;
+
+                          $producto = [];
+
+                          if ( !empty($modelDetalle->prod_detalle) )
+                          {
+                            $producto = Producto::findOne($modelDetalle->prod_detalle);
+                          }
+
+                          $productos = empty($modelDetalle->prod_detalle) ? '' : $producto->cod_prod.' '.$producto->des_prod.' - '.$producto->umedProd->des_und;
                           echo $form->field($modelDetalle, "[{$index}]prod_detalle",[
                             'addClass' => 'form-control ',
                             ])->widget(Select2::classname(), [

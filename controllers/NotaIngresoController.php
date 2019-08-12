@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Almacen;
 use app\models\NotaIngreso;
+use app\models\Producto;
 use app\models\NotaIngresoDetalle;
 use app\models\NotaIngresoSearch;
 use yii\web\Controller;
@@ -126,7 +127,7 @@ class NotaIngresoController extends Controller
                           'success' => true,
                           'title' => Yii::t('ingreso', 'Entry note'),
                           'id' => $model->id_trans,
-                          'message' => Yii::t('app','Record saved successfully!'),
+                          'message' => Yii::t('app','Record has been saved successfully!'),
                           'type' => 'success'
                         ];
                         return $return;
@@ -223,7 +224,7 @@ class NotaIngresoController extends Controller
                         $return = [
                           'success' => true,
                           'title' => Yii::t('ingreso', 'Entry note'),
-                          'message' => Yii::t('app','Record saved successfully!'),
+                          'message' => Yii::t('app','Record has been saved successfully!'),
                           'type' => 'success'
                         ];
                         return $return;

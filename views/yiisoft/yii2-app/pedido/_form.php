@@ -244,7 +244,15 @@ if ( $model->isNewRecord ) {
                             echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle");
                         }
                         $url = Url::to(['producto/producto-list']);
-                        $productos = empty($modelDetalle->prod_pdetalle) ? '' : Producto::findOne($modelDetalle->prod_pdetalle)->cod_prod.' '.Producto::findOne($modelDetalle->prod_pdetalle)->des_prod;
+
+                        $producto = [];
+
+                        if ( !empty($modelDetalle->prod_pdetalle) )
+                        {
+                          $producto = Producto::findOne($modelDetalle->prod_pdetalle);
+                        }
+
+                        $productos = empty($modelDetalle->prod_pdetalle) ? '' : $producto->cod_prod.' '.$producto->des_prod.' - '.$producto->umedProd->des_und;
                         echo $form->field($modelDetalle, "[{$index}]prod_pdetalle",[
                           'addClass' => 'form-control ',
                           ])->widget(Select2::classname(), [
