@@ -15,9 +15,22 @@ class AutoIncrement extends BaseObject
     return !($res['Auto_increment']) ? 1 : $res['Auto_increment']++;
   }
 
-  public function getAutoIncrementPad( $maxField, $table, $field, $value ){
+  public function getAutoIncrementPad( $maxField, $table, $field = null, $value = null ){
 
-    $command = Yii::$app->db->createCommand("SELECT MAX({$maxField}) AS maximo FROM {$table} WHERE $field = {$value}");
+    $sSql = "SELECT MAX({$maxField}) AS maximo FROM {$table}";
+
+    if ( !is_null($field) && !is_null($value) )
+    {
+      $where = "{$field} = {$value}";
+
+      if ( is_string( $value )){
+        $where = "{$field} like '{$value}'";
+      }
+
+      $sSql = "SELECT MAX({$maxField}) AS maximo FROM {$table} WHERE {$where}";
+    }
+
+    $command = Yii::$app->db->createCommand( $sSql );
 
     $res=$command->queryOne();
 

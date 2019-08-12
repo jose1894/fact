@@ -46,7 +46,7 @@ class PedidoDetalle extends \yii\db\ActiveRecord
             [['prod_pdetalle'], 'unique', 'targetAttribute' => ['pedido_pdetalle','prod_pdetalle']],
             [['cant_pdetalle', 'precio_pdetalle', 'descu_pdetalle', 'impuesto_pdetalle','plista_pdetalle','total_pdetalle'], 'number'],
             [['cant_pdetalle','precio_pdetalle'],'number','min' => 1],
-             ['cant_pdetalle', 'default', 'value' => 0],
+            ['cant_pdetalle', 'default', 'value' => 0],
             [['impuesto_pdetalle','descu_pdetalle'],'number','min' => 0],
             [['pedido_pdetalle'], 'exist', 'skipOnError' => true, 'targetClass' => Pedido::className(), 'targetAttribute' => ['pedido_pdetalle' => 'id_pedido']],
         ];

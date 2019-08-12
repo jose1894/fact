@@ -3,21 +3,28 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\NotaIngreso */
+/* @var $model app\models\Pedido */
 
-$this->title = Yii::t('tipo_movimiento', 'Update Nota Ingreso: {name}', [
-    'name' => $model->id_trans,
+$this->title = Yii::t('ingreso', 'Update entry note: {number} / {name}', [
+    'number' => $model->id_trans,
+    //'name' => $model->nombre_trans,
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('tipo_movimiento', 'Nota Ingresos'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('ingreso', 'Entry note'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id_trans, 'url' => ['view', 'id' => $model->id_trans]];
-$this->params['breadcrumbs'][] = Yii::t('tipo_movimiento', 'Update');
+$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="nota-ingreso-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
+<div class="pedido-update">
+  <div class="box box-success">
+    <div class="box-header with-border">
+      <h3 class="box-title">
+        <?= Html::encode($this->title) ?>
+      </h3>
+    </div>
+    <div class="box-body">
     <?= $this->render('_form', [
         'model' => $model,
+        'modelsDetalles' => $modelsDetalles,
     ]) ?>
-
+    </div>
+  </div>
 </div>

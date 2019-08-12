@@ -4,11 +4,13 @@ use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use app\models\TipoMovimiento;
 use app\models\Almacen;
+use app\models\Producto;
 use yii\web\View ;
 use wbraganca\dynamicform\DynamicFormWidget;
 use kartik\select2\Select2;
 use app\base\Model;
-
+use yii\helpers\Url;
+use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\NotaIngreso */
@@ -21,16 +23,14 @@ if ( $model->isNewRecord ) {
 <div class="nota-ingreso-form">
 
   <div class="container-fluid">
-
-
         <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true]); ?>
         <div class="row">
           <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
             <?= $form
             ->field($model, 'codigo_trans',['addClass' => 'form-control '])
-            ->textInput(['maxlength' => true,'readonly' => true, 'style' => ['text-align' => 'rigth']]) ?>
+            ->textInput(['maxlength' => true,'readonly' => true, 'style' => ['text-align' => 'right']]) ?>
           </div>
-          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
               <?= $form->field($model, 'fecha_trans',[
                   'addClass' => 'form-control'
               ])->textInput([
@@ -39,7 +39,15 @@ if ( $model->isNewRecord ) {
                 'style' => ['text-align' => 'right']
                 ]) ?>
           </div>
-          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <?= $form->field($model, 'docref_trans',[
+              'addClass' => 'form-control'
+              ])->textInput(['maxlength' => true]) ?>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <?php
               $mov = TipoMovimiento::getTipoMovList( 'E' );
             ?>
@@ -57,11 +65,6 @@ if ( $model->isNewRecord ) {
                 ]) ?>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <?= $form->field($model, 'docref_trans',[
-                'addClass' => 'form-control'
-              ])->textInput(['maxlength' => true]) ?>
-          </div>
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
             <?php $almacenes = Almacen::getAlmacenList();?>
 
@@ -70,7 +73,7 @@ if ( $model->isNewRecord ) {
               ])->widget(Select2::classname(), [
                         'data' => $almacenes,
                         'language' => Yii::$app->language,
-                        'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-exchange"></i>']],
+                        'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-archive"></i>']],
                         'options' => ['placeholder' => Yii::t('almacen','Select a warehouse').'...'],
                         'theme' => Select2::THEME_DEFAULT,
                         // 'pluginOptions' => [
@@ -101,9 +104,8 @@ if ( $model->isNewRecord ) {
               ]); ?>
 
               <div class="row">
-                  <div class="col-sm-5 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
-                  <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
-                  <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'L. price')?></div>
+                  <div class="col-sm-8 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
+                  <div class="col-sm-3 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
                   <div class="col-sm-1 col-xs-12">
                     <button type="button" class="add-item btn btn-success btn-flat btn-md" style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"><i class="fa fa-plus"></i></button>
                   </div>
@@ -121,7 +123,7 @@ if ( $model->isNewRecord ) {
                               echo Html::activeHiddenInput($modelDetalle, "[{$index}]trans_detalle");
                           }
                           $url = Url::to(['producto/producto-list']);
-                          $productos = empty($modelDetalle->prod_pdetalle) ? '' : Producto::findOne($modelDetalle->prod_detalle)->cod_prod.' '.Producto::findOne($modelDetalle->prod_detalle)->des_prod;
+                          $productos = empty($modelDetalle->prod_detalle) ? '' : Producto::findOne($modelDetalle->prod_detalle)->cod_prod.' '.Producto::findOne($modelDetalle->prod_detalle)->des_prod;
                           echo $form->field($modelDetalle, "[{$index}]prod_detalle",[
                             'addClass' => 'form-control ',
                             ])->widget(Select2::classname(), [
@@ -143,18 +145,18 @@ if ( $model->isNewRecord ) {
                               ],
                               'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
                               'templateResult' => new JsExpression('function(cliente) { return cliente.text; }'),
-                              'templateSelection' => new JsExpression('function (cliente) {
-                                  return cliente.text;
+                              'templateSelection' => new JsExpression('function (producto) {
+                                return producto.text;
                                 }'),
                               ],
                           ])->label(false);
                           ?>
-
                         </div>
+
                         <div class="col-sm-3 col-xs-12">
                           <?= $form
                           ->field($modelDetalle,"[{$index}]cant_detalle",[ 'addClass' => 'form-control number-decimals'])
-                          ->textInput(['type' => 'number','min' => 0, 'step' => 1])
+                          ->textInput(['type' => 'number','min' => 1,'pattern' => "\d*"])
                           ->label(false)?>
                         </div>
                         <div class="col-sm-1 col-xs-12">
@@ -169,17 +171,193 @@ if ( $model->isNewRecord ) {
         <hr>
         <div class="row">
           <div class="col-lg-12 col-xs-12">
-              <?= $form->field($model, 'obsv_trans')->textarea(['rows' => 6]) ?>
+              <?= $form->field($model, 'obsv_trans')->textarea(['rows' => 3]) ?>
           </div>
         </div>
 
-
-
-
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t('tipo_movimiento', 'Save'), ['class' => 'btn btn-success']) ?>
-    </div>
+        <div class="row">
+            <div class="form-group" style="float:right">
+             <?php if ( !$model->isNewRecord ) { ?>
+                <button type="button" name="button" id="imprimir" data-toggle="modal" class="btn btn-flat btn-primary "><span class="fa fa-print"></span> <?= Yii::t('app', 'Print')?></button>
+             <?php } ?>
+                <button id="submit" type="button" class="btn btn-flat btn-success"><span class="fa fa-save"></span> <?= Yii::t('app','Save') ?></button>
+            </div>
+          </div>
 
     <?php ActiveForm::end(); ?>
-
+  </div>
 </div>
+<?php
+$this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
+['depends'=>[\yii\web\JqueryAsset::className()],
+'position'=>View::POS_END]);
+
+$this->registerJsVar( "buttonPrint", "#imprimir" );
+$this->registerJsVar( "frameRpt", "#frame-rpt" );
+$this->registerJsVar( "buttonCancel", ".close-btn" );
+$this->registerJsVar( "modalRpt", "#modal-rpt" );
+echo   $this->render('//site/_modalRpt',[]);
+
+$jsTrigger = "";
+if ( !$model->isNewRecord ){
+  $jsTrigger = '
+    $( ".table-body input[id$=\'cant_detalle\']" ).trigger( "change" );
+  ';
+}
+
+$js = '
+
+$(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
+    //console.log("beforeInsert");
+});
+$(".dynamicform_wrapper").on("afterInsert", function(e, item) {
+    //console.log("afterInsert");
+});
+$(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
+  if ( confirm("'.Yii::t('producto','Are you sure to delete this product?').'") ) {
+    return true;
+  }
+  return false;
+});
+
+$(".dynamicform_wrapper").on("afterDelete", function(e) {
+    console.log("Deleted item!");
+});
+$(".dynamicform_wrapper").on("limitReached", function(e, item) {
+    alert("Limit reached");
+});
+
+$( buttonPrint ).on( "click", function(){
+  $( frameRpt ).attr( "src", "'.Url::to(['nota-ingreso/ingreso-rpt', 'id' => $model->id_trans]).'");
+  $( modalRpt ).modal({
+    backdrop: "static",
+    keyboard: false,
+  });
+  $( modalRpt ).modal("show");
+});
+
+
+$( ".table-body" ).on("select2:select","select[id$=\'prod_detalle\']",function() {
+	let _currSelect = $( this );
+  let row = $( this ).attr( "id" ).split( "-" );
+  row = row[ 1 ];
+
+  let selects = $("select[id$=\'prod_detalle\']");
+
+  if ( checkDuplicate( _currSelect, row, selects) ) {
+    _currSelect.val( null ).trigger( "change" );
+    swal( "Oops!!!","'. Yii::t('app','Code can´t be repeated, it is already in the list') .'","error" );
+    _currSelect.focus();
+  }
+
+  $( "#notaingresodetalle-" + row + "-cant_detalle" ).focus();
+
+});
+
+$( ".table-body" ).on( "keyup","input[id$=\'cant_detalle\']",function( e ) {
+  if ( e.keyCode === 13 && $( this ).val() ) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+
+    swal({
+      title: "' . Yii::t( 'app','Do you want to add a new item?') . '",
+      icon: "info",
+      buttons: true,
+    }).then( ( willDelete ) => {
+      if ( willDelete ) {
+        let row = $( ".detalle-item" ).length;
+
+        $( ".add-item" ).trigger( "click" );
+        $( "#notaingresodetalle-" + row + "-prod_detalle").focus();
+        $( "#notaingresodetalle-" + row + "-prod_detalle").select2("open");
+      }
+    });
+  }
+
+});
+
+
+$( "#submit" ).on( "click", function() {
+  let form = $( "form#' . $model->formName() . '" );
+
+  let rows = $(".table-body > .detalle-item").length;
+
+  if ( !rows ) {
+    swal("'.Yii::t('ingreso','Entry note').'", "'.Yii::t('compra','The order must have at least one item to be saved').'", "info");
+    return false;
+  }
+
+  $.ajax( {
+    "url"    : $( form ).attr( "action" ),
+    "method" : $( form ).attr( "method" ),
+    "data"   : $( form ).serialize(),
+    "async"  : false,
+    "success": function ( data ) {
+      if ( data.success ) {
+
+
+        if ( $( form ).attr("action").indexOf("create") != -1) {
+          $( form ).trigger( "reset" );
+          selects = $(form).find("select");
+
+          if ( selects.length ){
+            selects.trigger( "change" );
+          }
+
+          swal({
+            title: "'.Yii::t("compra","Do you want to issue the document?").'",
+            icon: "info",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willIssue) => {
+            if (willIssue) {
+              window.open("'.Url::to(['pedido/pedido-rpt']).'&id=" + data.id,"_blank");
+            }
+          });
+
+          $( ".table-body" ).empty();
+        }
+
+        swal(data.title, data.message, data.type);
+
+        return;
+      } else {
+        $( form ).yiiActiveForm( "updateMessages", data);
+      }
+
+    },
+    error: function(data) {
+        let message;
+
+        if ( data.responseJSON ) {
+          let error = data.responseJSON;
+          message =   "Se ha encontrado un error: " +
+          "\\n\\nCode " + error.code +
+          "\\n\\nFile: " + error.file +
+          "\\n\\nLine: " + error.line +
+          "\\n\\nName: " + error.name +
+          "\\n Message: " + error.message;
+        } else {
+            message = data.responseText;
+        }
+
+        swal("Oops!!!",message,"error" );
+    }
+  });
+
+
+});
+
+$( "body" ).on( "click", buttonCancel, function(){
+  $( frameRpt ).attr( "src", "about:blank" );
+  $( modalRpt ).modal("hide");
+});
+';
+$this->registerJs($js.$jsTrigger,View::POS_LOAD);
+
+$this->registerJsVar( "buttonPrint", "#imprimir" );
+$this->registerJsVar( "frameRpt", "#frame-rpt" );
+$this->registerJsVar( "buttonCancel", ".close-btn" );
+$this->registerJsVar( "modalRpt", "#modal-rpt" );
+echo   $this->render('//site/_modalRpt',[]);

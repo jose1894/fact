@@ -31,7 +31,8 @@ class TransDetalle extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['trans_detalle', 'prod_detalle', 'cant_detalle'], 'integer'],
+            [['trans_detalle', 'prod_detalle'], 'integer'],
+            [['cant_detalle'],'number','min'=>1],
             [['trans_detalle'], 'exist', 'skipOnError' => true, 'targetClass' => Transaccion::className(), 'targetAttribute' => ['trans_detalle' => 'id_trans']],
             [['prod_detalle'], 'exist', 'skipOnError' => true, 'targetClass' => Producto::className(), 'targetAttribute' => ['prod_detalle' => 'id_prod']],
         ];

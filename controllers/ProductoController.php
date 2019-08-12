@@ -302,7 +302,7 @@ class ProductoController extends Controller
         if ( !is_null( $desc ) && is_null( $tipo_listap ) ) {
             $query = new Query;
 
-            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text'])
+            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','des_und'])
                 ->from(['v_productos as p'])
                 ->where('p.status_prod = 1')
                 ->andWhere(['like', 'p.texto', $desc])
@@ -318,7 +318,7 @@ class ProductoController extends Controller
         } elseif ( !is_null( $desc ) && !is_null( $tipo_listap ) ) {
           $query = new Query;
 
-          $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio'])
+          $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio', 'des_und'])
               ->from(['v_productos as p'])
               ->where('p.status_prod = 1')
               ->andWhere(['like', 'p.texto', $desc])
@@ -333,7 +333,7 @@ class ProductoController extends Controller
         } elseif ( $id > 0 ) {
           $query = new Query;
 
-          $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio'])
+          $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio','des_und'])
               ->from(['v_productos as p'])
               ->where('p.status_prod = 1')
               ->andWhere(['p.id_prod = :id',['id' =>  $id]])

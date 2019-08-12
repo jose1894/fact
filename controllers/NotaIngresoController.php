@@ -3,7 +3,9 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\Almacen;
 use app\models\NotaIngreso;
+use app\models\NotaIngresoDetalle;
 use app\models\NotaIngresoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -70,18 +72,23 @@ class NotaIngresoController extends Controller
     public function actionCreate()
     {
         $model = new NotaIngreso();
-        $modelsDetalles = [new PedidoDetalle()];
+        $modelsDetalles = [new NotaIngresoDetalle()];
 
         if ($model->load(Yii::$app->request->post())) {
 
-          $modelsDetalles = Model::createMultiple(PedidoDetalle::classname());
+          $modelsDetalles = Model::createMultiple(NotaIngresoDetalle::classname());
           Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
 
           // validate all models
-          $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'id_pedido', 'pedido', 'tipo_pedido', $model->tipo_pedido );
+          $model->sucursal_trans = SiteController::getSucursal();
+          $model->usuario_trans = Yii::$app->user->id;
+          $model->codigo_trans = AutoIncrement::getAutoIncrementPad( 'id_trans', 'transaccion', 'grupo_trans', 'E' );
+          $model->grupo_trans = 'E';
           $valid = $model->validate();
           $valid = Model::validateMultiple($modelsDetalles) && $valid;
+
           // ajax validation
+
           if (!$valid)
           {
               if (Yii::$app->request->isAjax) {
@@ -94,17 +101,16 @@ class NotaIngresoController extends Controller
           }
           else
           {
-              $fecha = explode("/",$model->fecha_pedido);
+              $fecha = explode("/",$model->fecha_trans);
               $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
-              $model->fecha_pedido = $fecha;
-              $model->sucursal_pedido = SiteController::getSucursal();
+              $model->fecha_trans = $fecha;
               $transaction = \Yii::$app->db->beginTransaction();
 
               try {
 
                         if ($flag = $model->save(false)) {
                           foreach ($modelsDetalles as $modelDetalle) {
-                              $modelDetalle->pedido_pdetalle = $model->id_pedido;
+                              $modelDetalle->trans_detalle = $model->id_trans;
                               if (! ($flag = $modelDetalle->save(false))) {
                                   $transaction->rollBack();
                                   throw new \Exception("Error Processing Request", 1);
@@ -118,8 +124,8 @@ class NotaIngresoController extends Controller
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         $return = [
                           'success' => true,
-                          'title' => Yii::t('pedido', 'Order'),
-                          'id' => $model->id_pedido,
+                          'title' => Yii::t('ingreso', 'Entry note'),
+                          'id' => $model->id_trans,
                           'message' => Yii::t('app','Record saved successfully!'),
                           'type' => 'success'
                         ];
@@ -131,7 +137,7 @@ class NotaIngresoController extends Controller
                   Yii::$app->response->format = Response::FORMAT_JSON;
                   $return = [
                     'success' => false,
-                    'title' => Yii::t('pedido', 'Order'),
+                    'title' => Yii::t('ingreso', 'Entry note'),
                     'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
                     'type' => 'error'
                   ];
@@ -140,19 +146,16 @@ class NotaIngresoController extends Controller
           }
         }
 
-        //$searchModel = new PedidoDetalleSearch();
+        //$searchModel = new NotaIngresoDetalleSearch();
         //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        //  $dataProvider->query->andWhere('pedido_pdetalle=:pedido', [':pedido' => $model->id_pedido]);
+        //  $dataProvider->query->andWhere('trans_pdetalle=:trans', [':trans' => $model->id_trans]);
 
-        $model->moneda_pedido = Moneda::findOne(['status_moneda' => 1, 'tipo_moneda' => 'N']);
-        $model->almacen_pedido = Almacen::findOne(['status_almacen' => 1]);
-        $model->tipo_pedido = 0;
-        $model->usuario_pedido = Yii::$app->user->id;
+        $model->almacen_trans = Almacen::findOne(['status_almacen' => 1]);
+        $model->usuario_trans = Yii::$app->user->id;
         return $this->render('create', [
             'model' => $model,
-            'modelsDetalles' => (empty($modelsDetalles)) ? [new PedidoDetalle] : $modelsDetalles,
-            'IMPUESTO' => SiteController::getImpuesto(),
+            'modelsDetalles' => (empty($modelsDetalles)) ? [new NotaIngresoDetalle] : $modelsDetalles,
             //'dataProvider' => $dataProvider,
         ]);
         /*}
@@ -177,13 +180,72 @@ class NotaIngresoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $modelsDetalles = $model->detalles;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_trans]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            $oldIDs = ArrayHelper::map($modelsDetalles, 'id_detalle', 'id_detalle');
+            $modelsDetalles = Model::createMultiple(NotaIngresoDetalle::classname(), $modelsDetalles, 'id_detalle');
+            Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
+            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsDetalles, 'id_detalle', 'id_detalle')));
+
+            // validate all models
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsDetalles) && $valid;
+
+
+            if ($valid) {
+                $transaction = \Yii::$app->db->beginTransaction();
+
+                $fecha = explode("/",$model->fecha_trans);
+                $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
+                $model->fecha_trans = $fecha;
+                $model->sucursal_trans = SiteController::getSucursal();
+
+                try {
+                    if ($flag = $model->save(false)) {
+                        if (!empty($deletedIDs)) {
+                            NotaIngresoDetalle::deleteAll(['id_detalle' => $deletedIDs]);
+                        }
+                        foreach ($modelsDetalles as $modelDetalle) {
+                            $modelDetalle->trans_detalle = $model->id_trans;
+                            if (! ($flag = $modelDetalle->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                    }
+                    if ($flag) {
+                        $model->save();
+                        $transaction->commit();
+                        //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        $return = [
+                          'success' => true,
+                          'title' => Yii::t('ingreso', 'Entry note'),
+                          'message' => Yii::t('app','Record saved successfully!'),
+                          'type' => 'success'
+                        ];
+                        return $return;
+                    }
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    $return = [
+                      'success' => false,
+                      'title' => Yii::t('ingreso', 'Entry note'),
+                      'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                      'type' => 'error'
+
+                    ];
+                    return $return;
+                }
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'modelsDetalles' => (empty($modelsDetalles)) ? [new NotaIngresoDetalle] : $modelsDetalles,
         ]);
     }
 

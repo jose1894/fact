@@ -33,8 +33,8 @@ class NotaIngreso extends \yii\db\ActiveRecord
         return [
             [['fecha_trans'], 'safe'],
             [['obsv_trans'], 'string'],
-            [['tipo_trans', 'almacen_trans', 'sucursal_trans'], 'integer'],
-            [['almacen_trans'], 'required'],
+            [['tipo_trans', 'almacen_trans', 'sucursal_trans', 'usuario_trans'], 'integer'],
+            [['almacen_trans','tipo_trans','sucursal_trans', 'usuario_trans'], 'required'],
             [['codigo_trans', 'docref_trans'], 'string', 'max' => 10],
         ];
     }
@@ -53,6 +53,12 @@ class NotaIngreso extends \yii\db\ActiveRecord
             'docref_trans' => Yii::t('ingreso', 'Doc. Ref.'),
             'almacen_trans' => Yii::t('ingreso', 'Warehouse'),
             'sucursal_trans' => Yii::t('ingreso', 'sucursal'),
+            'usuario_trans' => Yii::t('ingreso', 'usuario'),
         ];
+    }
+
+    public function getDetalles()
+    {
+       return $this->hasMany(NotaIngresoDetalle::className(), ['trans_detalle' => 'id_trans']);
     }
 }

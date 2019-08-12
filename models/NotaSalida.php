@@ -33,7 +33,7 @@ class NotaSalida extends \yii\db\ActiveRecord
         return [
             [['fecha_trans'], 'safe'],
             [['obsv_trans'], 'string'],
-            [['tipo_trans', 'almacen_trans', 'sucursal_trans'], 'integer'],
+            [['tipo_trans', 'almacen_trans', 'sucursal_trans', 'usuario_trans'], 'integer'],
             [['almacen_trans'], 'required'],
             [['codigo_trans', 'docref_trans'], 'string', 'max' => 10],
         ];
@@ -53,6 +53,7 @@ class NotaSalida extends \yii\db\ActiveRecord
             'docref_trans' => Yii::t('salida', 'Doc. Ref.'),
             'almacen_trans' => Yii::t('salida', 'Warehouse'),
             'sucursal_trans' => Yii::t('salida', 'sucursal'),
+            'usuario_trans' => Yii::t('salida', 'usuario'),
         ];
     }
 }
