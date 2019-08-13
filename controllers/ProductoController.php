@@ -302,14 +302,17 @@ class ProductoController extends Controller
         if ( !is_null( $desc ) && is_null( $tipo_listap ) ) {
             $query = new Query;
 
-            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','des_und'])
+            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','des_und','stock_prod'])
                 ->from(['v_productos as p'])
                 ->where('p.status_prod = 1')
                 ->andWhere(['like', 'p.texto', $desc])
+                ->andWhere(['>', 'p.stock_prod', 0])
+                ->andWhere(['=', 'p.compra_prod', 1])
+                ->andWhere(['=', 'p.status_prod', 1])
                 ->andWhere('p.sucursal_prod = :sucursal',[':sucursal' => $sucursal])
                 ->groupBy(['p.id_prod','p.cod_prod','p.des_prod', 'p.texto'])
-                ->orderBy('p.cod_prod ASC')
-                ->limit(20);
+                ->orderBy('p.cod_prod ASC');
+                //->limit(20);
 
             $command = $query->createCommand();
             $data = $command->queryAll();
@@ -318,13 +321,15 @@ class ProductoController extends Controller
         } elseif ( !is_null( $desc ) && !is_null( $tipo_listap ) ) {
           $query = new Query;
 
-          $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio', 'des_und'])
+          $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio', 'des_und','stock_prod'])
               ->from(['v_productos as p'])
               ->where('p.status_prod = 1')
               ->andWhere(['like', 'p.texto', $desc])
+              ->andWhere(['=', 'p.venta_prod', 1])
+              ->andWhere(['=', 'p.status_prod', 1])
               ->andWhere('p.tipo_lista = :tipo_listap and p.sucursal_prod = :sucursal',[':tipo_listap' =>  $tipo_listap, ':sucursal' => $sucursal])
-              ->orderBy('p.cod_prod ASC')
-              ->limit(20);
+              ->orderBy('p.cod_prod ASC');
+              //->limit(20);
 
           $command = $query->createCommand();
           $data = $command->queryAll();
@@ -333,11 +338,11 @@ class ProductoController extends Controller
         } elseif ( $id > 0 ) {
           $query = new Query;
 
-          $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio','des_und'])
+          $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio','des_und','stock_prod'])
               ->from(['v_productos as p'])
               ->where('p.status_prod = 1')
-              ->andWhere(['p.id_prod = :id',['id' =>  $id]])
-              ->limit(20);
+              ->andWhere(['p.id_prod = :id',['id' =>  $id]]);
+              //->limit(20);
 
           $command = $query->createCommand();
           $data = $command->queryAll();

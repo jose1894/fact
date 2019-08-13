@@ -1,13 +1,17 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
-
+use kartik\detail\DetailView;
+use kartik\grid\GridView;
+use app\models\NotaIngresoDetalleSearch;
 /* @var $this yii\web\View */
 /* @var $model app\models\NotaIngreso */
 
-$this->title = $model->id_trans;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('tipo_movimiento', 'Nota Ingresos'), 'url' => ['index']];
+$this->title = Yii::t('ingreso', 'Entry note: {number}', [
+    'number' => $model->id_trans,
+    //'name' => $model->nombre_trans,
+]);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('ingreso', 'Entry note'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -15,28 +19,68 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a(Yii::t('tipo_movimiento', 'Update'), ['update', 'id' => $model->id_trans], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('tipo_movimiento', 'Delete'), ['delete', 'id' => $model->id_trans], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('tipo_movimiento', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id_trans',
-            'codigo_trans',
-            'fecha_trans',
-            'obsv_trans:ntext',
-            'tipo_trans',
-            'docref_trans',
-            'almacen_trans',
+            //'id_trans',
+            [
+              'attribute' => 'codigo_trans',
+              'labelColOptions'=>['style'=>'width:10%'],
+            ],
+            [
+              'labelColOptions'=>['style'=>'width:10%'],
+              'attribute' => 'fecha_trans',
+              'value' => Yii::$app->formatter->asDate($model->fecha_trans, 'dd/MM/yyyy')
+            ],
+            [
+              'labelColOptions'=>['style'=>'width:10%'],
+              'attribute' => 'docref_trans',
+              'value' => $model->docref_trans,
+            ],
+            [
+              'labelColOptions' => [ 'style' => 'width:10%' ],
+              'attribute' => 'tipo_trans',
+              'value' => $model->tipoTrans->des_tipom,
+            ],
+            [
+              'labelColOptions' => [ 'style' => 'width:10%' ],
+              'attribute' => 'almacen_trans',
+              'value' => $model->almacenTrans->des_almacen,
+            ],
+            [
+              'labelColOptions'=>['style'=>'width:10%'],
+              'attribute' => 'obsv_trans',
+              'obsv_trans:ntext',
+            ],
         ],
     ]) ?>
+    <h3><?= Yii::t('producto', 'Products')?> </h3>
+    <hr>
+    <?php
+    $sucursales = new NotaIngresoDetalleSearch;
+    $dataProvider = $sucursales->search([ "trans_detalle" => $model->id_trans ]);
+
+    echo  GridView::widget([
+        'dataProvider' => $dataProvider,
+        'summary' => '',
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            [
+              'attribute'=>'prod_detalle',
+              'value' => function($data){
+                   return $data->prodDetalle->des_prod;
+              },
+              'width' => '80%'
+            ],
+            [
+              'attribute'=>'cant_detalle',
+              'width' => '30%'
+            ],
+          ],
+
+    ]);
+
+    ?>
 
 </div>

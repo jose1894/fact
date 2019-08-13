@@ -60,6 +60,11 @@ class NotaIngresoController extends Controller
      */
     public function actionView($id)
     {
+        if (Yii::$app->request->get('asDialog'))
+        {
+          $this->layout = 'justStuff';
+        }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -260,7 +265,10 @@ class NotaIngresoController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        if (Yii::$app->request->isAjax) {
+             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+             return true;
+         }
         return $this->redirect(['index']);
     }
 
@@ -278,5 +286,84 @@ class NotaIngresoController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('tipo_movimiento', 'The requested page does not exist.'));
+    }
+
+    public function actionAprobarNota( )
+    {
+      $codigo = Yii::$app->request->post( 'codigo_trans' );
+
+      print_r(Yii::$app->request->post());
+      exit;
+
+      if ( $codigo ){
+        $model = NotaIngreso::findOne([ 'codigo_trans' => ':codigo'],[':codigo' => $codigo]);
+        $modelsDetalles = $model->detalles;
+        return false;
+      }
+
+      if ($model->load(Yii::$app->request->post())) {
+
+          exit('hecho');
+          $oldIDs = ArrayHelper::map($modelsDetalles, 'id_detalle', 'id_detalle');
+          $modelsDetalles = Model::createMultiple(NotaIngresoDetalle::classname(), $modelsDetalles, 'id_detalle');
+          Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
+          $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsDetalles, 'id_detalle', 'id_detalle')));
+
+          // validate all models
+          $valid = $model->validate();
+          $valid = Model::validateMultiple($modelsDetalles) && $valid;
+
+
+          if ($valid) {
+
+              $transaction = \Yii::$app->db->beginTransaction();
+
+              try {
+                  if ($flag = $model->save(false)) {
+
+                      foreach ($modelsDetalles as $modelDetalle) {
+                          $modelDetalle->trans_detalle = $model->id_trans;
+                          $producto = Producto::findOne(['id_prod' => ':producto'], [':producto' => $modelDetalle->prod_detalle]);
+                          $producto->stock_prod += $modelDetalle->cant_detalle;
+
+                          if (! ($flag = $modelDetalle->save(false))) {
+                              $transaction->rollBack();
+                              break;
+                          }
+                          $model->status_trans = 1;
+                      }
+                  }
+                  if ($flag) {
+                      $model->save();
+                      $transaction->commit();
+                      //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      $return = [
+                        'success' => true,
+                        'title' => Yii::t('ingreso', 'Entry note'),
+                        'message' => Yii::t('ingreso','Entry note has been approved successfully!'),
+                        'type' => 'success'
+                      ];
+                      return $return;
+                  }
+              } catch (Exception $e) {
+                  $transaction->rollBack();
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  $return = [
+                    'success' => false,
+                    'title' => Yii::t('ingreso', 'Entry note'),
+                    'message' => Yii::t('ingreso','Entry note couldn´t be approved!') . " \nError: ". $e->errorMessage(),
+                    'type' => 'error'
+
+                  ];
+                  return $return;
+              }
+          }
+      }
+
+      return $this->render('update', [
+          'model' => $model,
+          'modelsDetalles' => (empty($modelsDetalles)) ? [new NotaIngresoDetalle] : $modelsDetalles,
+      ]);
     }
 }

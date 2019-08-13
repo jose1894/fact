@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.6deb5
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost:3306
--- Tiempo de generación: 12-08-2019 a las 07:57:43
--- Versión del servidor: 5.7.27-0ubuntu0.18.04.1
--- Versión de PHP: 7.2.19-0ubuntu0.18.04.1
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 14-08-2019 a las 00:26:46
+-- Versión del servidor: 10.1.36-MariaDB
+-- Versión de PHP: 7.2.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -316,60 +318,6 @@ CREATE TABLE `auth_item_child` (
 
 INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('Administradores', '/*'),
-('SuperSU', '/*'),
-('SuperSU', '/admin/*'),
-('SuperSU', '/admin/assignment/*'),
-('SuperSU', '/admin/assignment/assign'),
-('SuperSU', '/admin/assignment/index'),
-('SuperSU', '/admin/assignment/revoke'),
-('SuperSU', '/admin/assignment/view'),
-('SuperSU', '/admin/default/*'),
-('SuperSU', '/admin/default/index'),
-('SuperSU', '/admin/menu/*'),
-('SuperSU', '/admin/menu/create'),
-('SuperSU', '/admin/menu/delete'),
-('SuperSU', '/admin/menu/index'),
-('SuperSU', '/admin/menu/update'),
-('SuperSU', '/admin/menu/view'),
-('SuperSU', '/admin/permission/*'),
-('SuperSU', '/admin/permission/assign'),
-('SuperSU', '/admin/permission/create'),
-('SuperSU', '/admin/permission/delete'),
-('SuperSU', '/admin/permission/index'),
-('SuperSU', '/admin/permission/remove'),
-('SuperSU', '/admin/permission/update'),
-('SuperSU', '/admin/permission/view'),
-('SuperSU', '/admin/role/*'),
-('SuperSU', '/admin/role/assign'),
-('SuperSU', '/admin/role/create'),
-('SuperSU', '/admin/role/delete'),
-('SuperSU', '/admin/role/index'),
-('SuperSU', '/admin/role/remove'),
-('SuperSU', '/admin/role/update'),
-('SuperSU', '/admin/role/view'),
-('SuperSU', '/admin/route/*'),
-('SuperSU', '/admin/route/assign'),
-('SuperSU', '/admin/route/create'),
-('SuperSU', '/admin/route/index'),
-('SuperSU', '/admin/route/refresh'),
-('SuperSU', '/admin/route/remove'),
-('SuperSU', '/admin/rule/*'),
-('SuperSU', '/admin/rule/create'),
-('SuperSU', '/admin/rule/delete'),
-('SuperSU', '/admin/rule/index'),
-('SuperSU', '/admin/rule/update'),
-('SuperSU', '/admin/rule/view'),
-('SuperSU', '/admin/user/*'),
-('SuperSU', '/admin/user/activate'),
-('SuperSU', '/admin/user/change-password'),
-('SuperSU', '/admin/user/delete'),
-('SuperSU', '/admin/user/index'),
-('SuperSU', '/admin/user/login'),
-('SuperSU', '/admin/user/logout'),
-('SuperSU', '/admin/user/request-password-reset'),
-('SuperSU', '/admin/user/reset-password'),
-('SuperSU', '/admin/user/signup'),
-('SuperSU', '/admin/user/view'),
 ('Administradores', '/almacen/*'),
 ('Administradores', '/almacen/create'),
 ('Administradores', '/almacen/delete'),
@@ -454,19 +402,12 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('Administradores', '/pedido-detalle/update'),
 ('Administradores', '/pedido-detalle/view'),
 ('Administradores', '/pedido/*'),
-('Usuarios', '/pedido/*'),
 ('Administradores', '/pedido/create'),
-('Usuarios', '/pedido/create'),
 ('Administradores', '/pedido/delete'),
-('Usuarios', '/pedido/delete'),
 ('Administradores', '/pedido/index'),
-('Usuarios', '/pedido/index'),
 ('Administradores', '/pedido/pedido-rpt'),
-('Usuarios', '/pedido/pedido-rpt'),
 ('Administradores', '/pedido/update'),
-('Usuarios', '/pedido/update'),
 ('Administradores', '/pedido/view'),
-('Usuarios', '/pedido/view'),
 ('Administradores', '/producto/*'),
 ('Administradores', '/producto/create'),
 ('Administradores', '/producto/delete'),
@@ -534,7 +475,68 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('Administradores', '/zona/index'),
 ('Administradores', '/zona/update'),
 ('Administradores', '/zona/view'),
-('SuperSU', 'Administradores');
+('SuperSU', '/*'),
+('SuperSU', '/admin/*'),
+('SuperSU', '/admin/assignment/*'),
+('SuperSU', '/admin/assignment/assign'),
+('SuperSU', '/admin/assignment/index'),
+('SuperSU', '/admin/assignment/revoke'),
+('SuperSU', '/admin/assignment/view'),
+('SuperSU', '/admin/default/*'),
+('SuperSU', '/admin/default/index'),
+('SuperSU', '/admin/menu/*'),
+('SuperSU', '/admin/menu/create'),
+('SuperSU', '/admin/menu/delete'),
+('SuperSU', '/admin/menu/index'),
+('SuperSU', '/admin/menu/update'),
+('SuperSU', '/admin/menu/view'),
+('SuperSU', '/admin/permission/*'),
+('SuperSU', '/admin/permission/assign'),
+('SuperSU', '/admin/permission/create'),
+('SuperSU', '/admin/permission/delete'),
+('SuperSU', '/admin/permission/index'),
+('SuperSU', '/admin/permission/remove'),
+('SuperSU', '/admin/permission/update'),
+('SuperSU', '/admin/permission/view'),
+('SuperSU', '/admin/role/*'),
+('SuperSU', '/admin/role/assign'),
+('SuperSU', '/admin/role/create'),
+('SuperSU', '/admin/role/delete'),
+('SuperSU', '/admin/role/index'),
+('SuperSU', '/admin/role/remove'),
+('SuperSU', '/admin/role/update'),
+('SuperSU', '/admin/role/view'),
+('SuperSU', '/admin/route/*'),
+('SuperSU', '/admin/route/assign'),
+('SuperSU', '/admin/route/create'),
+('SuperSU', '/admin/route/index'),
+('SuperSU', '/admin/route/refresh'),
+('SuperSU', '/admin/route/remove'),
+('SuperSU', '/admin/rule/*'),
+('SuperSU', '/admin/rule/create'),
+('SuperSU', '/admin/rule/delete'),
+('SuperSU', '/admin/rule/index'),
+('SuperSU', '/admin/rule/update'),
+('SuperSU', '/admin/rule/view'),
+('SuperSU', '/admin/user/*'),
+('SuperSU', '/admin/user/activate'),
+('SuperSU', '/admin/user/change-password'),
+('SuperSU', '/admin/user/delete'),
+('SuperSU', '/admin/user/index'),
+('SuperSU', '/admin/user/login'),
+('SuperSU', '/admin/user/logout'),
+('SuperSU', '/admin/user/request-password-reset'),
+('SuperSU', '/admin/user/reset-password'),
+('SuperSU', '/admin/user/signup'),
+('SuperSU', '/admin/user/view'),
+('SuperSU', 'Administradores'),
+('Usuarios', '/pedido/*'),
+('Usuarios', '/pedido/create'),
+('Usuarios', '/pedido/delete'),
+('Usuarios', '/pedido/index'),
+('Usuarios', '/pedido/pedido-rpt'),
+('Usuarios', '/pedido/update'),
+('Usuarios', '/pedido/view');
 
 -- --------------------------------------------------------
 
@@ -2701,20 +2703,20 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (8, 'LP-AV2C', 'CM07-AV4', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (9, 'LP-AV2', 'CM-9416', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)NEGRO         ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (10, 'LP-N32', 'CM-N3004  ', 'FARO NEBLI.CHEV. N300 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(11, 'LP-N22L', 'CM-N2004L', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(12, 'LP-N22R', 'CM-N2004R', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(11, 'LP-N22L', 'CM-N2004L', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(12, 'LP-N22R', 'CM-N2004R', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (13, 'LP-SA2', 'CM10-SAL5', 'FARO NEBLI.CHEV. SAIL 2010 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (14, 'LP-SP2', 'CM5-SPK04', 'FARO NEBLI.CHEV. SPARK 2005 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (15, 'LP-SP2A', 'CM5-SPK8', 'FARO NEBLI.CHEV. SPARK 2005 POST RED', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (16, 'LP-SP2B', 'CM5-SPK5', 'FARO NEBLI.CHEV. SPARK 2005 POST.BLANCO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (17, 'LP-SP4', 'CM9-SPK02', 'FARO NEBLI.CHEV. SPARK 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (18, 'LP-OP2', 'CM-9342', 'FARO NEBLI.CHEV. OPTRA 2003-2008(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(19, 'LP-ES2L', 'CM92-DE4L', 'FARO NEBLI.DAEWOO ESPERO 92....', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(20, 'LP-ES2R', 'CM92-DE4R', 'FARO NEBLI.DAEWOO ESPERO 92....', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(19, 'LP-ES2L', 'CM92-DE4L', 'FARO NEBLI.DAEWOO ESPERO 92....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(20, 'LP-ES2R', 'CM92-DE4R', 'FARO NEBLI.DAEWOO ESPERO 92....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (21, 'LP-ES4', 'CM96-DE4A', 'FARO NEBLI.DAEWOO ESPERO 96(SET)  ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (22, 'LP-CI2', 'CM94-DC4A', 'FARO NEBLI.DAEWOO CIELO NEGRO 94-96 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(23, 'LP-CI2CL', 'CM94-DC4L', 'FARO NEBLI.DAEWOO CIELO CRISTAL 94-96', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(24, 'LP-CI2CR', 'CM94-DC4R', 'FARO NEBLI.DAEWOO CIELO CRISTAL 94-96', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(23, 'LP-CI2CL', 'CM94-DC4L', 'FARO NEBLI.DAEWOO CIELO CRISTAL 94-96', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(24, 'LP-CI2CR', 'CM94-DC4R', 'FARO NEBLI.DAEWOO CIELO CRISTAL 94-96', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (25, 'LP-LA2', 'CM-LN04', 'FARO NEBLI.DAEWOO LANOS (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (26, 'LP-LA2C', 'CM-LN04C', 'FARO NEBLI.DAEWOO LANOS CRYSTAL(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (27, 'LP-NB2', 'CM97-DN04', 'FARO NEBLI.DAEWOO NUBIRA 1997 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -2723,8 +2725,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (30, 'LP-C372', 'CM37-DF02', 'FARO NEBLI.DONGFEND C37 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (31, 'LP-RA4', 'CM-9296', 'FARO NEBLI.FORD RANGER 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (32, 'LP-FL4', 'CM16-FLD2', 'FARO NEBLI.FORLAND 2016(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(33, 'LP-FT2L', 'CM06-FT02L', 'FARO NEBLI.FOTON 2007.....', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(34, 'LP-FT2R', 'CM06-FT02R', 'FARO NEBLI.FOTON 2007.....', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(33, 'LP-FT2L', 'CM06-FT02L', 'FARO NEBLI.FOTON 2007.....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(34, 'LP-FT2R', 'CM06-FT02R', 'FARO NEBLI.FOTON 2007.....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (35, 'LP-CK2', 'CM12-GY02', 'FARO NEBLI.GEELLY CK1 2012(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (36, 'LP-GY2', 'CM07-GY2', 'FARO NEBLI.GEELY 2012 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (37, 'LP-MK4', 'CM14-GY02', 'FARO NEBLI.GEELLY MK CROSS 2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -2740,8 +2742,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (47, 'LP-EL2C', 'CM07-EL02', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (48, 'LP-EL4', 'CM11-EL5  ', 'FARO NEBLI.PARACH. HY ELANTRA 2011(SETX2)CHINO ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (49, 'LP-EL4B', 'CM13-EL4', 'FARO NEBLI.PARACH. HY ELANTRA 2013-2014 (SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(50, 'LP-I104L', 'CM12-I104L', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(51, 'LP-I104R', 'CM12-I104R', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(50, 'LP-I104L', 'CM12-I104L', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(51, 'LP-I104R', 'CM12-I104R', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (52, 'LP-I104A', 'CM14-I102', 'FARO NEBLI.PARACH. HY I10 2014 (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (53, 'LP-I104B', 'CM14-I102A', 'FARO NEBLI.PARACH. HY I10 2014FULL (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (54, 'LP-H12', 'CMH1-002', 'FARO NEBLI.PARACH. HY H1(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -2751,8 +2753,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (58, 'LP-PO4', 'CM13-PRT2', 'FARO NEBLI.PARACH. HY PORTER II 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (59, 'LP-SF2', 'CM09-SF2', 'FARO NEBLI.PARACH. HY SANTA FE 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (60, 'LP-MA2', 'CM07-MX2', 'FARO NEBLI.PARACH. HY MATRIX 2005(SET X 2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(61, 'LP-SO2L', 'CM03-SON4L', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(62, 'LP-SO2R', 'CM03-SON4R', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(61, 'LP-SO2L', 'CM03-SON4L', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(62, 'LP-SO2R', 'CM03-SON4R', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (63, 'LP-SO4', 'CM08-SON2', 'FARO NEBLI.PARACH.HY SONATA 2008(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (64, 'LP-TU2', 'CM03-TS2', 'FARO NEBLI.PARACH.HY TUCSON 2003 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (65, 'LP-EO4', 'CM11-EON4', 'FARO NEBLI.PARACH.HY EON 2011-2013 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -2792,10 +2794,10 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (100, 'LP-NA4', 'CM-9406', 'FARO NEBLI.NISS.NAVARA 2009(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (101, 'LP-NA4B', 'CM-9449', 'FARO NEBLI.NISS.NAVARA 2010-2015(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (102, 'LP-UR4', 'CM25-UC5', 'FARO NEBLI.NISS.CARAVAN E25 2005(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(103, 'LP-UR4AL', 'CM26-UC5L', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(104, 'LP-UR4AR', 'CM26-UC5R', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(105, 'LP-UR4CL', 'CM26-UC5AL', 'FARO NEBLI.NISS.URVAN NV350 C/LED AZUL 2013', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(106, 'LP-UR4CR', 'CM26-UC5AR', 'FARO NEBLI.NISS.URVAN NV350 C/LED AZUL 2013', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(103, 'LP-UR4AL', 'CM26-UC5L', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(104, 'LP-UR4AR', 'CM26-UC5R', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(105, 'LP-UR4CL', 'CM26-UC5AL', 'FARO NEBLI.NISS.URVAN NV350 C/LED AZUL 2013', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(106, 'LP-UR4CR', 'CM26-UC5AR', 'FARO NEBLI.NISS.URVAN NV350 C/LED AZUL 2013', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (107, 'LP-AL2', 'CM-9141', 'FARO NEBLI.NISS.ALMERA 2000-2007(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (108, 'LP-AL2Q', 'CM-9281', 'FARO NEBLI.NISS.ALMERA 2007-QASHQAI(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (109, 'LP-VE4C', 'CM-9304', 'FARO NEBLI.NISS.VERSA 2011-2013(SET2)CROMAD', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -2811,7 +2813,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (120, 'LP-SW4N', 'CM-9310', 'FARO NEBLI.SUZ.SWIFT 2012....(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (122, 'LP-AE2', 'CM03-AE02     ', 'FARO NEBLI.SUZ.AERIO 2003 (SET2)               ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (123, 'LP-AZ4', 'CM-9262', 'FARO NEBLI.TY AVANZA 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(124, 'LP-DI2L', 'CM99-DN4L', 'FARO NEBLI.TY DINA 1999-2008', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(124, 'LP-DI2L', 'CM99-DN4L', 'FARO NEBLI.TY DINA 1999-2008', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (125, 'LP-DI2T', 'CM99-DN4R', 'FARO NEBLI.TY DINA 1999-2008', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (126, 'LP-CA2', 'CM98-CA4', 'FARO NEBLI.TY CALDINA AVENSIS(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (127, 'LP-YS2', 'CM-9225', 'FARO NEBLI.TY YARIS SEDAN 2007...NEGRO (SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -2838,12 +2840,12 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (148, 'LP-HX4C', 'CM15-HX4', 'FARO NEBLI.TY REVO 2015-AVANZA 2016-YARIS 2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (149, 'LP-HX4', 'CM-9430', 'FARO NEBLI.TY.REVO 2015 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (150, 'LP-HX4B', 'CM-9430C', 'FARO NEBLI.TY.REVO 2015 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(151, 'LP-TH2L', 'CM97-TH6L', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(152, 'LP-TH2R', 'CM97-TH6R', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(153, 'LP-TH2AL', 'CM04-TH9L', 'FARO NEBLI.TY HIACE 2004-2010', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(154, 'LP-TH2AR', 'CM04-TH9R', 'FARO NEBLI.TY HIACE 2004-2010', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(155, 'LP-TH4AL', 'CM11-TH7L ', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO CHINO        ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(156, 'LP-TH4AR', 'CM11-TH7R ', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO CHINO        ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(151, 'LP-TH2L', 'CM97-TH6L', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(152, 'LP-TH2R', 'CM97-TH6R', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(153, 'LP-TH2AL', 'CM04-TH9L', 'FARO NEBLI.TY HIACE 2004-2010', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(154, 'LP-TH2AR', 'CM04-TH9R', 'FARO NEBLI.TY HIACE 2004-2010', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(155, 'LP-TH4AL', 'CM11-TH7L ', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO CHINO        ', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(156, 'LP-TH4AR', 'CM11-TH7R ', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO CHINO        ', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (157, 'LP-TH4C', 'CM11-TH7-1', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO 9 FOCOS LED CHINO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (158, 'LP-TH4B', 'CM-9315', 'FARO NEBLI.TY.HIACE 2011-2013 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (159, 'LP-TH4E', 'CM11-TH7C', 'FARO NEBLI.TY HIACE 2011-2013 CROMO (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -2853,8 +2855,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (163, 'LP-TH6C', 'CM-9415C', 'FARO NEBLI.TY HIACE 2014-2015 CROMO(SET2)   ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (164, 'LP-NH2', 'CM96-TN4', 'FARO NEBLI.TY NOAH (SETX2)VIDRIO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (165, 'LP-SU2M', 'CM05-SC6M', 'FARO NEBLI.TY SUCCED MICA (SET X 2)C/BASE', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(166, 'LP-SU2VL', 'CM05-SC6L', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(167, 'LP-SU2VR', 'CM05-SC6R', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(166, 'LP-SU2VL', 'CM05-SC6L', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(167, 'LP-SU2VR', 'CM05-SC6R', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (168, 'LP-RV2C', 'CM-9431', 'FARO NEBLI.TY RAV4 2008-2012 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (169, 'LP-RV4', 'CM-9488', 'FARO NEBLI.TY RAV4 2013-2015 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (170, 'LP-RV6', 'CM-9455', 'FARO NEBLI.TY RAV4 2016-2017 NEGRO...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -3016,7 +3018,9 @@ INSERT INTO `tipo_movimiento` (`id_tipom`, `des_tipom`, `status_tipom`, `sucursa
 (1, 'INGRESO', 1, 1, 'E'),
 (2, 'SALIDA', 1, 1, 'S'),
 (3, 'COMPRA', 1, 1, 'E'),
-(4, 'VENTA', 1, 1, 'S');
+(4, 'VENTA', 1, 1, 'S'),
+(5, 'AJUSTE DE ENTRADA', 1, 1, 'E'),
+(6, 'AJUSTE DE SALIDA', 1, 1, 'S');
 
 -- --------------------------------------------------------
 
@@ -3065,6 +3069,33 @@ INSERT INTO `tipo_proveedor` (`id_tprov`, `des_tprov`, `status_tprov`, `sucursal
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `transaccion`
+--
+
+CREATE TABLE `transaccion` (
+  `id_trans` int(11) NOT NULL COMMENT 'ID UNICO',
+  `codigo_trans` varchar(10) DEFAULT NULL COMMENT 'CODIGO TRANSACCION',
+  `fecha_trans` date DEFAULT NULL COMMENT 'FECHA TRANSACCION',
+  `obsv_trans` text COMMENT 'OBSERVACIONES TRANSACCION',
+  `tipo_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO TRANSACCION',
+  `grupo_trans` varchar(1) NOT NULL COMMENT 'GRUPO TRANSACCION E=ENTRADA, S=SALIDA',
+  `docref_trans` varchar(10) DEFAULT NULL COMMENT 'DOCUMENTO REFERENCIA TRANSACCION',
+  `almacen_trans` int(11) NOT NULL COMMENT 'ALMACEN TRANSACCION',
+  `sucursal_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TRANSACCION',
+  `usuario_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'USUARIO TRANSACCION',
+  `status_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TRANSACCION 0=NO APROBADA, 1 = APROBADA, 2 = ANULADA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TRANSACCIONES';
+
+--
+-- Volcado de datos para la tabla `transaccion`
+--
+
+INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_trans`, `tipo_trans`, `grupo_trans`, `docref_trans`, `almacen_trans`, `sucursal_trans`, `usuario_trans`, `status_trans`) VALUES
+(6, '0000000001', '2019-08-13', '', 5, 'E', '11111', 1, 1, 2, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `trans_detalle`
 --
 
@@ -3080,34 +3111,8 @@ CREATE TABLE `trans_detalle` (
 --
 
 INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `cant_detalle`) VALUES
-(1, 1, 7, 5),
-(2, 1, 97, 5);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `transaccion`
---
-
-CREATE TABLE `transaccion` (
-  `id_trans` int(11) NOT NULL COMMENT 'ID UNICO',
-  `codigo_trans` varchar(10) DEFAULT NULL COMMENT 'CODIGO TRANSACCION',
-  `fecha_trans` date DEFAULT NULL COMMENT 'FECHA TRANSACCION',
-  `obsv_trans` text COMMENT 'OBSERVACIONES TRANSACCION',
-  `tipo_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO TRANSACCION',
-  `grupo_trans` varchar(1) NOT NULL COMMENT 'GRUPO TRANSACCION E=ENTRADA, S=SALIDA',
-  `docref_trans` varchar(10) DEFAULT NULL COMMENT 'DOCUMENTO REFERENCIA TRANSACCION',
-  `almacen_trans` int(11) NOT NULL COMMENT 'ALMACEN TRANSACCION',
-  `sucursal_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TRANSACCION',
-  `usuario_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'USUARIO TRANSACCION'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TRANSACCIONES';
-
---
--- Volcado de datos para la tabla `transaccion`
---
-
-INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_trans`, `tipo_trans`, `grupo_trans`, `docref_trans`, `almacen_trans`, `sucursal_trans`, `usuario_trans`) VALUES
-(1, '0000000001', '2019-08-11', '', 3, 'E', '', 1, 1, 2);
+(7, 6, 7, 5),
+(8, 6, 42, 3);
 
 -- --------------------------------------------------------
 
@@ -3160,27 +3165,6 @@ INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `password_res
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `v_productos`
--- (Véase abajo para la vista actual)
---
-CREATE TABLE `v_productos` (
-`id_prod` int(11)
-,`cod_prod` varchar(25)
-,`des_prod` varchar(70)
-,`texto` varchar(149)
-,`sucursal_prod` int(11)
-,`status_prod` int(11)
-,`precio_lista` decimal(18,2)
-,`tipo_lista` int(11)
-,`id_suc` int(11)
-,`impuesto_suc` decimal(7,2)
-,`id_und` int(11)
-,`des_und` varchar(50)
-);
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `vendedor`
 --
 
@@ -3204,6 +3188,30 @@ INSERT INTO `vendedor` (`id_vendedor`, `dni_vend`, `nombre_vend`, `tlf_vend`, `e
 (3, '', 'MELIN HUAMAN', '', 1, 1, 1),
 (4, '', 'IRVIN PEREZ', '', 1, 1, 1),
 (5, '', 'APP', '', 1, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `v_productos`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `v_productos` (
+`id_prod` int(11)
+,`cod_prod` varchar(25)
+,`des_prod` varchar(70)
+,`texto` varchar(149)
+,`sucursal_prod` int(11)
+,`status_prod` int(11)
+,`precio_lista` decimal(18,2)
+,`tipo_lista` int(11)
+,`stock_prod` int(11)
+,`id_suc` int(11)
+,`impuesto_suc` decimal(7,2)
+,`id_und` int(11)
+,`des_und` varchar(50)
+,`compra_prod` int(11)
+,`venta_prod` int(11)
+);
 
 -- --------------------------------------------------------
 
@@ -3236,7 +3244,7 @@ INSERT INTO `zona` (`id_zona`, `nombre_zona`, `desc_zona`, `estatus_zona`, `sucu
 --
 DROP TABLE IF EXISTS `v_productos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,concat(`producto`.`cod_prod`,' ',`producto`.`des_prod`,' - ',`unidad_medida`.`des_und`) AS `texto`,`producto`.`sucursal_prod` AS `sucursal_prod`,`producto`.`status_prod` AS `status_prod`,`lista_precios`.`precio_lista` AS `precio_lista`,`lista_precios`.`tipo_lista` AS `tipo_lista`,`sucursal`.`id_suc` AS `id_suc`,`sucursal`.`impuesto_suc` AS `impuesto_suc`,`unidad_medida`.`id_und` AS `id_und`,`unidad_medida`.`des_und` AS `des_und` from (((`producto` join `lista_precios` on((`producto`.`id_prod` = `lista_precios`.`prod_lista`))) join `sucursal` on((`producto`.`sucursal_prod` = `sucursal`.`id_suc`))) join `unidad_medida` on((`producto`.`umed_prod` = `unidad_medida`.`id_und`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,concat(`producto`.`cod_prod`,' ',`producto`.`des_prod`,' - ',`unidad_medida`.`des_und`) AS `texto`,`producto`.`sucursal_prod` AS `sucursal_prod`,`producto`.`status_prod` AS `status_prod`,`lista_precios`.`precio_lista` AS `precio_lista`,`lista_precios`.`tipo_lista` AS `tipo_lista`,`producto`.`stock_prod` AS `stock_prod`,`sucursal`.`id_suc` AS `id_suc`,`sucursal`.`impuesto_suc` AS `impuesto_suc`,`unidad_medida`.`id_und` AS `id_und`,`unidad_medida`.`des_und` AS `des_und`,`producto`.`compra_prod` AS `compra_prod`,`producto`.`venta_prod` AS `venta_prod` from (((`producto` join `lista_precios` on((`producto`.`id_prod` = `lista_precios`.`prod_lista`))) join `sucursal` on((`producto`.`sucursal_prod` = `sucursal`.`id_suc`))) join `unidad_medida` on((`producto`.`umed_prod` = `unidad_medida`.`id_und`))) ;
 
 --
 -- Índices para tablas volcadas
@@ -3487,14 +3495,6 @@ ALTER TABLE `tipo_proveedor`
   ADD KEY `sucursal_tprov` (`sucursal_tprov`);
 
 --
--- Indices de la tabla `trans_detalle`
---
-ALTER TABLE `trans_detalle`
-  ADD PRIMARY KEY (`id_detalle`),
-  ADD KEY `trans_detalle` (`trans_detalle`),
-  ADD KEY `prod_detalle` (`prod_detalle`);
-
---
 -- Indices de la tabla `transaccion`
 --
 ALTER TABLE `transaccion`
@@ -3504,6 +3504,14 @@ ALTER TABLE `transaccion`
   ADD KEY `tipo_trans` (`tipo_trans`),
   ADD KEY `almacen_trans` (`almacen_trans`),
   ADD KEY `usuario_trans` (`usuario_trans`);
+
+--
+-- Indices de la tabla `trans_detalle`
+--
+ALTER TABLE `trans_detalle`
+  ADD PRIMARY KEY (`id_detalle`),
+  ADD KEY `trans_detalle` (`trans_detalle`),
+  ADD KEY `prod_detalle` (`prod_detalle`);
 
 --
 -- Indices de la tabla `unidad_medida`
@@ -3544,156 +3552,187 @@ ALTER TABLE `zona`
 --
 ALTER TABLE `almacen`
   MODIFY `id_almacen` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
   MODIFY `id_clte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=750;
+
 --
 -- AUTO_INCREMENT de la tabla `compra`
 --
 ALTER TABLE `compra`
   MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+
 --
 -- AUTO_INCREMENT de la tabla `compra_detalle`
 --
 ALTER TABLE `compra_detalle`
   MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+
 --
 -- AUTO_INCREMENT de la tabla `cond_pago`
 --
 ALTER TABLE `cond_pago`
   MODIFY `id_condp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT de la tabla `departamento`
 --
 ALTER TABLE `departamento`
   MODIFY `id_depto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=217;
+
 --
 -- AUTO_INCREMENT de la tabla `distrito`
 --
 ALTER TABLE `distrito`
   MODIFY `id_dtto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=218;
+
 --
 -- AUTO_INCREMENT de la tabla `empresa`
 --
 ALTER TABLE `empresa`
   MODIFY `id_empresa` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT de la tabla `inventario`
 --
 ALTER TABLE `inventario`
   MODIFY `id_inv` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+
 --
 -- AUTO_INCREMENT de la tabla `lista_precios`
 --
 ALTER TABLE `lista_precios`
   MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=169;
+
 --
 -- AUTO_INCREMENT de la tabla `menu`
 --
 ALTER TABLE `menu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `moneda`
 --
 ALTER TABLE `moneda`
   MODIFY `id_moneda` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT de la tabla `movimiento_inv`
 --
 ALTER TABLE `movimiento_inv`
   MODIFY `id_inv` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+
 --
 -- AUTO_INCREMENT de la tabla `pais`
 --
 ALTER TABLE `pais`
   MODIFY `id_pais` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=243;
+
 --
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
   MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+
 --
 -- AUTO_INCREMENT de la tabla `pedido_detalle`
 --
 ALTER TABLE `pedido_detalle`
   MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
   MODIFY `id_prod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=173;
+
 --
 -- AUTO_INCREMENT de la tabla `profile`
 --
 ALTER TABLE `profile`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
   MODIFY `id_prove` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT de la tabla `provincia`
 --
 ALTER TABLE `provincia`
   MODIFY `id_prov` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=30;
+
 --
 -- AUTO_INCREMENT de la tabla `sucursal`
 --
 ALTER TABLE `sucursal`
   MODIFY `id_suc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT de la tabla `tipo_listap`
 --
 ALTER TABLE `tipo_listap`
   MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT de la tabla `tipo_movimiento`
 --
 ALTER TABLE `tipo_movimiento`
-  MODIFY `id_tipom` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
+  MODIFY `id_tipom` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=7;
+
 --
 -- AUTO_INCREMENT de la tabla `tipo_producto`
 --
 ALTER TABLE `tipo_producto`
   MODIFY `id_tpdcto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT de la tabla `tipo_proveedor`
 --
 ALTER TABLE `tipo_proveedor`
   MODIFY `id_tprov` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
---
--- AUTO_INCREMENT de la tabla `trans_detalle`
---
-ALTER TABLE `trans_detalle`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT de la tabla `transaccion`
 --
 ALTER TABLE `transaccion`
-  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `trans_detalle`
+--
+ALTER TABLE `trans_detalle`
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=9;
+
 --
 -- AUTO_INCREMENT de la tabla `unidad_medida`
 --
 ALTER TABLE `unidad_medida`
   MODIFY `id_und` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT de la tabla `vendedor`
 --
 ALTER TABLE `vendedor`
   MODIFY `id_vendedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT de la tabla `zona`
 --
 ALTER TABLE `zona`
   MODIFY `id_zona` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
+
 --
 -- Restricciones para tablas volcadas
 --
@@ -3818,13 +3857,6 @@ ALTER TABLE `sucursal`
   ADD CONSTRAINT `sucursal_ibfk_1` FOREIGN KEY (`empresa_suc`) REFERENCES `empresa` (`id_empresa`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `trans_detalle`
---
-ALTER TABLE `trans_detalle`
-  ADD CONSTRAINT `trans_detalle_ibfk_1` FOREIGN KEY (`trans_detalle`) REFERENCES `transaccion` (`id_trans`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `trans_detalle_ibfk_2` FOREIGN KEY (`prod_detalle`) REFERENCES `producto` (`id_prod`) ON DELETE NO ACTION ON UPDATE CASCADE;
-
---
 -- Filtros para la tabla `transaccion`
 --
 ALTER TABLE `transaccion`
@@ -3832,10 +3864,18 @@ ALTER TABLE `transaccion`
   ADD CONSTRAINT `transaccion_ibfk_2` FOREIGN KEY (`almacen_trans`) REFERENCES `almacen` (`id_almacen`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Filtros para la tabla `trans_detalle`
+--
+ALTER TABLE `trans_detalle`
+  ADD CONSTRAINT `trans_detalle_ibfk_1` FOREIGN KEY (`trans_detalle`) REFERENCES `transaccion` (`id_trans`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `trans_detalle_ibfk_2` FOREIGN KEY (`prod_detalle`) REFERENCES `producto` (`id_prod`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+--
 -- Filtros para la tabla `vendedor`
 --
 ALTER TABLE `vendedor`
   ADD CONSTRAINT `vendedor_ibfk_1` FOREIGN KEY (`zona_vend`) REFERENCES `zona` (`id_zona`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

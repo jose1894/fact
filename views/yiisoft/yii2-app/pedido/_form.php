@@ -237,6 +237,18 @@ if ( $model->isNewRecord ) {
                     <div class="row detalle-item"><!-- widgetBody -->
                       <div class="col-sm-5 col-xs-12">
                       <?php
+
+                      $resultsJs = '
+                                  function (data, params) {
+                                    params.page = params.page || 1;
+                                    return {
+                                        results: data.results,
+                                        pagination: {
+                                            more: (params.page * 30) < data.results.length
+                                        }
+                                    };
+                                  }';
+
                         // necessary for update action.
                         if (!$modelDetalle->isNewRecord) {
                             echo Html::activeHiddenInput($modelDetalle, "[{$index}]id_pdetalle");
@@ -270,13 +282,33 @@ if ( $model->isNewRecord ) {
                             'ajax' => [
                                 'url' => $url,
                                 'dataType' => 'json',
-                                'data' => new JsExpression('function(params) { return {desc:params.term,tipo_listap: $("#pedido-tipo_listap").val()}; }')
+                                'data' => new JsExpression('function(params) { return {desc:params.term,tipo_listap: $("#pedido-tipo_listap").val()}; }'),
+                                'processResults' => new JsExpression($resultsJs),
                             ],
                             'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-                            'templateResult' => new JsExpression('function(cliente) { return cliente.text; }'),
-                            'templateSelection' => new JsExpression('function (cliente) {
-                                return cliente.text;
-                              }'),
+                            'templateSelection' => new JsExpression( 'function (repo) { return repo.text; }'),
+                            'templateResult' => new JsExpression('function (producto) {
+                                //debugger;
+                                if (producto.loading) {
+                                    return producto.text;
+                                }
+
+                               var markup =
+                                        "<div class=\\"row\\">" +
+                                            "<div class=\\"col-sm-4\\">" +
+                                                "<b style=\\"margin-left:5px\\"> " + producto.cod_prod + "</b>" +
+                                            "</div>" +
+                                            "<div class=\\"col-sm-4\\"><b>U.M.:</b> " + producto.des_und + "</div>" +
+                                            "<div class=\\"col-sm-4\\"><b>Stock:</b> " + producto.stock_prod + "</div>" +
+                                        "</div>";
+
+                                if (producto.des_prod) {
+                                  markup += "<p>" + producto.des_prod + "</p>";
+                                }
+
+                                return "<div style=\\"overflow:hidden;\\">" + markup + "</div>";
+
+                            }'),
                             ],
                         ])->label(false);
                         ?>

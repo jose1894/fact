@@ -18,8 +18,8 @@ class NotaIngresoSearch extends NotaIngreso
     public function rules()
     {
         return [
-            [['id_trans', 'tipo_trans', 'almacen_trans'], 'integer'],
-            [['codigo_trans', 'fecha_trans', 'obsv_trans', 'docref_trans'], 'safe'],
+            [['id_trans', 'tipo_trans', 'almacen_trans','status_trans'], 'integer'],
+            [['codigo_trans', 'fecha_trans', 'obsv_trans', 'docref_trans','status_trans'], 'safe'],
         ];
     }
 
@@ -66,6 +66,7 @@ class NotaIngresoSearch extends NotaIngreso
             'id_trans' => $this->id_trans,
             'fecha_trans' => $this->fecha_trans,
             'tipo_trans' => $this->tipo_trans,
+            'status_trans' => $this->status_trans,
             'almacen_trans' => $this->almacen_trans,
             'sucursal_trans' => $this->sucursal_trans,
         ]);

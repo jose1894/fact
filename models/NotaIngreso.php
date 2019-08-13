@@ -33,9 +33,11 @@ class NotaIngreso extends \yii\db\ActiveRecord
         return [
             [['fecha_trans'], 'safe'],
             [['obsv_trans'], 'string'],
-            [['tipo_trans', 'almacen_trans', 'sucursal_trans', 'usuario_trans'], 'integer'],
+            [['tipo_trans', 'almacen_trans', 'sucursal_trans', 'usuario_trans', 'status_trans'], 'integer'],
             [['almacen_trans','tipo_trans','sucursal_trans', 'usuario_trans'], 'required'],
             [['codigo_trans', 'docref_trans'], 'string', 'max' => 10],
+            [['tipo_trans'], 'exist', 'skipOnError' => true, 'targetClass' => TipoMovimiento::className(), 'targetAttribute' => ['tipo_trans' => 'id_tipom']],
+            [['almacen_trans'], 'exist', 'skipOnError' => true, 'targetClass' => Almacen::className(), 'targetAttribute' => ['almacen_trans' => 'id_almacen']],
         ];
     }
 
@@ -49,16 +51,33 @@ class NotaIngreso extends \yii\db\ActiveRecord
             'codigo_trans' => Yii::t('ingreso', 'Code'),
             'fecha_trans' => Yii::t('ingreso', 'Date'),
             'obsv_trans' => Yii::t('ingreso', 'Comments'),
-            'tipo_trans' => Yii::t('ingreso', 'Type movement'),
-            'docref_trans' => Yii::t('ingreso', 'Doc. Ref.'),
-            'almacen_trans' => Yii::t('ingreso', 'Warehouse'),
+            'tipo_trans' => Yii::t('tipo_movimiento', 'Movement type'),
+            'docref_trans' => Yii::t('ingreso', 'Document'),
+            'almacen_trans' => Yii::t('almacen', 'Warehouse'),
             'sucursal_trans' => Yii::t('ingreso', 'sucursal'),
             'usuario_trans' => Yii::t('ingreso', 'usuario'),
+            'status_trans' => Yii::t('ingreso', 'Status'),
         ];
     }
 
     public function getDetalles()
     {
        return $this->hasMany(NotaIngresoDetalle::className(), ['trans_detalle' => 'id_trans']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTipoTrans()
+    {
+        return $this->hasOne(TipoMovimiento::className(), ['id_tipom' => 'tipo_trans']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAlmacenTrans()
+    {
+        return $this->hasOne(Almacen::className(), ['id_almacen' => 'almacen_trans']);
     }
 }

@@ -23,6 +23,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Quantity' => 'Cantidad',
+    'APPROVED' => 'APROBADO',
+    'NOT APPROVED' => 'NO APROBADO',
+    'CANCELED' => 'ANULADO',
     'Inventory' => 'Inventario',
     'Affect warehouse' => 'Afecta almacén',
     'Tax exemption' => 'Excento de I.G.V.',

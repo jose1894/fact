@@ -44,10 +44,10 @@ class NotaIngresoDetalle extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_detalle' => Yii::t('tipo_movimiento', 'Id Detalle'),
+            'id_detalle' => Yii::t('tipo_movimiento', 'Id'),
             'trans_detalle' => Yii::t('tipo_movimiento', 'Trans Detalle'),
-            'prod_detalle' => Yii::t('tipo_movimiento', 'Prod Detalle'),
-            'cant_detalle' => Yii::t('tipo_movimiento', 'Cant Detalle'),
+            'prod_detalle' => Yii::t('producto', 'Product'),
+            'cant_detalle' => Yii::t('app', 'Quantity'),
         ];
     }
 

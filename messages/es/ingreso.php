@@ -1,5 +1,7 @@
 <?php
 return [
+    'Entry note: {number}' => 'Nota de ingreso: {number}',
+    'Date' => 'Fecha',
     'Comments' => 'Observaciones',
     'Name' => 'Nombre',
     'Status' => 'Estatus',
@@ -15,8 +17,8 @@ return [
     'Purchase order list' => 'Lista de ordenes de compra',
     'Create purchase order' => 'Crear orden de compra',
     'Purchase order: {number} / {name}' => 'Orden de compra: {number} / {name}',
-    'Create product' => 'Crear producto',
-    'Update purchase order: {number} / {name}' => 'Actualizar orden de compra: {number} / {name}',
+    'Create entry note' => 'Crear nota de ingreso',
+    'Update entry note: {number}' => 'Actualizar nota de ingreso: {number}',
     'IGV exemption' => 'Excento de IGV',
     'Product for purchase' => 'Producto para la compra',
     'Product for sale' => 'Producto para la venta',
