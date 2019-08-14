@@ -43,7 +43,9 @@ function checkDuplicate( _currSelect, row, selects ) {
   row = row[ 1 ];
 
   for( let i = 0; i < selects.length - 1; i++) {
-      if ( _currSelect.val() === $( selects[i] ).val() ) {
+      if ( ( _currSelect.val() === $( selects[i] ).val() ) &&
+           ( _currSelect.attr("id") !== $( selects[i] ).attr("id") )
+         ) {
         band = true;
         break;
       }

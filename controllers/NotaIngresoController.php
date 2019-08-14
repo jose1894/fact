@@ -290,50 +290,51 @@ class NotaIngresoController extends Controller
 
     public function actionAprobarNota( )
     {
-      $codigo = Yii::$app->request->post( 'codigo_trans' );
+      $return = [];
+      $nota = Yii::$app->request->post( 'NotaIngreso' );
 
-      print_r(Yii::$app->request->post());
-      exit;
 
-      if ( $codigo ){
-        $model = NotaIngreso::findOne([ 'codigo_trans' => ':codigo'],[':codigo' => $codigo]);
+      if ( $nota['codigo_trans'] ){
+        $model = NotaIngreso::findOne(['codigo_trans' => $nota['codigo_trans']]);
+
+        if ( $model->status_trans == 1 )
+        {
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          $return = [
+            'success' => false,
+            'title' => Yii::t('ingreso', 'Entry note'),
+            'message' => Yii::t('ingreso','Entry note already has been approved!'),
+            'type' => 'error'
+          ];
+          return $return;
+        }
+
         $modelsDetalles = $model->detalles;
-        return false;
       }
 
-      if ($model->load(Yii::$app->request->post())) {
-
-          exit('hecho');
-          $oldIDs = ArrayHelper::map($modelsDetalles, 'id_detalle', 'id_detalle');
-          $modelsDetalles = Model::createMultiple(NotaIngresoDetalle::classname(), $modelsDetalles, 'id_detalle');
-          Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
-          $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsDetalles, 'id_detalle', 'id_detalle')));
-
-          // validate all models
-          $valid = $model->validate();
-          $valid = Model::validateMultiple($modelsDetalles) && $valid;
 
 
-          if ($valid) {
+      if (Yii::$app->request->post()) {
+          if ( !empty($model) ) {
 
               $transaction = \Yii::$app->db->beginTransaction();
-
+              $model->status_trans = NotaIngreso::STATUS_APPROVED;
               try {
                   if ($flag = $model->save(false)) {
 
                       foreach ($modelsDetalles as $modelDetalle) {
                           $modelDetalle->trans_detalle = $model->id_trans;
-                          $producto = Producto::findOne(['id_prod' => ':producto'], [':producto' => $modelDetalle->prod_detalle]);
+                          $producto = Producto::findOne(['id_prod' => $modelDetalle->prod_detalle]);
                           $producto->stock_prod += $modelDetalle->cant_detalle;
 
-                          if (! ($flag = $modelDetalle->save(false))) {
+                          if (! ($flag = $producto->save(false))) {
                               $transaction->rollBack();
                               break;
                           }
-                          $model->status_trans = 1;
                       }
                   }
                   if ($flag) {
+                      $model->status_trans = NotaIngreso::STATUS_APPROVED;
                       $model->save();
                       $transaction->commit();
                       //return $this->redirect(['view', 'id' => $model->id_empresa]);

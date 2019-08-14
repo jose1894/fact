@@ -41,17 +41,19 @@ $js = "
 
     $.ajax({
       'url': '".Url::to(['nota-ingreso/aprobar-nota'])."',
-      'method': $( form ).attr( 'post' ),
+      'method': $( form ).attr( 'method' ),
       'data'   : $( form ).serialize(),
       'async'  : false,
       'success': function ( data ){
-        if ( data.success )
-        {
-          swal(data.title, data.message, data.type);
-          window.parent.$.pjax.reload( { container: '#grid' } );
 
+        if ( data.success ) {
+          swal(data.title, data.message, data.type);
           return;
+        } else {
+          swal(data.title, data.message, data.type);
+          return;          
         }
+
       }
     });
   });
