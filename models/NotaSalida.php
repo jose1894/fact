@@ -17,6 +17,9 @@ use Yii;
  */
 class NotaSalida extends \yii\db\ActiveRecord
 {
+    public const STATUS_UNAPPROVED = 0;
+    public const STATUS_APPROVED = 1;
+    public const STATUS_CANCELED = 2;
     /**
      * {@inheritdoc}
      */
@@ -31,11 +34,13 @@ class NotaSalida extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fecha_trans'], 'safe'],
-            [['obsv_trans'], 'string'],
-            [['tipo_trans', 'almacen_trans', 'sucursal_trans', 'usuario_trans'], 'integer'],
-            [['almacen_trans'], 'required'],
-            [['codigo_trans', 'docref_trans'], 'string', 'max' => 10],
+          [['fecha_trans'], 'safe'],
+          [['obsv_trans'], 'string'],
+          [['tipo_trans', 'almacen_trans', 'sucursal_trans', 'usuario_trans', 'status_trans'], 'integer'],
+          [['almacen_trans','tipo_trans','sucursal_trans', 'usuario_trans'], 'required'],
+          [['codigo_trans', 'docref_trans'], 'string', 'max' => 10],
+          [['tipo_trans'], 'exist', 'skipOnError' => true, 'targetClass' => TipoMovimiento::className(), 'targetAttribute' => ['tipo_trans' => 'id_tipom']],
+          [['almacen_trans'], 'exist', 'skipOnError' => true, 'targetClass' => Almacen::className(), 'targetAttribute' => ['almacen_trans' => 'id_almacen']],
         ];
     }
 
@@ -45,15 +50,38 @@ class NotaSalida extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_trans' => Yii::t('salida', 'Id'),
-            'codigo_trans' => Yii::t('salida', 'Code'),
-            'fecha_trans' => Yii::t('salida', 'Date'),
-            'obsv_trans' => Yii::t('salida', 'Comments'),
-            'tipo_trans' => Yii::t('salida', 'Type'),
-            'docref_trans' => Yii::t('salida', 'Doc. Ref.'),
-            'almacen_trans' => Yii::t('salida', 'Warehouse'),
-            'sucursal_trans' => Yii::t('salida', 'sucursal'),
-            'usuario_trans' => Yii::t('salida', 'usuario'),
+          'id_trans' => Yii::t('salida', 'Id'),
+          'codigo_trans' => Yii::t('salida', 'Code'),
+          'fecha_trans' => Yii::t('salida', 'Date'),
+          'obsv_trans' => Yii::t('salida', 'Comments'),
+          'tipo_trans' => Yii::t('tipo_movimiento', 'Movement type'),
+          'docref_trans' => Yii::t('salida', 'Document'),
+          'almacen_trans' => Yii::t('almacen', 'Warehouse'),
+          'sucursal_trans' => Yii::t('salida', 'sucursal'),
+          'usuario_trans' => Yii::t('salida', 'usuario'),
+          'status_trans' => Yii::t('salida', 'Status'),
         ];
     }
+
+
+        public function getDetalles()
+        {
+           return $this->hasMany(NotaSalidaDetalle::className(), ['trans_detalle' => 'id_trans']);
+        }
+
+        /**
+         * @return \yii\db\ActiveQuery
+         */
+        public function getTipoTrans()
+        {
+            return $this->hasOne(TipoMovimiento::className(), ['id_tipom' => 'tipo_trans']);
+        }
+
+        /**
+         * @return \yii\db\ActiveQuery
+         */
+        public function getAlmacenTrans()
+        {
+            return $this->hasOne(Almacen::className(), ['id_almacen' => 'almacen_trans']);
+        }
 }

@@ -15,7 +15,7 @@ use Yii;
  * @property Transaccion $transDetalle
  * @property Producto $prodDetalle
  */
-class TransDetalle extends \yii\db\ActiveRecord
+class NotaSalidaDetalle extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -33,7 +33,7 @@ class TransDetalle extends \yii\db\ActiveRecord
         return [
             [['trans_detalle', 'prod_detalle'], 'integer'],
             [['cant_detalle'],'number','min'=>1],
-            [['trans_detalle'], 'exist', 'skipOnError' => true, 'targetClass' => Transaccion::className(), 'targetAttribute' => ['trans_detalle' => 'id_trans']],
+            [['trans_detalle'], 'exist', 'skipOnError' => true, 'targetClass' => NotaSalida::className(), 'targetAttribute' => ['trans_detalle' => 'id_trans']],
             [['prod_detalle'], 'exist', 'skipOnError' => true, 'targetClass' => Producto::className(), 'targetAttribute' => ['prod_detalle' => 'id_prod']],
         ];
     }

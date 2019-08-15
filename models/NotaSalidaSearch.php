@@ -18,8 +18,8 @@ class NotaSalidaSearch extends NotaSalida
     public function rules()
     {
         return [
-            [['id_trans', 'tipo_trans', 'almacen_trans'], 'integer'],
-            [['codigo_trans', 'fecha_trans', 'obsv_trans', 'docref_trans'], 'safe'],
+            [['id_trans', 'tipo_trans', 'almacen_trans','status_trans'], 'integer'],
+            [['codigo_trans', 'fecha_trans', 'obsv_trans', 'docref_trans','status_trans', 'grupo_trans'], 'safe'],
         ];
     }
 
@@ -46,6 +46,7 @@ class NotaSalidaSearch extends NotaSalida
         $query = NotaSalida::find()
                  ->where('sucursal_trans = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -65,6 +66,8 @@ class NotaSalidaSearch extends NotaSalida
             'id_trans' => $this->id_trans,
             'fecha_trans' => $this->fecha_trans,
             'tipo_trans' => $this->tipo_trans,
+            'grupo_trans' => $this->grupo_trans,
+            'status_trans' => $this->status_trans,
             'almacen_trans' => $this->almacen_trans,
             'sucursal_trans' => $this->sucursal_trans,
         ]);

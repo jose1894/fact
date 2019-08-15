@@ -42,10 +42,12 @@ function checkDuplicate( _currSelect, row, selects ) {
   let band = false;
   row = row[ 1 ];
 
-  for( let i = 0; i < selects.length - 1; i++) {
-      if ( ( _currSelect.val() === $( selects[i] ).val() ) &&
-           ( _currSelect.attr("id") !== $( selects[i] ).attr("id") )
-         ) {
+  for( let i = 0; i < selects.length; i++) {
+      if ( _currSelect.attr("id") === $( selects[i] ).attr("id") ) {
+        continue;
+      }
+
+      if (  _currSelect.val() === $( selects[i] ).val()  ) {
         band = true;
         break;
       }

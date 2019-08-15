@@ -178,6 +178,13 @@ class SiteController extends Controller
         }
     }
 
+    public static function getEmpresa()
+    {
+      $user = User::findOne(Yii::$app->user->id);
+
+      return $user->empresa0;
+    }
+
     public static function getSucursal()
     {
       $user = User::findOne(Yii::$app->user->id);

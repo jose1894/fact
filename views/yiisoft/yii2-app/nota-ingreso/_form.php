@@ -18,6 +18,11 @@ use yii\web\JsExpression;
 if ( $model->isNewRecord ) {
   $model->codigo_trans = "0000000000";
 }
+
+$disabled = true;
+if ( $model->status_trans === $model::STATUS_UNAPPROVED ) {
+  $disabled = false;
+}
 ?>
 
 <div class="nota-ingreso-form">
@@ -28,12 +33,18 @@ if ( $model->isNewRecord ) {
           <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
             <?= $form
             ->field($model, 'codigo_trans',['addClass' => 'form-control '])
-            ->textInput(['maxlength' => true,'readonly' => true, 'style' => ['text-align' => 'right']]) ?>
+            ->textInput([
+              'maxlength' => true,
+              'readonly' => true,
+              'style' => ['text-align' => 'right'],
+              'disabled' => $disabled
+              ]) ?>
           </div>
           <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
               <?= $form->field($model, 'fecha_trans',[
                   'addClass' => 'form-control'
               ])->textInput([
+                'disabled' => $disabled,
                 'value' => date('d/m/Y'),
                 'readonly' => 'readonly',
                 'style' => ['text-align' => 'right']
@@ -43,7 +54,10 @@ if ( $model->isNewRecord ) {
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <?= $form->field($model, 'docref_trans',[
               'addClass' => 'form-control'
-              ])->textInput(['maxlength' => true]) ?>
+              ])->textInput([
+                'disabled' => $disabled,
+                'maxlength' => true
+                ]) ?>
           </div>
         </div>
         <div class="row">
@@ -59,6 +73,7 @@ if ( $model->isNewRecord ) {
                         'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-exchange"></i>']],
                         'options' => ['placeholder' => Yii::t('tipo_movimiento','Select a type').'...'],
                         'theme' => Select2::THEME_DEFAULT,
+                        'disabled' => $disabled,
                         // 'pluginOptions' => [
                         //     'allowClear' => true
                         // ],
@@ -76,9 +91,11 @@ if ( $model->isNewRecord ) {
                         'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-archive"></i>']],
                         'options' => ['placeholder' => Yii::t('almacen','Select a warehouse').'...'],
                         'theme' => Select2::THEME_DEFAULT,
+                        'disabled' => $disabled,
                         // 'pluginOptions' => [
                         //     'allowClear' => true
                         // ],
+
                 ]) ?>
           </div>
         </div>
@@ -107,7 +124,11 @@ if ( $model->isNewRecord ) {
                   <div class="col-sm-8 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
                   <div class="col-sm-3 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
                   <div class="col-sm-1 col-xs-12">
-                    <button type="button" class="add-item btn btn-success btn-flat btn-md" style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"><i class="fa fa-plus"></i></button>
+                    <button type="button" class="add-item btn btn-success btn-flat btn-md"
+                    style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"
+                    disabled = "<?=$disabled?>">
+                      <i class="fa fa-plus"></i>
+                    </button>
                   </div>
               </div>
               <hr>
@@ -190,6 +211,7 @@ if ( $model->isNewRecord ) {
 
                               }'),
                               ],
+                              'disabled' => $disabled,
                           ])->label(false);
                           ?>
                         </div>
@@ -197,11 +219,18 @@ if ( $model->isNewRecord ) {
                         <div class="col-sm-3 col-xs-12">
                           <?= $form
                           ->field($modelDetalle,"[{$index}]cant_detalle",[ 'addClass' => 'form-control number-decimals'])
-                          ->textInput(['type' => 'number','min' => 1,'pattern' => "\d*"])
-                          ->label(false)?>
+                          ->textInput([
+                            'type' => 'number',
+                            'min' => 1,
+                            'pattern' => "\d*",
+                            'disabled' => $disabled
+                          ])->label(false)?>
                         </div>
                         <div class="col-sm-1 col-xs-12">
-                          <button type="button" class="remove-item btn btn-danger btn-flat btn-sm" style="width:100%" data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Delete item')?>"><i class="fa fa-trash"></i></button>
+                          <button type="button" class="remove-item btn btn-danger btn-flat btn-sm" style="width:100%"
+                          data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Delete item')?>" disabled = "<?=$disabled?>">
+                            <i class="fa fa-trash"></i>
+                          </button>
                       </div>
                     </div>
               <?php endforeach; ?>
@@ -212,7 +241,7 @@ if ( $model->isNewRecord ) {
         <hr>
         <div class="row">
           <div class="col-lg-12 col-xs-12">
-              <?= $form->field($model, 'obsv_trans')->textarea(['rows' => 3]) ?>
+              <?= $form->field($model, 'obsv_trans')->textarea(['rows' => 3, 'disabled' => $disabled]) ?>
           </div>
         </div>
 
@@ -221,7 +250,9 @@ if ( $model->isNewRecord ) {
              <?php if ( !$model->isNewRecord ) { ?>
                 <button type="button" name="button" id="imprimir" data-toggle="modal" class="btn btn-flat btn-primary "><span class="fa fa-print"></span> <?= Yii::t('app', 'Print')?></button>
              <?php } ?>
-                <button id="submit" type="button" class="btn btn-flat btn-success"><span class="fa fa-save"></span> <?= Yii::t('app','Save') ?></button>
+
+
+                <button id="submit" type="button" class="btn btn-flat btn-success" disabled = "<?=$disabled?>"><span class="fa fa-save"></span> <?= Yii::t('app','Save') ?></button>
             </div>
           </div>
 
@@ -269,7 +300,7 @@ $(".dynamicform_wrapper").on("limitReached", function(e, item) {
 });
 
 $( buttonPrint ).on( "click", function(){
-  $( frameRpt ).attr( "src", "'.Url::to(['nota-ingreso/ingreso-rpt', 'id' => $model->id_trans]).'");
+  $( frameRpt ).attr( "src", "'.Url::to(['nota-ingreso/notai-rpt', 'id' => $model->id_trans]).'");
   $( modalRpt ).modal({
     backdrop: "static",
     keyboard: false,
@@ -396,9 +427,3 @@ $( "body" ).on( "click", buttonCancel, function(){
 });
 ';
 $this->registerJs($js.$jsTrigger,View::POS_LOAD);
-
-$this->registerJsVar( "buttonPrint", "#imprimir" );
-$this->registerJsVar( "frameRpt", "#frame-rpt" );
-$this->registerJsVar( "buttonCancel", ".close-btn" );
-$this->registerJsVar( "modalRpt", "#modal-rpt" );
-echo   $this->render('//site/_modalRpt',[]);

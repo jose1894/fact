@@ -1,8 +1,11 @@
 <?php
 return [
+    'Exit note: {number}' => 'Nota de salida: {number}',
+    'Date' => 'Fecha',
+    'Comments' => 'Observaciones',
     'Name' => 'Nombre',
     'Status' => 'Estatus',
-    'Type' => 'Tipo',
+    'Type movement' => 'Tipo movimiento',
     'Document' => 'Documento',
     'Code' => 'Código',
     'Input a code' => 'Ingrese un código',
@@ -14,8 +17,8 @@ return [
     'Purchase order list' => 'Lista de ordenes de compra',
     'Create purchase order' => 'Crear orden de compra',
     'Purchase order: {number} / {name}' => 'Orden de compra: {number} / {name}',
-    'Create product' => 'Crear producto',
-    'Update purchase order: {number} / {name}' => 'Actualizar orden de compra: {number} / {name}',
+    'Create exit note' => 'Crear nota de salida',
+    'Update exit note: {number}' => 'Actualizar nota de salida: {number}',
     'IGV exemption' => 'Excento de IGV',
     'Product for purchase' => 'Producto para la compra',
     'Product for sale' => 'Producto para la venta',

@@ -3,18 +3,24 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\NotaSalida */
+/* @var $model app\models\NotaIngreso */
 
-$this->title = Yii::t('tipo_movimiento', 'Create Nota Salida');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('tipo_movimiento', 'Nota Salidas'), 'url' => ['index']];
+$this->title = Yii::t('salida', 'Create exit note');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('salida', 'Exit note'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="nota-salida-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
+<div class="nota-ingreso-create">
+  <div class="box box-success">
+    <div class="box-header with-border">
+      <h3 class="box-title">
+        <?= Html::encode($this->title) ?>
+      </h3>
+    </div>
+    <div class="box-body">
     <?= $this->render('_form', [
         'model' => $model,
+        'modelsDetalles' => $modelsDetalles,
     ]) ?>
-
+    </div>
+  </div>
 </div>

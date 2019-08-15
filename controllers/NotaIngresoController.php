@@ -6,6 +6,7 @@ use Yii;
 use app\models\Almacen;
 use app\models\NotaIngreso;
 use app\models\Producto;
+use app\models\User;
 use app\models\NotaIngresoDetalle;
 use app\models\NotaIngresoSearch;
 use yii\web\Controller;
@@ -44,6 +45,8 @@ class NotaIngresoController extends Controller
     public function actionIndex()
     {
         $searchModel = new NotaIngresoSearch();
+        $searchModel->status_trans = 0;
+        $searchModel->grupo_trans = 'E';
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -288,7 +291,7 @@ class NotaIngresoController extends Controller
         throw new NotFoundHttpException(Yii::t('tipo_movimiento', 'The requested page does not exist.'));
     }
 
-    public function actionAprobarNota( )
+    public function actionAprobarNota()
     {
       $return = [];
       $nota = Yii::$app->request->post( 'NotaIngreso' );
@@ -361,10 +364,74 @@ class NotaIngresoController extends Controller
               }
           }
       }
+    }
 
-      return $this->render('update', [
-          'model' => $model,
-          'modelsDetalles' => (empty($modelsDetalles)) ? [new NotaIngresoDetalle] : $modelsDetalles,
+    public function actionNotaiRpt( $id ) {
+      Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+      $modelNotaIngreso = NotaIngreso::findOne($id);
+      $this->layout = 'reports';
+
+      $content = $this->render('notaIngresoRpt', [
+          'nota' => $modelNotaIngreso,
       ]);
+
+
+      $pdf = Yii::$app->pdf; // or new Pdf();
+      //$pdf->cssFile = "@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css";
+      $pdf->marginTop = 60;
+      $mpdf = $pdf->api; // fetches mpdf api
+
+      $f = Yii::$app->formatter;
+      $date = $f->asDate($modelNotaIngreso->fecha_trans, 'php:j/m/Y');
+
+      $empresa = SiteController::getEmpresa();
+
+      $header = '
+      <table style="font-size:1rem">
+          <tr>
+              <td width="40%" class="center"><b>'.$empresa->nombre_empresa.'</b><br><b> RUC: '.$empresa->ruc_empresa.'</b></td>
+              <td width="30%" class="center"></td>
+              <td width="30%" style="font-size:0.75rem" class="right">
+                ' . Yii::t('app','Date') . ': {DATE j/m/Y}
+                <br>
+                ' . Yii::t('app','Hour') . ': {DATE H:i:s}
+                <br>
+                ' . Yii::t('app','Page') . ': {PAGENO}/{nbpg}
+                </td>
+          </tr>
+      </table>
+      <br>
+      <table >
+        <tr>
+          <td class="center bold" > ' . Yii::t('ingreso','Entry note') . ': ' . $modelNotaIngreso->codigo_trans . ' </td>
+        </tr>
+      </table>
+      <br>
+      <table class="datos-cliente" style="font-size:1rem">
+        <tr>
+          <td class="left celdas"><span class="bold">' . Yii::t( 'almacen', 'Warehouse') . ' :</span> ' . $modelNotaIngreso->almacenTrans->des_almacen . '</td>
+          <td class="center celdas"><span class="bold">' . Yii::t('app','Date') . ' :</span> ' . $date  . '</td>
+          <td class="right celdas"><span class="bold">' . Yii::t( 'ingreso', 'Movement type') . ' :</span> ' . $modelNotaIngreso->tipoTrans->des_tipom . '</td>
+        </tr>
+      </table>
+      ';
+
+
+      $footer = '
+      <hr>
+      ';
+
+      $sheet = file_get_contents( Yii::getAlias( '@rptcss' ).'/rptCss.css' );
+      $mpdf->WriteHTML( $sheet, 1 );
+
+      $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
+      $mpdf->WriteHtml( $content ); // call mpdf write html
+      $mpdf->SetHTMLFooter( $footer );
+
+  //    $tipo = ($modelPedido->tipo_pedido === 1) ? 'PEDIDO' : ($modelPedido->tipo_pedido === 2) ? 'PROFORMA' : 'COTIZACION';
+      $titulo = Yii::t('ingreso','Entry note').'-'.$modelNotaIngreso->codigo_trans.'.pdf';
+
+      $mpdf->SetTitle($titulo);
+      $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
     }
 }

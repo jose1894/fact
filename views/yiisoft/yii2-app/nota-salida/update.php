@@ -1,23 +1,61 @@
 <?php
 
 use yii\helpers\Html;
+use yii\web\View ;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\NotaSalida */
+/* @var $model app\models\Pedido */
 
-$this->title = Yii::t('tipo_movimiento', 'Update Nota Salida: {name}', [
-    'name' => $model->id_trans,
+$this->title = Yii::t('salida', 'Update exit note: {number}', [
+    'number' => $model->id_trans,
+    //'name' => $model->nombre_trans,
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('tipo_movimiento', 'Nota Salidas'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('salida', 'Exit note'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id_trans, 'url' => ['view', 'id' => $model->id_trans]];
-$this->params['breadcrumbs'][] = Yii::t('tipo_movimiento', 'Update');
+$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="nota-salida-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
+<div class="pedido-update">
+  <div class="box box-success">
+    <div class="box-header with-border">
+      <h3 class="box-title">
+        <?= Html::encode($this->title) ?>
+      </h3>
+      <span style="float:right">
+        <?php
+          $disabled = "disabled";
+          if ( $model->status_trans === $model::STATUS_UNAPPROVED ) {
+            $disabled = "";
+          }
+        ?>
+        <button id="aprobar-salida" class="btn btn-flat btn-warning" <?=$disabled?>><i class="fa fa-check"></i> <?= Yii::t('app','Approve') ?></button>
+        <button id="anular-salida" class="btn btn-flat btn-danger" <?=$disabled?>><i class="fa fa-ban"></i> <?= Yii::t('app','Cancel') ?></button>
+      </span>
+    </div>
+    <div class="box-body">
     <?= $this->render('_form', [
         'model' => $model,
+        'modelsDetalles' => $modelsDetalles,
     ]) ?>
-
+    </div>
+  </div>
 </div>
+<?php
+$js = "
+  $( '#aprobar-salida' ).on('click', function(){
+    form = $('.pedido-update form');
+
+    $.ajax({
+      'url': '".Url::to(['nota-salida/aprobar-nota'])."',
+      'method': $( form ).attr( 'method' ),
+      'data'   : $( form ).serialize(),
+      'async'  : false,
+      'success': function ( data ){
+        swal(data.title, data.message, data.type);
+        return;
+
+      }
+    });
+  });
+";
+$this->registerJs($js,View::POS_LOAD);

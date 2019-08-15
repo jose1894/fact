@@ -74,7 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
                    return $status[ $data->status_trans ];
               },
               //'filter'=>TipoMovimiento::getTipoMovList( 'E' ),
-              'filter'=> [ 0 => Yii::t('app','NOT APPROVED'), 1 => Yii::t('app','APPROVED'), 2 => Yii::t('app','CANCELED')],
+              'filter'=> [Yii::t('app','NOT APPROVED'),  Yii::t('app','APPROVED'), Yii::t('app','CANCELED')],
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,

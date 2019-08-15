@@ -22,8 +22,14 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
         <?= Html::encode($this->title) ?>
       </h3>
       <span style="float:right">
-        <a href="#" id="aprobar-ingreso" class="btn btn-flat btn-warning"><i class="fa fa-check"></i> <?= Yii::t('app','Approve') ?></a>
-        <a href="#" id="anular-ingreso" class="btn btn-flat btn-danger"><i class="fa fa-ban"></i> <?= Yii::t('app','Cancel') ?></a>
+        <?php
+          $disabled = "disabled";
+          if ( $model->status_trans === $model::STATUS_UNAPPROVED ) {
+            $disabled = "";
+          }
+        ?>
+        <button id="aprobar-ingreso" class="btn btn-flat btn-warning" <?=$disabled?>><i class="fa fa-check"></i> <?= Yii::t('app','Approve') ?></button>
+        <button id="anular-ingreso" class="btn btn-flat btn-danger" <?=$disabled?>><i class="fa fa-ban"></i> <?= Yii::t('app','Cancel') ?></button>
       </span>
     </div>
     <div class="box-body">
@@ -45,15 +51,8 @@ $js = "
       'data'   : $( form ).serialize(),
       'async'  : false,
       'success': function ( data ){
-
-        if ( data.success ) {
           swal(data.title, data.message, data.type);
           return;
-        } else {
-          swal(data.title, data.message, data.type);
-          return;          
-        }
-
       }
     });
   });
