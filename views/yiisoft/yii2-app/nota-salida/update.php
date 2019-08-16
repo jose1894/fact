@@ -8,14 +8,14 @@ use yii\helpers\Url;
 /* @var $model app\models\Pedido */
 
 $this->title = Yii::t('salida', 'Update exit note: {number}', [
-    'number' => $model->id_trans,
+    'number' => $model->codigo_trans,
     //'name' => $model->nombre_trans,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('salida', 'Exit note'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id_trans, 'url' => ['view', 'id' => $model->id_trans]];
+$this->params['breadcrumbs'][] = ['label' => $model->codigo_trans, 'url' => ['view', 'id' => $model->id_trans]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="pedido-update">
+<div class="nota-update">
   <div class="box box-success">
     <div class="box-header with-border">
       <h3 class="box-title">
@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 <?php
 $js = "
   $( '#aprobar-salida' ).on('click', function(){
-    form = $('.pedido-update form');
+    form = $('.nota-update form');
 
     $.ajax({
       'url': '".Url::to(['nota-salida/aprobar-nota'])."',
@@ -51,11 +51,41 @@ $js = "
       'data'   : $( form ).serialize(),
       'async'  : false,
       'success': function ( data ){
+        $('.nota-update input').attr('disabled',true);
+        $('.nota-update select').attr('disabled',true);
+        $('.nota-update textarea').attr('disabled',true);
+        $('.nota-update button').attr('disabled',true);
+        $('.nota-update #imprimir').attr('disabled',false);
         swal(data.title, data.message, data.type);
         return;
 
       }
     });
   });
+
+  $( '#anular-salida' ).on('click', function(){
+    form = $('.nota-update form');
+
+    $.ajax({
+      'url': '".Url::to(['nota-salida/anular-nota'])."',
+      'method': $( form ).attr( 'method' ),
+      'data'   : $( form ).serialize(),
+      'async'  : false,
+      'success': function ( data ){
+        $('.nota-update input').attr('disabled',true);
+        $('.nota-update select').attr('disabled',true);
+        $('.nota-update textarea').attr('disabled',true);
+        $('.nota-update button').attr('disabled',true);
+        $('.nota-update #imprimir').attr('disabled',false);
+        swal(data.title, data.message, data.type);
+
+
+
+        return;
+
+      }
+    });
+  });
+
 ";
 $this->registerJs($js,View::POS_LOAD);

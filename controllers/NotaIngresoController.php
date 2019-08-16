@@ -91,8 +91,8 @@ class NotaIngresoController extends Controller
           // validate all models
           $model->sucursal_trans = SiteController::getSucursal();
           $model->usuario_trans = Yii::$app->user->id;
-          $model->codigo_trans = AutoIncrement::getAutoIncrementPad( 'id_trans', 'transaccion', 'grupo_trans', 'E' );
-          $model->grupo_trans = 'E';
+          $model->codigo_trans = AutoIncrement::getAutoIncrementPad( 'codigo_trans', 'transaccion', 'grupo_trans', $model::GRUPO_TRANS );
+          $model->grupo_trans = $model::GRUPO_TRANS;
           $valid = $model->validate();
           $valid = Model::validateMultiple($modelsDetalles) && $valid;
 

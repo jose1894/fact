@@ -9,6 +9,7 @@ use yii\web\JqueryAsset;
 use app\models\Proveedor;
 use app\models\Vendedor;
 use app\models\TipoMovimiento;
+use app\models\NotaSalida;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 /* @var $this yii\web\View */
@@ -70,11 +71,11 @@ $this->params['breadcrumbs'][] = $this->title;
             [
               'attribute'=>'status_trans',
               'value' => function($data){
-                   $status =  [ 0 => Yii::t('app','NOT APPROVED'), 1 => Yii::t('app','APPROVED'), 2 => Yii::t('app','CANCELED')];
+                   $status =  NotaSalida::getStatuses();
                    return $status[ $data->status_trans ];
               },
               //'filter'=>TipoMovimiento::getTipoMovList( 'E' ),
-              'filter'=> [Yii::t('app','NOT APPROVED'),  Yii::t('app','APPROVED'), Yii::t('app','CANCELED')],
+              'filter'=> NotaSalida::getStatuses(),
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,

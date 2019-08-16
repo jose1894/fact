@@ -20,7 +20,7 @@ if ( $model->isNewRecord ) {
 }
 
 $disabled = true;
-// var_dump($model->status_trans);exit;
+
 if ( !$model->status_trans ) {
   $disabled = false;
 }
@@ -64,7 +64,7 @@ if ( !$model->status_trans ) {
         <div class="row">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <?php
-              $mov = TipoMovimiento::getTipoMovList( 'S' );
+              $mov = TipoMovimiento::getTipoMovList( $model::GRUPO_TRANS );
             ?>
             <?= $form->field($model, 'tipo_trans',[
                 'addClass' => 'form-control'
@@ -127,7 +127,7 @@ if ( !$model->status_trans ) {
                   <div class="col-sm-1 col-xs-12">
                     <button type="button" class="add-item btn btn-success btn-flat btn-md"
                     style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"
-                    disabled = "<?=$disabled?>">
+                    <?=$disabled ? 'disabled':''?>>
                       <i class="fa fa-plus"></i>
                     </button>
                   </div>
@@ -229,7 +229,7 @@ if ( !$model->status_trans ) {
                         </div>
                         <div class="col-sm-1 col-xs-12">
                           <button type="button" class="remove-item btn btn-danger btn-flat btn-sm" style="width:100%"
-                          data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Delete item')?>" disabled = "<?=$disabled?>">
+                          data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Delete item')?>" <?=$disabled ? 'disabled':''?>>
                             <i class="fa fa-trash"></i>
                           </button>
                       </div>
@@ -253,7 +253,7 @@ if ( !$model->status_trans ) {
              <?php } ?>
 
 
-                <button id="submit" type="button" class="btn btn-flat btn-success" disabled = "<?=$disabled?>"><span class="fa fa-save"></span> <?= Yii::t('app','Save') ?></button>
+                <button id="submit" type="button" class="btn btn-flat btn-success" <?=$disabled ? 'disabled':''?>><span class="fa fa-save"></span> <?= Yii::t('app','Save') ?></button>
             </div>
           </div>
 

@@ -8,7 +8,7 @@ use yii\helpers\Url;
 /* @var $model app\models\Pedido */
 
 $this->title = Yii::t('ingreso', 'Update entry note: {number}', [
-    'number' => $model->id_trans,
+    'number' => $model->codigo_trans,
     //'name' => $model->nombre_trans,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('ingreso', 'Entry note'), 'url' => ['index']];

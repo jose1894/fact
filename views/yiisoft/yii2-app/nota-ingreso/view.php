@@ -8,7 +8,7 @@ use app\models\NotaIngresoDetalleSearch;
 /* @var $model app\models\NotaIngreso */
 
 $this->title = Yii::t('ingreso', 'Entry note: {number}', [
-    'number' => $model->id_trans,
+    'number' => $model->codigo_trans,
     //'name' => $model->nombre_trans,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('ingreso', 'Entry note'), 'url' => ['index']];
@@ -53,13 +53,15 @@ $this->params['breadcrumbs'][] = $this->title;
               'attribute' => 'obsv_trans',
               'obsv_trans:ntext',
             ],
+
         ],
     ]) ?>
     <h3><?= Yii::t('producto', 'Products')?> </h3>
     <hr>
     <?php
-    $sucursales = new NotaIngresoDetalleSearch;
-    $dataProvider = $sucursales->search([ "trans_detalle" => $model->id_trans ]);
+    $detalles = new NotaIngresoDetalleSearch;
+    $detalles->trans_detalle = $model->id_trans;
+    $dataProvider = $detalles->search([  ]);
 
     echo  GridView::widget([
         'dataProvider' => $dataProvider,

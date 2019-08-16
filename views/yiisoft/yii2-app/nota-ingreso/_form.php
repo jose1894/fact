@@ -20,7 +20,8 @@ if ( $model->isNewRecord ) {
 }
 
 $disabled = true;
-if ( $model->status_trans === $model::STATUS_UNAPPROVED ) {
+
+if ( !$model->status_trans ) {
   $disabled = false;
 }
 ?>
@@ -126,7 +127,7 @@ if ( $model->status_trans === $model::STATUS_UNAPPROVED ) {
                   <div class="col-sm-1 col-xs-12">
                     <button type="button" class="add-item btn btn-success btn-flat btn-md"
                     style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"
-                    disabled = "<?=$disabled?>">
+                    <?=$disabled ? 'disabled':''?>>
                       <i class="fa fa-plus"></i>
                     </button>
                   </div>
@@ -228,7 +229,7 @@ if ( $model->status_trans === $model::STATUS_UNAPPROVED ) {
                         </div>
                         <div class="col-sm-1 col-xs-12">
                           <button type="button" class="remove-item btn btn-danger btn-flat btn-sm" style="width:100%"
-                          data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Delete item')?>" disabled = "<?=$disabled?>">
+                          data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Delete item')?>" <?=$disabled ? 'disabled':''?>>
                             <i class="fa fa-trash"></i>
                           </button>
                       </div>
@@ -252,7 +253,7 @@ if ( $model->status_trans === $model::STATUS_UNAPPROVED ) {
              <?php } ?>
 
 
-                <button id="submit" type="button" class="btn btn-flat btn-success" disabled = "<?=$disabled?>"><span class="fa fa-save"></span> <?= Yii::t('app','Save') ?></button>
+                <button id="submit" type="button" class="btn btn-flat btn-success" <?=$disabled ? 'disabled':''?>><span class="fa fa-save"></span> <?= Yii::t('app','Save') ?></button>
             </div>
           </div>
 

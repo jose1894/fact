@@ -46,7 +46,7 @@ class NotaSalidaController extends Controller
     {
         $searchModel = new NotaSalidaSearch();
         $searchModel->status_trans = 0;
-        $searchModel->grupo_trans = 'S';
+        $searchModel->grupo_trans = NotaSalida::GRUPO_TRANS;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -91,8 +91,8 @@ class NotaSalidaController extends Controller
           // validate all models
           $model->sucursal_trans = SiteController::getSucursal();
           $model->usuario_trans = Yii::$app->user->id;
-          $model->codigo_trans = AutoIncrement::getAutoIncrementPad( 'id_trans', 'transaccion', 'grupo_trans', 'S' );
-          $model->grupo_trans = 'S';
+          $model->codigo_trans = AutoIncrement::getAutoIncrementPad( 'codigo_trans', 'transaccion', 'grupo_trans', $model::GRUPO_TRANS );
+          $model->grupo_trans = $model::GRUPO_TRANS;
           $valid = $model->validate();
           $valid = Model::validateMultiple($modelsDetalles) && $valid;
 
@@ -298,9 +298,12 @@ class NotaSalidaController extends Controller
 
 
       if ( $nota['codigo_trans'] ){
-        $model = NotaSalida::findOne(['codigo_trans' => $nota['codigo_trans']]);
+        $model = NotaSalida::findOne([
+          'codigo_trans' => $nota['codigo_trans'],
+          'grupo_trans' => NotaSalida::GRUPO_TRANS
+        ]);
 
-        if ( $model->status_trans == 1 )
+        if ( $model->status_trans == $model::STATUS_APPROVED )
         {
           Yii::$app->response->format = Response::FORMAT_JSON;
           $return = [
@@ -321,14 +324,14 @@ class NotaSalidaController extends Controller
           if ( !empty($model) ) {
 
               $transaction = \Yii::$app->db->beginTransaction();
-              $model->status_trans = NotaSalida::STATUS_APPROVED;
+              $model->status_trans = $model::STATUS_APPROVED;
               try {
                   if ($flag = $model->save(false)) {
 
                       foreach ($modelsDetalles as $modelDetalle) {
                           $modelDetalle->trans_detalle = $model->id_trans;
                           $producto = Producto::findOne(['id_prod' => $modelDetalle->prod_detalle]);
-                          $producto->stock_prod += $modelDetalle->cant_detalle;
+                          $producto->stock_prod -= $modelDetalle->cant_detalle;
 
                           if (! ($flag = $producto->save(false))) {
                               $transaction->rollBack();
@@ -337,7 +340,6 @@ class NotaSalidaController extends Controller
                       }
                   }
                   if ($flag) {
-                      $model->status_trans = NotaSalida::STATUS_APPROVED;
                       $model->save();
                       $transaction->commit();
                       //return $this->redirect(['view', 'id' => $model->id_empresa]);
@@ -363,7 +365,71 @@ class NotaSalidaController extends Controller
                   return $return;
               }
           }
+        }
+    }
+
+
+    public function actionAnularNota()
+    {
+      $return = [];
+      $nota = Yii::$app->request->post( 'NotaSalida' );
+
+
+      if ( $nota['codigo_trans'] ){
+        $model = NotaSalida::findOne([
+          'codigo_trans' => $nota['codigo_trans'],
+          'grupo_trans' => NotaSalida::GRUPO_TRANS
+        ]);
+
+        if ( $model->status_trans != $model::STATUS_UNAPPROVED )
+        {
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          $return = [
+            'success' => false,
+            'title' => Yii::t('salida', 'Exit note'),
+            'message' => Yii::t('salida','Exit note could not be canceled!'),
+            'type' => 'error'
+          ];
+          return $return;
+        }
+
+        $modelsDetalles = $model->detalles;
       }
+
+
+
+      if (Yii::$app->request->post()) {
+          if ( !empty($model) ) {
+
+              $transaction = \Yii::$app->db->beginTransaction();
+              $model->status_trans = $model::STATUS_CANCELED;
+              try {
+                    $model->save();
+                    $transaction->commit();
+                    //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    $return = [
+                      'success' => true,
+                      'title' => Yii::t('salida', 'Exit note'),
+                      'message' => Yii::t('salida','Exit note has been canceled successfully!'),
+                      'type' => 'success'
+                    ];
+                    return $return;
+
+              } catch (Exception $e) {
+                  $transaction->rollBack();
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  $return = [
+                    'success' => false,
+                    'title' => Yii::t('salida', 'Exit note'),
+                    'message' => Yii::t('salida','Exit note couldn´t be canceled!') . " \nError: ". $e->errorMessage(),
+                    'type' => 'error'
+
+                  ];
+                  return $return;
+              }
+          }
+        }
     }
 
     public function actionNotaiRpt( $id ) {
