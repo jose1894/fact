@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 15-08-2019 a las 23:17:07
+-- Tiempo de generación: 16-08-2019 a las 23:03:24
 -- Versión del servidor: 5.7.27-0ubuntu0.18.04.1
 -- Versión de PHP: 7.2.19-0ubuntu0.18.04.1
 
@@ -2642,6 +2642,18 @@ CREATE TABLE `pedido` (
   `nrodoc_pedido` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO PEDIDO'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA PEDIDOS';
 
+--
+-- Volcado de datos para la tabla `pedido`
+--
+
+INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, `vend_pedido`, `moneda_pedido`, `almacen_pedido`, `usuario_pedido`, `estatus_pedido`, `sucursal_pedido`, `condp_pedido`, `tipo_pedido`, `edicion_pedido`, `nrodoc_pedido`) VALUES
+(1, '0000000001', '2019-08-16', 420, 4, 1, 1, 2, 0, 1, 3, 1, 'N', ''),
+(2, '0000000001', '2019-08-16', 330, 2, 1, 1, 2, 0, 1, 1, 0, 'N', ''),
+(3, '0000000002', '2019-08-16', 130, 4, 1, 1, 2, 0, 1, 1, 1, 'N', ''),
+(4, '0000000004', '2019-08-16', 59, 2, 1, 1, 2, 0, 1, 1, 0, 'N', ''),
+(5, '0000000003', '2019-08-16', 419, 4, 1, 1, 2, 0, 1, 3, 0, 'N', ''),
+(6, '0000000003', '2019-08-16', 410, 4, 1, 1, 2, 0, 1, 1, 1, 'N', '');
+
 -- --------------------------------------------------------
 
 --
@@ -2660,6 +2672,19 @@ CREATE TABLE `pedido_detalle` (
   `plista_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA PEDIDO DETALLE',
   `total_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL PEDIDO DETALLE'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE PEDIDOS';
+
+--
+-- Volcado de datos para la tabla `pedido_detalle`
+--
+
+INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `precio_pdetalle`, `descu_pdetalle`, `impuesto_pdetalle`, `status_pdetalle`, `pedido_pdetalle`, `plista_pdetalle`, `total_pdetalle`) VALUES
+(5, 7, '2.00', '58.00', '0.00', '18', 1, 1, '58.00', '116.00'),
+(6, 42, '2.00', '29.00', '0.00', '18', 1, 1, '29.00', '58.00'),
+(7, 1, '3.00', '70.00', '0.00', '18', 1, 2, '70.00', '210.00'),
+(8, 1, '2.00', '70.00', '0.00', '18', 1, 3, '70.00', '140.00'),
+(9, 126, '2.00', '75.00', '0.00', '18', 1, 4, '75.00', '150.00'),
+(10, 124, '2.00', '18.00', '0.00', '18', 1, 5, '18.00', '36.00'),
+(11, 43, '5.00', '29.00', '0.00', '18', 1, 6, '29.00', '145.00');
 
 -- --------------------------------------------------------
 
@@ -3187,13 +3212,14 @@ CREATE TABLE `v_productos` (
 ,`status_prod` int(11)
 ,`precio_lista` decimal(18,2)
 ,`tipo_lista` int(11)
-,`stock_prod` int(11)
 ,`id_suc` int(11)
 ,`impuesto_suc` decimal(7,2)
 ,`id_und` int(11)
 ,`des_und` varchar(50)
 ,`compra_prod` int(11)
 ,`venta_prod` int(11)
+,`stock_prod` decimal(41,2)
+,`estatus_pedido` bigint(11)
 );
 
 -- --------------------------------------------------------
@@ -3254,7 +3280,7 @@ INSERT INTO `zona` (`id_zona`, `nombre_zona`, `desc_zona`, `estatus_zona`, `sucu
 --
 DROP TABLE IF EXISTS `v_productos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,concat(`producto`.`cod_prod`,' ',`producto`.`des_prod`,' - ',`unidad_medida`.`des_und`) AS `texto`,`producto`.`sucursal_prod` AS `sucursal_prod`,`producto`.`status_prod` AS `status_prod`,`lista_precios`.`precio_lista` AS `precio_lista`,`lista_precios`.`tipo_lista` AS `tipo_lista`,`producto`.`stock_prod` AS `stock_prod`,`sucursal`.`id_suc` AS `id_suc`,`sucursal`.`impuesto_suc` AS `impuesto_suc`,`unidad_medida`.`id_und` AS `id_und`,`unidad_medida`.`des_und` AS `des_und`,`producto`.`compra_prod` AS `compra_prod`,`producto`.`venta_prod` AS `venta_prod` from (((`producto` join `lista_precios` on((`producto`.`id_prod` = `lista_precios`.`prod_lista`))) join `sucursal` on((`producto`.`sucursal_prod` = `sucursal`.`id_suc`))) join `unidad_medida` on((`producto`.`umed_prod` = `unidad_medida`.`id_und`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,concat(`producto`.`cod_prod`,' ',`producto`.`des_prod`,' - ',`unidad_medida`.`des_und`) AS `texto`,`producto`.`sucursal_prod` AS `sucursal_prod`,`producto`.`status_prod` AS `status_prod`,`lista_precios`.`precio_lista` AS `precio_lista`,`lista_precios`.`tipo_lista` AS `tipo_lista`,`sucursal`.`id_suc` AS `id_suc`,`sucursal`.`impuesto_suc` AS `impuesto_suc`,`unidad_medida`.`id_und` AS `id_und`,`unidad_medida`.`des_und` AS `des_und`,`producto`.`compra_prod` AS `compra_prod`,`producto`.`venta_prod` AS `venta_prod`,(`producto`.`stock_prod` - sum(coalesce(`pedido_detalle`.`cant_pdetalle`,0))) AS `stock_prod`,coalesce(`pedido`.`estatus_pedido`,0) AS `estatus_pedido` from (((((`producto` join `lista_precios` on((`producto`.`id_prod` = `lista_precios`.`prod_lista`))) join `sucursal` on((`producto`.`sucursal_prod` = `sucursal`.`id_suc`))) join `unidad_medida` on((`producto`.`umed_prod` = `unidad_medida`.`id_und`))) left join `pedido_detalle` on((`pedido_detalle`.`prod_pdetalle` = `producto`.`id_prod`))) left join `pedido` on(((`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`) and (coalesce(`pedido`.`estatus_pedido`,0) in (0,1))))) group by `producto`.`id_prod`,`producto`.`cod_prod`,`producto`.`des_prod`,`producto`.`sucursal_prod`,`producto`.`status_prod`,`lista_precios`.`precio_lista`,`lista_precios`.`tipo_lista`,`producto`.`stock_prod`,`sucursal`.`id_suc`,`sucursal`.`impuesto_suc`,`unidad_medida`.`id_und`,`unidad_medida`.`des_und`,`producto`.`compra_prod`,`producto`.`venta_prod`,`pedido`.`estatus_pedido` ;
 
 --
 -- Índices para tablas volcadas
@@ -3414,7 +3440,7 @@ ALTER TABLE `pais`
 -- Indices de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  ADD PRIMARY KEY (`id_pedido`),
+  ADD PRIMARY KEY (`id_pedido`,`cod_pedido`,`tipo_pedido`),
   ADD UNIQUE KEY `cod_pedido` (`cod_pedido`,`tipo_pedido`),
   ADD KEY `fecha_pedido` (`fecha_pedido`),
   ADD KEY `clte_pedido` (`clte_pedido`),
@@ -3632,12 +3658,12 @@ ALTER TABLE `pais`
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `pedido_detalle`
 --
 ALTER TABLE `pedido_detalle`
-  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
@@ -3791,15 +3817,16 @@ ALTER TABLE `menu`
 -- Filtros para la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  ADD CONSTRAINT `pedido_ibfk_1` FOREIGN KEY (`clte_pedido`) REFERENCES `cliente` (`id_clte`),
-  ADD CONSTRAINT `pedido_ibfk_2` FOREIGN KEY (`vend_pedido`) REFERENCES `vendedor` (`id_vendedor`),
-  ADD CONSTRAINT `pedido_ibfk_3` FOREIGN KEY (`moneda_pedido`) REFERENCES `moneda` (`id_moneda`),
+  ADD CONSTRAINT `pedido_ibfk_1` FOREIGN KEY (`clte_pedido`) REFERENCES `cliente` (`id_clte`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `pedido_ibfk_2` FOREIGN KEY (`vend_pedido`) REFERENCES `vendedor` (`id_vendedor`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `pedido_ibfk_3` FOREIGN KEY (`moneda_pedido`) REFERENCES `moneda` (`id_moneda`) ON UPDATE CASCADE,
   ADD CONSTRAINT `pedido_ibfk_4` FOREIGN KEY (`condp_pedido`) REFERENCES `cond_pago` (`id_condp`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `pedido_detalle`
 --
 ALTER TABLE `pedido_detalle`
+  ADD CONSTRAINT `fk_pedido_detalle_1` FOREIGN KEY (`prod_pdetalle`) REFERENCES `producto` (`id_prod`) ON UPDATE CASCADE,
   ADD CONSTRAINT `pedido_detalle_ibfk_1` FOREIGN KEY (`pedido_pdetalle`) REFERENCES `pedido` (`id_pedido`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --

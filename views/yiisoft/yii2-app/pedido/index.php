@@ -122,7 +122,7 @@ $this->params['breadcrumbs'][] = $this->title;
                       ]);
                   },
                   'delete' => function ($url, $model) {
-                      return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+                      return !$model->estatus_pedido ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
                                   'title' => Yii::t('app', 'Delete'),
                                   'class' => 'pjax-delete',
                                   'data' => [
@@ -136,7 +136,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                       'cancel' => Yii::t('app', 'Cancel'),
                                       'id' => $model->id_pedido
                                   ],
-                      ]);
+                      ]) : '';
                   }
 
                 ],
@@ -174,7 +174,4 @@ $this->registerJsVar( "buttonCancel", ".close-btn" );
 $this->registerJsVar( "frame", "#framePedido" );
 $this->registerJsVar( "modal", "#modal" );
 //Detalles
-echo   $this->render('//site/_modalPedido',[]);
-$this->registerJsFile(
-    '@web/js/app-detail.js',
-    ['depends' => [\yii\web\JqueryAsset::className()]]);
+echo   $this->render('//site/_modalForm',[]);

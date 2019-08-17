@@ -13,7 +13,7 @@ use yii\helpers\Url;
 use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\NotaIngreso */
+/* @var $model app\models\notasalida */
 /* @var $form yii\widgets\ActiveForm */
 if ( $model->isNewRecord ) {
   $model->codigo_trans = "0000000000";
@@ -323,7 +323,7 @@ $( ".table-body" ).on("select2:select","select[id$=\'prod_detalle\']",function()
     _currSelect.focus();
   }
 
-  $( "#notaingresodetalle-" + row + "-cant_detalle" ).focus();
+  $( "#notasalidadetalle-" + row + "-cant_detalle" ).focus();
 
 });
 
@@ -341,8 +341,8 @@ $( ".table-body" ).on( "keyup","input[id$=\'cant_detalle\']",function( e ) {
         let row = $( ".detalle-item" ).length;
 
         $( ".add-item" ).trigger( "click" );
-        $( "#notaingresodetalle-" + row + "-prod_detalle").focus();
-        $( "#notaingresodetalle-" + row + "-prod_detalle").select2("open");
+        $( "#notasalidadetalle-" + row + "-prod_detalle").focus();
+        $( "#notasalidadetalle-" + row + "-prod_detalle").select2("open");
       }
     });
   }

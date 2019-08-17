@@ -104,16 +104,16 @@ $this->params['breadcrumbs'][] = $this->title;
                   },
 
                   'update' => function ($url, $model) {
-                      return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+                      return !$model->status_trans ? Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
                                   'title' => Yii::t('app', 'Update'),
                                   // 'class' => 'pjax-update',
                                   'data' => [
                                     'id' => $model->id_trans,
                                   ]
-                      ]);
+                      ]) : '';
                   },
                   'delete' => function ($url, $model) {
-                      return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+                      return !$model->status_trans ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
                                   'title' => Yii::t('app', 'Delete'),
                                   'class' => 'pjax-delete',
                                   'data' => [
@@ -127,7 +127,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                       'cancel' => Yii::t('app', 'Cancel'),
                                       'id' => $model->id_trans
                                   ],
-                      ]);
+                      ]) : '';
                   }
 
                 ],

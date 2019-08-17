@@ -310,7 +310,7 @@ class ProductoController extends Controller
                 ->andWhere(['=', 'p.compra_prod', 1])
                 ->andWhere(['=', 'p.status_prod', 1])
                 ->andWhere('p.sucursal_prod = :sucursal',[':sucursal' => $sucursal])
-                ->groupBy(['p.id_prod','p.cod_prod','p.des_prod', 'p.texto'])
+                ->groupBy(['p.id_prod','p.cod_prod','p.des_prod', 'p.texto', 'des_und','stock_prod'])
                 ->orderBy('p.cod_prod ASC');
                 //->limit(20);
 

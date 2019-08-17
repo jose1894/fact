@@ -90,7 +90,7 @@ class PedidoController extends Controller
             Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
 
             // validate all models
-            $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'id_pedido', 'pedido', 'tipo_pedido', $model->tipo_pedido );
+            $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'cod_pedido', 'pedido', 'tipo_pedido', $model->tipo_pedido );
             $valid = $model->validate();
             $valid = Model::validateMultiple($modelsDetalles) && $valid;
             // ajax validation
@@ -191,12 +191,23 @@ class PedidoController extends Controller
         $model = $this->findModel($id);
         $modelsDetalles = $model->detalles;
 
+        $tipoPedido = $model->tipo_pedido;
+
         if ($model->load(Yii::$app->request->post())) {
 
             $oldIDs = ArrayHelper::map($modelsDetalles, 'id_pdetalle', 'id_pdetalle');
             $modelsDetalles = Model::createMultiple(PedidoDetalle::classname(), $modelsDetalles, 'id_pdetalle');
             Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
             $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsDetalles, 'id_pdetalle', 'id_pdetalle')));
+
+            //echo '$tipoPedido: '.$tipoPedido;
+            //echo '$model->tipo_pedido '.$model->tipo_pedido;
+
+          //  exit;
+            if ( $tipoPedido !== $model->tipo_pedido){
+              $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'cod_pedido', 'pedido', 'tipo_pedido', $model->tipo_pedido );
+              $codigo = $model->cod_pedido;
+            }
 
             // validate all models
             $valid = $model->validate();
@@ -233,7 +244,8 @@ class PedidoController extends Controller
                           'success' => true,
                           'title' => Yii::t('pedido', 'Order'),
                           'message' => Yii::t('app','Record saved successfully!'),
-                          'type' => 'success'
+                          'type' => 'success',
+                          'codigo' => $codigo,
                         ];
                         return $return;
                     }

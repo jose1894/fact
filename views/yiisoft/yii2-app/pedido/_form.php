@@ -794,6 +794,10 @@ JS
             $( '.table-body' ).empty();
           }
 
+          if ( data.codigo ) {
+            $( '#pedido-cod_pedido' ).val( data.codigo );
+          }
+
           swal(data.title, data.message, data.type);
 
           return;
