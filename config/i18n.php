@@ -82,6 +82,14 @@ return [
                 'inventario' => 'inventario.php',
             ],
         ],
+        'numeracion' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+                'numeracion' => 'numeracion.php',
+            ],
+        ],
         'moneda' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',
@@ -160,6 +168,14 @@ return [
             'sourceLanguage' => 'en-US',
             'fileMap' => [
               'tipo_movimiento' => 'tipoMovimiento.php',
+            ],
+        ],
+        'tipo_documento' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'tipo_documento' => 'tipoDocumento.php',
             ],
         ],
         'tipo_producto' => [
