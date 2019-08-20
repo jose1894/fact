@@ -32,6 +32,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
         return [
             [['sucursal_tipod', 'status_tipod'], 'integer'],
             [['des_tipod'], 'string', 'max' => 100],
+            [['abrv_tipod'], 'string', 'max' => 3],
         ];
     }
 
@@ -41,10 +42,11 @@ class TipoDocumento extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_tipod' => Yii::t('tipo_documento', 'Id Tipod'),
-            'des_tipod' => Yii::t('tipo_documento', 'Des Tipod'),
-            'sucursal_tipod' => Yii::t('tipo_documento', 'Sucursal Tipod'),
-            'status_tipod' => Yii::t('tipo_documento', 'Status Tipod'),
+            'id_tipod' => Yii::t('tipo_documento', 'Id'),
+            'des_tipod' => Yii::t('tipo_documento', 'Description'),
+            'sucursal_tipod' => Yii::t('tipo_documento', 'Sucursal'),
+            'status_tipod' => Yii::t('tipo_documento', 'Status'),
+            'abrv_tipod' => Yii::t('tipo_documento', 'Abbreviation'),
         ];
     }
 
