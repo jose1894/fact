@@ -63,6 +63,7 @@
                         ['label' => Yii::t('cliente','Customer'), 'url' => ['/cliente'], 'icon' => 'users'],
                         ['label' => Yii::t('proveedor','Supplier'), 'url' => ['/proveedor'], 'icon' => 'suitcase'],
                         ['label' => Yii::t('producto','Product'), 'url' => ['/producto'], 'icon' => 'tags'],
+                        ['label' => Yii::t('serie','Numeration'), 'url' => ['/numeracion'], 'icon' => 'tachometer'],
                       ]
                     ],
                     ['label' => Yii::t('pedido','Order').'s', 'url' => ['/pedido'], 'icon' => 'inbox'],

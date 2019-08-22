@@ -64,7 +64,7 @@ if ( !$model->status_trans ) {
         <div class="row">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <?php
-              $mov = TipoMovimiento::getTipoMovList( $model::GRUPO_TRANS );
+                $mov = TipoMovimiento::getTipoMovList( $model::OPE_TRANS );
             ?>
             <?= $form->field($model, 'tipo_trans',[
                 'addClass' => 'form-control'

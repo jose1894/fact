@@ -19,7 +19,7 @@ class TipoDocumentoSearch extends TipoDocumento
     {
         return [
             [['id_tipod', 'sucursal_tipod', 'status_tipod'], 'integer'],
-            [['des_tipod','abrv_tipod'], 'safe'],
+            [['des_tipod','abrv_tipod','ope_tipod'], 'safe'],
         ];
     }
 
@@ -67,6 +67,7 @@ class TipoDocumentoSearch extends TipoDocumento
             'sucursal_tipod' => $this->sucursal_tipod,
             'status_tipod' => $this->status_tipod,
             'abrv_tipod' => $this->abrv_tipod,
+            'ope_tipod' => $this->ope_tipod,
         ]);
 
         $query->andFilterWhere(['like', 'des_tipod', $this->des_tipod]);

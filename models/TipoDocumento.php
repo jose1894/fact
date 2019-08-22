@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "tipo_documento".
@@ -32,7 +33,8 @@ class TipoDocumento extends \yii\db\ActiveRecord
         return [
             [['sucursal_tipod', 'status_tipod'], 'integer'],
             [['des_tipod'], 'string', 'max' => 100],
-            [['abrv_tipod'], 'string', 'max' => 3],
+            [['abrv_tipod','ope_tipod'], 'string', 'max' => 3],
+            [['ope_tipod'], 'string', 'max' => 1],
         ];
     }
 
@@ -47,7 +49,26 @@ class TipoDocumento extends \yii\db\ActiveRecord
             'sucursal_tipod' => Yii::t('tipo_documento', 'Sucursal'),
             'status_tipod' => Yii::t('tipo_documento', 'Status'),
             'abrv_tipod' => Yii::t('tipo_documento', 'Abbreviation'),
+            'ope_tipod' => Yii::t('tipo_documento', 'Operation'),
         ];
+    }
+
+    public static function getTipoDocumento( $tipo = null )
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      if ( is_null($tipo) ){
+        $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal',[':status' => 1, ':sucursal' => $sucursal]];                        
+      } else {
+        $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal and ope_tipod like :tipo ',[':status' => 1, ':sucursal' => $sucursal, ':tipo' => $tipo]];
+      }
+
+      $tipom = TipoDocumento::find()
+                 ->where($condicion[0], $condicion[1])
+                ->orderBy('des_tipod')
+                ->all();
+      return  ArrayHelper::map( $tipom, 'id_tipod', 'des_tipod');
     }
 
     /**
@@ -57,4 +78,6 @@ class TipoDocumento extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Numeracion::className(), ['tipo_num' => 'id_tipod']);
     }
+
+
 }

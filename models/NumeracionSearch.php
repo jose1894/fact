@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Numeracion;
@@ -40,8 +41,11 @@ class NumeracionSearch extends Numeracion
      */
     public function search($params)
     {
-        $query = Numeracion::find();
-
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+        $query = Numeracion::find()
+                 ->where('sucursal_num = :sucursal')
+                 ->addParams([':sucursal' => $sucursal]);
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

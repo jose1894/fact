@@ -3,18 +3,25 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Numeracion */
+/* @var $model app\models\numeracion */
 
-$this->title = Yii::t('numeracion', 'Create Numeracion');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('numeracion', 'Numeracions'), 'url' => ['index']];
+$this->title = Yii::t('numeracion', 'Create numeration');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('numeracion', 'Numeration'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="numeracion-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+	<div class="box box-success">
+      <div class="box-header with-border">
+        <h3 class="box-title"><?= Html::encode($this->title) ?></h3>
+      </div>
+      <div class="box-body">
+          <div class="container-fluid">
+            <?= $this->render('_form', [
+                'model' => $model,
+            ]) ?>
+          </div>
+        </div>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
+	</div>
 </div>

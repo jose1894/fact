@@ -46,11 +46,11 @@ class Numeracion extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_num' => Yii::t('numeracion', 'Id Num'),
-            'tipo_num' => Yii::t('numeracion', 'Tipo Num'),
-            'numero_num' => Yii::t('numeracion', 'Numero Num'),
+            'id_num' => Yii::t('numeracion', 'Id'),
+            'tipo_num' => Yii::t('tipo_documento', 'Document type'),
+            'numero_num' => Yii::t('numeracion', 'Number'),
             'sucursal_num' => Yii::t('numeracion', 'Sucursal Num'),
-            'serie_num' => Yii::t('numeracion', 'Serie Num'),
+            'serie_num' => Yii::t('serie', 'Serie'),
             'status_num' => Yii::t('numeracion', 'Status Num'),
         ];
     }

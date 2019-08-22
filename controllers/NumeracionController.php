@@ -52,6 +52,7 @@ class NumeracionController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'justStuff';
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -66,8 +67,54 @@ class NumeracionController extends Controller
     {
         $model = new Numeracion();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_num]);
+        $this->layout = 'justStuff';
+
+
+
+        if ($model->load(Yii::$app->request->post())) {
+
+          $valid = $model->validate();
+
+          // ajax validation
+          if (!$valid)
+          {
+              if (Yii::$app->request->isAjax) {
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  return ActiveForm::validate($model);
+
+              }
+          }
+          else
+          {
+              $model->sucursal_clte = SiteController::getSucursal();
+              $transaction = \Yii::$app->db->beginTransaction();
+
+              try {
+                      $model->save();
+                      $transaction->commit();
+                      //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      $return = [
+                        'success' => true,
+                        'title' => Yii::t('cliente', 'Customer'),
+                        'message' => Yii::t('app','Record has been saved successfully!'),
+                        'type' => 'success'
+                      ];
+                      return $return;
+
+              } catch (Exception $e) {
+                  $transaction->rollBack();
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  $return = [
+                    'success' => false,
+                    'title' => Yii::t('cliente', 'Customer'),
+                    'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                    'type' => 'error'
+
+                  ];
+                  return $return;
+              }
+          }
         }
 
         return $this->render('create', [
@@ -85,9 +132,49 @@ class NumeracionController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $this->layout = "justStuff";
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_num]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            $valid = $model->validate();
+
+            // ajax validation
+            if (!$valid)
+            {
+                if (Yii::$app->request->isAjax) {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ActiveForm::validate($model);
+                }
+            }
+            else
+            {
+                $model->sucursal_clte = SiteController::getSucursal();
+                $transaction = \Yii::$app->db->beginTransaction();
+
+                try {
+                        $model->save();
+                        $transaction->commit();
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        $return = [
+                          'success' => true,
+                          'title' => Yii::t('cliente', 'Customer'),
+                          'message' => Yii::t('app','Record has been saved successfully!'),
+                          'type' => 'success'
+                        ];
+                        return $return;
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    $return = [
+                      'success' => false,
+                      'title' => Yii::t('cliente', 'Customer'),
+                      'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                      'type' => 'error'
+
+                    ];
+                    return $return;
+                }
+            }
         }
 
         return $this->render('update', [
@@ -105,7 +192,10 @@ class NumeracionController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        if (Yii::$app->request->isAjax) {
+             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+             return true;
+         }
         return $this->redirect(['index']);
     }
 
