@@ -46,7 +46,7 @@ class NotaIngresoController extends Controller
     {
         $searchModel = new NotaIngresoSearch();
         $searchModel->status_trans = 0;
-        $searchModel->grupo_trans = 'E';
+        $searchModel->ope_trans = 'E';
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -91,8 +91,8 @@ class NotaIngresoController extends Controller
           // validate all models
           $model->sucursal_trans = SiteController::getSucursal();
           $model->usuario_trans = Yii::$app->user->id;
-          $model->codigo_trans = AutoIncrement::getAutoIncrementPad( 'codigo_trans', 'transaccion', 'grupo_trans', $model::GRUPO_TRANS );
-          $model->grupo_trans = $model::GRUPO_TRANS;
+          $model->codigo_trans = AutoIncrement::getAutoIncrementPad( 'codigo_trans', 'transaccion', 'ope_trans', $model::OPE_TRANS );
+          $model->ope_trans = $model::OPE_TRANS;
           $valid = $model->validate();
           $valid = Model::validateMultiple($modelsDetalles) && $valid;
 

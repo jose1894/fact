@@ -43,6 +43,7 @@
                             ['label' => Yii::t('tipo_producto','Product types'), 'url' => ['/tipo-producto'], 'icon' => 'cube'],
                             ['label' => Yii::t('tipo_movimiento','Movement type'), 'url' => ['/tipo-movimiento'], 'icon' => 'exchange'],
                             ['label' => Yii::t('tipo_documento','Document type'), 'url' => ['/tipo-documento'], 'icon' => 'list'],
+                            ['label' => Yii::t('serie','Series'), 'url' => ['/series'], 'icon' => 'tachometer'],
                             ['label' => Yii::t('zona','Zone'), 'url' => ['/zona'], 'icon' => 'map-signs'],
                             ['label' => Yii::t('condicionp','Payment condition'), 'url' => ['/cond-pago'], 'icon' => 'ticket'],
                             ['label' => Yii::t('unidad_medida','Unit of measurement'), 'url' => ['/unidad-medida'], 'icon' => 'balance-scale'],

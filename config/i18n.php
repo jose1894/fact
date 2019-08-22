@@ -154,6 +154,14 @@ return [
               'salida' => 'salida.php',
             ],
         ],
+        'serie' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'serie' => 'serie.php',
+            ],
+        ],
         'sucursal' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',

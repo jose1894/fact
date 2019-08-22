@@ -20,7 +20,7 @@ class NotaSalida extends \yii\db\ActiveRecord
     public const STATUS_UNAPPROVED = 0;
     public const STATUS_APPROVED = 1;
     public const STATUS_CANCELED = 2;
-    const GRUPO_TRANS = 'S';
+    const OPE_TRANS = 'S';
     /**
      * {@inheritdoc}
      */

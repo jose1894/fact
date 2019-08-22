@@ -33,6 +33,7 @@ class Numeracion extends \yii\db\ActiveRecord
     {
         return [
             [['tipo_num', 'sucursal_num', 'status_num'], 'integer'],
+            [['serie_num'], 'required'],
             [['numero_num'], 'string', 'max' => 10],
             [['serie_num'], 'string', 'max' => 4],
             [['tipo_num'], 'exist', 'skipOnError' => true, 'targetClass' => TipoDocumento::className(), 'targetAttribute' => ['tipo_num' => 'id_tipod']],

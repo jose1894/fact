@@ -46,7 +46,7 @@ class NotaSalidaController extends Controller
     {
         $searchModel = new NotaSalidaSearch();
         $searchModel->status_trans = 0;
-        $searchModel->grupo_trans = NotaSalida::GRUPO_TRANS;
+        $searchModel->ope_trans = NotaSalida::OPE_TRANS;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -91,8 +91,8 @@ class NotaSalidaController extends Controller
           // validate all models
           $model->sucursal_trans = SiteController::getSucursal();
           $model->usuario_trans = Yii::$app->user->id;
-          $model->codigo_trans = AutoIncrement::getAutoIncrementPad( 'codigo_trans', 'transaccion', 'grupo_trans', $model::GRUPO_TRANS );
-          $model->grupo_trans = $model::GRUPO_TRANS;
+          $model->codigo_trans = AutoIncrement::getAutoIncrementPad( 'codigo_trans', 'transaccion', 'ope_trans', $model::OPE_TRANS );
+          $model->ope_trans = $model::OPE_TRANS;
           $valid = $model->validate();
           $valid = Model::validateMultiple($modelsDetalles) && $valid;
 
@@ -300,7 +300,7 @@ class NotaSalidaController extends Controller
       if ( $nota['codigo_trans'] ){
         $model = NotaSalida::findOne([
           'codigo_trans' => $nota['codigo_trans'],
-          'grupo_trans' => NotaSalida::GRUPO_TRANS
+          'ope_trans' => NotaSalida::OPE_TRANS
         ]);
 
         if ( $model->status_trans == $model::STATUS_APPROVED )
@@ -378,7 +378,7 @@ class NotaSalidaController extends Controller
       if ( $nota['codigo_trans'] ){
         $model = NotaSalida::findOne([
           'codigo_trans' => $nota['codigo_trans'],
-          'grupo_trans' => NotaSalida::GRUPO_TRANS
+          'ope_trans' => NotaSalida::OPE_TRANS
         ]);
 
         if ( $model->status_trans != $model::STATUS_UNAPPROVED )
