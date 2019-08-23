@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use kartik\select2\Select2;
 use app\models\TipoDocumento;
+use yii\web\View ;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Numeracion */
@@ -59,3 +60,14 @@ use app\models\TipoDocumento;
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+
+$js = <<< JS
+$( '#numeracion-serie_num' ).on( 'blur', function(){
+  $( this ). val( $( this ).val().padStart(2,'0') );
+})
+$( '#numeracion-numero_num' ).on( 'blur', function(){
+  $( this ). val( $( this ).val().padStart(10,'0') );
+})
+JS;
+$this->registerJs($js,View::POS_LOAD);

@@ -18,8 +18,9 @@ class PedidoSearch extends Pedido
     public function rules()
     {
         return [
-            [['id_pedido', 'clte_pedido', 'vend_pedido', 'moneda_pedido', 'almacen_pedido', 'tipo_pedido', 'usuario_pedido','condp_pedido', 'estatus_pedido', 'sucursal_pedido'], 'integer'],
-            [['cod_pedido', 'fecha_pedido'], 'safe'],
+            [['id_pedido', 'clte_pedido', 'vend_pedido', 'moneda_pedido', 'almacen_pedido', 'usuario_pedido','condp_pedido', 'estatus_pedido', 'sucursal_pedido'], 'integer'],
+            [['tipo_pedido'],'string'],
+            [['cod_pedido', 'fecha_pedido', 'string'], 'safe'],
         ];
     }
 

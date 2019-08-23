@@ -26,6 +26,7 @@ use yii\helpers\ArrayHelper;
  */
 class Compra extends \yii\db\ActiveRecord
 {
+    const ORDEN_COMPRA = 'OC';
     /**
      * {@inheritdoc}
      */
@@ -61,7 +62,7 @@ class Compra extends \yii\db\ActiveRecord
     {
         return [
             'id_compra' => Yii::t('compra', 'Id'),
-            'cod_compra' => Yii::t('compra', 'Cod'),
+            'cod_compra' => Yii::t('compra', 'Code'),
             'fecha_compra' => Yii::t('compra', 'Date'),
             'provee_compra' => Yii::t('proveedor', 'Supplier'),
             'moneda_compra' => Yii::t('moneda', 'Currency'),

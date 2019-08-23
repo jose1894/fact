@@ -17,6 +17,7 @@ use app\components\AutoIncrement;
 use app\base\Model;
 use yii\helpers\ArrayHelper;
 use kartik\mpdf\Pdf;
+use app\models\Numeracion;
 
 /**
  * CompraController implements the CRUD actions for Compra model.
@@ -81,8 +82,12 @@ class CompraController extends Controller
         $modelsDetalles = Model::createMultiple(CompraDetalle::classname());
         Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
 
+        $num = Numeracion::getNumeracion( Compra::ORDEN_COMPRA );
+        $codigo = intval( $num['numero_num'] ) + 1;
+        $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
+        $model->cod_compra = $codigo;
+
         // validate all models
-        $model->cod_compra = AutoIncrement::getAutoIncrementPad( 'id_compra','compra', 1, 1 );
         $valid = $model->validate();
         $valid = Model::validateMultiple($modelsDetalles) && $valid;
         // ajax validation
@@ -119,6 +124,9 @@ class CompraController extends Controller
                     }
                     //return $this->redirect(['view', 'id' => $model->id_empresa]);
                     if ($flag) {
+                      $numeracion = Numeracion::findOne($num['id_num']);
+                      $numeracion->numero_num = $codigo;
+                      $numeracion->save();                      
                       $transaction->commit();
                       Yii::$app->response->format = Response::FORMAT_JSON;
                       $return = [

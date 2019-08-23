@@ -16,23 +16,24 @@ use yii\web\View ;
 use wbraganca\dynamicform\DynamicFormWidget;
 use kartik\select2\Select2;
 use app\base\Model;
-use app\models\Numeracion;
 /* @var $this yii\web\View */
 /* @var $model app\models\Pedido */
 /* @var $form yii\widgets\ActiveForm */
+$disabled = false;
+
 if ( $model->isNewRecord ) {
   $model->cod_pedido = "0000000000";
+} else {
+  $disabled = true;
 }
+
+
+
 ?>
 
 <div class="pedido-form">
 
   <div class="container-fluid">
-      <h1>
-        <?php
-          print_r(Numeracion::getNumeracion('NP'));
-        ?>
-      </h1>
 
       <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true]); ?>
       <div class="row">
@@ -104,9 +105,14 @@ if ( $model->isNewRecord ) {
         </div>
         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
           <?php
-            $list = [0 => 'PEDIDO', 1 => 'PROFORMA', 2 => 'COTIZACION'];
+            $list = ['NP' => 'PEDIDO', 'PR' => 'PROFORMA', 'CT' => 'COTIZACION'];
           ?>
-          <?= $form->field($model, 'tipo_pedido')->radioList($list, ['custom' => true,'id'=>'pedido_tipo','inline'=>true, ]) ?>
+          <?= $form->field($model, 'tipo_pedido',[
+              'addClass' => 'form-control ',
+              'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-ticket"></i>']]
+            ])->dropDownList( $list,
+              ['custom' => true, 'prompt' => Yii::t('app','Select...'), 'disabled' => $disabled,]
+              ) ?>
         </div>
       </div>
 

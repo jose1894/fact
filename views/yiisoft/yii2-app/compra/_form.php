@@ -37,7 +37,7 @@ if ( $model->isNewRecord ) {
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
           <?= $form
           ->field($model, 'cod_compra',['addClass' => 'form-control '])
-          ->textInput(['maxlength' => true,'readonly' => true, 'style' => ['text-align' => 'rigth']]) ?>
+          ->textInput(['maxlength' => true,'readonly' => true, 'style' => ['text-align' => 'right']]) ?>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
           <?php
@@ -47,7 +47,7 @@ if ( $model->isNewRecord ) {
             ])->textInput([
                   'value' => date('d/m/Y'),
                   'readonly' => 'readonly',
-                  'style' => ['text-aling' => 'right']
+                  'style' => ['text-align' => 'right']
               ]) ?>
         </div>
 

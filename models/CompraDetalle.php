@@ -39,6 +39,7 @@ class CompraDetalle extends \yii\db\ActiveRecord
             [['prod_cdetalle'], 'required'],
             [['prod_cdetalle', 'status_cdetalle', 'compra_cdetalle'], 'integer'],
             [['cant_cdetalle', 'precio_cdetalle', 'descu_cdetalle', 'impuesto_cdetalle', 'plista_cdetalle', 'total_cdetalle'], 'number'],
+            [['cant_cdetalle', 'precio_cdetalle', 'descu_cdetalle', 'impuesto_cdetalle', 'plista_cdetalle', 'total_cdetalle'], 'default', 'value' => 0],
             [['compra_cdetalle'], 'exist', 'skipOnError' => true, 'targetClass' => Compra::className(), 'targetAttribute' => ['compra_cdetalle' => 'id_compra']],
         ];
     }

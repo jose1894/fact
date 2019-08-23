@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
               'attribute'=>'tipo_num',
               'value' => function($data){
-                   return $data->tipoNum->des_tipod;
+                   return '(' . $data->tipoDocumento->abrv_tipod. ') - '.$data->tipoDocumento->des_tipod;
               },
               'filter'=>TipoDocumento::getTipoDocumento(),
               'filterType' => GridView::FILTER_SELECT2,

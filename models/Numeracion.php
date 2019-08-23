@@ -32,10 +32,10 @@ class Numeracion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tipo_num', 'sucursal_num', 'status_num'], 'integer'],
-            [['serie_num'], 'required'],
+            [['tipo_num','sucursal_num', 'status_num'], 'integer'],
+            [['tipo_num','serie_num','numero_num', 'status_num'], 'required'],
             [['numero_num'], 'string', 'max' => 10],
-            [['serie_num'], 'string', 'max' => 4],
+            [['serie_num'], 'string', 'max' => 2],
             [['tipo_num'], 'exist', 'skipOnError' => true, 'targetClass' => TipoDocumento::className(), 'targetAttribute' => ['tipo_num' => 'id_tipod']],
         ];
     }
@@ -100,13 +100,13 @@ class Numeracion extends \yii\db\ActiveRecord
 
       if ( is_null($serie) ){
         $condicion = [
-          'status_num = :status and sucursal_num = :sucursal ',
-          [':status' => 1, ':sucursal' => $sucursal]
+          'status_num = :status and sucursal_num = :sucursal and tipo_documento.abrv_tipod like :tipo',
+          [':status' => 1, ':sucursal' => $sucursal, ':tipo' => $tipo]
         ];
       } else {
         $condicion = [
-            'status_num = :status and sucursal_num = :sucursal and tipo_documento.tipo_num like :tipo ',
-            [':status' => 1, ':sucursal' => $sucursal, ':tipo' => $tipo]
+            'status_num = :status and sucursal_num = :sucursal and tipo_documento.tipo_num like :tipo and serie like :serie ',
+            [':status' => 1, ':sucursal' => $sucursal, ':tipo' => $tipo, ':serie' => $serie]
           ];
       }
 
@@ -115,9 +115,8 @@ class Numeracion extends \yii\db\ActiveRecord
                  ->where( $condicion[0], $condicion[1] )
                 ->orderBy('serie_num')
                 ->all();
-
-      foreach ($numeraciones as $value) {
-        // code...
+      $numeracion = [];
+      foreach ($numeraciones as $value) {        // code...
         $numeracion = [
             'id_num' => $value->id_num,
             'tipo_num' => $value->tipo_num,

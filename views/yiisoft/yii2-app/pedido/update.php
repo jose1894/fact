@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model app\models\Pedido */
 
 $this->title = Yii::t('pedido', 'Update order: {number} / {name}', [
-    'number' => $model->id_pedido,
+    'number' => $model->cod_pedido . " - " . $tipo,
     'name' => $model->cltePedido->nombre_clte,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('pedido', 'Order'), 'url' => ['index']];

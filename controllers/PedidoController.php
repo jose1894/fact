@@ -18,6 +18,7 @@ use app\components\AutoIncrement;
 use app\base\Model;
 use yii\helpers\ArrayHelper;
 use kartik\mpdf\Pdf;
+use app\models\Numeracion;
 
 /**
  * PedidoController implements the CRUD actions for Pedido model.
@@ -89,10 +90,12 @@ class PedidoController extends Controller
             $modelsDetalles = Model::createMultiple(PedidoDetalle::classname());
             Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
 
+            $num = Numeracion::getNumeracion( $model->tipo_pedido );
+            $codigo = intval( $num['numero_num'] ) + 1;
+            $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
+            $model->cod_pedido = $codigo;
+
             // validate all models
-            // $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'cod_pedido', 'pedido', 'tipo_pedido', $model->tipo_pedido );
-            $num = Numeracion::getNumeracion( Pedido::TIPO_OPE );
-            $model->cod_pedido = $num['numero_num'];
             $valid = $model->validate();
             $valid = Model::validateMultiple($modelsDetalles) && $valid;
             // ajax validation
@@ -128,8 +131,11 @@ class PedidoController extends Controller
                         }
                         //return $this->redirect(['view', 'id' => $model->id_empresa]);
                         if ($flag) {
+                          $numeracion = Numeracion::findOne($num['id_num']);
+                          $numeracion->numero_num = $codigo;
+                          $numeracion->save();
                           $transaction->commit();
-                          
+
                           Yii::$app->response->format = Response::FORMAT_JSON;
                           $return = [
                             'success' => true,
@@ -206,7 +212,7 @@ class PedidoController extends Controller
             //echo '$tipoPedido: '.$tipoPedido;
             //echo '$model->tipo_pedido '.$model->tipo_pedido;
 
-          //  exit;
+
             if ( $tipoPedido !== $model->tipo_pedido){
               $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'cod_pedido', 'pedido', 'tipo_pedido', $model->tipo_pedido );
               $codigo = $model->cod_pedido;
@@ -248,7 +254,7 @@ class PedidoController extends Controller
                           'title' => Yii::t('pedido', 'Order'),
                           'message' => Yii::t('app','Record saved successfully!'),
                           'type' => 'success',
-                          'codigo' => $codigo,
+                          //'codigo' => $codigo,
                         ];
                         return $return;
                     }
@@ -267,10 +273,13 @@ class PedidoController extends Controller
             }
         }
 
+        $tipo = ($model->tipo_pedido === Pedido::PEDIDO) ? 'PEDIDO' : ($modelPedido->tipo_pedido === Pedido::PROFORMA) ? 'PROFORMA' : 'COTIZACION';
+
         return $this->render('update', [
             'model' => $model,
             'modelsDetalles' => (empty($modelsDetalles)) ? [new PedidoDetalle] : $modelsDetalles,
             'IMPUESTO' => SiteController::getImpuesto(),
+            'tipo' => $tipo
         ]);
 
     }
@@ -453,7 +462,7 @@ class PedidoController extends Controller
       $mpdf->WriteHtml( $content ); // call mpdf write html
       $mpdf->SetHTMLFooter( $footer );
 
-      $tipo = ($modelPedido->tipo_pedido === 1) ? 'PEDIDO' : ($modelPedido->tipo_pedido === 2) ? 'PROFORMA' : 'COTIZACION';
+      $tipo = ($modelPedido->tipo_pedido === Pedido::PEDIDO) ? 'PEDIDO' : ($modelPedido->tipo_pedido === Pedido::PROFORMA) ? 'PROFORMA' : 'COTIZACION';
       $titulo = $modelPedido->cod_pedido. '-'. $tipo .'-'.$modelPedido->cltePedido->nombre_clte.'.pdf';
 
       $mpdf->SetTitle($titulo);

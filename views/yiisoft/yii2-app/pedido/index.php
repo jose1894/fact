@@ -7,6 +7,7 @@ use yii\web\View;
 use kartik\grid\GridView;
 use yii\web\JqueryAsset;
 use app\models\Cliente;
+use app\models\Pedido;
 use app\models\Vendedor;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
@@ -35,9 +36,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [
               'attribute'=>'tipo_pedido',
               'value' => function($data){
-                   return $data->tipo_pedido > 0 ? $data->tipo_pedido == 1 ? 'PROFORMA' : 'COTIZACION' : 'PEDIDO' ;
+                   return $data->tipo_pedido !== Pedido::PEDIDO  ? $data->tipo_pedido === Pedido::PROFORMA ? 'PROFORMA' : 'COTIZACION' : 'PEDIDO' ;
               },
-              'filter'=>[ 0 => 'PEDIDO', 1 => 'PROFORMA', 2=> 'COTIZACION' ],
+              'filter'=>[ Pedido::PEDIDO => 'PEDIDO', Pedido::PROFORMA => 'PROFORMA', Pedido::COTIZACION=> 'COTIZACION' ],
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,
