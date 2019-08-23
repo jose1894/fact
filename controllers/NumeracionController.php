@@ -8,7 +8,8 @@ use app\models\NumeracionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\web\Response;
+use kartik\widgets\ActiveForm;
 /**
  * NumeracionController implements the CRUD actions for Numeracion model.
  */
@@ -68,9 +69,6 @@ class NumeracionController extends Controller
         $model = new Numeracion();
 
         $this->layout = 'justStuff';
-
-
-
         if ($model->load(Yii::$app->request->post())) {
 
           $valid = $model->validate();
@@ -86,7 +84,7 @@ class NumeracionController extends Controller
           }
           else
           {
-              $model->sucursal_clte = SiteController::getSucursal();
+              $model->sucursal_num = SiteController::getSucursal();
               $transaction = \Yii::$app->db->beginTransaction();
 
               try {
@@ -96,7 +94,7 @@ class NumeracionController extends Controller
                       Yii::$app->response->format = Response::FORMAT_JSON;
                       $return = [
                         'success' => true,
-                        'title' => Yii::t('cliente', 'Customer'),
+                        'title' => Yii::t('numeracion', 'Numeration'),
                         'message' => Yii::t('app','Record has been saved successfully!'),
                         'type' => 'success'
                       ];
@@ -107,7 +105,7 @@ class NumeracionController extends Controller
                   Yii::$app->response->format = Response::FORMAT_JSON;
                   $return = [
                     'success' => false,
-                    'title' => Yii::t('cliente', 'Customer'),
+                    'title' => Yii::t('numeracion', 'Numeration'),
                     'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
                     'type' => 'error'
 
@@ -148,7 +146,7 @@ class NumeracionController extends Controller
             }
             else
             {
-                $model->sucursal_clte = SiteController::getSucursal();
+                $model->sucursal_num = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
 
                 try {
@@ -157,7 +155,7 @@ class NumeracionController extends Controller
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         $return = [
                           'success' => true,
-                          'title' => Yii::t('cliente', 'Customer'),
+                          'title' => Yii::t('numeracion', 'Numeration'),
                           'message' => Yii::t('app','Record has been saved successfully!'),
                           'type' => 'success'
                         ];
@@ -167,7 +165,7 @@ class NumeracionController extends Controller
                     Yii::$app->response->format = Response::FORMAT_JSON;
                     $return = [
                       'success' => false,
-                      'title' => Yii::t('cliente', 'Customer'),
+                      'title' => Yii::t('numeracion', 'Numeration'),
                       'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
                       'type' => 'error'
 

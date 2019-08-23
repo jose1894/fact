@@ -15,7 +15,6 @@ use app\models\TipoDocumento;
     <?php $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientScript' => true]); ?>
     <div class="row">
     	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <?= $form->field($model, 'tipo_num')->textInput() ?>
         <?php
           $mov = TipoDocumento::getTipoDocumento( );
         ?>
@@ -39,15 +38,22 @@ use app\models\TipoDocumento;
 
       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
         <?= $form->field($model, 'numero_num',[
-          'addClass' => 'form-control'
+          'addClass' => 'form-control',
+          'addon' => ['prepend' => ['content'=>'#']]
           ])->textInput([
-            'maxlength' => true
+            'maxlength' => true,
+            'placeholder' => '00000000000'
+
             ]) ?>
       </div>
 
       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <?= $form->field($model, 'status_num')->textInput() ?>
-      </div>
+    		<?= $form->field($model, 'status_num',[
+          		'addClass' => 'form-control ',
+          		'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-ticket"></i>']]])->dropDownList(
+          		[1 => 'Activo', 0 => 'Inactivo'],
+          		['custom' => true, 'prompt' => Yii::t('app','Select...')]) ?>
+    	</div>
     </div>
 
     <?php ActiveForm::end(); ?>

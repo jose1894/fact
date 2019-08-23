@@ -24,6 +24,7 @@ use Yii;
  */
 class Pedido extends \yii\db\ActiveRecord
 {
+    public static TIPO_OPE = 'NP';
     /**
      * {@inheritdoc}
      */

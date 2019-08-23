@@ -16,6 +16,7 @@ use yii\web\View ;
 use wbraganca\dynamicform\DynamicFormWidget;
 use kartik\select2\Select2;
 use app\base\Model;
+use app\models\Numeracion;
 /* @var $this yii\web\View */
 /* @var $model app\models\Pedido */
 /* @var $form yii\widgets\ActiveForm */
@@ -27,7 +28,11 @@ if ( $model->isNewRecord ) {
 <div class="pedido-form">
 
   <div class="container-fluid">
-
+      <h1>
+        <?php
+          print_r(Numeracion::getNumeracion('NP'));
+        ?>
+      </h1>
 
       <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true]); ?>
       <div class="row">

@@ -90,7 +90,9 @@ class PedidoController extends Controller
             Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
 
             // validate all models
-            $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'cod_pedido', 'pedido', 'tipo_pedido', $model->tipo_pedido );
+            // $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'cod_pedido', 'pedido', 'tipo_pedido', $model->tipo_pedido );
+            $num = Numeracion::getNumeracion( Pedido::TIPO_OPE );
+            $model->cod_pedido = $num['numero_num'];
             $valid = $model->validate();
             $valid = Model::validateMultiple($modelsDetalles) && $valid;
             // ajax validation
@@ -127,6 +129,7 @@ class PedidoController extends Controller
                         //return $this->redirect(['view', 'id' => $model->id_empresa]);
                         if ($flag) {
                           $transaction->commit();
+                          
                           Yii::$app->response->format = Response::FORMAT_JSON;
                           $return = [
                             'success' => true,

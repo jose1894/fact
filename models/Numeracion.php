@@ -58,8 +58,74 @@ class Numeracion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTipoNum()
+    public function getTipoDocumento()
     {
         return $this->hasOne(TipoDocumento::className(), ['id_tipod' => 'tipo_num']);
+    }
+
+    public static function getSerieNum( $tipo )
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      $condicion = [
+          "status_num = :status and sucursal_num = :sucursal and tipo_documento.abrv_tipod like :tipo",
+          [':status' => 1, ':sucursal' => $sucursal, ':tipo' => $tipo]
+        ];
+
+      $series = Numeracion::find()
+                ->joinWith('tipoDocumento')
+                ->where( $condicion[0],$condicion[1] )
+                ->orderBy('serie_num')
+                ->all();
+
+      foreach ($series as $value) {
+        // code...
+        $serie = [
+          'id_num' => $value->id_num,
+          'tipo_num' => $value->tipo_num,
+          'serie_num' => $value->serie_num,
+          'numero_num' => $value->numero_num,
+          'abrv_tipod' => $value->tipoDocumento->abrv_tipod
+        ];
+      }
+
+      return  $serie;
+    }
+
+    public static function getNumeracion( $tipo, $serie = null )
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      if ( is_null($serie) ){
+        $condicion = [
+          'status_num = :status and sucursal_num = :sucursal ',
+          [':status' => 1, ':sucursal' => $sucursal]
+        ];
+      } else {
+        $condicion = [
+            'status_num = :status and sucursal_num = :sucursal and tipo_documento.tipo_num like :tipo ',
+            [':status' => 1, ':sucursal' => $sucursal, ':tipo' => $tipo]
+          ];
+      }
+
+      $numeraciones = Numeracion::find()
+                ->joinWith('tipoDocumento')
+                 ->where( $condicion[0], $condicion[1] )
+                ->orderBy('serie_num')
+                ->all();
+
+      foreach ($numeraciones as $value) {
+        // code...
+        $numeracion = [
+            'id_num' => $value->id_num,
+            'tipo_num' => $value->tipo_num,
+            'serie_num' => $value->serie_num,
+            'numero_num' => $value->numero_num,
+            'abrv_tipod' => $value->tipoDocumento->abrv_tipod
+          ];
+      }
+      return  $numeracion;
     }
 }
