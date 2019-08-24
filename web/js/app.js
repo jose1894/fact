@@ -74,6 +74,11 @@ $( document ).ready( function( e ){
   $( 'body' ).on( 'click', buttonCancel, function(){
     $( frame ).attr( 'src', 'about:blank' );
     $( modal ).modal("hide");
+
+    if ( frameRpt && modalRpt){
+      $( frameRpt ).attr( 'src', 'about:blank' );
+      $( modalRpt ).modal("hide");
+    }
   });
 
   $( 'body' ).on( 'click', '.pjax-delete', function( e ){
@@ -169,7 +174,27 @@ $( document ).ready( function( e ){
     $( modal ).modal("show");
   });
 
-  $( 'body' ).on("show.bs.modal","#frame", function() {
+
+  $( 'body' ).on( 'click', buttonPrint, function( e ){
+
+    e.preventDefault();
+
+    $( buttonSubmit ).css( 'display', 'none' );
+
+    $( frameRpt ).attr( "src", $( this ).attr( 'href' ));
+    $( modalRpt ).modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+    $( modalRpt ).modal("show");
+  });
+
+  $( 'body' ).on("show.bs.modal",frame, function() {
+    let height = $(window).height() - 200;
+    $(this).find(".modal-body").css("max-height", height);
+  });
+
+  $( 'body' ).on("show.bs.modal",frameRpt, function() {
     let height = $(window).height() - 200;
     $(this).find(".modal-body").css("max-height", height);
   });

@@ -101,8 +101,17 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
-                'template' => '{view} {update} {delete}',
+                'template' => ' {print} {view} {update} {delete}',
                 'buttons' => [
+                  'print' => function ($url, $model) {
+                      return Html::a('<span class="glyphicon glyphicon-print"></span>', $url, [
+                                  'title' => Yii::t('app', 'Print'),
+                                  'class' => 'pjax-print',
+                                  'data' => [
+                                    'id' => $model->id_pedido,
+                                  ]
+                      ]);
+                  },
                   'view' => function ($url, $model) {
                       return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
                                   'title' => Yii::t('app', 'View'),
@@ -142,11 +151,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
+                  if ($action === 'print') {
+                      $url ='index.php?r=pedido/pedido-rpt&id='.$model->id_pedido;
+                      return $url;
+                  }
                   if ($action === 'view') {
                       $url ='index.php?r=pedido/view&id='.$model->id_pedido;
                       return $url;
                   }
-
                   if ($action === 'update') {
                       $url ='index.php?r=pedido/update&id='.$model->id_pedido;
                       return $url;
@@ -176,3 +188,8 @@ $this->registerJsVar( "frame", "#framePedido" );
 $this->registerJsVar( "modal", "#modal" );
 //Detalles
 echo   $this->render('//site/_modalForm',[]);
+
+$this->registerJsVar( "buttonPrint", ".pjax-print" );
+$this->registerJsVar( "frameRpt", "#frame-rpt" );
+$this->registerJsVar( "modalRpt", "#modal-rpt" );
+echo   $this->render('//site/_modalRpt',[]);

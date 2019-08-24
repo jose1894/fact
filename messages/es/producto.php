@@ -19,5 +19,6 @@ return [
     'Max stock' => 'Estock máximo',
     'Initial stock' => 'Estock inicial',
     'Select a product' => 'Seleccione un producto',
-    'Factory code' => 'Código de fábrica'
+    'Factory code' => 'Código de fábrica',
+    'Products' => 'Productos'
 ];

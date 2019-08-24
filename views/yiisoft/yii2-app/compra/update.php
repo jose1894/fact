@@ -6,11 +6,11 @@ use yii\helpers\Html;
 /* @var $model app\models\Compra */
 
 $this->title = Yii::t('compra', 'Update purchase order: {number} / {name}', [
-    'number' => $model->id_compra,
+    'number' => $model->cod_compra,
     'name' => $model->proveeCompra->nombre_prove,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('compra', 'Purchase order'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id_compra, 'url' => ['view', 'id' => $model->id_compra]];
+$this->params['breadcrumbs'][] = ['label' => $model->cod_compra. ' / '. $model->proveeCompra->nombre_prove, 'url' => ['view', 'id' => $model->id_compra]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="pedido-update">

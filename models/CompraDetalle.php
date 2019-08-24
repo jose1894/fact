@@ -19,6 +19,7 @@ use Yii;
  * @property string $total_cdetalle TOTAL COMPRA DETALLE
  *
  * @property Compra $compraCdetalle
+ * @property Producto $prodCdetalle
  */
 class CompraDetalle extends \yii\db\ActiveRecord
 {
@@ -39,8 +40,8 @@ class CompraDetalle extends \yii\db\ActiveRecord
             [['prod_cdetalle'], 'required'],
             [['prod_cdetalle', 'status_cdetalle', 'compra_cdetalle'], 'integer'],
             [['cant_cdetalle', 'precio_cdetalle', 'descu_cdetalle', 'impuesto_cdetalle', 'plista_cdetalle', 'total_cdetalle'], 'number'],
-            [['cant_cdetalle', 'precio_cdetalle', 'descu_cdetalle', 'impuesto_cdetalle', 'plista_cdetalle', 'total_cdetalle'], 'default', 'value' => 0],
             [['compra_cdetalle'], 'exist', 'skipOnError' => true, 'targetClass' => Compra::className(), 'targetAttribute' => ['compra_cdetalle' => 'id_compra']],
+            [['prod_cdetalle'], 'exist', 'skipOnError' => true, 'targetClass' => Producto::className(), 'targetAttribute' => ['prod_cdetalle' => 'id_prod']],
         ];
     }
 
@@ -50,16 +51,16 @@ class CompraDetalle extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_cdetalle' => Yii::t('compra', 'Id Cdetalle'),
-            'prod_cdetalle' => Yii::t('compra', 'Prod Cdetalle'),
-            'cant_cdetalle' => Yii::t('compra', 'Cant Cdetalle'),
-            'precio_cdetalle' => Yii::t('compra', 'Precio Cdetalle'),
-            'descu_cdetalle' => Yii::t('compra', 'Descu Cdetalle'),
-            'impuesto_cdetalle' => Yii::t('compra', 'Impuesto Cdetalle'),
-            'status_cdetalle' => Yii::t('compra', 'Status Cdetalle'),
+            'id_cdetalle' => Yii::t('compra', 'Id'),
+            'prod_cdetalle' => Yii::t('producto', 'Product'),
+            'cant_cdetalle' => Yii::t('compra', 'Qtty'),
+            'precio_cdetalle' => Yii::t('compra', 'Price'),
+            'descu_cdetalle' => Yii::t('compra', 'Disc'),
+            'impuesto_cdetalle' => Yii::t('compra', 'Tax'),
+            'status_cdetalle' => Yii::t('compra', 'Status'),
             'compra_cdetalle' => Yii::t('compra', 'Compra Cdetalle'),
             'plista_cdetalle' => Yii::t('compra', 'Plista Cdetalle'),
-            'total_cdetalle' => Yii::t('compra', 'Total Cdetalle'),
+            'total_cdetalle' => Yii::t('compra', 'Total'),
         ];
     }
 
@@ -69,5 +70,13 @@ class CompraDetalle extends \yii\db\ActiveRecord
     public function getCompraCdetalle()
     {
         return $this->hasOne(Compra::className(), ['id_compra' => 'compra_cdetalle']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProdCdetalle()
+    {
+        return $this->hasOne(Producto::className(), ['id_prod' => 'prod_cdetalle']);
     }
 }

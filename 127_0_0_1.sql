@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-08-2019 a las 23:56:39
+-- Tiempo de generación: 24-08-2019 a las 18:33:29
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -3782,13 +3782,13 @@ ALTER TABLE `pais`
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=10;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `pedido_detalle`
 --
 ALTER TABLE `pedido_detalle`
-  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=15;
+  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -3939,7 +3939,7 @@ ALTER TABLE `compra`
 --
 ALTER TABLE `compra_detalle`
   ADD CONSTRAINT `compra_detalle_ibfk_1` FOREIGN KEY (`compra_cdetalle`) REFERENCES `compra` (`id_compra`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `compra_detalle_ibfk_2` FOREIGN KEY (`prod_cdetalle`) REFERENCES `producto` (`id_prod`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `compra_detalle_ibfk_2` FOREIGN KEY (`prod_cdetalle`) REFERENCES `producto` (`id_prod`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `departamento`

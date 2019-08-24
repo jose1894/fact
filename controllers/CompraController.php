@@ -62,6 +62,7 @@ class CompraController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'justStuff';
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -126,7 +127,7 @@ class CompraController extends Controller
                     if ($flag) {
                       $numeracion = Numeracion::findOne($num['id_num']);
                       $numeracion->numero_num = $codigo;
-                      $numeracion->save();                      
+                      $numeracion->save();
                       $transaction->commit();
                       Yii::$app->response->format = Response::FORMAT_JSON;
                       $return = [
@@ -153,10 +154,10 @@ class CompraController extends Controller
         }
       }
 
-        //$searchModel = new PedidoDetalleSearch();
+        //$searchModel = new CompraDetalleSearch();
         //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-      //  $dataProvider->query->andWhere('pedido_pdetalle=:pedido', [':pedido' => $model->id_pedido]);
+      //  $dataProvider->query->andWhere('compra_cdetalle=:compra', [':compra' => $model->id_compra]);
 
         $model->moneda_compra = Moneda::findOne(['status_moneda' => 1, 'tipo_moneda' => 'N']);
         //$model->almacen_compra = Almacen::findOne(['status_almacen' => 1]);
@@ -218,7 +219,7 @@ class CompraController extends Controller
                           CompraDetalle::deleteAll(['id_cdetalle' => $deletedIDs]);
                       }
                       foreach ($modelsDetalles as $modelDetalle) {
-                          $modelDetalle->compra_pdetalle = $model->id_compra;
+                          $modelDetalle->compra_cdetalle = $model->id_compra;
                           if (! ($flag = $modelDetalle->save(false))) {
                               $transaction->rollBack();
                               break;
@@ -288,5 +289,150 @@ class CompraController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('compra', 'The requested page does not exist.'));
+    }
+
+    public function actionCompraRpt( $id ) {
+      Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+      $modelCompra = Compra::findOne($id);
+      $this->layout = 'reports';
+
+      $content = $this->render('compraRpt', [
+          'compra' => $modelCompra,
+      ]);
+
+
+      $pdf = Yii::$app->pdf; // or new Pdf();
+      //$pdf->cssFile = "@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css";
+      $pdf->marginTop = 60;
+      $mpdf = $pdf->api; // fetches mpdf api
+
+
+      $f = Yii::$app->formatter;
+      $date = $f->asDate($modelCompra->fecha_compra, 'php:j/m/Y');
+
+      $header = '
+      <table>
+          <tr>
+              <td width="33%" class="center">MARVIG<!-- *-empresa-* --></td>
+              <td width="33%" class="center"></td>
+              <td width="33%" style="font-size:0.75rem" class="right">
+                ' . Yii::t('app','Date') . ': {DATE j/m/Y}
+                <br>
+                ' . Yii::t('app','Hour') . ': {DATE H:i:s}
+                <br>
+                ' . Yii::t('app','Page') . ': {PAGENO}/{nbpg}
+              </td>
+          </tr>
+      </table>
+      <br>
+      <table >
+        <tr>
+          <td class="center bold" > ' . Yii::t('compra', 'Purchase order') . ': ' . $modelCompra->cod_compra . ' </td>
+        </tr>
+      </table>
+      <br>
+      <table class="datos-cliente" style="font-size:0.75rem">
+        <tr>
+          <td class="left celdas"><span class="bold">' . Yii::t( 'proveedor', 'Supplier') . ' :</span> ' . $modelCompra->proveeCompra->nombre_prove . '</td>
+          <td>&nbsp;</td>
+          <td class="right celdas"><span class="bold">' . Yii::t('app','Date') . ' :</span> ' . $date  . '</td>
+        </tr>
+        <tr>
+          <td class="left celdas"><span class="bold">' . Yii::t('condicionp','Payment condition') . ':</span> ' . $modelCompra->condpCompra->desc_condp . ' </td>
+          <td>&nbsp;</td>
+          <td class="right celdas"><span class="bold">' . Yii::t('moneda','Currency') . ' :</span> ' . $modelCompra->monedaCompra->des_moneda  . '</td>
+        </tr>
+      </table>
+      ';
+      $total = 0;
+      $subt = 0;
+      $subtotal = 0;
+      $descuento = 0;
+      $totalImp = 0;
+      $impuesto = SiteController::getImpuesto() / 100;
+
+      foreach ( $modelCompra->detalles as $value ) {
+        $total += $value->total_cdetalle;
+
+        if ( $value->descu_cdetalle && $value->impuesto_cdetalle ){
+          $desc = ( ( $value->plista_cdetalle  *  $value->descu_cdetalle ) / 100 ) * $value->cant_cdetalle / ( ( $value->impuesto_cdetalle / 100 ) + 1)  ;
+          $descuento += $desc;
+        } else if ( $value->descu_cdetalle && !$value->impuesto_cdetalle){
+          $desc = ( ( $value->plista_cdetalle  *  $value->descu_cdetalle ) / 100 ) * $value->cant_cdetalle  ;
+          $descuento += $desc;
+        }
+
+        if ( $value->impuesto_cdetalle ){
+          $subt = ( $value->plista_cdetalle * $value->cant_cdetalle  ) / ( ( $value->impuesto_cdetalle / 100 ) + 1) ;
+        } else {
+          $subt = ( $value->precio_cdetalle * $value->cant_cdetalle  ) ;
+        }
+
+        $subtotal += $subt;
+      }
+
+
+      $descuento =  $descuento > 0  ? $descuento : 0;
+      $precioNeto = $total / ( $impuesto + 1);
+      $totalImp = $total - $precioNeto;
+      $subtotal2 = $precioNeto;
+
+
+      $footer = '
+      <table style="font-size:0.78rem" class="table table-stripped">
+        <tr>
+          <td style="width:80%" class="right">
+          Subtotal
+          </td>
+          <td style="width:20%" class="right">
+          ' . Yii::$app->formatter->asDecimal($subtotal) . '
+          </td>
+        </tr>
+        <tr>
+          <td class="right">
+          ' . Yii::t('compra', 'Discount') . '
+          </td>
+          <td class="right">
+          '.Yii::$app->formatter->asDecimal($descuento).'
+          </td>
+        </tr>
+        <tr>
+          <td style="width:80%" class="right">
+          Subtotal
+          </td>
+          <td style="width:20%" class="right">
+          ' . Yii::$app->formatter->asDecimal($subtotal2) . '
+          </td>
+        </tr>
+        <tr>
+          <td class="right">
+          ' . Yii::t('compra','Tax'). ' ' . SiteController::getImpuesto() .'%
+          </td>
+          <td class="right">
+          '.Yii::$app->formatter->asDecimal($totalImp).'
+          </td>
+        </tr>
+        <tr>
+          <td class="right">
+          Total
+          </td>
+          <td class="right">
+          '.Yii::$app->formatter->asDecimal($total).'
+          </td>
+        </tr>
+      </table>
+      ';
+
+      $sheet = file_get_contents( Yii::getAlias( '@rptcss' ).'/rptCss.css' );
+      $mpdf->WriteHTML( $sheet, 1 );
+
+      $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
+      $mpdf->WriteHtml( $content ); // call mpdf write html
+      $mpdf->SetHTMLFooter( $footer );
+
+      $titulo = $modelCompra->cod_compra. '-'.$modelCompra->proveeCompra->nombre_prove.'.pdf';
+
+      $mpdf->SetTitle($titulo);
+      $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
     }
 }

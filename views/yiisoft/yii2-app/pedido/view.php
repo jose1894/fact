@@ -15,49 +15,53 @@ $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="pedido-view">
+  <div class="box box-success">
+    <div class="box-header with-border">
+      <h3 class="box-title">
+        <?= $this->title ?>
+      </h3>
+    </div>
+    <div class="box-body">
+        <div class="container-fluid">
+          <?= DetailView::widget([
+              'model' => $model,
+              'attributes' => [
+                  [
+                    'attribute' => 'cod_pedido',
+                    'labelColOptions'=>['style'=>'width:10%'],
+                  ],
+                  [
+                    'labelColOptions'=>['style'=>'width:10%'],
+                    'attribute' => 'fecha_pedido',
+                    'value' => Yii::$app->formatter->asDate($model->fecha_pedido, 'dd/MM/yyyy')
+                  ],
+                  [
+                    'labelColOptions'=>['style'=>'width:10%'],
+                    //'valueColOptions'=>['style'=>'width:30%'],
+                    'attribute' => 'clte_pedido',
+                    'value' => $model->cltePedido->nombre_clte,
+                    'width' => '80%',
+                  ],
+                  [
+                    'labelColOptions'=>['style'=>'width:10%'],
+                    'attribute' => 'vend_pedido',
+                    'value' => $model->vendPedido->nombre_vend,
+                    'width' => '80%',
+                  ],
+                  [
+                    'labelColOptions'=>['style'=>'width:10%'],
+                    'attribute' => 'moneda_pedido',
+                    'value' => $model->monedaPedido->des_moneda,
+                  ],
+                  [
+                    'labelColOptions'=>['style'=>'width:10%'],
+                    'attribute' => 'almacen_pedido',
+                    'value' => $model->almacenPedido->des_almacen
+                  ]
+              ],
+          ]) ?>
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id_pedido], ['class' => 'btn btn-flat btn-primary']) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            [
-              'attribute' => 'cod_pedido',
-              'labelColOptions'=>['style'=>'width:10%'],
-            ],
-            [
-              'labelColOptions'=>['style'=>'width:10%'],
-              'attribute' => 'fecha_pedido',
-              'value' => Yii::$app->formatter->asDate($model->fecha_pedido, 'dd/MM/yyyy')
-            ],
-            [
-              'labelColOptions'=>['style'=>'width:10%'],
-              //'valueColOptions'=>['style'=>'width:30%'],
-              'attribute' => 'clte_pedido',
-              'value' => $model->cltePedido->nombre_clte,
-              'width' => '80%',
-            ],
-            [
-              'labelColOptions'=>['style'=>'width:10%'],
-              'attribute' => 'vend_pedido',
-              'value' => $model->vendPedido->nombre_vend,
-              'width' => '80%',
-            ],
-            [
-              'labelColOptions'=>['style'=>'width:10%'],
-              'attribute' => 'moneda_pedido',
-              'value' => $model->monedaPedido->des_moneda,
-            ],
-            [
-              'labelColOptions'=>['style'=>'width:10%'],
-              'attribute' => 'almacen_pedido',
-              'value' => $model->almacenPedido->des_almacen
-            ]
-        ],
-    ]) ?>
-
+        </div>
+      </div>
+    </div>
 </div>
