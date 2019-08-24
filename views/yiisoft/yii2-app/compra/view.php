@@ -9,7 +9,7 @@ use app\models\CompraDetalleSearch;
 /* @var $model app\models\Compra */
 
 $this->title = Yii::t('compra', 'Purchase order: {number} / {name}', [
-    'number' => $model->cod_compra
+    'number' => $model->cod_compra,
     'name' => $model->proveeCompra->nombre_prove
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('compra', 'Purchase order'), 'url' => ['index']];
