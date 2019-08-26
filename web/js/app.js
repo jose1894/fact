@@ -116,10 +116,13 @@ $( document ).ready( function( e ){
                 data: {id:id},
                 success: function (data) {
                     var res = $.parseJSON(data);
-                    if(res !== false) {
+                    if( res ) {
                         swal(title, succMessage, "success")
-                        window.parent.$.pjax.reload( { container: '#grid' } )
+                        window.parent.$.pjax.reload( { container: '#grid' } );
+
+                        return;
                     }
+
                 },
                 error: function(data) {
                     let message;

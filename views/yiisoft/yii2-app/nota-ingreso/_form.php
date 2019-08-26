@@ -31,7 +31,7 @@ if ( !$model->status_trans ) {
   <div class="container-fluid">
         <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true]); ?>
         <div class="row">
-          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
             <?= $form
             ->field($model, 'codigo_trans',['addClass' => 'form-control '])
             ->textInput([
@@ -42,14 +42,21 @@ if ( !$model->status_trans ) {
               ]) ?>
           </div>
           <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-              <?= $form->field($model, 'fecha_trans',[
-                  'addClass' => 'form-control'
+            <?= $form->field($model, 'fecha_trans',[
+              'addClass' => 'form-control'
               ])->textInput([
                 'disabled' => $disabled,
                 'value' => date('d/m/Y'),
                 'readonly' => 'readonly',
                 'style' => ['text-align' => 'right']
                 ]) ?>
+              </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <?= $form->field($model, 'status_moneda',[
+              'addClass' => 'form-control ',
+              'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-ticket"></i>']]])->dropDownList(
+              [1 => 'Activo', 0 => 'Inactivo'],
+              ['custom' => true, 'prompt' => Yii::t('app','Select...')])  ?>
           </div>
 
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">

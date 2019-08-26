@@ -90,8 +90,17 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
-                'template' => '{view} {update} {delete}',
+                'template' => '{print} {view} {update} {delete}',
                 'buttons' => [
+                  'print' => function ($url, $model) {
+                      return Html::a('<span class="glyphicon glyphicon-print"></span>', $url, [
+                                  'title' => Yii::t('app', 'Print'),
+                                  'class' => 'pjax-print',
+                                  'data' => [
+                                    'id' => $model->id_trans,
+                                  ]
+                      ]);
+                  },
                   'view' => function ($url, $model) {
                       return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
                                   'title' => Yii::t('app', 'View'),
@@ -103,34 +112,38 @@ $this->params['breadcrumbs'][] = $this->title;
                   },
 
                   'update' => function ($url, $model) {
-                      return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+                      return !$model->status_trans ? Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
                                   'title' => Yii::t('app', 'Update'),
                                   // 'class' => 'pjax-update',
                                   'data' => [
                                     'id' => $model->id_trans,
                                   ]
-                      ]);
+                      ]): '' ;
                   },
                   'delete' => function ($url, $model) {
-                      return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-                                  'title' => Yii::t('app', 'Delete'),
-                                  'class' => 'pjax-delete',
-                                  'data' => [
-                                      'message' => Yii::t('app','Are you sure you want to delete this item?'),
-                                      'succmessage' => Yii::t('app', 'Item deleted successfully!'),
-                                      'method' => 'post',
-                                      'pjax' => 0,
-                                      'icon' => 'warning',
-                                      'title' => Yii::t('ingreso', 'Entry note'),
-                                      'ok' => Yii::t('app', 'Confirm'),
-                                      'cancel' => Yii::t('app', 'Cancel'),
-                                      'id' => $model->id_trans
-                                  ],
-                      ]);
+                    return !$model->status_trans ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+                                'title' => Yii::t('app', 'Delete'),
+                                'class' => 'pjax-delete',
+                                'data' => [
+                                    'message' => Yii::t('app','Are you sure you want to delete this item?'),
+                                    'succmessage' => Yii::t('app', 'Item deleted successfully!'),
+                                    'method' => 'post',
+                                    'pjax' => 0,
+                                    'icon' => 'warning',
+                                    'title' => Yii::t('salida', 'Exit note'),
+                                    'ok' => Yii::t('app', 'Confirm'),
+                                    'cancel' => Yii::t('app', 'Cancel'),
+                                    'id' => $model->id_trans
+                                ],
+                    ]) : '';
                   }
 
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
+                  if ($action === 'print') {
+                      $url ='index.php?r=nota-ingreso/notai-rpt&id='.$model->id_trans;
+                      return $url;
+                  }
                   if ($action === 'view') {
                       $url ='index.php?r=nota-ingreso/view&id='.$model->id_trans.'&asDialog=1';
                       return $url;
@@ -163,3 +176,9 @@ $this->registerJsVar( "buttonCancel", ".close-btn" );
 $this->registerJsVar( "frame", "#frame" );
 $this->registerJsVar( "modal", "#modal" );
 echo   $this->render('//site/_modalForm',[]);
+
+
+$this->registerJsVar( "buttonPrint", ".pjax-print" );
+$this->registerJsVar( "frameRpt", "#frame-rpt" );
+$this->registerJsVar( "modalRpt", "#modal-rpt" );
+echo   $this->render('//site/_modalRpt',[]);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-08-2019 a las 18:33:29
+-- Tiempo de generación: 27-08-2019 a las 00:32:36
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -2397,7 +2397,8 @@ INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `s
 (1, 1, '0000000000', 1, '00', 1),
 (2, 7, '0000000001', 1, '00', 1),
 (3, 8, '0000000000', 1, '00', 1),
-(4, 6, '0000000001', 1, '00', 1);
+(4, 6, '0000000001', 1, '00', 1),
+(5, 4, '0000000002', 1, '00', 1);
 
 -- --------------------------------------------------------
 
@@ -2752,7 +2753,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (4, 'LP-F62', 'CM6-BYD2', 'FARO NEBLINERO BYD F6 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (5, 'LP-CG2', 'CM12-CHG2', 'FARO NEBLINERO CHANGHAN 2012 (SET X 2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (6, 'LP-CF2', 'CM-CH02', 'FARO NEBLINERO MINIVAN CHANGHE FREEDOM(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(7, 'LP-A12', 'CM-A102', 'FARO NEBLINERO CHERRY A1 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(7, 'LP-A12', 'CM-A102', 'FARO NEBLINERO CHERRY A1 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (8, 'LP-AV2C', 'CM07-AV4', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (9, 'LP-AV2', 'CM-9416', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)NEGRO         ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (10, 'LP-N32', 'CM-N3004  ', 'FARO NEBLI.CHEV. N300 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -2787,7 +2788,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (39, 'LP-FJ2', 'CM5-WIN2', 'FARO NEBLI.GREATWALL FENG JUN 5(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (40, 'LP-GH2', 'CM5-GH02', 'FARO NEBLI.GREATWALL HOVER(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (41, 'LP-ST4', 'CM05-SX2', 'FARO NEBLI.PARACH. HY.STAREX 2005(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (43, 'LP-AC2B', 'CM98-AC4', 'FARO NEBLI.PARACH. HY ACCENT BLANCO 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (44, 'LP-AC4', 'CM-9172', 'FARO NEBLI.PARACH. HY ACCENT 2006...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (45, 'LP-AC4B', 'CM10-AC04', 'FARO NEBLI.PARACH. HY ACCENT 2011-2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -3182,7 +3183,9 @@ CREATE TABLE `transaccion` (
   `fecha_trans` date DEFAULT NULL COMMENT 'FECHA TRANSACCION',
   `obsv_trans` text COMMENT 'OBSERVACIONES TRANSACCION',
   `tipo_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO TRANSACCION',
-  `ope_trans` varchar(1) NOT NULL,
+  `ope_trans` varchar(1) NOT NULL COMMENT 'OPERACION TRANSACCION',
+  `idrefdoc_trans` int(11) DEFAULT NULL COMMENT 'ID DOCUMENTO REFERENCIA TRANSACCION',
+  `seriedocref_trans` varchar(4) DEFAULT NULL COMMENT 'SERIE DOC REFERENCIA TRANSACCION',
   `docref_trans` varchar(10) DEFAULT NULL COMMENT 'DOCUMENTO REFERENCIA TRANSACCION',
   `almacen_trans` int(11) NOT NULL COMMENT 'ALMACEN TRANSACCION',
   `sucursal_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TRANSACCION',
@@ -3194,12 +3197,9 @@ CREATE TABLE `transaccion` (
 -- Volcado de datos para la tabla `transaccion`
 --
 
-INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_trans`, `tipo_trans`, `ope_trans`, `docref_trans`, `almacen_trans`, `sucursal_trans`, `usuario_trans`, `status_trans`) VALUES
-(1, '0000000001', '2019-08-15', '', 5, 'E', '111111', 1, 1, 2, 1),
-(3, '0000000001', '2019-08-15', '', 6, 'S', '111111', 1, 1, 2, 1),
-(5, '0000000002', '2019-08-15', '', 5, 'E', '222222', 1, 1, 2, 0),
-(6, '0000000002', '2019-08-15', '', 6, 'S', '222222', 1, 1, 2, 2),
-(7, '0000000003', '2019-08-15', '', 6, 'S', '3333', 1, 1, 2, 1);
+INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_trans`, `tipo_trans`, `ope_trans`, `idrefdoc_trans`, `seriedocref_trans`, `docref_trans`, `almacen_trans`, `sucursal_trans`, `usuario_trans`, `status_trans`) VALUES
+(1, '0000000001', '2019-08-26', '', 5, 'E', NULL, NULL, '111111', 1, 1, 2, 0),
+(2, '0000000002', '2019-08-26', '', 1, 'E', NULL, NULL, '22222', 1, 1, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -3219,16 +3219,8 @@ CREATE TABLE `trans_detalle` (
 --
 
 INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `cant_detalle`) VALUES
-(19, 1, 7, 5),
-(20, 1, 42, 5),
-(23, 3, 7, 5),
-(24, 3, 42, 5),
-(27, 5, 7, 5),
-(28, 5, 42, 5),
-(29, 6, 7, 5),
-(30, 6, 42, 5),
-(31, 7, 42, 5),
-(32, 7, 7, 5);
+(34, 1, 7, 5),
+(35, 2, 42, 5);
 
 -- --------------------------------------------------------
 
@@ -3644,7 +3636,8 @@ ALTER TABLE `transaccion`
   ADD KEY `tipo_trans` (`tipo_trans`),
   ADD KEY `almacen_trans` (`almacen_trans`),
   ADD KEY `usuario_trans` (`usuario_trans`),
-  ADD KEY `grupo_trans` (`ope_trans`);
+  ADD KEY `grupo_trans` (`ope_trans`),
+  ADD KEY `idrefdoc_trans` (`idrefdoc_trans`);
 
 --
 -- Indices de la tabla `trans_detalle`
@@ -3770,7 +3763,7 @@ ALTER TABLE `movimiento_inv`
 -- AUTO_INCREMENT de la tabla `numeracion`
 --
 ALTER TABLE `numeracion`
-  MODIFY `id_num` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
+  MODIFY `id_num` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `pais`
@@ -3860,13 +3853,13 @@ ALTER TABLE `tipo_proveedor`
 -- AUTO_INCREMENT de la tabla `transaccion`
 --
 ALTER TABLE `transaccion`
-  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=8;
+  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `trans_detalle`
 --
 ALTER TABLE `trans_detalle`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=33;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `unidad_medida`
