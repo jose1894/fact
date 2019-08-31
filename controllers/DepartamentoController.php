@@ -55,10 +55,8 @@ class DepartamentoController extends Controller
      */
     public function actionView($id)
     {
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
-        }
+        $this->layout = 'justStuff';
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -72,13 +70,74 @@ class DepartamentoController extends Controller
     public function actionCreate()
     {
         $model = new Departamento();
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
+
+        $this->layout = 'justStuff';
 
 
 
-          if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
+
+          $valid = $model->validate();
+
+          // ajax validation
+          if (!$valid)
+          {
+              if (Yii::$app->request->isAjax) {
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  return ActiveForm::validate($model);
+
+              }
+          }
+          else
+          {
+              $model->sucursal_depto = SiteController::getSucursal();
+              $transaction = \Yii::$app->db->beginTransaction();
+              try {
+                      $model->save();
+                      $transaction->commit();
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      $return = [
+                        'success' => true,
+                        'title' => Yii::t('departamento', 'Department / County / Municipality'),
+                        'message' => Yii::t('app','Record has been saved successfully!'),
+                        'type' => 'success'
+                      ];
+                      return $return;
+
+              } catch (Exception $e) {
+                  $transaction->rollBack();
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  $return = [
+                    'success' => false,
+                    'title' => Yii::t('departamento', 'Department / County / Municipality'),
+                    'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                    'type' => 'error'
+
+                  ];
+                  return $return;
+              }
+          }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Updates an existing Departamento model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        $this->layout = "justStuff";
+
+        if ($model->load(Yii::$app->request->post())) {
 
             $valid = $model->validate();
 
@@ -95,6 +154,7 @@ class DepartamentoController extends Controller
             {
                 $model->sucursal_depto = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
+
                 try {
                         $model->save();
                         $transaction->commit();
@@ -106,7 +166,6 @@ class DepartamentoController extends Controller
                           'type' => 'success'
                         ];
                         return $return;
-
                 } catch (Exception $e) {
                     $transaction->rollBack();
                     Yii::$app->response->format = Response::FORMAT_JSON;
@@ -120,96 +179,11 @@ class DepartamentoController extends Controller
                     return $return;
                 }
             }
-          }
-
-          return $this->render('create', [
-              'model' => $model,
-          ]);
         }
-        else
-        {
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id_depto]);
-            }
 
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Updates an existing Departamento model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-        if ( Yii::$app->request->get( 'asDialog' ) )
-        {
-          $this->layout = "justStuff";
-
-          if ($model->load(Yii::$app->request->post())) {
-
-              $valid = $model->validate();
-
-              // ajax validation
-              if (!$valid)
-              {
-                  if (Yii::$app->request->isAjax) {
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      return ActiveForm::validate($model);
-
-                  }
-              }
-              else
-              {
-                  $model->sucursal_depto = SiteController::getSucursal();
-                  $transaction = \Yii::$app->db->beginTransaction();
-                  
-                  try {
-                          $model->save();
-                          $transaction->commit();
-                          Yii::$app->response->format = Response::FORMAT_JSON;
-                          $return = [
-                            'success' => true,
-                            'title' => Yii::t('departamento', 'Department / County / Municipality'),
-                            'message' => Yii::t('app','Record has been saved successfully!'),
-                            'type' => 'success'
-                          ];
-                          return $return;
-                  } catch (Exception $e) {
-                      $transaction->rollBack();
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      $return = [
-                        'success' => false,
-                        'title' => Yii::t('departamento', 'Department / County / Municipality'),
-                        'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
-                        'type' => 'error'
-
-                      ];
-                      return $return;
-                  }
-              }
-          }
-
-          return $this->render('update', [
-              'model' => $model,
-          ]);
-        }
-        else
-        {
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              return $this->redirect(['view', 'id' => $model->id_depto]);
-          }
-
-          return $this->render('update', [
-              'model' => $model,
-          ]);
-        }
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**

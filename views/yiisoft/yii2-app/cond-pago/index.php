@@ -18,7 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(['id' => 'grid']); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('condicionp', 'Create payment condition'), ['create','asDialog' => 1 ], ['id' => 'create','class' => 'btn btn-success btn-flat']) ?>
@@ -28,20 +27,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            //['class' => 'yii\grid\SerialColumn'],
             [
               'attribute'=>'id_condp',
               'width' => '5%'
             ],
             'desc_condp',
-            //'status_condp',
             [
                 'class' => 'kartik\grid\BooleanColumn',
                 'attribute' => 'status_condp',
                 'vAlign' => 'middle',
                 'width' => '10%'
             ],
-            //'sucursal_condp',
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
@@ -86,19 +82,21 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
-                  if ($action === 'view') {
-                      $url ='index.php?r=cond-pago/view&id='.$model->id_condp.'&asDialog=1';
-                      return $url;
-                  }
 
-                  if ($action === 'update') {
-                      $url ='index.php?r=cond-pago/update&id='.$model->id_condp."&asDialog=1";
-                      return $url;
-                  }
-                  if ($action === 'delete') {
-                      $url ='index.php?r=cond-pago/delete&id='.$model->id_condp;
-                      return $url;
-                  }
+                    if ($action === 'view') {
+                        $url =Url::to(['cond-pago/view', 'id' => $model->id_condp]);
+                        return $url;
+                    }
+
+                    if ($action === 'update') {
+                        $url =Url::to(['cond-pago/update', 'id' => $model->id_condp]);
+                        return $url;
+                    }
+
+                    if ($action === 'delete') {
+                        $url =Url::to(['cond-pago/delete', 'id' => $model->id_condp]);                        
+                        return $url;
+                    }
 
                 }
             ],

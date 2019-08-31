@@ -32,9 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            //['class' => 'yii\grid\SerialColumn'],
-
-            //'id_trans',
             [
               'attribute'=>'codigo_trans',
               'width' => '7%'
@@ -106,7 +103,7 @@ $this->params['breadcrumbs'][] = $this->title;
                   'update' => function ($url, $model) {
                       return !$model->status_trans ? Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
                                   'title' => Yii::t('app', 'Update'),
-                                  // 'class' => 'pjax-update',
+                                  //'class' => 'pjax-update',
                                   'data' => [
                                     'id' => $model->id_trans,
                                   ]
@@ -133,16 +130,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'view') {
-                      $url ='index.php?r=nota-salida/view&id='.$model->id_trans.'&asDialog=1';
+                      $url = Url::to(['nota-salida/view','id' => $model->id_trans]);
                       return $url;
                   }
 
                   if ($action === 'update') {
-                      $url ='index.php?r=nota-salida/update&id='.$model->id_trans;
+                      $url = Url::to(['nota-salida/update','id' => $model->id_trans]);
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url ='index.php?r=nota-salida/delete&id='.$model->id_trans;
+                      $url = Url::to(['nota-salida/delete','id' => $model->id_trans]);
                       return $url;
                   }
 

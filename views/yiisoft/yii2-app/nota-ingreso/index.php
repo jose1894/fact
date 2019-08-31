@@ -141,20 +141,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'print') {
-                      $url ='index.php?r=nota-ingreso/notai-rpt&id='.$model->id_trans;
+                      $url = Url::to(['nota-ingreso/notai-rpt','id'=>$model->id_trans]);
                       return $url;
                   }
                   if ($action === 'view') {
-                      $url ='index.php?r=nota-ingreso/view&id='.$model->id_trans.'&asDialog=1';
+                      $url = Url::to(['nota-ingreso/view','id'=>$model->id_trans]);
                       return $url;
                   }
 
                   if ($action === 'update') {
-                      $url ='index.php?r=nota-ingreso/update&id='.$model->id_trans;
+                      $url = Url::to(['nota-ingreso/update','id'=>$model->id_trans]);
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url ='index.php?r=nota-ingreso/delete&id='.$model->id_trans;
+                      $url = Url::to(['nota-ingreso/delete','id'=>$model->id_trans]);                      
                       return $url;
                   }
 

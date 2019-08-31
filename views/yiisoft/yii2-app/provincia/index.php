@@ -22,7 +22,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(['id' => 'grid']); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('provincia', 'Create estate / province'), ['create','asDialog' => 1], [ 'id' => 'create', 'class' => 'btn btn-flat btn-success']) ?>
@@ -37,7 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
               'width' => '5%'
             ],
             'des_prov',
-            //'pais_prov',
             [
               'attribute'=>'pais_prov',
               'value' => function($data){
@@ -60,7 +58,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'vAlign' => 'middle',
                 'width' => '10%'
             ],
-            //'sucursal_prov',
             [
               'class' => '\kartik\grid\ActionColumn',
               'headerOptions' => ['style' => 'color:#337ab7'],
@@ -106,16 +103,16 @@ $this->params['breadcrumbs'][] = $this->title;
               ],
               'urlCreator' => function ($action, $model, $key, $index) {
                 if ($action === 'view') {
-                    $url ='index.php?r=provincia/view&id='.$model->id_prov.'&asDialog=1';
+                    $url = Url::to(['provincia/view','id'=>$model->id_prov]);
                     return $url;
                 }
 
                 if ($action === 'update') {
-                    $url ='index.php?r=provincia/update&id='.$model->id_prov."&asDialog=1";
+                    $url = Url::to(['provincia/update','id'=>$model->id_prov]);
                     return $url;
                 }
                 if ($action === 'delete') {
-                    $url ='index.php?r=provincia/delete&id='.$model->id_prov;
+                    $url = Url::to(['provincia/delete','id'=>$model->id_prov]);                    
                     return $url;
                 }
 

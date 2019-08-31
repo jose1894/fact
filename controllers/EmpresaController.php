@@ -57,24 +57,16 @@ class EmpresaController extends Controller
      */
     public function actionView($id)
     {
-      if ( Yii::$app->request->get( 'asDialog' ) )
-      {
-        $this->layout = 'justStuff';
+      $this->layout = 'justStuff';
 
-        $model = $this->findModel($id);
-        $modelsSucursal = $model->sucursales;
+      $model = $this->findModel($id);
+      $modelsSucursal = $model->sucursales;
 
-        return $this->render('view', [
-            'model' => $model,
-            'modelsSucursal' => $modelsSucursal,
-        ]);
-      }
-      else
-      {
-        return $this->render('view', [
-          'model' => $this->findModel($id),
-        ]);
-      }
+      return $this->render('view', [
+          'model' => $model,
+          'modelsSucursal' => $modelsSucursal,
+      ]);
+
     }
 
     /**
@@ -86,87 +78,73 @@ class EmpresaController extends Controller
     {
         $model = new Empresa();
 
-        if ( Yii::$app->request->get( 'asDialog' ) )
-        {
-          $modelsSucursal = [new Sucursal];
-          $this->layout = "justStuff";
+        $modelsSucursal = [new Sucursal];
+        $this->layout = "justStuff";
 
-          if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
 
-              //exit( "post aki" );
-              $modelsSucursal = Model::createMultiple(Sucursal::classname(),[],'id_suc');
-              Model::loadMultiple($modelsSucursal, Yii::$app->request->post());
+            //exit( "post aki" );
+            $modelsSucursal = Model::createMultiple(Sucursal::classname(),[],'id_suc');
+            Model::loadMultiple($modelsSucursal, Yii::$app->request->post());
 
-              $valid = $model->validate();
-              $valid = Model::validateMultiple($modelsSucursal) && $valid;
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsSucursal) && $valid;
 
-              // ajax validation
-              if (!$valid)
-              {
-                  if (Yii::$app->request->isAjax) {
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      return ArrayHelper::merge(
-                          ActiveForm::validateMultiple($modelsSucursal),
-                          ActiveForm::validate($model)
-                      );
-                  }
-              }
-              else
-              {
-                  $transaction = \Yii::$app->db->beginTransaction();
-                  try {
-                      if ($flag = $model->save(false)) {
-                          foreach ($modelsSucursal as $modelSucursal) {
-                              $modelSucursal->empresa_suc = $model->id_empresa;
-                              if (! ($flag = $modelSucursal->save(false))) {
-                                  $transaction->rollBack();
-                                  break;
-                              }
-                          }
-                      }
-                      if ($flag) {
-                          $transaction->commit();
-                          //return $this->redirect(['view', 'id' => $model->id_empresa]);
-                          Yii::$app->response->format = Response::FORMAT_JSON;
-                          $return = [
-                            'success' => true,
-                            'title' => Yii::t('empresa', 'Company'),
-                            'message' => Yii::t('app','Record has been saved successfully!'),
-                            'type' => 'success'
-                          ];
-                          return $return;
-                      }
-                  } catch (Exception $e) {
-                      $transaction->rollBack();
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      $return = [
-                        'success' => false,
-                        'title' => Yii::t('empresa', 'Company'),
-                        'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
-                        'type' => 'error'
+            // ajax validation
+            if (!$valid)
+            {
+                if (Yii::$app->request->isAjax) {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ArrayHelper::merge(
+                        ActiveForm::validateMultiple($modelsSucursal),
+                        ActiveForm::validate($model)
+                    );
+                }
+            }
+            else
+            {
+                $transaction = \Yii::$app->db->beginTransaction();
+                try {
+                    if ($flag = $model->save(false)) {
+                        foreach ($modelsSucursal as $modelSucursal) {
+                            $modelSucursal->empresa_suc = $model->id_empresa;
+                            if (! ($flag = $modelSucursal->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                    }
+                    if ($flag) {
+                        $transaction->commit();
+                        //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        $return = [
+                          'success' => true,
+                          'title' => Yii::t('empresa', 'Company'),
+                          'message' => Yii::t('app','Record has been saved successfully!'),
+                          'type' => 'success'
+                        ];
+                        return $return;
+                    }
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    $return = [
+                      'success' => false,
+                      'title' => Yii::t('empresa', 'Company'),
+                      'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                      'type' => 'error'
 
-                      ];
-                      return $return;
-                  }
-              }
-          }
-
-          return $this->render('create', [
-              'model' => $model,
-              'modelsSucursal' => (empty($modelsSucursal)) ? [new Sucursal] : $modelsSucursal
-          ]);
-        }
-        else
-        {
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              return $this->redirect(['view', 'id' => $model->dni_empresa]);
-          }
-
-          return $this->render('create', [
-              'model' => $model,
-          ]);
+                    ];
+                    return $return;
+                }
+            }
         }
 
+        return $this->render('create', [
+            'model' => $model,
+            'modelsSucursal' => (empty($modelsSucursal)) ? [new Sucursal] : $modelsSucursal
+        ]);
 
     }
 
@@ -180,92 +158,80 @@ class EmpresaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ( Yii::$app->request->get( 'asDialog' ) )
-        {
-          $modelsSucursal = $model->sucursales;
-          $this->layout = "justStuff";
 
-          if ($model->load(Yii::$app->request->post())) {
+        $modelsSucursal = $model->sucursales;
+        $this->layout = "justStuff";
 
-              //exit( "post aki" );
-              $oldIDs = ArrayHelper::map($modelsSucursal, 'id_suc', 'id_suc');
-              $modelsSucursal = Model::createMultiple(Sucursal::classname(), $modelsSucursal,'id_suc');
-              Model::loadMultiple($modelsSucursal, Yii::$app->request->post());
-              $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsSucursal, 'id_suc', 'id_suc')));
+        if ($model->load(Yii::$app->request->post())) {
 
-              $valid = $model->validate();
-              $valid = Model::validateMultiple($modelsSucursal) && $valid;
+            //exit( "post aki" );
+            $oldIDs = ArrayHelper::map($modelsSucursal, 'id_suc', 'id_suc');
+            $modelsSucursal = Model::createMultiple(Sucursal::classname(), $modelsSucursal,'id_suc');
+            Model::loadMultiple($modelsSucursal, Yii::$app->request->post());
+            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsSucursal, 'id_suc', 'id_suc')));
 
-              // ajax validation
-              if (!$valid)
-              {
-                  if (Yii::$app->request->isAjax) {
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      return ArrayHelper::merge(
-                          ActiveForm::validateMultiple($modelsSucursal),
-                          ActiveForm::validate($model)
-                      );
-                  }
-              }
-              else
-              {
-                  $transaction = \Yii::$app->db->beginTransaction();
-                  try {
-                      if ($flag = $model->save(false)) {
-                        if (!empty($deletedIDs)) {
-                            Sucursal::deleteAll(['id_suc' => $deletedIDs]);
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsSucursal) && $valid;
+
+            // ajax validation
+            if (!$valid)
+            {
+                if (Yii::$app->request->isAjax) {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ArrayHelper::merge(
+                        ActiveForm::validateMultiple($modelsSucursal),
+                        ActiveForm::validate($model)
+                    );
+                }
+            }
+            else
+            {
+                $transaction = \Yii::$app->db->beginTransaction();
+                try {
+                    if ($flag = $model->save(false)) {
+                      if (!empty($deletedIDs)) {
+                          Sucursal::deleteAll(['id_suc' => $deletedIDs]);
+                      }
+
+                        foreach ($modelsSucursal as $modelSucursal) {
+                            $modelSucursal->empresa_suc = $model->id_empresa;
+                            if (! ($flag = $modelSucursal->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
                         }
+                    }
+                    if ($flag) {
+                        $transaction->commit();
+                        //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        $return = [
+                          'success' => true,
+                          'title' => Yii::t('empresa', 'Company'),
+                          'message' => Yii::t('app','Record has been saved successfully!'),
+                          'type' => 'success'
+                        ];
+                        return $return;
+                    }
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    $return = [
+                      'success' => false,
+                      'title' => Yii::t('empresa', 'Company'),
+                      'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                      'type' => 'error'
 
-                          foreach ($modelsSucursal as $modelSucursal) {
-                              $modelSucursal->empresa_suc = $model->id_empresa;
-                              if (! ($flag = $modelSucursal->save(false))) {
-                                  $transaction->rollBack();
-                                  break;
-                              }
-                          }
-                      }
-                      if ($flag) {
-                          $transaction->commit();
-                          //return $this->redirect(['view', 'id' => $model->id_empresa]);
-                          Yii::$app->response->format = Response::FORMAT_JSON;
-                          $return = [
-                            'success' => true,
-                            'title' => Yii::t('empresa', 'Company'),
-                            'message' => Yii::t('app','Record has been saved successfully!'),
-                            'type' => 'success'
-                          ];
-                          return $return;
-                      }
-                  } catch (Exception $e) {
-                      $transaction->rollBack();
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      $return = [
-                        'success' => false,
-                        'title' => Yii::t('empresa', 'Company'),
-                        'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
-                        'type' => 'error'
-
-                      ];
-                      return $return;
-                  }
-              }
-          }
-
-          return $this->render('update', [
-              'model' => $model,
-              'modelsSucursal' => (empty($modelsSucursal)) ? [new Sucursal] : $modelsSucursal
-          ]);
+                    ];
+                    return $return;
+                }
+            }
         }
-        else
-        {
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              return $this->redirect(['view', 'id' => $model->dni_empresa]);
-          }
 
-          return $this->render('update', [
-              'model' => $model,
-          ]);
-        }
+        return $this->render('update', [
+            'model' => $model,
+            'modelsSucursal' => (empty($modelsSucursal)) ? [new Sucursal] : $modelsSucursal
+        ]);
     }
 
     /**
@@ -325,7 +291,7 @@ class EmpresaController extends Controller
             }
           }
         }
-        
+
         $out =  ['output' => $arrSucursales, 'selected' => $selected];
       }
 

@@ -17,7 +17,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin([ 'id' => 'grid']); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('pais', 'Create country'), ['create', 'asDialog' => 1], ['id' => 'create','class' => 'btn btn-flat btn-success']) ?>
@@ -36,14 +35,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' =>'des_pais',
                 'width' => '70%'
             ],
-            //'status_pais',
             [
                 'class' => 'kartik\grid\BooleanColumn',
                 'attribute' => 'status_pais',
                 'vAlign' => 'middle',
                 'width' => '10%'
             ],
-            //'sucursal_pais',
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
@@ -89,16 +86,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'view') {
-                      $url ='index.php?r=pais/view&id='.$model->id_pais.'&asDialog=1';
+                      $url = Url::to(['pais/view', 'id'=> $model->id_pais]);
                       return $url;
                   }
 
                   if ($action === 'update') {
-                      $url ='index.php?r=pais/update&id='.$model->id_pais."&asDialog=1";
+                      $url = Url::to(['pais/update', 'id'=> $model->id_pais]);
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url ='index.php?r=pais/delete&id='.$model->id_pais;
+                      $url = Url::to(['pais/delete', 'id'=> $model->id_pais]);                      
                       return $url;
                   }
 

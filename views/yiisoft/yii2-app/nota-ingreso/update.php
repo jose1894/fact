@@ -12,7 +12,7 @@ $this->title = Yii::t('ingreso', 'Update entry note: {number}', [
     //'name' => $model->nombre_trans,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('ingreso', 'Entry note'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id_trans, 'url' => ['view', 'id' => $model->id_trans]];
+$this->params['breadcrumbs'][] = ['label' => $model->codigo_trans, 'url' => ['view', 'id' => $model->id_trans]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="pedido-update">

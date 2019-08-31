@@ -10,5 +10,5 @@ return [
     'Country: <span class="label label-primary">{number}</span> {name}' => 'País: <span class="label label-primary">{number}</span> {name}',
     'Country' => 'País',
     'Select a country' => 'Seleccione un país',
-    'Update country: {<span class="label label-primary">{number}</span> {name}' => 'Actualizar país: <span class="label label-primary">{number}</span> {name}'
+    'Update country: <span class="label label-primary">{number}</span> {name}' => 'Actualizar país: <span class="label label-primary">{number}</span> {name}'
 ];

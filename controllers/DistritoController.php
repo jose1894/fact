@@ -55,10 +55,8 @@ class DistritoController extends Controller
      */
     public function actionView($id)
     {
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
-        }
+        $this->layout = 'justStuff';
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -72,11 +70,71 @@ class DistritoController extends Controller
     public function actionCreate()
     {
         $model = new Distrito();
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
+        $this->layout = 'justStuff';
 
-          if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
+
+          $valid = $model->validate();
+
+          // ajax validation
+          if (!$valid)
+          {
+              if (Yii::$app->request->isAjax) {
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  return ActiveForm::validate($model);
+
+              }
+          }
+          else
+          {
+              $model->sucursal_dtto = SiteController::getSucursal();
+              $transaction = \Yii::$app->db->beginTransaction();
+              try {
+                      $model->save();
+                      $transaction->commit();
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      $return = [
+                        'success' => true,
+                        'title' => Yii::t('distrito', 'District / Parish'),
+                        'message' => Yii::t('app','Record has been saved successfully!'),
+                        'type' => 'success'
+                      ];
+                      return $return;
+
+              } catch (Exception $e) {
+                  $transaction->rollBack();
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  $return = [
+                    'success' => false,
+                    'title' => Yii::t('distrito', 'District / Parish'),
+                    'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                    'type' => 'error'
+
+                  ];
+                  return $return;
+              }
+          }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Updates an existing Distrito model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        $this->layout = "justStuff";
+
+        if ($model->load(Yii::$app->request->post())) {
 
             $valid = $model->validate();
 
@@ -93,6 +151,7 @@ class DistritoController extends Controller
             {
                 $model->sucursal_dtto = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
+
                 try {
                         $model->save();
                         $transaction->commit();
@@ -104,7 +163,6 @@ class DistritoController extends Controller
                           'type' => 'success'
                         ];
                         return $return;
-
                 } catch (Exception $e) {
                     $transaction->rollBack();
                     Yii::$app->response->format = Response::FORMAT_JSON;
@@ -118,96 +176,12 @@ class DistritoController extends Controller
                     return $return;
                 }
             }
-          }
-
-          return $this->render('create', [
-              'model' => $model,
-          ]);
         }
-        else
-        {
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id_depto]);
-            }
 
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
+        return $this->render('update', [
+            'model' => $model,
+        ]);
 
-    /**
-     * Updates an existing Distrito model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-        if ( Yii::$app->request->get( 'asDialog' ) )
-        {
-          $this->layout = "justStuff";
-
-          if ($model->load(Yii::$app->request->post())) {
-
-              $valid = $model->validate();
-
-              // ajax validation
-              if (!$valid)
-              {
-                  if (Yii::$app->request->isAjax) {
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      return ActiveForm::validate($model);
-
-                  }
-              }
-              else
-              {
-                  $model->sucursal_dtto = SiteController::getSucursal();
-                  $transaction = \Yii::$app->db->beginTransaction();
-                  
-                  try {
-                          $model->save();
-                          $transaction->commit();
-                          Yii::$app->response->format = Response::FORMAT_JSON;
-                          $return = [
-                            'success' => true,
-                            'title' => Yii::t('distrito', 'District / Parish'),
-                            'message' => Yii::t('app','Record has been saved successfully!'),
-                            'type' => 'success'
-                          ];
-                          return $return;
-                  } catch (Exception $e) {
-                      $transaction->rollBack();
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      $return = [
-                        'success' => false,
-                        'title' => Yii::t('distrito', 'District / Parish'),
-                        'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
-                        'type' => 'error'
-
-                      ];
-                      return $return;
-                  }
-              }
-          }
-
-          return $this->render('update', [
-              'model' => $model,
-          ]);
-        }
-        else
-        {
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              return $this->redirect(['view', 'id' => $model->id_depto]);
-          }
-
-          return $this->render('update', [
-              'model' => $model,
-          ]);
-        }
     }
 
     /**

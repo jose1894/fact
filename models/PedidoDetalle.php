@@ -60,7 +60,7 @@ class PedidoDetalle extends \yii\db\ActiveRecord
         return [
             'id_pdetalle' => Yii::t('pedido', 'Id'),
             'prod_pdetalle' => Yii::t('pedido', 'Product'),
-            'cant_pdetalle' => Yii::t('pedido', 'Quantity'),
+            'cant_pdetalle' => Yii::t('pedido', 'Qtty'),
             'precio_pdetalle' => Yii::t('pedido', 'Price'),
             'descu_pdetalle' => Yii::t('pedido', 'Discount'),
             'impuesto_pdetalle' => Yii::t('pedido', 'Tax'),

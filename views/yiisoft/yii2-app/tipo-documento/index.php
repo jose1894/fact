@@ -21,7 +21,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin([ 'id' => 'grid']); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('tipo_documento', 'Create document type'), ['create','asDialog' => 1 ], [ 'id' => 'create','class' => 'btn btn-flat btn btn-success']) ?>
@@ -109,16 +108,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'view') {
-                      $url ='index.php?r=tipo-documento/view&id='.$model->id_tipod.'&asDialog=1';
+                      $url = Url::to(['tipo-documento/view','id'=>$model->id_tipod]);
                       return $url;
                   }
 
                   if ($action === 'update') {
-                      $url ='index.php?r=tipo-documento/update&id='.$model->id_tipod."&asDialog=1";
+                      $url = Url::to(['tipo-documento/update','id'=>$model->id_tipod]);
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url ='index.php?r=tipo-documento/delete&id='.$model->id_tipod;
+                      $url = Url::to(['tipo-documento/delete','id'=>$model->id_tipod]);
                       return $url;
                   }
 

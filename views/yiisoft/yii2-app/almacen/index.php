@@ -84,16 +84,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'view') {
-                      $url ='index.php?r=almacen/view&id='.$model->id_almacen.'&asDialog=1';
+                      $url = Url::to(['almacen/view','id' => $model->id_almacen]);
                       return $url;
                   }
 
                   if ($action === 'update') {
-                      $url ='index.php?r=almacen/update&id='.$model->id_almacen."&asDialog=1";
+                      $url = Url::to(['almacen/update','id' => $model->id_almacen]);
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url ='index.php?r=almacen/delete&id='.$model->id_almacen;
+                      $url = Url::to(['almacen/delete','id' => $model->id_almacen]);                      
                       return $url;
                   }
 

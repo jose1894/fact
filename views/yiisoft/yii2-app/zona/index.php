@@ -17,7 +17,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin([ 'id' => 'grid']); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('zona', 'Create Zone'), ['create', 'asDialog' => 1], ['id' => 'create','class' => 'btn btn-flat btn btn-success']) ?>
@@ -26,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'columns' => [            
+        'columns' => [
             'id_zona',
             [
               'attribute' => 'nombre_zona',
@@ -42,7 +41,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'vAlign' => 'middle',
                 'width' => '10%'
             ],
-            //'sucursal_zona',
 
             [
               'class' => '\kartik\grid\ActionColumn',
@@ -89,16 +87,16 @@ $this->params['breadcrumbs'][] = $this->title;
               ],
               'urlCreator' => function ($action, $model, $key, $index) {
                 if ($action === 'view') {
-                    $url ='index.php?r=zona/view&id='.$model->id_zona.'&asDialog=1';
+                    $url = Url::to(['zona/view','id'=>$model->id_zona]);
                     return $url;
                 }
 
                 if ($action === 'update') {
-                    $url ='index.php?r=zona/update&id='.$model->id_zona."&asDialog=1";
+                    $url = Url::to(['zona/update','id'=>$model->id_zona]);
                     return $url;
                 }
                 if ($action === 'delete') {
-                    $url ='index.php?r=zona/delete&id='.$model->id_zona;
+                    $url = Url::to(['zona/delete','id'=>$model->id_zona]);                    
                     return $url;
                 }
 

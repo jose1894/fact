@@ -63,10 +63,8 @@ class NotaIngresoController extends Controller
      */
     public function actionView($id)
     {
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
-        }
+
+        $this->layout = 'justStuff';
 
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -131,7 +129,7 @@ class NotaIngresoController extends Controller
                               }
                           }
                       }
-                      //return $this->redirect(['view', 'id' => $model->id_empresa]);
+
                       if ($flag) {
                         $numeracion = Numeracion::findOne($num['id_num']);
                         $numeracion->numero_num = $codigo;
@@ -162,28 +160,12 @@ class NotaIngresoController extends Controller
           }
         }
 
-        //$searchModel = new NotaIngresoDetalleSearch();
-        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        //  $dataProvider->query->andWhere('trans_pdetalle=:trans', [':trans' => $model->id_trans]);
-
         $model->almacen_trans = Almacen::findOne(['status_almacen' => 1]);
         $model->usuario_trans = Yii::$app->user->id;
         return $this->render('create', [
             'model' => $model,
             'modelsDetalles' => (empty($modelsDetalles)) ? [new NotaIngresoDetalle] : $modelsDetalles,
-            //'dataProvider' => $dataProvider,
         ]);
-        /*}
-        else {
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              return $this->redirect(['view', 'id' => $model->id_tpdcto]);
-          }
-
-          return $this->render('create', [
-              'model' => $model,
-          ]);
-        }*/
     }
 
     /**

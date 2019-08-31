@@ -52,7 +52,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'serie_num',
             'numero_num',
-            //'sucursal_num',
             [
                 'class' => 'kartik\grid\BooleanColumn',
                 'attribute' => 'status_num',
@@ -105,16 +104,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'view') {
-                      $url ='index.php?r=numeracion/view&id='.$model->id_num.'&asDialog=1';
+                      $url = Url::to(['numeracion/view', 'id'=>$model->id_num]);
                       return $url;
                   }
 
                   if ($action === 'update') {
-                      $url ='index.php?r=numeracion/update&id='.$model->id_num."&asDialog=1";
+                      $url = Url::to(['numeracion/update', 'id'=>$model->id_num]);
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url ='index.php?r=numeracion/delete&id='.$model->id_num;
+                      $url = Url::to(['numeracion/delete', 'id'=>$model->id_num]);                                          
                       return $url;
                   }
 

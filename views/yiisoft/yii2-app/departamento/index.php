@@ -23,7 +23,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(['id' => 'grid']); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('departamento', 'Create department / county / municipality'), ['create', 'asDialog' => 1], ['id'=>'create','class' => 'btn btn-flat btn-success']) ?>
@@ -76,7 +75,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'vAlign' => 'middle',
                 'width' => '10%'
             ],
-            //'sucursal_depto',
             [
               'class' => '\kartik\grid\ActionColumn',
               'headerOptions' => ['style' => 'color:#337ab7'],
@@ -122,16 +120,16 @@ $this->params['breadcrumbs'][] = $this->title;
               ],
               'urlCreator' => function ($action, $model, $key, $index) {
                 if ($action === 'view') {
-                    $url ='index.php?r=departamento/view&id='.$model->id_depto.'&asDialog=1';
+                    $url = Url::to(['departamento/view', 'id' => $model->id_depto]);
                     return $url;
                 }
 
                 if ($action === 'update') {
-                    $url ='index.php?r=departamento/update&id='.$model->id_depto."&asDialog=1";
+                    $url = Url::to(['departamento/update', 'id' => $model->id_depto]);
                     return $url;
                 }
                 if ($action === 'delete') {
-                    $url ='index.php?r=departamento/delete&id='.$model->id_depto;
+                    $url = Url::to(['departamento/delete', 'id' => $model->id_depto]);                    
                     return $url;
                 }
 

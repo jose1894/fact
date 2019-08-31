@@ -41,13 +41,12 @@ class Pedido extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            //[['usuario_pedido', 'estatus_pedido', 'sucursal_pedido'],'required'],
             [['cod_pedido', 'fecha_pedido', 'clte_pedido', 'vend_pedido', 'moneda_pedido', 'almacen_pedido', 'condp_pedido','tipo_pedido'], 'required'],
             [['fecha_pedido'], 'safe'],
             [['clte_pedido', 'vend_pedido', 'moneda_pedido', 'almacen_pedido', 'usuario_pedido', 'condp_pedido', 'estatus_pedido', 'sucursal_pedido'], 'integer'],
             [['cod_pedido'], 'string', 'max' => 10],
             [['nrodoc_pedido'], 'string', 'max' => 12],
-            [['tipo_pedido'], 'string', 'max' => 2],            
+            [['tipo_pedido'], 'string', 'max' => 2],
             [['cod_pedido'], 'unique', 'targetAttribute' => ['cod_pedido','tipo_pedido']],
             [['clte_pedido'], 'exist', 'skipOnError' => true, 'targetClass' => Cliente::className(), 'targetAttribute' => ['clte_pedido' => 'id_clte']],
             [['vend_pedido'], 'exist', 'skipOnError' => true, 'targetClass' => Vendedor::className(), 'targetAttribute' => ['vend_pedido' => 'id_vendedor']],

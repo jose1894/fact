@@ -63,10 +63,8 @@ class NotaSalidaController extends Controller
      */
     public function actionView($id)
     {
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
-        }
+
+        $this->layout = 'justStuff';
 
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -82,8 +80,6 @@ class NotaSalidaController extends Controller
     {
         $model = new NotaSalida();
         $modelsDetalles = [new NotaSalidaDetalle()];
-
-        if ($model->load(Yii::$app->request->post())) {
 
           $modelsDetalles = Model::createMultiple(NotaSalidaDetalle::classname());
           Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
@@ -117,7 +113,7 @@ class NotaSalidaController extends Controller
 
               try {
 
-                        if ($flag = $model->save(false)) {
+                      if ($flag = $model->save(false)) {
                           foreach ($modelsDetalles as $modelDetalle) {
                               $modelDetalle->trans_detalle = $model->id_trans;
                               if (! ($flag = $modelDetalle->save(false))) {
@@ -127,7 +123,7 @@ class NotaSalidaController extends Controller
                               }
                           }
                       }
-                      //return $this->redirect(['view', 'id' => $model->id_empresa]);
+
                       if ($flag) {
                         $transaction->commit();
                         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -152,31 +148,17 @@ class NotaSalidaController extends Controller
                   ];
                   return $return;
               }
-          }
         }
 
-        //$searchModel = new NotaSalidaDetalleSearch();
-        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        //  $dataProvider->query->andWhere('trans_pdetalle=:trans', [':trans' => $model->id_trans]);
 
         $model->almacen_trans = Almacen::findOne(['status_almacen' => 1]);
         $model->usuario_trans = Yii::$app->user->id;
         return $this->render('create', [
             'model' => $model,
             'modelsDetalles' => (empty($modelsDetalles)) ? [new NotaSalidaDetalle] : $modelsDetalles,
-            //'dataProvider' => $dataProvider,
-        ]);
-        /*}
-        else {
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              return $this->redirect(['view', 'id' => $model->id_tpdcto]);
-          }
 
-          return $this->render('create', [
-              'model' => $model,
-          ]);
-        }*/
+        ]);
+
     }
 
     /**
@@ -227,7 +209,6 @@ class NotaSalidaController extends Controller
                     if ($flag) {
                         $model->save();
                         $transaction->commit();
-                        //return $this->redirect(['view', 'id' => $model->id_empresa]);
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         $return = [
                           'success' => true,

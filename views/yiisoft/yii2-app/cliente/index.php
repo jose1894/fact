@@ -20,8 +20,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(['id'=>'grid']); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
         <?= Html::a(Yii::t('cliente', 'Create customer'), ['create','asDialog' => 1], ['id'=>'create', 'class' => 'btn btn-flat btn-success']) ?>
     </p>
@@ -42,38 +40,12 @@ $this->params['breadcrumbs'][] = $this->title;
               'contentOptions' => ['class' => 'text-wrap'],
               'width' => '50%'
             ],
-            //'vendedor_clte',
-          /*  [
-              'attribute'=>'provi_cte',
-              'value' => function($data){
-                   return $data->provClte->des_prov;
-              },
-              'filter'=>Provincia::getProvinciaList($searchModel->pais_cte),
-              'filterType' => GridView::FILTER_SELECT2,
-              'filterWidgetOptions' => [
-                  'language' => Yii::$app->language,
-                  'theme' => Select2::THEME_DEFAULT,
-                  'pluginOptions' => ['allowClear' => true],
-                  'pluginEvents' =>[],
-                  'options' => ['prompt' => ''],
-              ],
-              'width' => '20%'
-            ],*/
             [
                 'class' => 'kartik\grid\BooleanColumn',
                 'attribute' => 'estatus_ctle',
                 'vAlign' => 'middle',
                 'width' => '10%'
             ],
-            //'direcc_clte:ntext',
-            //'depto_cte',
-            //'provi_cte',
-            //'dtto_clte',
-            //'tlf_ctle',
-            //'estatus_ctle',
-            //'condp_clte',
-            //'sucursal_clte',
-
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
@@ -119,16 +91,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'view') {
-                      $url ='index.php?r=cliente/view&id='.$model->id_clte.'&asDialog=1';
+                      $url = Url::to(['cliente/view','id' => $model->id_clte]);
                       return $url;
                   }
 
                   if ($action === 'update') {
-                      $url ='index.php?r=cliente/update&id='.$model->id_clte."&asDialog=1";
+                      $url = Url::to(['cliente/update','id' => $model->id_clte]);
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url ='index.php?r=cliente/delete&id='.$model->id_clte;
+                      $url = Url::to(['cliente/delete','id' => $model->id_clte]);
                       return $url;
                   }
 

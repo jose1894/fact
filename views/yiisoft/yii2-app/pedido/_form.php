@@ -40,7 +40,7 @@ if ( $model->isNewRecord ) {
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
           <?= $form
           ->field($model, 'cod_pedido',['addClass' => 'form-control '])
-          ->textInput(['maxlength' => true,'readonly' => true, 'style' => ['text-align' => 'rigth']]) ?>
+          ->textInput(['maxlength' => true,'readonly' => true, 'style' => ['text-align' => 'right']]) ?>
         </div>
 
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
@@ -51,7 +51,7 @@ if ( $model->isNewRecord ) {
             ])->textInput([
                   'value' => date('d/m/Y'),
                   'readonly' => 'readonly',
-                  'style' => ['text-align','rigth']
+                  'style' => ['text-align' => 'right']
               ]) ?>
         </div>
 
@@ -293,6 +293,7 @@ if ( $model->isNewRecord ) {
                             'ajax' => [
                                 'url' => $url,
                                 'dataType' => 'json',
+                                'method' => 'POST',
                                 'data' => new JsExpression('function(params) { return {desc:params.term,tipo_listap: $("#pedido-tipo_listap").val()}; }'),
                                 'processResults' => new JsExpression($resultsJs),
                             ],
@@ -474,21 +475,13 @@ $( buttonPrint ).on( "click", function(){
   });
   $( modalRpt ).modal("show");
 });
-';
-$this->registerJs($js,View::POS_LOAD);
-$this->registerJs(<<<JS
-
-$('#pedido_tipo  input[type="radio"]').iCheck({
-  checkboxClass: 'icheckbox_flat-green',
-  radioClass   : 'iradio_flat-green'
-});
 
 
-$( '#pedido-clte_pedido' ).on( 'select2:select',function () {
+$( "#pedido-clte_pedido" ).on( "select2:select",function () {
 
   $.ajax({
-    url: '?r=cliente/cliente-list',
-    method: 'GET',
+    url: "'. Url::to(['cliente/cliente-list']).'",
+    method: "GET",
     data:{ id : $(this).val()},
     async: false,
     success: function( cliente ) {
@@ -512,6 +505,14 @@ $( '#pedido-clte_pedido' ).on( 'select2:select',function () {
     }
   });
 
+});
+';
+$this->registerJs($js,View::POS_LOAD);
+$this->registerJs(<<<JS
+
+$('#pedido_tipo  input[type="radio"]').iCheck({
+  checkboxClass: 'icheckbox_flat-green',
+  radioClass   : 'iradio_flat-green'
 });
 
 $( '.table-body' ).on('select2:select',"select[id$='prod_pdetalle']",function() {
@@ -708,37 +709,6 @@ function calculateTotals( IMPUESTO ) {
   //return totals;
 }
 
-function setPrices( value = null, row, tipo_lista ) {
-  if ( value ) {
-    $.ajax({
-        url:'?r=producto/product-price',
-        data:{
-          id: value,
-          tipo_listap: tipo_lista
-        },
-        async:false,
-        success: function( data ) {
-          if ( data.results ) {
-            let precioLista = data.results[ 0 ].precio;
-            let impuestoDetalle = data.results[ 0 ].precio - data.results[ 0 ].precio / ( IMPUESTO + 1 );
-
-            precioLista = parseFloat(  precioLista  ).toFixed( 2 );
-            impuestoDetalle = parseFloat(  impuestoDetalle  ).toFixed( 2 );
-
-            $( '#pedidodetalle-' + row + '-plista_pdetalle' ).val( precioLista );
-            $( '#pedidodetalle-' + row + '-impuesto_pdetalle' ).val( impuestoDetalle );
-
-            let descuDetalle = $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( );
-            descuDetalle = descuDetalle ? descuDetalle : 0;
-
-            $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( descuDetalle );
-            $( '#pedidodetalle-' + row + '-precio_pdetalle' ).val( precioLista );
-          }
-        }
-    });
-  }
-}
-
 JS
 , VIEW::POS_END);
 
@@ -763,6 +733,37 @@ JS
   }
 
   $jsSave = "
+  function setPrices( value = null, row, tipo_lista ) {
+    if ( value ) {
+      $.ajax({
+          url:'".Url::to(['producto/product-price'])."',
+          data:{
+            id: value,
+            tipo_listap: tipo_lista
+          },
+          async:false,
+          success: function( data ) {
+            if ( data.results ) {
+              let precioLista = data.results[ 0 ].precio;
+              let impuestoDetalle = data.results[ 0 ].precio - data.results[ 0 ].precio / ( IMPUESTO + 1 );
+
+              precioLista = parseFloat(  precioLista  ).toFixed( 2 );
+              impuestoDetalle = parseFloat(  impuestoDetalle  ).toFixed( 2 );
+
+              $( '#pedidodetalle-' + row + '-plista_pdetalle' ).val( precioLista );
+              $( '#pedidodetalle-' + row + '-impuesto_pdetalle' ).val( impuestoDetalle );
+
+              let descuDetalle = $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( );
+              descuDetalle = descuDetalle ? descuDetalle : 0;
+
+              $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( descuDetalle );
+              $( '#pedidodetalle-' + row + '-precio_pdetalle' ).val( precioLista );
+            }
+          }
+      });
+    }
+  }
+
   $( '#submit' ).on( 'click', function() {
     let form = $( 'form#Pedido' );
 

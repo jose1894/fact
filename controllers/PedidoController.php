@@ -63,12 +63,14 @@ class PedidoController extends Controller
      */
     public function actionView($id)
     {
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
-        }
+
+        $this->layout = 'justStuff';
+        $model = $this->findModel($id);
+
+        $tipo = ($model->tipo_pedido === Pedido::PEDIDO) ? 'PEDIDO' : ($model->tipo_pedido === Pedido::PROFORMA) ? 'PROFORMA' : 'COTIZACION';
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'tipo' => $tipo
         ]);
     }
 
@@ -80,20 +82,12 @@ class PedidoController extends Controller
     public function actionCreate()
     {
         $model = new Pedido();
-      //  if (Yii::$app->request->get('asDialog'))
-        //{
-          //$this->layout = 'justStuff';
           $modelsDetalles = [new PedidoDetalle()];
 
           if ($model->load(Yii::$app->request->post())) {
 
             $modelsDetalles = Model::createMultiple(PedidoDetalle::classname());
             Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
-
-            $num = Numeracion::getNumeracion( $model->tipo_pedido );
-            $codigo = intval( $num['numero_num'] ) + 1;
-            $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
-            $model->cod_pedido = $codigo;
 
             // validate all models
             $valid = $model->validate();
@@ -111,6 +105,11 @@ class PedidoController extends Controller
             }
             else
             {
+                $num = Numeracion::getNumeracion( $model->tipo_pedido );
+                $codigo = intval( $num['numero_num'] ) + 1;
+                $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
+                $model->cod_pedido = $codigo;
+
                 $fecha = explode("/",$model->fecha_pedido);
                 $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
                 $model->fecha_pedido = $fecha;
@@ -273,7 +272,7 @@ class PedidoController extends Controller
             }
         }
 
-        $tipo = ($model->tipo_pedido === Pedido::PEDIDO) ? 'PEDIDO' : ($modelPedido->tipo_pedido === Pedido::PROFORMA) ? 'PROFORMA' : 'COTIZACION';
+        $tipo = ($model->tipo_pedido === Pedido::PEDIDO) ? 'PEDIDO' : ($model->tipo_pedido === Pedido::PROFORMA) ? 'PROFORMA' : 'COTIZACION';
 
         return $this->render('update', [
             'model' => $model,

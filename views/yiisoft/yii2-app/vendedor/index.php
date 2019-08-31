@@ -90,16 +90,16 @@ $this->params['breadcrumbs'][] = $this->title;
               ],
               'urlCreator' => function ($action, $model, $key, $index) {
                 if ($action === 'view') {
-                    $url ='index.php?r=vendedor/view&id='.$model->id_vendedor.'&asDialog=1';
+                    $url = Url::to(['vendedor/view','id'=>$model->id_vendedor]);
                     return $url;
                 }
 
                 if ($action === 'update') {
-                    $url ='index.php?r=vendedor/update&id='.$model->id_vendedor."&asDialog=1";
+                    $url = Url::to(['vendedor/update','id'=>$model->id_vendedor]);
                     return $url;
                 }
                 if ($action === 'delete') {
-                    $url ='index.php?r=vendedor/delete&id='.$model->id_vendedor;
+                    $url = Url::to(['vendedor/delete','id'=>$model->id_vendedor]);                    
                     return $url;
                 }
 

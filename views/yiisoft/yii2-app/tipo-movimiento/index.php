@@ -18,7 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin([ 'id' => 'grid']); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('tipo_movimiento', 'Create movement type'), ['create','asDialog' => 1 ], [ 'id' => 'create','class' => 'btn btn-flat btn btn-success']) ?>
@@ -33,14 +32,12 @@ $this->params['breadcrumbs'][] = $this->title;
               'width' => '5%'
             ],
             'des_tipom',
-            //'status_tipom',
             [
                 'class' => 'kartik\grid\BooleanColumn',
                 'attribute' => 'status_tipom',
                 'vAlign' => 'middle',
                 'width' => '10%'
             ],
-            //'sucursal_tipom',
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
@@ -86,16 +83,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'view') {
-                      $url ='index.php?r=tipo-movimiento/view&id='.$model->id_tipom.'&asDialog=1';
+                      $url = Url::to(['tipo-movimiento/view','id'=>$model->id_tipom]);
                       return $url;
                   }
 
                   if ($action === 'update') {
-                      $url ='index.php?r=tipo-movimiento/update&id='.$model->id_tipom."&asDialog=1";
+                      $url = Url::to(['tipo-movimiento/update','id'=>$model->id_tipom]);
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url ='index.php?r=tipo-movimiento/delete&id='.$model->id_tipom;
+                      $url = Url::to(['tipo-movimiento/delete','id'=>$model->id_tipom]);
                       return $url;
                   }
 

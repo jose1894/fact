@@ -21,7 +21,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(['id'=>'grid']); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('proveedor', 'Create supplier'), ['create', 'asDialog' => 1], ['id' => 'create', 'class' => 'btn btn-flat btn-success']) ?>
@@ -67,15 +66,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'trueLabel' => 'Yes',
                 'falseLabel' => 'No '
             ],
-            //'direcc_prove:ntext',
-            //'pais_prove',
-            //'depto_prove',
-            //'provi_prove',
-            //'dtto_prove',
-            //'tlf_prove',
-            //'tipo_prove',
-            //'status_prove',
-            //'sucursal_prove',
 
             [
                 'class' => '\kartik\grid\ActionColumn',
@@ -122,16 +112,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'view') {
-                      $url ='index.php?r=proveedor/view&id='.$model->id_prove.'&asDialog=1';
+                      $url = Url::to(['proveedor/view','id'=>$model->id_prove]);
                       return $url;
                   }
 
                   if ($action === 'update') {
-                      $url ='index.php?r=proveedor/update&id='.$model->id_prove."&asDialog=1";
+                      $url = Url::to(['proveedor/update','id'=>$model->id_prove]);
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url ='index.php?r=proveedor/delete&id='.$model->id_prove;
+                      $url = Url::to(['proveedor/delete','id'=>$model->id_prove]);
                       return $url;
                   }
 

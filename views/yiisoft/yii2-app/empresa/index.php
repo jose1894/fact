@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-//use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
 use yii\web\View;
@@ -20,7 +19,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin( ['id'=> "grid"] ); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('empresa', 'Create company'), ['create', 'asDialog' => 1 ], [ 'id' => 'create', 'class' => 'btn btn-flat btn-success']) ?>
@@ -30,7 +28,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            //['class' => 'yii\grid\SerialColumn'],
             [
               'attribute'=>'id_empresa',
               'width' => '5%'
@@ -44,11 +41,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'vAlign' => 'middle',
                 'width' => '10%'
             ],
-            //'dni_empresa',
-            //'ruc_empresa',
-            //'tipopers_empresa',
-            //'tlf_empresa',
-            //'direcc_empresa:ntext',
 
             [
               'class' => '\kartik\grid\ActionColumn',
@@ -95,16 +87,15 @@ $this->params['breadcrumbs'][] = $this->title;
               ],
               'urlCreator' => function ($action, $model, $key, $index) {
                 if ($action === 'view') {
-                    $url ='index.php?r=empresa/view&id='.$model->id_empresa.'&asDialog=1';
+                    $url = Url::to(['empresa/view', 'id' => $model->id_empresa]);
                     return $url;
                 }
-
                 if ($action === 'update') {
-                    $url ='index.php?r=empresa/update&id='.$model->id_empresa."&asDialog=1";
+                    $url = Url::to(['empresa/update', 'id' => $model->id_empresa]);
                     return $url;
                 }
                 if ($action === 'delete') {
-                    $url ='index.php?r=empresa/delete&id='.$model->id_empresa;
+                    $url = Url::to(['empresa/delete', 'id' => $model->id_empresa]);
                     return $url;
                 }
 

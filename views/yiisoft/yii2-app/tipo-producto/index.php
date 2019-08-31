@@ -18,7 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin([ 'id' => 'grid']); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('tipo_producto', 'Create product type'), ['create','asDialog' => 1 ], [ 'id' => 'create','class' => 'btn btn-flat btn btn-success']) ?>
@@ -33,14 +32,12 @@ $this->params['breadcrumbs'][] = $this->title;
               'width' => '5%'
             ],
             'desc_tpdcto',
-            //'status_tpdcto',
             [
                 'class' => 'kartik\grid\BooleanColumn',
                 'attribute' => 'status_tpdcto',
                 'vAlign' => 'middle',
                 'width' => '10%'
             ],
-            //'sucursal_tpdcto',
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
@@ -86,16 +83,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'view') {
-                      $url ='index.php?r=tipo-producto/view&id='.$model->id_tpdcto.'&asDialog=1';
+                      $url = Url::to(['tipo-producto/view','id'=>$model->id_tpdcto]);
                       return $url;
                   }
 
                   if ($action === 'update') {
-                      $url ='index.php?r=tipo-producto/update&id='.$model->id_tpdcto."&asDialog=1";
+                      $url = Url::to(['tipo-producto/update','id'=>$model->id_tpdcto]);
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url ='index.php?r=tipo-producto/delete&id='.$model->id_tpdcto;
+                      $url = Url::to(['tipo-producto/delete','id'=>$model->id_tpdcto]);                      
                       return $url;
                   }
 

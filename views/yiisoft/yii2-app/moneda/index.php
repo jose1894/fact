@@ -17,7 +17,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(['id' => 'grid']); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('moneda', 'Create currency'), ['create' ,  'asDialog' => 1], ['id' => 'create', 'class' => 'btn btn-flat btn-success']) ?>
@@ -89,16 +88,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'view') {
-                      $url ='index.php?r=moneda/view&id='.$model->id_moneda.'&asDialog=1';
+                      $url = Url::to(['moneda/view','id'=>$model->id_moneda]);
                       return $url;
                   }
 
                   if ($action === 'update') {
-                      $url ='index.php?r=moneda/update&id='.$model->id_moneda."&asDialog=1";
+                      $url = Url::to(['moneda/update','id'=>$model->id_moneda]);
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url ='index.php?r=moneda/delete&id='.$model->id_moneda;
+                      $url = Url::to(['moneda/delete','id'=>$model->id_moneda]);
                       return $url;
                   }
 

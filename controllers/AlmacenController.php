@@ -55,10 +55,9 @@ class AlmacenController extends Controller
      */
     public function actionView($id)
     {
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
-        }
+
+        $this->layout = 'justStuff';
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -72,8 +71,7 @@ class AlmacenController extends Controller
     public function actionCreate()
     {
         $model = new Almacen();
-        if (Yii::$app->request->get('asDialog'))
-        {
+
           $this->layout = 'justStuff';
 
 
@@ -127,17 +125,7 @@ class AlmacenController extends Controller
           return $this->render('create', [
               'model' => $model,
           ]);
-        }
-        else
-        {
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              return $this->redirect(['view', 'id' => $model->id_tpdcto]);
-          }
 
-          return $this->render('create', [
-              'model' => $model,
-          ]);
-        }
     }
 
     /**
@@ -151,68 +139,57 @@ class AlmacenController extends Controller
     {
         $model = $this->findModel($id);
 
-                if ( Yii::$app->request->get( 'asDialog' ) )
+
+            $this->layout = "justStuff";
+
+            if ($model->load(Yii::$app->request->post())) {
+
+                $valid = $model->validate();
+
+                // ajax validation
+                if (!$valid)
                 {
-                  $this->layout = "justStuff";
+                    if (Yii::$app->request->isAjax) {
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        return ActiveForm::validate($model);
 
-                  if ($model->load(Yii::$app->request->post())) {
-
-                      $valid = $model->validate();
-
-                      // ajax validation
-                      if (!$valid)
-                      {
-                          if (Yii::$app->request->isAjax) {
-                              Yii::$app->response->format = Response::FORMAT_JSON;
-                              return ActiveForm::validate($model);
-
-                          }
-                      }
-                      else
-                      {
-                          $model->sucursal_almacen = SiteController::getSucursal();
-                          $transaction = \Yii::$app->db->beginTransaction();
-                          
-                          try {
-                                  $model->save();
-                                  $transaction->commit();
-                                  Yii::$app->response->format = Response::FORMAT_JSON;
-                                  $return = [
-                                    'success' => true,
-                                    'title' => Yii::t('almacen', 'Warehouse'),
-                                    'message' => Yii::t('app','Record has been saved successfully!'),
-                                    'type' => 'success'
-                                  ];
-                                  return $return;
-                          } catch (Exception $e) {
-                              $transaction->rollBack();
-                              Yii::$app->response->format = Response::FORMAT_JSON;
-                              $return = [
-                                'success' => false,
-                                'title' => Yii::t('almacen', 'Warehouse'),
-                                'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
-                                'type' => 'error'
-
-                              ];
-                              return $return;
-                          }
-                      }
-                  }
-
-                  return $this->render('update', [
-                      'model' => $model,
-                  ]);
+                    }
                 }
                 else
                 {
-                  if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                      return $this->redirect(['view', 'id' => $model->dni_empresa]);
-                  }
+                    $model->sucursal_almacen = SiteController::getSucursal();
+                    $transaction = \Yii::$app->db->beginTransaction();
 
-                  return $this->render('update', [
-                      'model' => $model,
-                  ]);
+                    try {
+                            $model->save();
+                            $transaction->commit();
+                            Yii::$app->response->format = Response::FORMAT_JSON;
+                            $return = [
+                              'success' => true,
+                              'title' => Yii::t('almacen', 'Warehouse'),
+                              'message' => Yii::t('app','Record has been saved successfully!'),
+                              'type' => 'success'
+                            ];
+                            return $return;
+                    } catch (Exception $e) {
+                        $transaction->rollBack();
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        $return = [
+                          'success' => false,
+                          'title' => Yii::t('almacen', 'Warehouse'),
+                          'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                          'type' => 'error'
+
+                        ];
+                        return $return;
+                    }
                 }
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+  
     }
 
     /**

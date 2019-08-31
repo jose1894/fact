@@ -51,7 +51,7 @@ if ( !$model->status_trans ) {
                 'style' => ['text-align' => 'right']
                 ]) ?>
               </div>
-        
+
 
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <?= $form->field($model, 'docref_trans',[
@@ -176,7 +176,6 @@ if ( !$model->status_trans ) {
                               'options' => ['placeholder' => Yii::t('producto','Select a product').'...'],
                               'theme' => Select2::THEME_DEFAULT,
                               'pluginOptions' => [
-                                  //'allowClear' => true,
                                   'minimumInputLength' => 3,
                                   'language' => [
                                       'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
@@ -185,13 +184,13 @@ if ( !$model->status_trans ) {
                               'ajax' => [
                                   'url' => $url,
                                   'dataType' => 'json',
-                                  'data' => new JsExpression('function(params) { return {desc:params.term,tipo_listap: $("#pedido-tipo_listap").val()}; }'),
+                                  'method' => 'POST',
+                                  'data' => new JsExpression('function(params) { return {desc:params.term}; }'),
                                   'processResults' => new JsExpression($resultsJs),
                               ],
                               'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-                              //'templateResult' => new JsExpression('function(cliente) { return cliente.text; }'),
                               'templateResult' => new JsExpression('function (producto) {
-                                  //debugger;
+
                                   if (producto.loading) {
                                       return producto.text;
                                   }
@@ -360,7 +359,7 @@ $( "#submit" ).on( "click", function() {
     swal("'.Yii::t('ingreso','Entry note').'", "'.Yii::t('compra','The order must have at least one item to be saved').'", "info");
     return false;
   }
-
+  
   $.ajax( {
     "url"    : $( form ).attr( "action" ),
     "method" : $( form ).attr( "method" ),

@@ -55,10 +55,8 @@ class TipoProveedorController extends Controller
      */
     public function actionView($id)
     {
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
-        }
+        $this->layout = 'justStuff';
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -72,13 +70,75 @@ class TipoProveedorController extends Controller
     public function actionCreate()
     {
         $model = new TipoProveedor();
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
+
+        $this->layout = 'justStuff';
 
 
 
-          if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
+
+          $valid = $model->validate();
+
+          // ajax validation
+          if (!$valid)
+          {
+              if (Yii::$app->request->isAjax) {
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  return ActiveForm::validate($model);
+
+              }
+          }
+          else
+          {
+              $model->sucursal_tprov = SiteController::getSucursal();
+              $transaction = \Yii::$app->db->beginTransaction();
+
+              try {
+                      $model->save();
+                      $transaction->commit();
+                      //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      $return = [
+                        'success' => true,
+                        'title' => Yii::t('tipo_proveedor', 'Supplier type'),
+                        'message' => Yii::t('app','Record has been saved successfully!'),
+                        'type' => 'success'
+                      ];
+                      return $return;
+
+              } catch (Exception $e) {
+                  $transaction->rollBack();
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  $return = [
+                    'success' => false,
+                    'title' => Yii::t('tipo_proveedor', 'Supplier type'),
+                    'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                    'type' => 'error'
+
+                  ];
+                  return $return;
+              }
+          }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Updates an existing TipoProveedor model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+        $this->layout = "justStuff";
+
+        if ($model->load(Yii::$app->request->post())) {
 
             $valid = $model->validate();
 
@@ -99,7 +159,6 @@ class TipoProveedorController extends Controller
                 try {
                         $model->save();
                         $transaction->commit();
-                        //return $this->redirect(['view', 'id' => $model->id_empresa]);
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         $return = [
                           'success' => true,
@@ -108,7 +167,6 @@ class TipoProveedorController extends Controller
                           'type' => 'success'
                         ];
                         return $return;
-
                 } catch (Exception $e) {
                     $transaction->rollBack();
                     Yii::$app->response->format = Response::FORMAT_JSON;
@@ -122,95 +180,11 @@ class TipoProveedorController extends Controller
                     return $return;
                 }
             }
-          }
-
-          return $this->render('create', [
-              'model' => $model,
-          ]);
-      }
-      else {
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_tprov]);
         }
 
-        return $this->render('create', [
+        return $this->render('update', [
             'model' => $model,
         ]);
-      }
-    }
-
-    /**
-     * Updates an existing TipoProveedor model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-        if ( Yii::$app->request->get( 'asDialog' ) )
-        {
-          $this->layout = "justStuff";
-
-          if ($model->load(Yii::$app->request->post())) {
-
-              $valid = $model->validate();
-
-              // ajax validation
-              if (!$valid)
-              {
-                  if (Yii::$app->request->isAjax) {
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      return ActiveForm::validate($model);
-
-                  }
-              }
-              else
-              {
-                  $model->sucursal_tprov = SiteController::getSucursal();
-                  $transaction = \Yii::$app->db->beginTransaction();
-
-                  try {
-                          $model->save();
-                          $transaction->commit();
-                          Yii::$app->response->format = Response::FORMAT_JSON;
-                          $return = [
-                            'success' => true,
-                            'title' => Yii::t('tipo_proveedor', 'Supplier type'),
-                            'message' => Yii::t('app','Record has been saved successfully!'),
-                            'type' => 'success'
-                          ];
-                          return $return;
-                  } catch (Exception $e) {
-                      $transaction->rollBack();
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      $return = [
-                        'success' => false,
-                        'title' => Yii::t('tipo_proveedor', 'Supplier type'),
-                        'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
-                        'type' => 'error'
-
-                      ];
-                      return $return;
-                  }
-              }
-          }
-
-          return $this->render('update', [
-              'model' => $model,
-          ]);
-        }
-        else
-        {
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              return $this->redirect(['view', 'id' => $model->id_tprov]);
-          }
-
-          return $this->render('update', [
-              'model' => $model,
-          ]);
-        }
     }
 
     /**

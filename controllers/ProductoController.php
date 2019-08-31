@@ -58,10 +58,8 @@ class ProductoController extends Controller
      */
     public function actionView($id)
     {
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
-        }
+        $this->layout = 'justStuff';
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -75,88 +73,75 @@ class ProductoController extends Controller
     public function actionCreate()
     {
         $model = new Producto();
-        if ( Yii::$app->request->get( 'asDialog' ) )
-        {
-          $modelsListaP = [new ListaPrecios()];
-          $this->layout = "justStuff";
+        $modelsListaP = [new ListaPrecios()];
+        $this->layout = "justStuff";
 
-          if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
 
 
-              $modelsListaP = Model::createMultiple(ListaPrecios::classname(),[],'id_lista');
-              Model::loadMultiple($modelsListaP, Yii::$app->request->post());
+            $modelsListaP = Model::createMultiple(ListaPrecios::classname(),[],'id_lista');
+            Model::loadMultiple($modelsListaP, Yii::$app->request->post());
 
-              $valid = $model->validate();
-              $valid = Model::validateMultiple($modelsListaP) && $valid;
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsListaP) && $valid;
 
-              // ajax validation
-              if (!$valid)
-              {
-                  if (Yii::$app->request->isAjax) {
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      return ArrayHelper::merge(
-                          ActiveForm::validateMultiple($modelsListaP),
-                          ActiveForm::validate($model)
-                      );
-                  }
-              }
-              else
-              {
-                $model->sucursal_prod = SiteController::getSucursal();
-                $transaction = \Yii::$app->db->beginTransaction();
+            // ajax validation
+            if (!$valid)
+            {
+                if (Yii::$app->request->isAjax) {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ArrayHelper::merge(
+                        ActiveForm::validateMultiple($modelsListaP),
+                        ActiveForm::validate($model)
+                    );
+                }
+            }
+            else
+            {
+              $model->sucursal_prod = SiteController::getSucursal();
+              $transaction = \Yii::$app->db->beginTransaction();
 
-                  try {
-                      if ($flag = $model->save(false)) {
-                          foreach ($modelsListaP as $modelListaP) {
-                              $modelListaP->prod_lista = $model->id_prod;
-                              if (! ($flag = $modelListaP->save(false))) {
-                                  $transaction->rollBack();
-                                  break;
-                              }
-                          }
-                      }
-                      if ($flag) {
-                          $transaction->commit();
-                          //return $this->redirect(['view', 'id' => $model->id_prod]);
-                          Yii::$app->response->format = Response::FORMAT_JSON;
-                          $return = [
-                            'success' => true,
-                            'title' => Yii::t('producto', 'Product'),
-                            'message' => Yii::t('app','Record has been saved successfully!'),
-                            'type' => 'success'
-                          ];
-                          return $return;
-                      }
-                  } catch (Exception $e) {
-                      $transaction->rollBack();
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      $return = [
-                        'success' => false,
-                        'title' => Yii::t('producto', 'Product'),
-                        'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
-                        'type' => 'error'
+                try {
+                    if ($flag = $model->save(false)) {
+                        foreach ($modelsListaP as $modelListaP) {
+                            $modelListaP->prod_lista = $model->id_prod;
+                            if (! ($flag = $modelListaP->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                    }
+                    if ($flag) {
+                        $transaction->commit();
+                        //return $this->redirect(['view', 'id' => $model->id_prod]);
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        $return = [
+                          'success' => true,
+                          'title' => Yii::t('producto', 'Product'),
+                          'message' => Yii::t('app','Record has been saved successfully!'),
+                          'type' => 'success'
+                        ];
+                        return $return;
+                    }
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    $return = [
+                      'success' => false,
+                      'title' => Yii::t('producto', 'Product'),
+                      'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                      'type' => 'error'
 
-                      ];
-                      return $return;
-                  }
-              }
-          }
-
-          return $this->render('create', [
-              'model' => $model,
-              'modelsListaP' => (empty($modelsListaP)) ? [new ListaPrecios()] : $modelsListaP
-          ]);
+                    ];
+                    return $return;
+                }
+            }
         }
-        else
-        {
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              return $this->redirect(['view', 'id' => $model->dni_empresa]);
-          }
 
-          return $this->render('create', [
-              'model' => $model,
-          ]);
-        }
+        return $this->render('create', [
+            'model' => $model,
+            'modelsListaP' => (empty($modelsListaP)) ? [new ListaPrecios()] : $modelsListaP
+        ]);
     }
 
     /**
@@ -169,94 +154,80 @@ class ProductoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ( Yii::$app->request->get( 'asDialog' ) )
-        {
-          $modelsListaP = $model->listas;
-          $this->layout = "justStuff";
+        $modelsListaP = $model->listas;
+        $this->layout = "justStuff";
 
-          if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
 
-              //exit( "post aki" );
-              $oldIDs = ArrayHelper::map($modelsListaP, 'id_lista', 'id_lista');
-              $modelsListaP = Model::createMultiple(ListaPrecios::classname(), $modelsListaP,'id_lista');
-              Model::loadMultiple($modelsListaP, Yii::$app->request->post());
-              $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsListaP, 'id_lista', 'id_lista')));
+            $oldIDs = ArrayHelper::map($modelsListaP, 'id_lista', 'id_lista');
+            $modelsListaP = Model::createMultiple(ListaPrecios::classname(), $modelsListaP,'id_lista');
+            Model::loadMultiple($modelsListaP, Yii::$app->request->post());
+            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsListaP, 'id_lista', 'id_lista')));
 
-              $valid = $model->validate();
-              $valid = Model::validateMultiple($modelsListaP) && $valid;
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsListaP) && $valid;
 
-              // ajax validation
-              if (!$valid)
-              {
-                  if (Yii::$app->request->isAjax) {
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      return ArrayHelper::merge(
-                          ActiveForm::validateMultiple($modelsListaP),
-                          ActiveForm::validate($model)
-                      );
-                  }
-              }
-              else
-              {
-                  $model->sucursal_prod = SiteController::getSucursal();
-                  $transaction = \Yii::$app->db->beginTransaction();
+            // ajax validation
+            if (!$valid)
+            {
+                if (Yii::$app->request->isAjax) {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ArrayHelper::merge(
+                        ActiveForm::validateMultiple($modelsListaP),
+                        ActiveForm::validate($model)
+                    );
+                }
+            }
+            else
+            {
+                $model->sucursal_prod = SiteController::getSucursal();
+                $transaction = \Yii::$app->db->beginTransaction();
 
-                  try {
-                      if ($flag = $model->save(false)) {
-                        if (!empty($deletedIDs)) {
-                            ListaPrecios::deleteAll(['id_lista' => $deletedIDs]);
+                try {
+                    if ($flag = $model->save(false)) {
+                      if (!empty($deletedIDs)) {
+                          ListaPrecios::deleteAll(['id_lista' => $deletedIDs]);
+                      }
+
+                        foreach ($modelsListaP as $modelListaP) {
+                            $modelListaP->prod_lista = $model->id_prod;
+                            if (! ($flag = $modelListaP->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
                         }
+                    }
+                    if ($flag) {
+                        $transaction->commit();
+                        //return $this->redirect(['view', 'id' => $model->id_prod]);
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        $return = [
+                          'success' => true,
+                          'title' => Yii::t('producto', 'Product'),
+                          'message' => Yii::t('app','Record has been saved successfully!'),
+                          'type' => 'success'
+                        ];
+                        return $return;
+                    }
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    $return = [
+                      'success' => false,
+                      'title' => Yii::t('producto', 'Product'),
+                      'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                      'type' => 'error'
 
-                          foreach ($modelsListaP as $modelListaP) {
-                              $modelListaP->prod_lista = $model->id_prod;
-                              if (! ($flag = $modelListaP->save(false))) {
-                                  $transaction->rollBack();
-                                  break;
-                              }
-                          }
-                      }
-                      if ($flag) {
-                          $transaction->commit();
-                          //return $this->redirect(['view', 'id' => $model->id_prod]);
-                          Yii::$app->response->format = Response::FORMAT_JSON;
-                          $return = [
-                            'success' => true,
-                            'title' => Yii::t('producto', 'Product'),
-                            'message' => Yii::t('app','Record has been saved successfully!'),
-                            'type' => 'success'
-                          ];
-                          return $return;
-                      }
-                  } catch (Exception $e) {
-                      $transaction->rollBack();
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      $return = [
-                        'success' => false,
-                        'title' => Yii::t('producto', 'Product'),
-                        'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
-                        'type' => 'error'
-
-                      ];
-                      return $return;
-                  }
-              }
-          }
-
-          return $this->render('update', [
-              'model' => $model,
-              'modelsListaP' => (empty($modelsListaP)) ? [new ListaPrecios] : $modelsListaP
-          ]);
+                    ];
+                    return $return;
+                }
+            }
         }
-        else
-        {
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              return $this->redirect(['view', 'id' => $model->dni_empresa]);
-          }
 
-          return $this->render('update', [
-              'model' => $model,
-          ]);
-        }
+        return $this->render('update', [
+            'model' => $model,
+            'modelsListaP' => (empty($modelsListaP)) ? [new ListaPrecios] : $modelsListaP
+        ]);
     }
 
     /**
@@ -292,11 +263,13 @@ class ProductoController extends Controller
         throw new NotFoundHttpException(Yii::t('producto', 'The requested page does not exist.'));
     }
 
-    public function actionProductoList($q = null, $id = null,$desc = null,$tipo_listap = null)
+    public function actionProductoList($q = null, $id = null)
     {
-
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $out = ['results' => ['id' => '', 'text' => '']];
+        $desc = is_null(Yii::$app->request->post( 'desc' )) ? null : Yii::$app->request->post( 'desc' );
+        $tipo_listap = is_null(Yii::$app->request->post( 'tipo_listap' )) ? null : Yii::$app->request->post( 'tipo_listap' );
+
 
         $sucursal = SiteController::getSucursal();
         if ( !is_null( $desc ) && is_null( $tipo_listap ) ) {

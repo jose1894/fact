@@ -24,7 +24,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(['id'=>'grid']); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('distrito', 'Create district / parish'), ['create' ,'asDialog'=>1], ['id'=>'create','class' => 'btn btn-flat btn-success']) ?>
@@ -142,16 +141,17 @@ $this->params['breadcrumbs'][] = $this->title;
               ],
               'urlCreator' => function ($action, $model, $key, $index) {
                 if ($action === 'view') {
-                    $url ='index.php?r=distrito/view&id='.$model->id_dtto.'&asDialog=1';
+                    $url = Url::to(['distrito/view','id' => $model->id_dtto]);
                     return $url;
                 }
 
                 if ($action === 'update') {
-                    $url ='index.php?r=distrito/update&id='.$model->id_dtto."&asDialog=1";
+                    $url = Url::to(['distrito/update','id' => $model->id_dtto]);
                     return $url;
                 }
+
                 if ($action === 'delete') {
-                    $url ='index.php?r=distrito/delete&id='.$model->id_dtto;
+                    $url = Url::to(['distrito/delete','id' => $model->id_dtto]);
                     return $url;
                 }
 

@@ -32,15 +32,12 @@ $this->params['breadcrumbs'][] = $this->title;
               'width' => '5%'
             ],
             'des_serie',
-            //'pais_serie',
-
             [
                 'class' => 'kartik\grid\BooleanColumn',
                 'attribute' => 'status_serie',
                 'vAlign' => 'middle',
                 'width' => '10%'
             ],
-            //'sucursal_serie',
             [
               'class' => '\kartik\grid\ActionColumn',
               'headerOptions' => ['style' => 'color:#337ab7'],
@@ -86,16 +83,16 @@ $this->params['breadcrumbs'][] = $this->title;
               ],
               'urlCreator' => function ($action, $model, $key, $index) {
                 if ($action === 'view') {
-                    $url ='index.php?r=series/view&id='.$model->id_serie.'&asDialog=1';
+                    $url = Url::to(['series/view','id'=>$model->id_serie]);
                     return $url;
                 }
 
                 if ($action === 'update') {
-                    $url ='index.php?r=series/update&id='.$model->id_serie."&asDialog=1";
+                    $url = Url::to(['series/update','id'=>$model->id_serie]);
                     return $url;
                 }
                 if ($action === 'delete') {
-                    $url ='index.php?r=series/delete&id='.$model->id_serie;
+                    $url = Url::to(['series/delete','id'=>$model->id_serie]);
                     return $url;
                 }
 

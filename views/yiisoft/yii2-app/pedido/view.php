@@ -2,12 +2,14 @@
 
 use yii\helpers\Html;
 use kartik\detail\DetailView;
+use app\models\PedidoDetalleSearch;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Pedido */
 
 $this->title = Yii::t('pedido', 'Order: {number} / {name}', [
-    'number' => $model->id_pedido,
+    'number' => $model->cod_pedido .' - '. $tipo,
     'name' => $model->cltePedido->nombre_clte,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('pedido', 'Pedidos'), 'url' => ['index']];
@@ -60,6 +62,46 @@ $this->params['breadcrumbs'][] = $this->title;
                   ]
               ],
           ]) ?>
+          <h3><?= Yii::t('producto', 'Products')?> </h3>
+          <hr>
+          <?php
+          $detalles = new PedidoDetalleSearch;
+          $detalles->pedido_pdetalle = $model->id_pedido;
+          $dataProvider = $detalles->search([  ]);
+
+          echo  GridView::widget([
+              'dataProvider' => $dataProvider,
+              'summary' => '',
+              'columns' => [
+                  ['class' => 'yii\grid\SerialColumn'],
+                  [
+                    'attribute'=>'prod_pdetalle',
+                    'value' => function($data){
+                         return $data->productoPdetalle->des_prod;
+                    },
+                    'width' => '50%'
+                  ],
+                  [
+                    'attribute'=>'cant_pdetalle',
+                    'width' => '10%'
+                  ],
+                  [
+                    'attribute'=>'precio_pdetalle',
+                    'width' => '10%'
+                  ],
+                  [
+                    'attribute'=>'descu_pdetalle',
+                    'width' => '10%'
+                  ],
+                  [
+                    'attribute'=>'total_pdetalle',
+                    'width' => '20%'
+                  ],
+                ],
+
+          ]);
+
+          ?>
 
         </div>
       </div>

@@ -92,12 +92,6 @@ $this->params['breadcrumbs'][] = $this->title;
               ],
               'width' => '20%'
             ],
-            //'moneda_pedido',
-            //'almacen_pedido',
-            //'usuario_pedido',
-            //'estatus_pedido',
-            //'sucursal_pedido',
-
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
@@ -152,19 +146,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'print') {
-                      $url ='index.php?r=pedido/pedido-rpt&id='.$model->id_pedido;
+                      $url = Url::to(['pedido/pedido-rpt','id' => $model->id_pedido]);
                       return $url;
                   }
                   if ($action === 'view') {
-                      $url ='index.php?r=pedido/view&id='.$model->id_pedido;
+                      $url = Url::to(['pedido/view','id' => $model->id_pedido]);
                       return $url;
                   }
                   if ($action === 'update') {
-                      $url ='index.php?r=pedido/update&id='.$model->id_pedido;
+                      $url = Url::to(['pedido/update','id' => $model->id_pedido]);
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url ='index.php?r=pedido/delete&id='.$model->id_pedido;
+                    $url = Url::to(['pedido/delete','id' => $model->id_pedido]);
                       return $url;
                   }
 
@@ -184,7 +178,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsVar( "buttonCreate", "#create" );
 $this->registerJsVar( "buttonSubmit", "#submit" );
 $this->registerJsVar( "buttonCancel", ".close-btn" );
-$this->registerJsVar( "frame", "#framePedido" );
+$this->registerJsVar( "frame", "#frame" );
 $this->registerJsVar( "modal", "#modal" );
 //Detalles
 echo   $this->render('//site/_modalForm',[]);
