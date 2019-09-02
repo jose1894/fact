@@ -74,7 +74,7 @@
                             [ 'label' => Yii::t('salida','Exit note'), 'url' => ['/nota-salida'],'icon' => 'upload'],
                           ]
                     ],
-                    ['label' => Yii::t('compra','Invoice').'s', 'url' => ['/'], 'icon' => 'file-text'],
+                    ['label' => Yii::t('compra','Invoice').'s', 'url' => ['/documento/generar-fact'], 'icon' => 'file-text'],
                     ['label' => 'Usuarios', 'options' => ['class' => 'header']],
                     [ 'label' => 'Administracion de usuarios', 'icon' => 'users',
                      'items' => [

@@ -58,6 +58,14 @@ return [
                 'distrito' => 'distrito.php',
             ],
         ],
+        'documento' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+                'documento' => 'documento.php',
+            ],
+        ],
         'empresa' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',

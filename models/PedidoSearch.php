@@ -56,7 +56,7 @@ class PedidoSearch extends Pedido
             ],
             'sort' => [
                 'defaultOrder' => [
-                    //'fecha_pedido' => SORT_DESC,
+                    'fecha_pedido' => SORT_DESC,
                     //'id_pedido' => SORT_DESC,
                 ]
             ],

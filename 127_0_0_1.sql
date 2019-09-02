@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-08-2019 a las 00:32:36
+-- Tiempo de generación: 03-09-2019 a las 00:24:50
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -2069,6 +2069,26 @@ INSERT INTO `distrito` (`id_dtto`, `des_dtto`, `pais_dtto`, `prov_dtto`, `depto_
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `documento`
+--
+
+CREATE TABLE `documento` (
+  `id_doc` int(11) NOT NULL COMMENT 'ID UNICO',
+  `cod_doc` varchar(10) DEFAULT '0000000000' COMMENT 'CODIGO DEL DOCUMENTO',
+  `tipo_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO DE DOCUMENTO: FACTURA, NOTA DE CREDITO, NOTA DE DEBITO',
+  `pedido_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'PEDIDO DEL DOCUMENTO',
+  `fecha_doc` date DEFAULT NULL COMMENT 'FECHA DEL DOCUMENTO',
+  `obsv_doc` text COMMENT 'OBSERVACIONES DEL DOCUMENTO',
+  `totalimp_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL IMPUESTO DEL DOCUMENTO',
+  `totaldsc_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL DESCUENTO DEL DOCUMENTO',
+  `total_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL DEL DOCUMENTO',
+  `status_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTADO DEL DOCUMENTO',
+  `sucursal_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL DEL DOCUMENTO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LAS FACTURAS';
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `empresa`
 --
 
@@ -2689,7 +2709,7 @@ CREATE TABLE `pedido` (
 --
 
 INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, `vend_pedido`, `moneda_pedido`, `almacen_pedido`, `usuario_pedido`, `estatus_pedido`, `sucursal_pedido`, `condp_pedido`, `tipo_pedido`, `edicion_pedido`, `nrodoc_pedido`) VALUES
-(8, '0000000001', '2019-08-23', 420, 4, 1, 1, 2, 0, 1, 1, 'NP', 'N', '');
+(8, '0000000001', '2019-08-31', 420, 4, 1, 1, 2, 0, 1, 1, 'NP', 'N', '');
 
 -- --------------------------------------------------------
 
@@ -2788,7 +2808,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (39, 'LP-FJ2', 'CM5-WIN2', 'FARO NEBLI.GREATWALL FENG JUN 5(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (40, 'LP-GH2', 'CM5-GH02', 'FARO NEBLI.GREATWALL HOVER(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (41, 'LP-ST4', 'CM05-SX2', 'FARO NEBLI.PARACH. HY.STAREX 2005(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (43, 'LP-AC2B', 'CM98-AC4', 'FARO NEBLI.PARACH. HY ACCENT BLANCO 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (44, 'LP-AC4', 'CM-9172', 'FARO NEBLI.PARACH. HY ACCENT 2006...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (45, 'LP-AC4B', 'CM10-AC04', 'FARO NEBLI.PARACH. HY ACCENT 2011-2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -3199,7 +3219,8 @@ CREATE TABLE `transaccion` (
 
 INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_trans`, `tipo_trans`, `ope_trans`, `idrefdoc_trans`, `seriedocref_trans`, `docref_trans`, `almacen_trans`, `sucursal_trans`, `usuario_trans`, `status_trans`) VALUES
 (1, '0000000001', '2019-08-26', '', 5, 'E', NULL, NULL, '111111', 1, 1, 2, 0),
-(2, '0000000002', '2019-08-26', '', 1, 'E', NULL, NULL, '22222', 1, 1, 2, 0);
+(2, '0000000002', '2019-08-26', '', 1, 'E', NULL, NULL, '22222', 1, 1, 2, 0),
+(3, '0000000001', '2019-08-27', 'OIOII', 6, 'S', NULL, NULL, '', 1, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -3220,7 +3241,8 @@ CREATE TABLE `trans_detalle` (
 
 INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `cant_detalle`) VALUES
 (34, 1, 7, 5),
-(35, 2, 42, 5);
+(35, 2, 42, 5),
+(36, 3, 42, 5);
 
 -- --------------------------------------------------------
 
@@ -3452,6 +3474,18 @@ ALTER TABLE `distrito`
   ADD KEY `depto_dtto` (`depto_dtto`),
   ADD KEY `pais_dtto` (`pais_dtto`),
   ADD KEY `prov_dtto` (`prov_dtto`);
+
+--
+-- Indices de la tabla `documento`
+--
+ALTER TABLE `documento`
+  ADD PRIMARY KEY (`id_doc`),
+  ADD KEY `cod_doc` (`cod_doc`),
+  ADD KEY `tipo_doc` (`tipo_doc`),
+  ADD KEY `pedido_doc` (`pedido_doc`),
+  ADD KEY `fecha_doc` (`fecha_doc`),
+  ADD KEY `status_doc` (`status_doc`),
+  ADD KEY `sucursal_doc` (`sucursal_doc`);
 
 --
 -- Indices de la tabla `empresa`
@@ -3724,6 +3758,12 @@ ALTER TABLE `distrito`
   MODIFY `id_dtto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=218;
 
 --
+-- AUTO_INCREMENT de la tabla `documento`
+--
+ALTER TABLE `documento`
+  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+
+--
 -- AUTO_INCREMENT de la tabla `empresa`
 --
 ALTER TABLE `empresa`
@@ -3853,13 +3893,13 @@ ALTER TABLE `tipo_proveedor`
 -- AUTO_INCREMENT de la tabla `transaccion`
 --
 ALTER TABLE `transaccion`
-  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `trans_detalle`
 --
 ALTER TABLE `trans_detalle`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=36;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT de la tabla `unidad_medida`
@@ -3945,6 +3985,13 @@ ALTER TABLE `departamento`
 --
 ALTER TABLE `distrito`
   ADD CONSTRAINT `depto_dtto_ibkf` FOREIGN KEY (`depto_dtto`) REFERENCES `departamento` (`id_depto`);
+
+--
+-- Filtros para la tabla `documento`
+--
+ALTER TABLE `documento`
+  ADD CONSTRAINT `documento_ibfk_1` FOREIGN KEY (`tipo_doc`) REFERENCES `tipo_documento` (`id_tipod`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `documento_ibfk_2` FOREIGN KEY (`pedido_doc`) REFERENCES `pedido` (`id_pedido`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `lista_precios`

@@ -468,5 +468,19 @@ class PedidoController extends Controller
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
     }
 
+    public function actionPendiente()
+    {
+      $this->layout = "justStuff";
+      $searchModel = new PedidoSearch();
+      $searchModel->estatus_pedido = 0;
+      $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+
+      return $this->render('pendiente', [
+          'searchModel' => $searchModel,
+          'dataProvider' => $dataProvider,
+      ]);
+    }
+
 
 }
