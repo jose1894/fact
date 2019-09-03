@@ -24,6 +24,8 @@ use Yii;
  */
 class Pedido extends \yii\db\ActiveRecord
 {
+    const STATUS_ACTIVO = 1;
+    const STATUS_INACTIVO = 0;
     const PEDIDO = 'NP';
     const PROFORMA = 'PR';
     const COTIZACION = 'CT';
@@ -117,7 +119,18 @@ class Pedido extends \yii\db\ActiveRecord
     }
 
     public function getDetalles()
-   {
+    {
        return $this->hasMany(PedidoDetalle::className(), ['pedido_pdetalle' => 'id_pedido']);
-   }
+    }
+
+    public function sumChildTotal()
+    {
+        $total = 0;
+        
+        foreach( $this->detalles as $value){
+          $total += $value->total_pdetalle;
+        }
+
+        return $total;
+    }
 }

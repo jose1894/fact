@@ -17,11 +17,11 @@ use kartik\select2\Select2;
 /* @var $searchModel app\models\PedidoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('documento', 'Order list to bill');
+$this->title = Yii::t('pedido', 'Orders list');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="pedido-index">
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h4><?= Html::encode($this->title) ?></h4>
     <?php Pjax::begin(['id' => 'pedido-grid']); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -77,9 +77,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => ' {factura} ',
                 'buttons' => [
                   'factura' => function ($url, $model) {
-                      return Html::a('<button class="btn btn-flat btn-success">'.Yii::t('documento','Generate document').'&nbsp; &nbsp;<i class="fa fa-play-circle"></i></button>', $url, [
-                                  'title' => Yii::t('documento', 'Generate documento'),
-                                  'class' => 'pjax-document',
+                      return Html::a('<button class="btn btn-flat btn-success">'.Yii::t('app','Generate invoice').'&nbsp; &nbsp;<i class="fa fa-play-circle"></i></button>', "#", [
+                                  'title' => Yii::t('app', 'Generate invoice'),
+                                  'class' => 'pjax-invoice',
                                   'data' => [
                                     'id' => $model->id_pedido,
                                   ]
@@ -89,7 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'factura') {
-                      $url = Url::to(['documento/pedido-rpt','id' => $model->id_pedido]);
+                      $url = Url::to(['pedido/pedido-rpt','id' => $model->id_pedido]);
                       return $url;
                   }
                 }
@@ -105,7 +105,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <?php
 //Maestro
-$this->registerJsVar( "buttonCreate", ".pjax-document" );
+$this->registerJsVar( "buttonCreate", "#create" );
 $this->registerJsVar( "buttonSubmit", "#submit" );
 $this->registerJsVar( "buttonCancel", ".close-btn" );
 $this->registerJsVar( "frame", "#frame" );

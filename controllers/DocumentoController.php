@@ -4,7 +4,9 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Documento;
+use app\models\Pedido;
 use app\models\DocumentoSearch;
+use app\models\PedidoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -125,8 +127,46 @@ class DocumentoController extends Controller
         throw new NotFoundHttpException(Yii::t('documento', 'The requested page does not exist.'));
     }
 
-    public function actionGenerarFact()
+    public function actionPedidosPendientes()
     {
-      return $this->render('generar',[]);
+      //$this->layout = "justStuff";
+      $searchModel = new PedidoSearch();
+      $searchModel->estatus_pedido = Pedido::STATUS_INACTIVO;
+      $searchModel->tipo_pedido = Pedido::PEDIDO;
+      $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+
+      return $this->render('generar', [
+          'searchModel' => $searchModel,
+          'dataProvider' => $dataProvider,
+      ]);
     }
+
+    /**
+     * Creates a new Documento model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionPedidoCreate( $id )
+    {
+        $model = new Documento();
+        $modelPedido = Pedido::findOne( $id );
+
+        if ( $modelPedido === null) {
+            throw new NotFoundHttpException(Yii::t('documento', 'The requested page does not exist.'));
+        }
+
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id_doc]);
+        }
+
+        $this->layout = 'justStuff';
+        return $this->render('_formDocumento', [
+            'model' => $model,
+            'modelPedido' => $modelPedido
+        ]);
+    }
+
+
 }
