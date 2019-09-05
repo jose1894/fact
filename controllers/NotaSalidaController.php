@@ -81,6 +81,7 @@ class NotaSalidaController extends Controller
         $model = new NotaSalida();
         $modelsDetalles = [new NotaSalidaDetalle()];
 
+        if ($model->load(Yii::$app->request->post())) {
           $modelsDetalles = Model::createMultiple(NotaSalidaDetalle::classname());
           Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
 
@@ -148,6 +149,7 @@ class NotaSalidaController extends Controller
                   ];
                   return $return;
               }
+          }
         }
 
 
@@ -413,7 +415,7 @@ class NotaSalidaController extends Controller
         }
     }
 
-    public function actionNotaiRpt( $id ) {
+    public function actionNotasRpt( $id ) {
       Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
       $modelNotaSalida = NotaSalida::findOne($id);
       $this->layout = 'reports';

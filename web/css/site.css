@@ -128,3 +128,10 @@ a.desc:after {
 .number-decimals{
   text-align: right;
 }
+
+input-group.select2-bootstrap-prepend .select2-container--krajee .select2-selection {
+    border-bottom-left-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}

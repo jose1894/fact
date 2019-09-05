@@ -261,10 +261,6 @@ if ( !$model->status_trans ) {
   </div>
 </div>
 <?php
-$this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
-['depends'=>[\yii\web\JqueryAsset::className()],
-'position'=>View::POS_END]);
-
 $this->registerJsVar( "buttonPrint", "#imprimir" );
 $this->registerJsVar( "frameRpt", "#frame-rpt" );
 $this->registerJsVar( "buttonCancel", ".close-btn" );
@@ -301,7 +297,7 @@ $(".dynamicform_wrapper").on("limitReached", function(e, item) {
 });
 
 $( buttonPrint ).on( "click", function(){
-  $( frameRpt ).attr( "src", "'.Url::to(['nota-ingreso/notai-rpt', 'id' => $model->id_trans]).'");
+  $( frameRpt ).attr( "src", "'.Url::to(['nota-salida/notas-rpt', 'id' => $model->id_trans]).'");
   $( modalRpt ).modal({
     backdrop: "static",
     keyboard: false,
@@ -429,3 +425,7 @@ $( "body" ).on( "click", buttonCancel, function(){
 });
 ';
 $this->registerJs($js.$jsTrigger,View::POS_LOAD);
+
+$this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
+['depends'=>[\yii\web\JqueryAsset::className()],
+'position'=>View::POS_END]);

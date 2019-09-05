@@ -88,8 +88,17 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
-                'template' => '{view} {update} {delete}',
+                'template' => '{print}&nbsp;&nbsp;&nbsp;{view}&nbsp;&nbsp;{update}&nbsp;&nbsp;{delete}',
                 'buttons' => [
+                  'print' => function ($url, $model) {
+                      return Html::a('<span class="glyphicon glyphicon-print"></span>', $url, [
+                                  'title' => Yii::t('app', 'Print'),
+                                  'class' => 'pjax-print',
+                                  'data' => [
+                                    'id' => $model->id_trans,
+                                  ]
+                      ]);
+                  },
                   'view' => function ($url, $model) {
                       return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
                                   'title' => Yii::t('app', 'View'),
@@ -129,6 +138,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
+                  if ($action === 'print') {
+                      $url = Url::to(['nota-salida/notas-rpt','id'=>$model->id_trans]);
+                      return $url;
+                  }
+
                   if ($action === 'view') {
                       $url = Url::to(['nota-salida/view','id' => $model->id_trans]);
                       return $url;
@@ -161,3 +175,8 @@ $this->registerJsVar( "buttonCancel", ".close-btn" );
 $this->registerJsVar( "frame", "#frame" );
 $this->registerJsVar( "modal", "#modal" );
 echo   $this->render('//site/_modalForm',[]);
+
+$this->registerJsVar( "buttonPrint", ".pjax-print" );
+$this->registerJsVar( "frameRpt", "#frame-rpt" );
+$this->registerJsVar( "modalRpt", "#modal-rpt" );
+echo   $this->render('//site/_modalRpt',[]);

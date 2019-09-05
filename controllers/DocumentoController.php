@@ -135,8 +135,7 @@ class DocumentoController extends Controller
       $searchModel->tipo_pedido = Pedido::PEDIDO;
       $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-
-      return $this->render('generar', [
+      return $this->render('listado-generar', [
           'searchModel' => $searchModel,
           'dataProvider' => $dataProvider,
       ]);
@@ -147,7 +146,7 @@ class DocumentoController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionPedidoCreate( $id )
+    public function actionFacturaCreate( $id )
     {
         $model = new Documento();
         $modelPedido = Pedido::findOne( $id );
@@ -164,7 +163,8 @@ class DocumentoController extends Controller
         $this->layout = 'justStuff';
         return $this->render('_formDocumento', [
             'model' => $model,
-            'modelPedido' => $modelPedido
+            'modelPedido' => $modelPedido,
+            'IMPUESTO' => SiteController::getImpuesto(),
         ]);
     }
 

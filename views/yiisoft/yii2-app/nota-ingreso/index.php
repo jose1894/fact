@@ -90,7 +90,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
-                'template' => '{print} {view} {update} {delete}',
+                'template' => '{print}&nbsp;&nbsp;&nbsp;{view}&nbsp;&nbsp;{update}&nbsp;&nbsp;{delete}',
                 'buttons' => [
                   'print' => function ($url, $model) {
                       return Html::a('<span class="glyphicon glyphicon-print"></span>', $url, [
@@ -154,7 +154,7 @@ $this->params['breadcrumbs'][] = $this->title;
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url = Url::to(['nota-ingreso/delete','id'=>$model->id_trans]);                      
+                      $url = Url::to(['nota-ingreso/delete','id'=>$model->id_trans]);
                       return $url;
                   }
 

@@ -71,11 +71,16 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'class' => 'yii\web\UrlManager',
-            'rules' => array(
+            'rules' => [
+                    '' => 'site/index',
                     '<controller:\w+>/<id:\d+>' => '<controller>/view',
                     '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                     '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
-            ),
+                     '<id:\d+>' => 'pedido/pedido-rpt',
+                     '<id:\d+>' => 'documento/pedido-rpt',
+                     '<id:\d+>' => 'nota-salida/notas-rpt',
+                     '<id:\d+>' => 'nota-ingreso/notai-rpt',
+            ],
         ],
 
         'view' => [

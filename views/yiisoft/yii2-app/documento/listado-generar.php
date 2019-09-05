@@ -89,7 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'factura') {
-                      $url = Url::to(['documento/pedido-rpt','id' => $model->id_pedido]);
+                      $url = Url::to(['documento/factura-create','id' => $model->id_pedido]);
                       return $url;
                   }
                 }
