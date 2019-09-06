@@ -8,6 +8,7 @@ use app\models\Moneda;
 use app\models\Almacen;
 use app\models\CondPago;
 use app\models\Producto;
+use app\models\TipoDocumento;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 use kartik\date\DatePicker;
@@ -20,16 +21,17 @@ use app\base\Model;
 /* @var $modelPedido app\models\Pedido */
 /* @var $form yii\widgets\ActiveForm */
 $disabled = false;
+$disabledPedido = true;
 
-if ( $modelPedido->isNewRecord ) {
-  $modelPedido->cod_pedido = "0000000000";
+if ( $model->isNewRecord ) {
+  $model->cod_doc = "0000000000";
 } else {
   $disabled = true;
 }
 ?>
 
 <div class="pedido-form">
-      <?php $form = ActiveForm::begin([ 'id' => $modelPedido->formName(), 'enableClientScript' => true]); ?>
+      <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true]); ?>
       <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
           <div class="row">
@@ -44,7 +46,7 @@ if ( $modelPedido->isNewRecord ) {
                   <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                               <?php
                               $url = Url::to(['cliente/cliente-list']);
 
@@ -62,7 +64,7 @@ if ( $modelPedido->isNewRecord ) {
                                 ])->widget(Select2::classname(), [
                                   'language' => Yii::$app->language,
                                   'size' => Select2::SMALL,
-                                  'disabled' => $disabled,
+                                  'disabled' => $disabledPedido,
                                   'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-users"></i>']],
                                   'initValueText' => $clienteText, // set the initial display text
                                   'options' => ['placeholder' => Yii::t('cliente','Select a customer').'...'],
@@ -89,18 +91,15 @@ if ( $modelPedido->isNewRecord ) {
 
                               <?=  Html::hiddenInput("pedido-tipo_listap", " ",['id'=>'pedido-tipo_listap']); ?>
                             </div>
-                        </div>
-
-                        <div class="row">
-                          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <label for=""><?= Yii::t('cliente','Address') ?></label>
-                            <?= Html::textArea('pedido',$cliente->direcc_clte,[
-                              'id'=>'pedido-direccion_pedido',
-                              'class' => 'form-control input-sm',
-                              'rows' => 1,
-                              'readonly' => true
-                            ]); ?>
-                          </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                              <label for=""><?= Yii::t('cliente','Address') ?></label>
+                              <?= Html::textArea('pedido',$cliente->direcc_clte,[
+                                'id'=>'pedido-direccion_pedido',
+                                'class' => 'form-control input-sm',
+                                'rows' => 1,
+                                'readonly' => $disabledPedido
+                              ]); ?>
+                            </div>
                         </div>
                     </div>
                   </div>
@@ -108,7 +107,66 @@ if ( $modelPedido->isNewRecord ) {
               </div>
           </div>
           <div class="row">
+            <div class="box box-danger">
+              <div class="box-header with-border">
+                <h3 class="box-title">
+                  <?= Yii::t('documento','Invoice') ?>
+                </h3>
+              </div>
+              <div class="box-body">
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row">
+                      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <?php
+                        $tipoDoc = "";
+                        $tipoDocText = "";
 
+                        if ( $model->tipo_doc) {
+                          $tipoDoc = TipoDocumento::findOne($model->tipo_doc);
+                          $tipoDocText = $tipoDoc->des_tipod;
+                        }
+
+                        $tipoDocs = TipoDocumento::getTipoDocumento( 'S', TipoDocumento::ES_DOCUMENTO );
+                        ?>
+                        <?= $form->field($model, 'tipo_doc',[
+                          'addClass' => 'form-control input-sm',
+                          ])->widget(Select2::classname(), [
+                                    'data' => $tipoDocs,
+                                    'size' => Select2::SMALL,
+                                    'initValueText' => $tipoDocText,
+                                    'language' => Yii::$app->language,
+                                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                                    'options' => [
+                                      'placeholder' => Yii::t('tipo_documento','Select a document type').'...',
+                                    ],
+                            ])?>
+                      </div>
+                      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <?= $form->field($model, 'cod_doc',[
+                          'addClass' => 'form-control input-sm',
+                          ])->textInput([
+                            'readonly' => true,
+                            'maxlength' => true,
+                            'style' => ['text-align' => 'right']
+                          ])?>
+                      </div>
+                      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <?php
+                          $model->fecha_doc = date('d/m/Y');
+                          echo $form->field($model, 'fecha_doc',[
+                            'addClass' => 'form-control input-sm',
+                          ])->textInput([
+                                'value' => date('d/m/Y'),
+                                'readonly' => 'readonly',
+                                'style' => ['text-align' => 'right']
+                            ]) ?>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -131,7 +189,7 @@ if ( $modelPedido->isNewRecord ) {
                         ])->dropDownList( $list,[
                           'custom' => true,
                           'prompt' => Yii::t('app','Select...'),
-                          'disabled' => $disabled,
+                          'disabled' => $disabledPedido,
                         ])?>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -139,7 +197,7 @@ if ( $modelPedido->isNewRecord ) {
                             'addClass' => 'form-control input-sm'
                           ])->textInput([
                             'maxlength' => true,
-                            'disabled'=> $disabled,
+                            'disabled'=> $disabledPedido,
                             'style' => ['text-align' => 'right']
                             ]) ?>
                     </div>
@@ -165,7 +223,7 @@ if ( $modelPedido->isNewRecord ) {
                                   'options' => [
                                     'placeholder' => Yii::t('vendedor','Select a seller').'...',
                                   ],
-                                  'disabled' => $disabled
+                                  'disabled' => $disabledPedido
                           ])?>
 
                     </div>
@@ -180,12 +238,8 @@ if ( $modelPedido->isNewRecord ) {
                                   'language' => Yii::$app->language,
                                   'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-money"></i>']],
                                   'options' => ['placeholder' => Yii::t('moneda','Select a currency').'...'],
-                                  'disabled' => $disabled,
+                                  'disabled' => $disabledPedido,
                                   'size' => Select2::SMALL,
-                                  //'theme' => Select2::THEME_DEFAULT,
-                                  // 'pluginOptions' => [
-                                  //     'allowClear' => true
-                                  // ],
                           ])?>
                     </div>
                   </div>
@@ -202,7 +256,7 @@ if ( $modelPedido->isNewRecord ) {
                                   'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-tag"></i>']],
                                   'options' => ['placeholder' => Yii::t('condicionp','Select a payment condition').'...'],
                                   'size' => Select2::SMALL,
-                                  'disabled' => $disabled,
+                                  'disabled' => $disabledPedido,
                           ])?>
                     </div>
                   </div>
@@ -215,7 +269,6 @@ if ( $modelPedido->isNewRecord ) {
 
       <?php
         $modelsDetalles = $modelPedido->detalles;
-
       ?>
       <!-- Articulos -->
       <div class="row">
@@ -250,7 +303,7 @@ if ( $modelPedido->isNewRecord ) {
                 <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Price')?></div>
                 <div class="col-sm-2 col-xs-12"><?= Yii::t( 'pedido', 'Total')?></div>
                 <div class="col-sm-1 col-xs-12">
-                  <button type="button" class="add-item btn btn-success btn-flat btn-md" style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"><i class="fa fa-plus"></i></button>
+                  &nbsp;
                 </div>
             </div>
             <hr>
@@ -286,17 +339,17 @@ if ( $modelPedido->isNewRecord ) {
                           $producto = Producto::findOne($modelDetalle->prod_pdetalle);
                         }
 
+
                         $productos = empty($modelDetalle->prod_pdetalle) ? '' : $producto->cod_prod.' '.$producto->des_prod.' - '.$producto->umedProd->des_und;
                         echo $form->field($modelDetalle, "[{$index}]prod_pdetalle",[
                           'addClass' => 'form-control ',
                           ])->widget(Select2::classname(), [
                             'language' => Yii::$app->language,
                             'initValueText' => $productos, // set the initial display text
-                            'options' => ['placeholder' => Yii::t('producto','Select a product').'...'],
-                            'theme' => Select2::THEME_DEFAULT,
-                            'disabled' => true,
+                            'disabled' => $disabledPedido,
+                            'options' => ['placeholder' => Yii::t('producto','Select a product').'...',],
+                            'size' => Select2::SMALL,
                             'pluginOptions' => [
-                                //'allowClear' => true,
                                 'minimumInputLength' => 3,
                                 'language' => [
                                     'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
@@ -312,11 +365,9 @@ if ( $modelPedido->isNewRecord ) {
                             'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
                             'templateSelection' => new JsExpression( 'function (repo) { return repo.text; }'),
                             'templateResult' => new JsExpression('function (producto) {
-                                //debugger;
                                 if (producto.loading) {
                                     return producto.text;
                                 }
-
                                var markup =
                                         "<div class=\\"row\\">" +
                                             "<div class=\\"col-sm-4\\">" +
@@ -335,19 +386,21 @@ if ( $modelPedido->isNewRecord ) {
                             }'),
                             ],
                         ])->label(false);
+
+                        echo Html::activeHiddenInput($modelDetalle, "[{$index}]prod_pdetalle");
                         ?>
 
                       </div>
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control number-decimals'])
-                        ->textInput(['type' => 'number','min' => 0, 'step' => 1])
+                        ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'readonly' => $disabledPedido])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]plista_pdetalle", [ 'addClass' => 'form-control number-decimals'])
-                        ->textInput([ 'type' => 'number','readonly' => true])
+                        ->textInput([ 'type' => 'number','readonly' => true, 'readonly' => $disabledPedido])
                         ->label(false)?>
                         <?php echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle"); ?>
                       </div>
@@ -362,19 +415,19 @@ if ( $modelPedido->isNewRecord ) {
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]descu_pdetalle", [ 'addClass' => 'form-control number-decimals'])
-                        ->textInput([ 'type'=>'number','width' => '200px'])
+                        ->textInput([ 'type'=>'number','width' => '200px', 'readonly' => $disabledPedido])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]precio_pdetalle",[ 'addClass' => 'form-control number-decimals'])
-                        ->textInput(['type'=>'number','width' => '200px'])
+                        ->textInput(['type'=>'number','width' => '200px', 'readonly' => $disabledPedido])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-2 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]total_pdetalle",[ 'addClass' => 'form-control number-decimals'])
-                        ->textInput(['type'=>'number','readonly' => true])
+                        ->textInput(['type'=>'number','readonly' => true, 'readonly' => $disabledPedido])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-1 col-xs-12">
@@ -431,12 +484,12 @@ if ( $modelPedido->isNewRecord ) {
       </div>
       <!-- Articulos -->
 
-       <div class="form-group" style="float:right">
-        <?php if ( !$model->isNewRecord ) { ?>
-           <button type="button" name="button" id="imprimir" data-toggle="modal" class="btn btn-flat btn-primary "><span class="fa fa-print"></span> <?= Yii::t('app', 'Print')?></button>
-        <?php } ?>
-           <button id="submit" type="button" class="btn btn-flat btn-success"><span class="fa fa-save"></span> <?= Yii::t('app','Save') ?></button>
-       </div>
+      <?php
+        $model->pedido_doc = $modelPedido->id_pedido;
+        echo Html::activeHiddenInput($model, "pedido_doc");
+      ?>
+
+
       <?php ActiveForm::end(); ?>
 </div>
 
@@ -445,6 +498,10 @@ if ( $modelPedido->isNewRecord ) {
 $css = "
 .input-group.select2-bootstrap-prepend .select2-container--krajee .select2-selection {
     border-radius: 0;
+}
+
+.input-sm.select2-container--krajee .select2-selection--single, .input-group-sm .select2-container--krajee .select2-selection--single{
+  border-radius: 0;
 }
 ";
 
@@ -720,7 +777,7 @@ JS
 
   $jsTrigger = "";
 
-  if ( !$model->isNewRecord ){
+  if ( $model->scenario === $model::SCENARIO_FACTURA ){
     $jsTrigger = "
 
       $('#pedido-clte_pedido').trigger('select2:select');

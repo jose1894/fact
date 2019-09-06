@@ -24,6 +24,7 @@ use Yii;
  */
 class Documento extends \yii\db\ActiveRecord
 {
+    const SCENARIO_FACTURA = 'factura';
     /**
      * {@inheritdoc}
      */
@@ -38,6 +39,7 @@ class Documento extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc'], 'required', 'on' => self::SCENARIO_FACTURA],
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc'], 'integer'],
             [['fecha_doc'], 'safe'],
             [['obsv_doc'], 'string'],

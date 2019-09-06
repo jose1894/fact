@@ -13,4 +13,5 @@ return [
     'Update department / county / municipality: {<span class="label label-primary">{number}</span> {name}' => 'Actualizar departamento / condado / municipalidad: <span class="label label-primary">{number}</span> {name}',
     'Order list to bill' => 'Listado de pedidos a generar',
     'Generate document' => 'Generar documento',
+    'Invoice' => 'Factura',
 ];

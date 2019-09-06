@@ -149,6 +149,7 @@ class DocumentoController extends Controller
     public function actionFacturaCreate( $id )
     {
         $model = new Documento();
+        $model->scenario = Documento::SCENARIO_FACTURA;
         $modelPedido = Pedido::findOne( $id );
 
         if ( $modelPedido === null) {

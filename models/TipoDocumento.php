@@ -12,11 +12,15 @@ use yii\helpers\ArrayHelper;
  * @property string $des_tipod DESCRIPCION TIPO DOCUMENTO
  * @property int $sucursal_tipod SUCURSAL TIPO DOCUMENTO
  * @property int $status_tipod ESTATUS TIPO DOCUMENTO
+ * @property int $tipo_tipod TIPO DE DOCUMENTO 0 = ES PEDIDO, 1 = ES DOCUMENTO, 2 = ES GUIA
  *
  * @property Numeracion[] $numeracions
  */
 class TipoDocumento extends \yii\db\ActiveRecord
 {
+    const STATUS_ACTIVO = 1;
+    const STATUS_INACTIVO = 0;
+    const ES_DOCUMENTO = 1;
     /**
      * {@inheritdoc}
      */
@@ -31,7 +35,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['sucursal_tipod', 'status_tipod'], 'integer'],
+            [['sucursal_tipod', 'status_tipod', 'tipo_tipod'], 'integer'],
             [['des_tipod'], 'string', 'max' => 100],
             [['abrv_tipod','ope_tipod'], 'string', 'max' => 3],
             [['ope_tipod'], 'string', 'max' => 1],
@@ -49,19 +53,27 @@ class TipoDocumento extends \yii\db\ActiveRecord
             'sucursal_tipod' => Yii::t('tipo_documento', 'Sucursal'),
             'status_tipod' => Yii::t('tipo_documento', 'Status'),
             'abrv_tipod' => Yii::t('tipo_documento', 'Abbreviation'),
+            'tipo_tipod' => Yii::t('tipo_documento', 'Type'),
             'ope_tipod' => Yii::t('tipo_documento', 'Operation'),
         ];
     }
 
-    public static function getTipoDocumento( $tipo = null )
+    public static function getTipoDocumento( $tipo = null, $esDoc = null )
     {
       $user = User::findOne(Yii::$app->user->id);
       $sucursal = $user->sucursal0->id_suc;
 
-      if ( is_null($tipo) ){
-        $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal',[':status' => 1, ':sucursal' => $sucursal]];                        
-      } else {
-        $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal and ope_tipod like :tipo ',[':status' => 1, ':sucursal' => $sucursal, ':tipo' => $tipo]];
+      $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal', [':status' => self::STATUS_ACTIVO, ':sucursal' => $sucursal]];
+
+      if ( !is_null($esDoc) ) {
+        $condicion[ 0 ] .= ' and tipo_tipod = :documento ';
+        $condicion[ 1 ][ ':documento' ] = self::ES_DOCUMENTO;
+      }
+
+
+      if ( !is_null($tipo) ){
+        $condicion[ 0 ] .= ' and ope_tipod like :tipo ';
+        $condicion[ 1 ][ ':tipo' ] = $tipo;
       }
 
       $tipom = TipoDocumento::find()
