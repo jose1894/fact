@@ -63,3 +63,57 @@ function getRow( row = null ) {
     }
   }
 }
+
+formatMoney(number, a): string {
+        const separador = JSON.parse(localStorage.getItem('languageInt'));
+        const tn = separador.default[13][1];
+        const dn = separador.default[13][0];
+        const n = number;
+        if (number !== undefined && number !== null) {
+            if (dn === ',') { number = (number.toString()).replace(',', '.'); }
+            const val = (number.toString()).split('.');
+            const valInt = isNaN(val[0]) ? '0' : val[0];
+            const c = isNaN(a = Math.abs(a)) ? 2 : a;
+            const d = this.decimalSeparator(dn);
+            const t = this.milesSeparator(tn);
+            const s = n < 0 ? '-' : '';
+            let i = valInt === '' ? '0' : valInt;
+            i = i.replace('-', '');
+            let numDecimal = '';
+            if (val[1] === '' || val.length === 1) {
+                for (let k = 0; k < a; k++) { numDecimal += '0'; }
+            } else {
+                // tslint:disable-next-line:radix
+                const decN = val[1];  // c - ((number.toString()).slice((c * -1)).replace('.' , '')).length;
+                numDecimal = decN.substr(0, a); // (number.toString()).slice((c * -1)).replace('.' , '');
+                for (let k = 0; k < (c - decN.length); k++) { numDecimal += '0'; }
+            }
+            // if ( valInt === '999999999999999' ) {i = val[0]; }
+            const long = i.length; // longintud
+            const j = (long) > 3 ? long % 3 : 0;
+            const numero = s + (j ? i.substr(0, j) + t : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + t) + (c ? d + numDecimal : '');
+            return numero;
+        }
+    }
+
+    decimalSeparator(dec_point): any {
+        if (dec_point === '.') {
+            // tslint:disable-next-line:no-unused-expression
+            (dec_point === undefined) ? '.' : dec_point;
+        } else {
+            // tslint:disable-next-line:no-unused-expression
+            dec_point === undefined ? ',' : dec_point;
+        }
+        return dec_point;
+    }
+
+    milesSeparator(mil_point): any {
+        if (mil_point === ',') {
+            // tslint:disable-next-line:no-unused-expression
+            mil_point === undefined ? ',' : mil_point;
+        } else {
+            // tslint:disable-next-line:no-unused-expression
+            mil_point === undefined ? '.' : mil_point;
+        }
+        return mil_point;
+    }

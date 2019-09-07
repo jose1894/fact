@@ -559,35 +559,32 @@ $( "#pedido-clte_pedido" ).on( "select2:select",function () {
           tpl = cliente.tpl;
 
       $( "#pedido-direccion_pedido" ).val( textDirecc );
-      $( "#pedido-condp_pedido" ).val( condp );
+      //$( "#pedido-condp_pedido" ).val( condp );
       $( "#pedido-vend_pedido" ).val( vendedor );
       $( "#pedido-tipo_listap" ).val( tpl );
-      $( "#pedido-condp_pedido" ).trigger( "change" );
+      //$( "#pedido-condp_pedido" ).trigger( "change" );
       $( "#pedido-vend_pedido" ).trigger( "change" );
 
     }
   });
 
 });
-';
-$this->registerJs($js,View::POS_LOAD);
-$this->registerJs(<<<JS
 
-$('#pedido_tipo  input[type="radio"]').iCheck({
-  checkboxClass: 'icheckbox_flat-green',
-  radioClass   : 'iradio_flat-green'
+$("#pedido_tipo  input[type=\'radio\']").iCheck({
+  checkboxClass: "icheckbox_flat-green",
+  radioClass   : "iradio_flat-green"
 });
 
-$( '.table-body' ).on('select2:select',"select[id$='prod_pdetalle']",function() {
+$( ".table-body" ).on("select2:select","select[id$=\'prod_pdetalle\']",function() {
 	let _currSelect = $( this );
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
 
-  let selects = $("select[id$='prod_pdetalle']");
+  let selects = $("select[id$=\'prod_pdetalle\']");
 
   if ( checkDuplicate( _currSelect, row, selects) ) {
-    _currSelect.val( null ).trigger( 'change' );
-    swal( 'Oops!!!',"El código no puede repetirse, ya está en la lista","error" );
+    _currSelect.val( null ).trigger( "change" );
+    swal( "Oops!!!","El código no puede repetirse, ya está en la lista","error" );
     _currSelect.focus();
   }
 
@@ -596,12 +593,12 @@ $( '.table-body' ).on('select2:select',"select[id$='prod_pdetalle']",function() 
 
   if ( valor ) {
     setPrices( valor, row, tipoLista);
-    $( '#pedidodetalle-' + row + '-cant_pdetalle' ).focus();
+    $( "#pedidodetalle-" + row + "-cant_pdetalle" ).focus();
   }
 
 });
 
-$( '.table-body' ).on( 'change', 'input[id$="cant_pdetalle"]', function( e ) {
+$( ".table-body" ).on( "change", "input[id$=\'cant_pdetalle\']", function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     let cant = $( this ).val();
@@ -624,7 +621,7 @@ $( '.table-body' ).on( 'change', 'input[id$="cant_pdetalle"]', function( e ) {
     }
 });
 
-$( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ) {
+$( ".table-body" ).on( "change", "input[id$=\'descu_pdetalle\']", function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     let descu = $( this ).val();
@@ -656,7 +653,7 @@ $( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ) {
     }
 });
 
-$( '.table-body' ).on( 'change', 'input[id$="precio_pdetalle"]', function( e ) {
+$( ".table-body" ).on( "change", "input[id$=\'precio_pdetalle\']", function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     let cant = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
@@ -673,31 +670,31 @@ $( '.table-body' ).on( 'change', 'input[id$="precio_pdetalle"]', function( e ) {
 
 });
 
-$( '.table-body' ).on( 'blur', 'input[id$="precio_pdetalle"]', function( e ) {
+$( ".table-body" ).on( "blur", "input[id$=\'precio_pdetalle\']", function( e ) {
   calculateTotals( IMPUESTO );
 });
 
-$( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ) {
+$( ".table-body" ).on( "keyup", "input[id$=\'cant_pdetalle\']", function( e ) {
 
   if ( e.keyCode === 13 && $( this ).val() ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
-    $( '#pedidodetalle-' + row + '-descu_pdetalle' ).focus();
-    $( '#pedidodetalle-' + row + '-descu_pdetalle' ).select();
+    $( "#pedidodetalle-" + row + "-descu_pdetalle" ).focus();
+    $( "#pedidodetalle-" + row + "-descu_pdetalle" ).select();
   }
 
 });
 
-$( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ){
+$( ".table-body" ).on( "keyup", "input[id$=\'descu_pdetalle\']", function( e ){
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
 
   if ( e.keyCode === 13 && $( "#pedidodetalle-" + row + "-cant_pdetalle" ).val() ) {
-    $( '#pedidodetalle-' + row + '-precio_pdetalle' ).focus();
+    $( "#pedidodetalle-" + row + "-precio_pdetalle" ).focus();
   }
 });
 
-$( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ) {
+$( ".table-body" ).on( "keyup", "input[id$=\'precio_pdetalle\']", function( e ) {
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
 
@@ -711,16 +708,16 @@ $( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ) {
       }).then( ( willDelete ) => {
         if ( willDelete ) {
           let row = $( ".detalle-item" ).length;
-          $( '.add-item' ).trigger( 'click' );
+          $( ".add-item" ).trigger( "click" );
           $( "#pedidodetalle-" + row + "-prod_pdetalle").focus();
-          $( "#pedidodetalle-" + row + "-prod_pdetalle").select2('open');
+          $( "#pedidodetalle-" + row + "-prod_pdetalle").select2("open");
         }
       });
   }
 });
 
-$( 'body' ).on( 'click', buttonCancel, function(){
-  $( frameRpt ).attr( 'src', 'about:blank' );
+$( "body" ).on( "click", buttonCancel, function(){
+  $( frameRpt ).attr( "src", "about:blank" );
   $( modalRpt ).modal("hide");
 });
 
@@ -741,12 +738,12 @@ function calculateTotals( IMPUESTO ) {
         total: 0
       };
 
-  $( 'input[id$="-total_pdetalle"]' ).each(function (i, element) {
+  $( "input[id$=\'-total_pdetalle\']" ).each(function (i, element) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     total += parseFloat(element.value);
-    subT = $( '#pedidodetalle-' + row + '-plista_pdetalle' ).val()  *  $( '#pedidodetalle-' + row + '-cant_pdetalle' ).val() / ( IMPUESTO + 1 ) ;
-    desc = parseFloat( $( '#pedidodetalle-' + row + '-descu_pdetalle' ).data( "descuento" ) * $( '#pedidodetalle-' + row + '-cant_pdetalle' ).val()   / ( IMPUESTO + 1 ) );
+    subT = $( "#pedidodetalle-" + row + "-plista_pdetalle" ).val()  *  $( "#pedidodetalle-" + row + "-cant_pdetalle" ).val() / ( IMPUESTO + 1 ) ;
+    desc = parseFloat( $( "#pedidodetalle-" + row + "-descu_pdetalle" ).data( "descuento" ) * $( "#pedidodetalle-" + row + "-cant_pdetalle" ).val()   / ( IMPUESTO + 1 ) );
     subTotal1 += subT;
     descuento += desc;
   });
@@ -772,142 +769,131 @@ function calculateTotals( IMPUESTO ) {
   //return totals;
 }
 
-JS
-, VIEW::POS_END);
+$("#pedido-clte_pedido").trigger("select2:select");
+$("select[id$=\'prod_pdetalle\']").trigger("change");
 
-  $jsTrigger = "";
+$("select[id$=\'prod_pdetalle\']").each(function( i ){
 
-  if ( $model->scenario === $model::SCENARIO_FACTURA ){
-    $jsTrigger = "
+  let row = $( this ).attr( \'id\' ).split( \'-\' );
+  row = row[ 1 ];
 
-      $('#pedido-clte_pedido').trigger('select2:select');
-      $('select[id$=\"prod_pdetalle\"]').trigger('change');
+  setPrices( $( this ).val(), row,   $( "#pedido-tipo_listap" ).val() );
+  $("#pedidodetalle-" + row + "-descu_pdetalle").trigger( "change" );
+  $("#pedidodetalle-" + row + "-precio_pdetalle").trigger( "blur" );
+});
 
-      $('select[id$=\"prod_pdetalle\"]').each(function( i ){
+function setPrices( value = null, row, tipo_lista ) {
+  if ( value ) {
+    $.ajax({
+        url:"'.Url::to(['producto/product-price']).'",
+        data:{
+          id: value,
+          tipo_listap: tipo_lista
+        },
+        async:false,
+        success: function( data ) {
+          if ( data.results ) {
+            let precioLista = data.results[ 0 ].precio;
+            let impuestoDetalle = data.results[ 0 ].precio - data.results[ 0 ].precio / ( IMPUESTO + 1 );
 
-        let row = $( this ).attr( \"id\" ).split( \"-\" );
-        row = row[ 1 ];
+            precioLista = parseFloat(  precioLista  ).toFixed( 2 );
+            impuestoDetalle = parseFloat(  impuestoDetalle  ).toFixed( 2 );
 
-        setPrices( $( this ).val(), row,   $( \"#pedido-tipo_listap\" ).val() );
-        $('#pedidodetalle-' + row + '-descu_pdetalle').trigger( 'change' );
-        $('#pedidodetalle-' + row + '-precio_pdetalle').trigger( 'blur' );
-      });
-    ";
+            $( "#pedidodetalle-" + row + "-plista_pdetalle" ).val( precioLista );
+            $( "#pedidodetalle-" + row + "-impuesto_pdetalle" ).val( impuestoDetalle );
+
+            let descuDetalle = $( "#pedidodetalle-" + row + "-descu_pdetalle" ).val( );
+            descuDetalle = descuDetalle ? descuDetalle : 0;
+
+            $( "#pedidodetalle-" + row + "-descu_pdetalle" ).val( descuDetalle );
+            $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioLista );
+          }
+        }
+    });
+  }
+}
+
+$( "#submit" ).on( "click", function() {
+  let form = $( "form#'. $model->formName() .'" );
+
+  let rows = $(".table-body > .detalle-item").length;
+
+  if ( !rows ) {
+    swal("'.Yii::t('pedido','Order').'", "'.Yii::t('pedido','The order must have at least one item to be saved').'", "info");
+    return false;
   }
 
-  $jsSave = "
-  function setPrices( value = null, row, tipo_lista ) {
-    if ( value ) {
-      $.ajax({
-          url:'".Url::to(['producto/product-price'])."',
-          data:{
-            id: value,
-            tipo_listap: tipo_lista
-          },
-          async:false,
-          success: function( data ) {
-            if ( data.results ) {
-              let precioLista = data.results[ 0 ].precio;
-              let impuestoDetalle = data.results[ 0 ].precio - data.results[ 0 ].precio / ( IMPUESTO + 1 );
+  $.ajax( {
+    "url"    : $( form ).attr( "action" ),
+    "method" : $( form ).attr( "method" ),
+    "data"   : $( form ).serialize(),
+    "async"  : false,
+    "success": function ( data ) {
+      if ( data.success ) {
 
-              precioLista = parseFloat(  precioLista  ).toFixed( 2 );
-              impuestoDetalle = parseFloat(  impuestoDetalle  ).toFixed( 2 );
 
-              $( '#pedidodetalle-' + row + '-plista_pdetalle' ).val( precioLista );
-              $( '#pedidodetalle-' + row + '-impuesto_pdetalle' ).val( impuestoDetalle );
+        if ( $( form ).attr("action").indexOf("create") != -1) {
+          $( form ).trigger( "reset" );
+          selects = $(form).find("select");
 
-              let descuDetalle = $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( );
-              descuDetalle = descuDetalle ? descuDetalle : 0;
+          if ( selects.length ){
+            selects.trigger( "change" );
+          }
 
-              $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( descuDetalle );
-              $( '#pedidodetalle-' + row + '-precio_pdetalle' ).val( precioLista );
+          swal({
+            title: "'.Yii::t('pedido','Do you want to issue the document?').'",
+            icon: "info",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willIssue) => {
+            if (willIssue) {
+              window.open("'.Url::to(['pedido/pedido-rpt']).'&id=" + data.id,"_blank");
             }
-          }
-      });
-    }
-  }
+          });
 
-  $( '#submit' ).on( 'click', function() {
-    let form = $( 'form#Pedido' );
-
-    let rows = $('.table-body > .detalle-item').length;
-
-    if ( !rows ) {
-      swal('".Yii::t('pedido','Order')."', '".Yii::t('pedido','The order must have at least one item to be saved')."', 'info');
-      return false;
-    }
-
-    $.ajax( {
-      'url'    : $( form ).attr( 'action' ),
-      'method' : $( form ).attr( 'method' ),
-      'data'   : $( form ).serialize(),
-      'async'  : false,
-      'success': function ( data ) {
-        if ( data.success ) {
-
-
-          if ( $( form ).attr('action').indexOf('create') != -1) {
-            $( form ).trigger( 'reset' );
-            selects = $(form).find('select');
-
-            if ( selects.length ){
-              selects.trigger( 'change' );
-            }
-
-            swal({
-              title: '".Yii::t('pedido','Do you want to issue the document?')."',
-              icon: 'info',
-              buttons: true,
-              dangerMode: true,
-            })
-            .then((willIssue) => {
-              if (willIssue) {
-                window.open('".Url::to(['pedido/pedido-rpt'])."&id=' + data.id,'_blank');
-              }
-            });
-
-            $( '.table-body' ).empty();
-          }
-
-          if ( data.codigo ) {
-            $( '#pedido-cod_pedido' ).val( data.codigo );
-          }
-
-          swal(data.title, data.message, data.type);
-
-          return;
-        } else {
-          $( form ).yiiActiveForm( 'updateMessages', data);
+          $( ".table-body" ).empty();
         }
 
-      },
-      error: function(data) {
-          let message;
+        if ( data.codigo ) {
+          $( "#pedido-cod_pedido" ).val( data.codigo );
+        }
 
-          if ( data.responseJSON ) {
-            let error = data.responseJSON;
-            message =   'Se ha encontrado un error: ' +
-            '\\n\\nCode ' + error.code +
-            '\\n\\nFile: ' + error.file +
-            '\\n\\nLine: ' + error.line +
-            '\\n\\nName: ' + error.name +
-            '\\n Message: ' + error.message;
-          } else {
-              message = data.responseText;
-          }
+        swal(data.title, data.message, data.type);
 
-          swal('Oops!!!',message,'error' );
+        return;
+      } else {
+        $( form ).yiiActiveForm( "updateMessages", data);
       }
-    });
 
+    },
+    error: function(data) {
+        let message;
 
+        if ( data.responseJSON ) {
+          let error = data.responseJSON;
+          message =   "Se ha encontrado un error: " +
+          "\\n\\nCode " + error.code +
+          "\\n\\nFile: " + error.file +
+          "\\n\\nLine: " + error.line +
+          "\\n\\nName: " + error.name +
+          "\\n Message: " + error.message;
+        } else {
+            message = data.responseText;
+        }
+
+        swal("Oops!!!",message,"error" );
+    }
   });
-  ";
-
-$this->registerJs($jsTrigger.$jsSave,View::POS_END);
 
 
-$this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
+});
+';
+
+Yii::$app->view->registerJs($js,View::POS_END);
+
+
+Yii::$app->view->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
 ['depends'=>[\yii\web\JqueryAsset::className()],
 'position'=>View::POS_END]);
 
