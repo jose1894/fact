@@ -37,7 +37,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
         return [
             [['sucursal_tipod', 'status_tipod', 'tipo_tipod'], 'integer'],
             [['des_tipod'], 'string', 'max' => 100],
-            [['abrv_tipod','ope_tipod'], 'string', 'max' => 3],
+            [['abrv_tipod'], 'string', 'max' => 4],
             [['ope_tipod'], 'string', 'max' => 1],
         ];
     }
@@ -76,11 +76,22 @@ class TipoDocumento extends \yii\db\ActiveRecord
         $condicion[ 1 ][ ':tipo' ] = $tipo;
       }
 
-      $tipom = TipoDocumento::find()
-                 ->where($condicion[0], $condicion[1])
-                ->orderBy('des_tipod')
-                ->all();
-      return  ArrayHelper::map( $tipom, 'id_tipod', 'des_tipod');
+
+      if ( !is_null($esDoc) ){
+        $tipom = TipoDocumento::find()
+        ->joinWith('numeracions as n')
+        ->select(['id_tipod','CONCAT(abrv_tipod,"/",n.serie_num," - ", des_tipod) AS des_tipod'])
+        ->where($condicion[0], $condicion[1])
+        ->orderBy('des_tipod')
+        ->all();
+     } else {
+        $tipom = TipoDocumento::find()
+                  ->select(['id_tipod','CONCAT(abrv_tipod," - ", des_tipod) AS des_tipod'])
+                  ->where($condicion[0], $condicion[1])
+                  ->orderBy('des_tipod')
+                  ->all();
+      }
+    return  ArrayHelper::map( $tipom, 'id_tipod', 'des_tipod');
     }
 
     /**

@@ -14,4 +14,5 @@ return [
     'Order list to bill' => 'Listado de pedidos a generar',
     'Generate document' => 'Generar documento',
     'Invoice' => 'Factura',
+    'Comments' => 'Observaciones',
 ];

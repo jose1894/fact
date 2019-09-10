@@ -21,7 +21,7 @@ use kartik\form\ActiveForm;
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
         <?= $form->field($model, 'abrv_tipod',[
           'addClass' => 'form-control ',
-          'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-edit"></i>']]])->textInput(['maxlength' => 3])  ?>
+          'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-edit"></i>']]])->textInput(['maxlength' => true])  ?>
       </div>
     </div>
     <div class="row">

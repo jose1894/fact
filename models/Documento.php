@@ -56,17 +56,17 @@ class Documento extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_doc' => Yii::t('compra', 'Id Doc'),
-            'cod_doc' => Yii::t('compra', 'Cod Doc'),
-            'tipo_doc' => Yii::t('compra', 'Tipo Doc'),
-            'pedido_doc' => Yii::t('compra', 'Pedido Doc'),
-            'fecha_doc' => Yii::t('compra', 'Fecha Doc'),
-            'obsv_doc' => Yii::t('compra', 'Obsv Doc'),
-            'totalimp_doc' => Yii::t('compra', 'Totalimp Doc'),
-            'totaldsc_doc' => Yii::t('compra', 'Totaldsc Doc'),
-            'total_doc' => Yii::t('compra', 'Total Doc'),
-            'status_doc' => Yii::t('compra', 'Status Doc'),
-            'sucursal_doc' => Yii::t('compra', 'Sucursal Doc'),
+            'id_doc' => Yii::t('compra', 'Id'),
+            'cod_doc' => Yii::t('compra', 'Code'),
+            'tipo_doc' => Yii::t('tipo_documento', 'Type'),
+            'pedido_doc' => Yii::t('pedido', 'Order'),
+            'fecha_doc' => Yii::t('documento', 'Date'),
+            'obsv_doc' => Yii::t('documento', 'Comments'),
+            'totalimp_doc' => Yii::t('documento', 'Tax'),
+            'totaldsc_doc' => Yii::t('documento', 'Discount'),
+            'total_doc' => Yii::t('documento', 'Total'),
+            'status_doc' => Yii::t('documento', 'Status'),
+            'sucursal_doc' => Yii::t('documento', 'Sucursal '),
         ];
     }
 

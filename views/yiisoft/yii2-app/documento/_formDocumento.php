@@ -282,7 +282,7 @@ if ( $model->isNewRecord ) {
                 'insertButton' => '.add-item', // css class
                 'deleteButton' => '.remove-item', // css class
                 'model' => $modelsDetalles[0],
-                'formId' => $modelPedido->formName(),
+                'formId' => $model->formName(),
                 'formFields' => [
                     'id_pdetalle',
                     'prod_pdetalle',
@@ -436,50 +436,58 @@ if ( $model->isNewRecord ) {
                   </div>
             <?php endforeach; ?>
           </div>
+
           <?php DynamicFormWidget::end(); ?>
           <hr>
-          <table class="table table-fixed table-stripped">
-            <tr>
-              <td class="col-xs-6" style="text-align:right;">
-                <?= Yii::t('app', 'Subtotal') ?>
-              </td>
-              <td class="col-xs-2">
-                <input type="text" id="subtotal1" name="subtotal" readonly class="form-control totales" value="">
-              </td>
-            </tr>
-            <tr>
-              <td class="col-xs-6" style="text-align:right;">
-                <?= Yii::t('app', 'Discount') ?>
-              </td>
-              <td class="col-xs-2">
-                <input type="text" id="descuento" name="descuento" readonly class="form-control totales" value="">
-              </td>
-            </tr>
-            <tr>
-              <td class="col-xs-6" style="text-align:right;">
-                <?= Yii::t('app', 'Subtotal') ?>
-              </td>
-              <td class="col-xs-2">
-                <input type="text" id="subtotal2" name="subtotal" readonly class="form-control totales" value="">
-              </td>
-            </tr>
-            <tr>
-              <td class="col-xs-7" style="text-align:right;">
-                <?= Yii::t('app', 'Tax')?> <?= $IMPUESTO ?>%
-              </td>
-              <td class="col-xs-2">
-                <input type="text" name="impuesto" id="impuesto" readonly class="form-control totales" value="">
-              </td>
-            </tr>
-            <tr>
-              <td class="col-xs-6" style="text-align:right;">
-                <?= Yii::t('app', 'Total')?>
-              </td>
-              <td class="col-xs-2">
-                <input type="text" name="total" id="total" readonly  class="form-control totales" value="">
-              </td>
-            </tr>
-          </table>
+          <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+              <?= $form->field($model, 'obsv_doc')->textarea(['rows' => 11, 'disabled' => $disabled])?>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+              <table class="table table-fixed table-stripped">
+                <tr>
+                  <td class="col-xs-2" style="text-align:right;">
+                    <?= Yii::t('app', 'Subtotal') ?>
+                  </td>
+                  <td class="col-xs-4">
+                    <input type="text" id="subtotal1" name="subtotal" readonly class="form-control totales" value="">
+                  </td>
+                </tr>
+                <tr>
+                  <td class="col-xs-2" style="text-align:right;">
+                    <?= Yii::t('app', 'Discount') ?>
+                  </td>
+                  <td class="col-xs-4">
+                    <input type="text" id="descuento" name="descuento" readonly class="form-control totales" value="">
+                  </td>
+                </tr>
+                <tr>
+                  <td class="col-xs-2" style="text-align:right;">
+                    <?= Yii::t('app', 'Subtotal') ?>
+                  </td>
+                  <td class="col-xs-4">
+                    <input type="text" id="subtotal2" name="subtotal" readonly class="form-control totales" value="">
+                  </td>
+                </tr>
+                <tr>
+                  <td class="col-xs-2" style="text-align:right;">
+                    <?= Yii::t('app', 'Tax')?> <?= $IMPUESTO ?>%
+                  </td>
+                  <td class="col-xs-4">
+                    <input type="text" name="impuesto" id="impuesto" readonly class="form-control totales" value="">
+                  </td>
+                </tr>
+                <tr>
+                  <td class="col-xs-2" style="text-align:right;">
+                    <?= Yii::t('app', 'Total')?>
+                  </td>
+                  <td class="col-xs-4">
+                    <input type="text" name="total" id="total" readonly  class="form-control totales" value="">
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
       <!-- Articulos -->
@@ -491,6 +499,8 @@ if ( $model->isNewRecord ) {
 
 
       <?php ActiveForm::end(); ?>
+<button type="button" name="button" id="imprimir" data-toggle="modal" class="btn btn-flat btn-primary "><span class="fa fa-print"></span> <?= Yii::t('app', 'Print')?></button>
+
 </div>
 
 <?php
@@ -507,6 +517,7 @@ $css = "
 
 Yii::$app->view->registerCss($css);
 
+$this->registerJsVar( "buttonPrint", "#imprimir" );
 Yii::$app->view->registerJs('const IMPUESTO = '. $IMPUESTO .' / 100;',  \yii\web\View::POS_HEAD);
 $js = '
 $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {

@@ -63,7 +63,7 @@ function getRow( row = null ) {
     }
   }
 }
-
+/*
 formatMoney(number, a): string {
         const separador = JSON.parse(localStorage.getItem('languageInt'));
         const tn = separador.default[13][1];
@@ -117,3 +117,4 @@ formatMoney(number, a): string {
         }
         return mil_point;
     }
+*/

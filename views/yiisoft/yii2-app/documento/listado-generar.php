@@ -74,12 +74,21 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
-                'template' => ' {factura} ',
+                'template' => ' {factura}&nbsp;&nbsp;{print} ',
                 'buttons' => [
                   'factura' => function ($url, $model) {
                       return Html::a('<button class="btn btn-flat btn-success">'.Yii::t('documento','Generate document').'&nbsp; &nbsp;<i class="fa fa-play-circle"></i></button>', $url, [
                                   'title' => Yii::t('documento', 'Generate documento'),
                                   'class' => 'pjax-document',
+                                  'data' => [
+                                    'id' => $model->id_pedido,
+                                  ]
+                      ]);
+                  },
+                  'print' => function ($url, $model) {
+                      return Html::a('<button class="btn btn-flat btn-primary">'.Yii::t('app','Print').'&nbsp; &nbsp;<i class="fa fa-print"></i></button>', $url, [
+                                  'title' => Yii::t('documento', 'Print'),
+                                  'class' => 'pjax-print',
                                   'data' => [
                                     'id' => $model->id_pedido,
                                   ]
@@ -105,6 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <?php
 //Maestro
+$this->registerJsVar( "buttonPrint", ".pjax-print" );
 $this->registerJsVar( "buttonCreate", ".pjax-document" );
 $this->registerJsVar( "buttonSubmit", "#submit" );
 $this->registerJsVar( "buttonCancel", ".close-btn" );

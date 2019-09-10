@@ -18,6 +18,7 @@ use app\components\AutoIncrement;
 use app\base\Model;
 use yii\helpers\ArrayHelper;
 use kartik\mpdf\Pdf;
+use app\models\Numeracion;
 /**
  * NotaSalidaController implements the CRUD actions for NotaSalida model.
  */
@@ -85,11 +86,15 @@ class NotaSalidaController extends Controller
           $modelsDetalles = Model::createMultiple(NotaSalidaDetalle::classname());
           Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
 
-          // validate all models
           $model->sucursal_trans = SiteController::getSucursal();
           $model->usuario_trans = Yii::$app->user->id;
-          $model->codigo_trans = AutoIncrement::getAutoIncrementPad( 'codigo_trans', 'transaccion', 'ope_trans', $model::OPE_TRANS );
           $model->ope_trans = $model::OPE_TRANS;
+          $num = Numeracion::getNumeracion( $model::NOTA_SALIDA );
+          $codigo = intval( $num['numero_num'] ) + 1;
+          $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
+          $model->codigo_trans = $codigo;
+
+          // validate all models
           $valid = $model->validate();
           $valid = Model::validateMultiple($modelsDetalles) && $valid;
 
@@ -126,6 +131,9 @@ class NotaSalidaController extends Controller
                       }
 
                       if ($flag) {
+                        $numeracion = Numeracion::findOne($num['id_num']);
+                        $numeracion->numero_num = $codigo;
+                        $numeracion->save();
                         $transaction->commit();
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         $return = [
