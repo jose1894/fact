@@ -227,6 +227,7 @@ if ( $model->isNewRecord ) {
                       'ajax' => [
                           'url' => $url,
                           'dataType' => 'json',
+                          'method' => 'POST',
                           'data' => new JsExpression('function(params) { return {desc:params.term,tipo_listap: $("#pedido-tipo_listap").val()}; }')
                       ],
                       'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),

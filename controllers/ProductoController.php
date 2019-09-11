@@ -113,7 +113,7 @@ class ProductoController extends Controller
                     }
                     if ($flag) {
                         $transaction->commit();
-                        //return $this->redirect(['view', 'id' => $model->id_prod]);
+                        
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         $return = [
                           'success' => true,
@@ -269,12 +269,11 @@ class ProductoController extends Controller
         $out = ['results' => ['id' => '', 'text' => '']];
         $desc = is_null(Yii::$app->request->post( 'desc' )) ? null : Yii::$app->request->post( 'desc' );
         $tipo_listap = is_null(Yii::$app->request->post( 'tipo_listap' )) ? null : Yii::$app->request->post( 'tipo_listap' );
-
-
         $sucursal = SiteController::getSucursal();
-        if ( !is_null( $desc ) && is_null( $tipo_listap ) ) {
-            $query = new Query;
 
+        if ( !is_null( $desc ) && is_null( $tipo_listap ) ) {
+
+            $query = new Query;
             $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','des_und','stock_prod'])
                 ->from(['v_productos as p'])
                 ->where('p.status_prod = 1')
@@ -289,38 +288,37 @@ class ProductoController extends Controller
 
             $command = $query->createCommand();
             $data = $command->queryAll();
-
             $out['results'] = array_values( $data );
+
         } elseif ( !is_null( $desc ) && !is_null( $tipo_listap ) ) {
-          $query = new Query;
 
-          $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio', 'des_und','stock_prod'])
-              ->from(['v_productos as p'])
-              ->where('p.status_prod = 1')
-              ->andWhere(['like', 'p.texto', $desc])
-              ->andWhere(['=', 'p.venta_prod', 1])
-              ->andWhere(['=', 'p.status_prod', 1])
-              ->andWhere('p.tipo_lista = :tipo_listap and p.sucursal_prod = :sucursal',[':tipo_listap' =>  $tipo_listap, ':sucursal' => $sucursal])
-              ->orderBy('p.cod_prod ASC');
-              //->limit(20);
+            $query = new Query;
+            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio', 'des_und','stock_prod'])
+                ->from(['v_productos as p'])
+                ->where('p.status_prod = 1')
+                ->andWhere(['like', 'p.texto', $desc])
+                ->andWhere(['=', 'p.venta_prod', 1])
+                ->andWhere(['=', 'p.status_prod', 1])
+                ->andWhere('p.tipo_lista = :tipo_listap and p.sucursal_prod = :sucursal',[':tipo_listap' =>  $tipo_listap, ':sucursal' => $sucursal])
+                ->orderBy('p.cod_prod ASC');
 
-          $command = $query->createCommand();
-          $data = $command->queryAll();
+            $command = $query->createCommand();
+            $data = $command->queryAll();
+            $out['results'] = array_values( $data );
 
-          $out['results'] = array_values( $data );
         } elseif ( $id > 0 ) {
-          $query = new Query;
 
-          $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio','des_und','stock_prod'])
-              ->from(['v_productos as p'])
-              ->where('p.status_prod = 1')
-              ->andWhere(['p.id_prod = :id',['id' =>  $id]]);
-              //->limit(20);
+            $query = new Query;
 
-          $command = $query->createCommand();
-          $data = $command->queryAll();
+            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio','des_und','stock_prod'])
+                ->from(['v_productos as p'])
+                ->where('p.status_prod = 1')
+                ->andWhere(['p.id_prod = :id',['id' =>  $id]]);
 
-          $out['results'] = array_values($data);
+            $command = $query->createCommand();
+            $data = $command->queryAll();
+
+            $out['results'] = array_values($data);
         }
 
         return $out;
