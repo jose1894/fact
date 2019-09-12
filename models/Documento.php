@@ -25,6 +25,7 @@ use Yii;
 class Documento extends \yii\db\ActiveRecord
 {
     const SCENARIO_FACTURA = 'factura';
+    const TIPO_FACTURA = 6;
     /**
      * {@inheritdoc}
      */
