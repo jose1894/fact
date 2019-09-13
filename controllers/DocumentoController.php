@@ -193,6 +193,8 @@ class DocumentoController extends Controller
           $model->fecha_doc = $fecha;
           $modelNotaSalida->fecha_trans =  $fecha;
 
+          $numDoc = Numeracion::getNumeracion( $model::FACTURA_DOC );
+
           // validate all models
           $valid = $model->validate();
           $valid = $modelNotaSalida->validate() && $valid;
@@ -209,16 +211,20 @@ class DocumentoController extends Controller
           } else {
 
             $transaction = \Yii::$app->db->beginTransaction();
+            $flag = $model->save();
 
             try {
-              if ($flag = $modelNotaSalida->save()) {
+              $modelNotaSalida->idrefdoc_trans = $model->id_doc;
+              $modelNotaSalida->
+              $flag = $modelNotaSalida->save() && $flag;
+              if ( $flag ) {
                 for($i = 0; $i < count($notaSalidaDetalle); $i++) {
                       $modelNotaSalidaDetalle = new NotaSalidaDetalle();
                       $modelNotaSalidaDetalle->trans_detalle = $modelNotaSalida->id_trans;
                       $modelNotaSalidaDetalle->prod_detalle = $notaSalidaDetalle[$i]['prod_detalle'];
                       $modelNotaSalidaDetalle->cant_detalle = $notaSalidaDetalle[$i]['cant_detalle'];
 
-                      if (! ($flag = $modelNotaSalidaDetalle->save())) {
+                      if ( !($flag = $modelNotaSalidaDetalle->save()) ) {
                           $transaction->rollBack();
                           throw new \Exception("Error Processing Request", 1);
                           break;
@@ -228,11 +234,10 @@ class DocumentoController extends Controller
 
               $numeracion = Numeracion::findOne($num['id_num']);
               $numeracion->numero_num = $codigo;
-              $flag = $numeracion->save();
+              $flag = $numeracion->save() && $flag;
 
-              $flag = $model->save() && $flag;
 
-              if ($flag) {
+              if ( $flag ) {
                 $transaction->commit();
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 $return = [

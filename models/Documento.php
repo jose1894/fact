@@ -25,7 +25,8 @@ use Yii;
 class Documento extends \yii\db\ActiveRecord
 {
     const SCENARIO_FACTURA = 'factura';
-    const TIPO_FACTURA = 6;
+    const FACTURA_DOC = 'FE'; //TIPO DE DOCUMENTO 
+    const TIPO_FACTURA = 6; //Tipo de operacion para la tabla transaccion cuando tenga que aumentar o descontar almacen
     /**
      * {@inheritdoc}
      */
