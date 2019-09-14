@@ -294,8 +294,7 @@ class NotaSalidaController extends Controller
           'ope_trans' => NotaSalida::OPE_TRANS
         ]);
 
-        if ( $model->status_trans == $model::STATUS_APPROVED )
-        {
+        if ( $model->status_trans == $model::STATUS_APPROVED ){
           Yii::$app->response->format = Response::FORMAT_JSON;
           $return = [
             'success' => false,

@@ -18,6 +18,8 @@ use Yii;
  */
 class Numeracion extends \yii\db\ActiveRecord
 {
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
     /**
      * {@inheritdoc}
      */
@@ -70,7 +72,7 @@ class Numeracion extends \yii\db\ActiveRecord
 
       $condicion = [
           "status_num = :status and sucursal_num = :sucursal and tipo_documento.abrv_tipod like :tipo",
-          [':status' => 1, ':sucursal' => $sucursal, ':tipo' => $tipo]
+          [':status' => self::STATUS_ACTIVE, ':sucursal' => $sucursal, ':tipo' => $tipo]
         ];
 
       $series = Numeracion::find()
@@ -93,21 +95,24 @@ class Numeracion extends \yii\db\ActiveRecord
       return  $serie;
     }
 
-    public static function getNumeracion( $tipo, $serie = null )
+    public static function getNumeracion( $tipo, $serie = false )
     {
       $user = User::findOne(Yii::$app->user->id);
       $sucursal = $user->sucursal0->id_suc;
 
-      if ( is_null($serie) ){
+      if ( $serie ){
+
+        $serie = self::getSerieNum( $tipo );
+
         $condicion = [
-          'status_num = :status and sucursal_num = :sucursal and tipo_documento.abrv_tipod like :tipo',
-          [':status' => 1, ':sucursal' => $sucursal, ':tipo' => $tipo]
-        ];
+            'status_num = :status and sucursal_num = :sucursal and tipo_documento.abrv_tipod like :tipo and serie_num like :serie ',
+            [':status' => self::STATUS_ACTIVE, ':sucursal' => $sucursal, ':tipo' => $tipo, ':serie' => $serie['serie_num']]
+          ];
       } else {
         $condicion = [
-            'status_num = :status and sucursal_num = :sucursal and tipo_documento.tipo_num like :tipo and serie like :serie ',
-            [':status' => 1, ':sucursal' => $sucursal, ':tipo' => $tipo, ':serie' => $serie]
-          ];
+          'status_num = :status and sucursal_num = :sucursal and tipo_documento.abrv_tipod like :tipo',
+          [':status' => self::STATUS_ACTIVE, ':sucursal' => $sucursal, ':tipo' => $tipo]
+        ];
       }
 
       $numeraciones = Numeracion::find()

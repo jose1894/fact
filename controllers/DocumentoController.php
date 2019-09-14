@@ -171,6 +171,7 @@ class DocumentoController extends Controller
           $modelNotaSalidaDetalle = [new NotaSalidaDetalle()];
 
 
+
           $notaSalidaDetalle = [];
           foreach ($post['PedidoDetalle'] as $key => $value) {
             $notaSalidaDetalle[$key] = ['prod_detalle' => $value['prod_pdetalle'],'cant_detalle' => $value['cant_pdetalle']];
@@ -193,8 +194,6 @@ class DocumentoController extends Controller
           $model->fecha_doc = $fecha;
           $modelNotaSalida->fecha_trans =  $fecha;
 
-          $numDoc = Numeracion::getNumeracion( $model::FACTURA_DOC );
-
           // validate all models
           $valid = $model->validate();
           $valid = $modelNotaSalida->validate() && $valid;
@@ -209,13 +208,17 @@ class DocumentoController extends Controller
                 );
             }
           } else {
+            $numDoc = Numeracion::getNumeracion( $model::FACTURA_DOC,$model->tipo_doc );
+            $codigoDoc = intval( $numDoc['numero_num'] ) + 1;
+            $codigoDoc = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
 
             $transaction = \Yii::$app->db->beginTransaction();
+            $model->cod_doc = $codigoDoc;
             $flag = $model->save();
 
             try {
               $modelNotaSalida->idrefdoc_trans = $model->id_doc;
-              $modelNotaSalida->
+              //$modelNotaSalida->
               $flag = $modelNotaSalida->save() && $flag;
               if ( $flag ) {
                 for($i = 0; $i < count($notaSalidaDetalle); $i++) {
@@ -236,6 +239,9 @@ class DocumentoController extends Controller
               $numeracion->numero_num = $codigo;
               $flag = $numeracion->save() && $flag;
 
+              $numeracion = Numeracion::findOne($numDoc['id_num']);
+              $numeracion->numero_num = $codigoDoc;
+              $flag = $numeracion->save() && $flag;
 
               if ( $flag ) {
                 $transaction->commit();
