@@ -45,6 +45,7 @@ class NotaSalidaSearch extends NotaSalida
         $sucursal = $user->sucursal0->id_suc;
         $query = NotaSalida::find()
                  ->where('sucursal_trans = :sucursal')
+                 ->where(['not in','tipo_trans',[4]])
                  ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here

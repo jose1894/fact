@@ -7,6 +7,7 @@ use app\models\Documento;
 use app\models\NotaSalida;
 use app\models\NotaSalidaDetalle;
 use app\models\Pedido;
+use app\models\Producto;
 use app\models\Numeracion;
 use app\models\DocumentoSearch;
 use app\models\PedidoSearch;
@@ -208,6 +209,8 @@ class DocumentoController extends Controller
                 );
             }
           } else {
+            $modelPedido->estatus_pedido = 1;
+
             $numDoc = Numeracion::getNumeracion( $model::FACTURA_DOC,$model->tipo_doc );
             $codigoDoc = intval( $numDoc['numero_num'] ) + 1;
             $codigoDoc = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
@@ -215,10 +218,11 @@ class DocumentoController extends Controller
             $transaction = \Yii::$app->db->beginTransaction();
             $model->cod_doc = $codigoDoc;
             $flag = $model->save();
+            $flag = $modelPedido->save() && $flag;
 
             try {
               $modelNotaSalida->idrefdoc_trans = $model->id_doc;
-              //$modelNotaSalida->
+              $modelNotaSalida->status_trans = $modelNotaSalida::STATUS_APPROVED;
               $flag = $modelNotaSalida->save() && $flag;
               if ( $flag ) {
                 for($i = 0; $i < count($notaSalidaDetalle); $i++) {
@@ -228,6 +232,15 @@ class DocumentoController extends Controller
                       $modelNotaSalidaDetalle->cant_detalle = $notaSalidaDetalle[$i]['cant_detalle'];
 
                       if ( !($flag = $modelNotaSalidaDetalle->save()) ) {
+                          $transaction->rollBack();
+                          throw new \Exception("Error Processing Request", 1);
+                          break;
+                      }
+
+                      $producto = Producto::findOne(['id_prod' => $notaSalidaDetalle[$i]['prod_detalle']]);
+                      $producto->stock_prod -= $notaSalidaDetalle[$i]['cant_detalle'];
+
+                      if (! ($flag = $producto->save(false))) {
                           $transaction->rollBack();
                           throw new \Exception("Error Processing Request", 1);
                           break;

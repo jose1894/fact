@@ -23,6 +23,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Approve' => 'Aprobar',
+    'Cancel' => 'Anular',
     'Quantity' => 'Cantidad',
     'APPROVED' => 'APROBADO',
     'NOT APPROVED' => 'NO APROBADO',

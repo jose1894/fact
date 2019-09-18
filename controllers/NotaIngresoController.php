@@ -408,7 +408,7 @@ class NotaIngresoController extends Controller
         <tr>
           <td class="left celdas"><span class="bold">' . Yii::t( 'almacen', 'Warehouse') . ' :</span> ' . $modelNotaIngreso->almacenTrans->des_almacen . '</td>
           <td class="center celdas"><span class="bold">' . Yii::t('app','Date') . ' :</span> ' . $date  . '</td>
-          <td class="right celdas"><span class="bold">' . Yii::t( 'ingreso', 'Movement type') . ' :</span> ' . $modelNotaIngreso->tipoTrans->des_tipom . '</td>
+          <td class="right celdas"><span class="bold">' . Yii::t( 'tipo_movimiento', 'Movement type') . ' :</span> ' . $modelNotaIngreso->tipoTrans->des_tipom . '</td>
         </tr>
       </table>
       ';
@@ -430,5 +430,68 @@ class NotaIngresoController extends Controller
 
       $mpdf->SetTitle($titulo);
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
+    }
+
+    public function actionAnularNota()
+    {
+      $return = [];
+      $nota = Yii::$app->request->post( 'NotaIngreso' );
+
+
+      if ( $nota['codigo_trans'] ){
+        $model = NotaIngreso::findOne([
+          'codigo_trans' => $nota['codigo_trans'],
+          'ope_trans' => NotaIngreso::OPE_TRANS
+        ]);
+
+        if ( $model->status_trans != $model::STATUS_UNAPPROVED )
+        {
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          $return = [
+            'success' => false,
+            'title' => Yii::t('ingreso', 'Entry note'),
+            'message' => Yii::t('ingreso','Entry note could not be canceled!'),
+            'type' => 'error'
+          ];
+          return $return;
+        }
+
+        $modelsDetalles = $model->detalles;
+      }
+
+
+
+      if (Yii::$app->request->post()) {
+          if ( !empty($model) ) {
+
+              $transaction = \Yii::$app->db->beginTransaction();
+              $model->status_trans = $model::STATUS_CANCELED;
+              try {
+                    $model->save();
+                    $transaction->commit();
+                    //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    $return = [
+                      'success' => true,
+                      'title' => Yii::t('ingreso', 'Entry note'),
+                      'message' => Yii::t('ingreso','Entry note has been canceled successfully!'),
+                      'type' => 'success'
+                    ];
+                    return $return;
+
+              } catch (Exception $e) {
+                  $transaction->rollBack();
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  $return = [
+                    'success' => false,
+                    'title' => Yii::t('ingreso', 'Entry note'),
+                    'message' => Yii::t('ingreso','Entry note couldn´t be canceled!') . " \nError: ". $e->errorMessage(),
+                    'type' => 'error'
+
+                  ];
+                  return $return;
+              }
+          }
+        }
     }
 }

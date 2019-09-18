@@ -37,5 +37,5 @@ return [
     'Do you want to issue the document?' => '¿Quieres emitir el documento?',
     'N.Price' => 'P.Neto',
     'G.Price' => 'P.Bruto',
-    'Entry note' => 'Nota de ingreso'
+    'Entry note' => 'Nota de ingreso',
 ];

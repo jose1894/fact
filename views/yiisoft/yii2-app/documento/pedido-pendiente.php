@@ -17,12 +17,12 @@ use kartik\select2\Select2;
 /* @var $searchModel app\models\PedidoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('pedido', 'Orders list');
+$this->title = Yii::t('pedido', 'Orders lbist');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="pedido-index">
     <h4><?= Html::encode($this->title) ?></h4>
-    <?php Pjax::begin(['id' => 'pedido-grid']); ?>
+    <?php Pjax::begin(['id' => 'grid']); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([

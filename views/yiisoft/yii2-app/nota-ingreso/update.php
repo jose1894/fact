@@ -12,10 +12,10 @@ $this->title = Yii::t('ingreso', 'Update entry note: {number}', [
     //'name' => $model->nombre_trans,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('ingreso', 'Entry note'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->codigo_trans, 'url' => ['view', 'id' => $model->id_trans]];
+$this->params['breadcrumbs'][] = ['label' => $model->codigo_trans];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="pedido-update">
+<div class="nota-ingreso-update">
   <div class="box box-success">
     <div class="box-header with-border">
       <h3 class="box-title">
@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
             $disabled = "";
           }
         ?>
-        <button id="aprobar-ingreso" class="btn btn-flat btn-warning" <?=$disabled?>><i class="fa fa-check"></i> <?= Yii::t('app','Approve') ?></button>
+        <button id="aprobar-ingreso" class="btn btn-flat btn-primary" <?=$disabled?>><i class="fa fa-check"></i> <?= Yii::t('app','Approve') ?></button>
         <button id="anular-ingreso" class="btn btn-flat btn-danger" <?=$disabled?>><i class="fa fa-ban"></i> <?= Yii::t('app','Cancel') ?></button>
       </span>
     </div>
@@ -41,20 +41,47 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
   </div>
 </div>
 <?php
-$js = "
-  $( '#aprobar-ingreso' ).on('click', function(){
-    form = $('.pedido-update form');
+$js = '
+  $( "#aprobar-ingreso" ).on("click", function(){
+    form = $(".nota-ingreso-update form");
 
     $.ajax({
-      'url': '".Url::to(['nota-ingreso/aprobar-nota'])."',
-      'method': $( form ).attr( 'method' ),
-      'data'   : $( form ).serialize(),
-      'async'  : false,
-      'success': function ( data ){
+      "url": "'.Url::to(['nota-ingreso/aprobar-nota']).'",
+      "method": $( form ).attr( "method" ),
+      "data"   : $( form ).serialize(),
+      "async"  : false,
+      "success": function ( data ){
           swal(data.title, data.message, data.type);
+          $(".nota-ingreso-update .btn").attr("disabled",true);
+          $(".nota-ingreso-update input").attr("disabled",true);
+          $(".nota-ingreso-update textarea").attr("disabled",true);
+          $(".nota-ingreso-update select").prop("disabled",true);
+          $(".nota-ingreso-update #imprimir").attr("disabled",false);
           return;
       }
     });
   });
-";
+
+  $( "#anular-ingreso" ).on("click", function(){
+    form = $(".nota-ingreso-update form");
+
+    $.ajax({
+      "url": "'.Url::to(["nota-ingreso/anular-nota"]).'",
+      "method": $( form ).attr( "method" ),
+      "data"   : $( form ).serialize(),
+      "async"  : false,
+      "success": function ( data ){
+        $(".nota-ingreso-update input").attr("disabled",true);
+        $(".nota-ingres-update select").prop("disabled",true);
+        $(".nota-ingreso-update textarea").attr("disabled",true);
+        $(".nota-ingreso-update button").attr("disabled",true);
+        $(".nota-ingreso-update #imprimir").attr("disabled",false);
+        swal(data.title, data.message, data.type);
+
+        return;
+
+      }
+    });
+  });
+';
 $this->registerJs($js,View::POS_LOAD);

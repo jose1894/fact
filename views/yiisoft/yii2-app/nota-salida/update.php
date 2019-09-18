@@ -73,7 +73,7 @@ $js = "
       'async'  : false,
       'success': function ( data ){
         $('.nota-update input').attr('disabled',true);
-        $('.nota-update select').attr('disabled',true);
+        $('.nota-update select').prop('disabled',true);
         $('.nota-update textarea').attr('disabled',true);
         $('.nota-update button').attr('disabled',true);
         $('.nota-update #imprimir').attr('disabled',false);
