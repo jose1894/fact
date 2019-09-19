@@ -123,10 +123,15 @@ class Pedido extends \yii\db\ActiveRecord
        return $this->hasMany(PedidoDetalle::className(), ['pedido_pdetalle' => 'id_pedido']);
     }
 
+    public function getDocumento()
+    {
+       return $this->hasOne(Documento::className(), ['pedido_doc' => 'id_pedido']);
+    }
+
     public function sumChildTotal()
     {
         $total = 0;
-        
+
         foreach( $this->detalles as $value){
           $total += $value->total_pdetalle;
         }

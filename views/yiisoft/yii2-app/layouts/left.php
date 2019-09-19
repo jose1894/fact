@@ -66,15 +66,28 @@
                         ['label' => Yii::t('serie','Numeration'), 'url' => ['/numeracion'], 'icon' => 'tachometer'],
                       ]
                     ],
-                    ['label' => Yii::t('pedido','Order').'s', 'url' => ['/pedido'], 'icon' => 'inbox'],
-                    ['label' => Yii::t('compra','Purchase order').'s', 'url' => ['/compra'], 'icon' => 'shopping-cart'],
+                    ['label' => Yii::t('app', 'Sales'), 'icon' => 'inbox',
+                      'items' => [
+                        ['label' => Yii::t('pedido','Order').'s', 'url' => ['/pedido'], 'icon' => 'inbox'],
+                        [ 'label' => Yii::t('documento','Orders to bill'), 'url' => ['/documento/pedidos-pendientes']],
+                        [ 'label' => Yii::t('documento','Invoice list'), 'url' => ['/documento/listado-factura']],
+                      ]
+                    ],
+                    ['label' => Yii::t('app', 'Buy'), 'icon' => 'shopping-cart',
+                    'items' => [
+                        ['label' => Yii::t('compra','Purchase order').'s', 'url' => ['/compra'], 'icon' => 'shopping-cart'],
+                      ]
+                    ],
                     ['label' => Yii::t('app','Inventory'), 'icon' => 'archive',
                       'items' =>[
                             [ 'label' => Yii::t('ingreso','Entry note'), 'url' => ['/nota-ingreso'],'icon' => 'download'],
                             [ 'label' => Yii::t('salida','Exit note'), 'url' => ['/nota-salida'],'icon' => 'upload'],
                           ]
                     ],
-                    ['label' => Yii::t('compra','Invoice').'s', 'url' => ['/documento/pedidos-pendientes'], 'icon' => 'file-text'],
+                    ['label' => Yii::t('documento','Invoice').'s', 'url' => '#', 'icon' => 'file-text',
+                      'items' => [
+                      ]
+                    ],
                     ['label' => 'Usuarios', 'options' => ['class' => 'header']],
                     [ 'label' => 'Administracion de usuarios', 'icon' => 'users',
                      'items' => [

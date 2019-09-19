@@ -11,8 +11,9 @@ return [
     'Department / County / Municipality: <span class="label label-primary">{number}</span> {name}' => 'Departamento / Condado / Municipalidad: <span class="label label-primary">{number}</span> {name}',
     'Department / County / Municipality' => 'Departamento / Condado / Municipalidad',
     'Update department / county / municipality: {<span class="label label-primary">{number}</span> {name}' => 'Actualizar departamento / condado / municipalidad: <span class="label label-primary">{number}</span> {name}',
-    'Order list to bill' => 'Listado de pedidos a generar',
+    'Orders to bill' => 'Pedidos a facturar',
     'Generate document' => 'Generar documento',
+    'Generate guide' => 'Generar guía',
     'Invoice' => 'Factura',
     'Comments' => 'Observaciones',
 ];

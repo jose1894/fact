@@ -18,7 +18,7 @@ class DocumentoSearch extends Documento
     {
         return [
             [['id_doc', 'tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc'], 'integer'],
-            [['cod_doc', 'fecha_doc', 'obsv_doc'], 'safe'],
+            [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc'], 'safe'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
         ];
     }
@@ -66,12 +66,12 @@ class DocumentoSearch extends Documento
             'totalimp_doc' => $this->totalimp_doc,
             'totaldsc_doc' => $this->totaldsc_doc,
             'total_doc' => $this->total_doc,
-            'status_doc' => $this->status_doc,
             'sucursal_doc' => $this->sucursal_doc,
         ]);
 
         $query->andFilterWhere(['like', 'cod_doc', $this->cod_doc])
-            ->andFilterWhere(['like', 'obsv_doc', $this->obsv_doc]);
+            ->andFilterWhere(['like', 'obsv_doc', $this->obsv_doc])
+            ->andFilterWhere(['in', 'status_doc', $this->status_doc]);
 
         return $dataProvider;
     }

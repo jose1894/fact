@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-09-2019 a las 00:05:34
+-- Tiempo de generación: 20-09-2019 a las 00:21:01
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -2068,17 +2068,9 @@ CREATE TABLE `documento` (
   `totalimp_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL IMPUESTO DEL DOCUMENTO',
   `totaldsc_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL DESCUENTO DEL DOCUMENTO',
   `total_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL DEL DOCUMENTO',
-  `status_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTADO DEL DOCUMENTO',
+  `status_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTADO DEL DOCUMENTO: 0 = SIN GENERAR, 1 = GUIA GENERADA, 2 = DOCUMENTO GENERADO, 3 = DOCUMENTO ANULADO',
   `sucursal_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL DEL DOCUMENTO'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LAS FACTURAS';
-
---
--- Volcado de datos para la tabla `documento`
---
-
-INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `pedido_doc`, `fecha_doc`, `obsv_doc`, `totalimp_doc`, `totaldsc_doc`, `total_doc`, `status_doc`, `sucursal_doc`) VALUES
-(4, '0000000001', 2, 12, '2019-09-18', '', '0.00', '0.00', '0.00', 1, 1),
-(5, '0000000002', 2, 12, '2019-09-18', '', '0.00', '0.00', '0.00', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2374,23 +2366,6 @@ INSERT INTO `moneda` (`id_moneda`, `des_moneda`, `tipo_moneda`, `status_moneda`,
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `movimiento_inv`
---
-
-CREATE TABLE `movimiento_inv` (
-  `id_inv` int(11) NOT NULL COMMENT 'ID UNICO',
-  `tipotrans_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO TRANSACCION INVENTARIO',
-  `fecha_inv` date NOT NULL COMMENT 'FECHA DE CREACION INVENTARIO',
-  `fecham_inv` date NOT NULL COMMENT 'FECHA DE MODIFICACION INVENTARIO',
-  `prod_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO INVENTARIO',
-  `cantidad_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'CANTIDAD INVENTARIO',
-  `orden_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'NUMERO DE ORDEN PEDIDO / COMPRA INVENTARIO',
-  `sucursal_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL INVENTARIO'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA MOVIMIENTOS DE ALMACEN';
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `numeracion`
 --
 
@@ -2408,13 +2383,13 @@ CREATE TABLE `numeracion` (
 --
 
 INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `serie_num`, `status_num`) VALUES
-(1, 1, '0000000001', 1, '00', 1),
+(1, 1, '0000000000', 1, '00', 1),
 (2, 7, '0000000000', 1, '00', 1),
 (3, 8, '0000000000', 1, '00', 1),
 (4, 6, '0000000000', 1, '00', 1),
-(5, 4, '0000000002', 1, '00', 1),
-(6, 5, '0000000002', 1, '00', 1),
-(7, 2, '0000000002', 1, '01', 1),
+(5, 4, '0000000000', 1, '00', 1),
+(6, 5, '0000000000', 1, '00', 1),
+(7, 2, '0000000000', 1, '01', 1),
 (8, 9, '0000000000', 1, '01', 1);
 
 -- --------------------------------------------------------
@@ -2701,13 +2676,6 @@ CREATE TABLE `pedido` (
   `nrodoc_pedido` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO PEDIDO'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA PEDIDOS';
 
---
--- Volcado de datos para la tabla `pedido`
---
-
-INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, `vend_pedido`, `moneda_pedido`, `almacen_pedido`, `usuario_pedido`, `estatus_pedido`, `sucursal_pedido`, `condp_pedido`, `tipo_pedido`, `edicion_pedido`, `nrodoc_pedido`) VALUES
-(12, '0000000001', '2019-09-18', 330, 2, 1, 1, 2, 1, 1, 1, 'NP', 'N', '123654');
-
 -- --------------------------------------------------------
 
 --
@@ -2726,17 +2694,6 @@ CREATE TABLE `pedido_detalle` (
   `plista_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA PEDIDO DETALLE',
   `total_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL PEDIDO DETALLE'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE PEDIDOS';
-
---
--- Volcado de datos para la tabla `pedido_detalle`
---
-
-INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `precio_pdetalle`, `descu_pdetalle`, `impuesto_pdetalle`, `status_pdetalle`, `pedido_pdetalle`, `plista_pdetalle`, `total_pdetalle`) VALUES
-(16, 7, '2.00', '58.00', '0.00', '18', 1, 12, '58.00', '116.00'),
-(17, 42, '2.00', '29.00', '0.00', '18', 1, 12, '29.00', '58.00'),
-(18, 43, '2.00', '29.00', '0.00', '18', 1, 12, '29.00', '58.00'),
-(19, 44, '2.00', '118.50', '0.00', '18', 1, 12, '118.50', '237.00'),
-(20, 45, '2.00', '63.00', '0.00', '18', 1, 12, '63.00', '126.00');
 
 -- --------------------------------------------------------
 
@@ -2774,7 +2731,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (4, 'LP-F62', 'CM6-BYD2', 'FARO NEBLINERO BYD F6 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (5, 'LP-CG2', 'CM12-CHG2', 'FARO NEBLINERO CHANGHAN 2012 (SET X 2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (6, 'LP-CF2', 'CM-CH02', 'FARO NEBLINERO MINIVAN CHANGHE FREEDOM(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(7, 'LP-A12', 'CM-A102', 'FARO NEBLINERO CHERRY A1 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
+(7, 'LP-A12', 'CM-A102', 'FARO NEBLINERO CHERRY A1 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (8, 'LP-AV2C', 'CM07-AV4', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (9, 'LP-AV2', 'CM-9416', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)NEGRO         ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (10, 'LP-N32', 'CM-N3004  ', 'FARO NEBLI.CHEV. N300 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -2809,10 +2766,10 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (39, 'LP-FJ2', 'CM5-WIN2', 'FARO NEBLI.GREATWALL FENG JUN 5(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (40, 'LP-GH2', 'CM5-GH02', 'FARO NEBLI.GREATWALL HOVER(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (41, 'LP-ST4', 'CM05-SX2', 'FARO NEBLI.PARACH. HY.STAREX 2005(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
-(43, 'LP-AC2B', 'CM98-AC4', 'FARO NEBLI.PARACH. HY ACCENT BLANCO 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
-(44, 'LP-AC4', 'CM-9172', 'FARO NEBLI.PARACH. HY ACCENT 2006...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
-(45, 'LP-AC4B', 'CM10-AC04', 'FARO NEBLI.PARACH. HY ACCENT 2011-2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
+(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(43, 'LP-AC2B', 'CM98-AC4', 'FARO NEBLI.PARACH. HY ACCENT BLANCO 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(44, 'LP-AC4', 'CM-9172', 'FARO NEBLI.PARACH. HY ACCENT 2006...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(45, 'LP-AC4B', 'CM10-AC04', 'FARO NEBLI.PARACH. HY ACCENT 2011-2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (46, 'LP-EL2', 'CM-9071', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (47, 'LP-EL2C', 'CM07-EL02', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (48, 'LP-EL4', 'CM11-EL5  ', 'FARO NEBLI.PARACH. HY ELANTRA 2011(SETX2)CHINO ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -3216,16 +3173,6 @@ CREATE TABLE `transaccion` (
   `status_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TRANSACCION 0=NO APROBADA, 1 = APROBADA, 2 = ANULADA'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TRANSACCIONES';
 
---
--- Volcado de datos para la tabla `transaccion`
---
-
-INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_trans`, `tipo_trans`, `ope_trans`, `idrefdoc_trans`, `seriedocref_trans`, `docref_trans`, `almacen_trans`, `sucursal_trans`, `usuario_trans`, `status_trans`) VALUES
-(26, '0000000001', '2019-09-18', '', 1, 'E', NULL, NULL, '111111', 1, 1, 2, 1),
-(28, '0000000002', '2019-09-18', '', 1, 'E', NULL, NULL, '222222', 1, 1, 2, 2),
-(31, '0000000001', '2019-09-18', NULL, 4, 'S', 4, NULL, NULL, 1, 1, 2, 1),
-(32, '0000000002', '2019-09-18', NULL, 4, 'S', 5, NULL, NULL, 1, 1, 2, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -3238,32 +3185,6 @@ CREATE TABLE `trans_detalle` (
   `prod_detalle` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO DETALLE',
   `cant_detalle` int(11) NOT NULL DEFAULT '0' COMMENT 'CANTIDAD DETALLE'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE TRANSACCIONES';
-
---
--- Volcado de datos para la tabla `trans_detalle`
---
-
-INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `cant_detalle`) VALUES
-(49, 26, 7, 5),
-(50, 26, 42, 5),
-(51, 26, 44, 5),
-(52, 26, 43, 5),
-(53, 26, 45, 5),
-(58, 28, 7, 5),
-(59, 28, 42, 5),
-(60, 28, 43, 5),
-(61, 28, 44, 5),
-(62, 28, 45, 5),
-(65, 31, 7, 2),
-(66, 31, 42, 2),
-(67, 31, 43, 2),
-(68, 31, 44, 2),
-(69, 31, 45, 2),
-(70, 32, 7, 2),
-(71, 32, 42, 2),
-(72, 32, 43, 2),
-(73, 32, 44, 2),
-(74, 32, 45, 2);
 
 -- --------------------------------------------------------
 
@@ -3552,13 +3473,6 @@ ALTER TABLE `moneda`
   ADD KEY `sucursal_moneda` (`sucursal_moneda`);
 
 --
--- Indices de la tabla `movimiento_inv`
---
-ALTER TABLE `movimiento_inv`
-  ADD PRIMARY KEY (`id_inv`),
-  ADD KEY `sucursal_inv` (`sucursal_inv`);
-
---
 -- Indices de la tabla `numeracion`
 --
 ALTER TABLE `numeracion`
@@ -3754,13 +3668,13 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
+  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
 
 --
 -- AUTO_INCREMENT de la tabla `compra_detalle`
 --
 ALTER TABLE `compra_detalle`
-  MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=4;
+  MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
 
 --
 -- AUTO_INCREMENT de la tabla `cond_pago`
@@ -3815,12 +3729,6 @@ ALTER TABLE `menu`
 --
 ALTER TABLE `moneda`
   MODIFY `id_moneda` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `movimiento_inv`
---
-ALTER TABLE `movimiento_inv`
-  MODIFY `id_inv` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
 
 --
 -- AUTO_INCREMENT de la tabla `numeracion`

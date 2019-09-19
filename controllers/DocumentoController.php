@@ -290,5 +290,18 @@ class DocumentoController extends Controller
         ]);
     }
 
+    public function actionListadoFactura()
+    {
+        $searchModel = new DocumentoSearch();
+        $searchModel->status_doc = Documento::DOCUMENTO_GENERADO;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+
+        return $this->render('_facturaGenerada', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
 
 }
