@@ -218,6 +218,22 @@ return [
               'tipo_listap' => 'tipo_listap.php',
             ],
         ],
+        'transportista' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'transportista' => 'transportista.php',
+            ],
+        ],
+        'unidad_transporte' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'unidad_transporte' => 'unidaTransporte.php',
+            ],
+        ],
         'unidad_medida' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',

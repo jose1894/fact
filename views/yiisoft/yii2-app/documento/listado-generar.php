@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
               'attribute'=>'tipo_pedido',
               'value' => function($data){
-                   return $data->tipo_pedido !== Pedido::PEDIDO  ? $data->tipo_pedido === Pedido::PROFORMA ? 'PROFORMA' : 'COTIZACION' : 'PEDIDO' ;
+                   return $data->tipo_pedido !== $data::PEDIDO  ? $data->tipo_pedido === Pedido::PROFORMA ? 'PROFORMA' : 'COTIZACION' : 'PEDIDO' ;
               },
               'width' => '12%'
             ],
@@ -77,28 +77,39 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => ' {guia}&nbsp;&nbsp;{factura}&nbsp;&nbsp;{print} ',
                 'buttons' => [
                   'guia' =>  function ($url, $model) {
-                      return ( $model->documento->status_doc === 0) ? Html::a('<button class="btn btn-flat btn-success">'.Yii::t('documento','Generate guide').'&nbsp; &nbsp;<i class="fa fa-play-circle"></i></button>', $url, [
-                                  'title' => Yii::t('documento', 'Generate documento'),
-                                  'class' => 'pjax-document',
+                      return ( $model->estatus_pedido === $model::STATUS_INACTIVO) ?
+                            Html::a(
+                              '<button class="btn btn-flat btn-success">'.Yii::t('documento','Generate guide').'&nbsp; &nbsp;<i class="fa fa-play-circle"></i></button>',
+                              $url,
+                              [
+                                  'title' => Yii::t('documento', 'Generate guide'),
+                                  'class' => 'pjax-guide',
                                   'data' => [
                                     'id' => $model->id_pedido,
                                   ]
-                      ]) : '';
+                              ]) : '';
                   } ,
                   'factura' =>  function ($url, $model) {
-                      return ( $model->documento->status_doc === 1) ? Html::a('<button class="btn btn-flat btn-primary">'.Yii::t('documento','Generate document').'&nbsp; &nbsp;<i class="fa fa-play-circle"></i></button>', $url, [
-                                  'title' => Yii::t('documento', 'Generate documento'),
+                      return ( $model->estatus_pedido === $model::GUIA_GENERADA) ?
+                            Html::a('<button class="btn btn-flat btn-primary">'.Yii::t('documento','Generate document').'&nbsp; &nbsp;<i class="fa fa-play-circle"></i></button>',
+                            $url,
+                            [
+                                  'title' => Yii::t('documento', 'Generate document'),
                                   'class' => 'pjax-document',
                                   'data' => [
                                     'id' => $model->id_pedido,
                                   ]
-                      ]) : '' ;
+                            ]) : '' ;
                   },
-
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'factura') {
                       $url = Url::to(['documento/factura-create','id' => $model->id_pedido]);
+                      return $url;
+                  }
+
+                  if ($action === 'guia') {
+                      $url = Url::to(['documento/guia-create','id' => $model->id_pedido]);
                       return $url;
                   }
                 }
@@ -113,25 +124,23 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php Pjax::end(); ?>
 </div>
 <?php
-//Maestro
+
+//Guia
+$this->registerJsVar( "buttonGuide", ".pjax-guide" );
+$this->registerJsVar( "frameGuide", "#frame-guide" );
+$this->registerJsVar( "modalGuide", "#modal-guide" );
+echo   $this->render('//site/_modalGuide',[]);
+
+//Factura
 $this->registerJsVar( "buttonPrint", ".pjax-print" );
 $this->registerJsVar( "buttonCreate", ".pjax-document" );
 $this->registerJsVar( "buttonSubmit", "#submit" );
 $this->registerJsVar( "buttonCancel", ".close-btn" );
 $this->registerJsVar( "frame", "#frame" );
 $this->registerJsVar( "modal", "#modal" );
-//Detalles
 echo   $this->render('//site/_modalForm',[]);
 
+//Reporte
 $this->registerJsVar( "frameRpt", "#frame-rpt" );
 $this->registerJsVar( "modalRpt", "#modal-rpt" );
 echo   $this->render('//site/_modalRpt',[]);
-
-$js = '
-  $( ".pjax-invoice" ).on( "click", function( e ){
-    e.preventDefault();
-    console.log("Click");
-  })
-';
-
-$this->registerJs($js,View::POS_END);

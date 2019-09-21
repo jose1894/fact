@@ -69,7 +69,7 @@
                     ['label' => Yii::t('app', 'Sales'), 'icon' => 'inbox',
                       'items' => [
                         ['label' => Yii::t('pedido','Order').'s', 'url' => ['/pedido'], 'icon' => 'inbox'],
-                        [ 'label' => Yii::t('documento','Orders to bill'), 'url' => ['/documento/pedidos-pendientes']],
+                        [ 'label' => Yii::t('documento','Orders to bill'), 'url' => ['/documento/pedidos-pendientes'],'icon' => 'play-circle',], 
                         [ 'label' => Yii::t('documento','Invoice list'), 'url' => ['/documento/listado-factura']],
                       ]
                     ],

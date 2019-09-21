@@ -24,8 +24,11 @@ use Yii;
  */
 class Pedido extends \yii\db\ActiveRecord
 {
-    const STATUS_ACTIVO = 1;
     const STATUS_INACTIVO = 0;
+    const GUIA_GENERADA = 1;
+    const DOCUMENTO_GENERADO = 2;
+    const PEDIDO_FINALIZADO = 3;
+    const PEDIDO_ANULADO = 4;    
     const PEDIDO = 'NP';
     const PROFORMA = 'PR';
     const COTIZACION = 'CT';

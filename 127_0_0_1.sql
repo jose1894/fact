@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-09-2019 a las 00:21:01
+-- Tiempo de generación: 21-09-2019 a las 17:21:59
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -2383,7 +2383,7 @@ CREATE TABLE `numeracion` (
 --
 
 INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `serie_num`, `status_num`) VALUES
-(1, 1, '0000000000', 1, '00', 1),
+(1, 1, '0000000001', 1, '00', 1),
 (2, 7, '0000000000', 1, '00', 1),
 (3, 8, '0000000000', 1, '00', 1),
 (4, 6, '0000000000', 1, '00', 1),
@@ -2668,13 +2668,20 @@ CREATE TABLE `pedido` (
   `moneda_pedido` int(11) NOT NULL COMMENT 'MONEDA PEDIDO',
   `almacen_pedido` int(11) NOT NULL COMMENT 'ALMACEN PEDIDO',
   `usuario_pedido` int(11) NOT NULL COMMENT 'USUARIO PEDIDO',
-  `estatus_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS PEDIDO',
+  `estatus_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS PEDIDO: STATUS_INACTIVO=0;GUIA_GENERADA = 1; DOCUMENTO_GENERADO = 2; PEDIDO_FINALIZADO = 3; PEDIDO_ANULADO = 4;',
   `sucursal_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL PEDIDO',
   `condp_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'CONDICION PAGO PEDIDO',
   `tipo_pedido` varchar(2) NOT NULL COMMENT 'TIPO DE PEDIDO NP = PEDIDO, PR = PROFORMA, CT = COTIZACION  ',
   `edicion_pedido` varchar(1) DEFAULT 'N' COMMENT 'EDICION PEDIDO',
   `nrodoc_pedido` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO PEDIDO'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA PEDIDOS';
+
+--
+-- Volcado de datos para la tabla `pedido`
+--
+
+INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, `vend_pedido`, `moneda_pedido`, `almacen_pedido`, `usuario_pedido`, `estatus_pedido`, `sucursal_pedido`, `condp_pedido`, `tipo_pedido`, `edicion_pedido`, `nrodoc_pedido`) VALUES
+(1, '0000000001', '2019-09-20', 330, 2, 1, 1, 2, 0, 1, 1, 'NP', 'N', '1111');
 
 -- --------------------------------------------------------
 
@@ -2694,6 +2701,17 @@ CREATE TABLE `pedido_detalle` (
   `plista_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA PEDIDO DETALLE',
   `total_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL PEDIDO DETALLE'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE PEDIDOS';
+
+--
+-- Volcado de datos para la tabla `pedido_detalle`
+--
+
+INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `precio_pdetalle`, `descu_pdetalle`, `impuesto_pdetalle`, `status_pdetalle`, `pedido_pdetalle`, `plista_pdetalle`, `total_pdetalle`) VALUES
+(1, 7, '2.00', '58.00', '0.00', '18', 1, 1, '58.00', '116.00'),
+(2, 42, '2.00', '29.00', '0.00', '18', 1, 1, '29.00', '58.00'),
+(3, 43, '2.00', '28.13', '3.00', '18', 1, 1, '29.00', '56.26'),
+(4, 44, '2.00', '118.50', '0.00', '18', 1, 1, '118.50', '237.00'),
+(5, 97, '2.00', '35.00', '0.00', '18', 1, 1, '35.00', '70.00');
 
 -- --------------------------------------------------------
 
@@ -3176,6 +3194,19 @@ CREATE TABLE `transaccion` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `transportista`
+--
+
+CREATE TABLE `transportista` (
+  `id_transp` int(11) NOT NULL COMMENT 'ID UNICO',
+  `des_transp` varchar(150) DEFAULT NULL COMMENT 'DESCRIPCION TRANSPORTISTA',
+  `status_transp` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TRANSPORTISTA',
+  `sucursal_transp` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TRANSPORTISTA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LOS TRANSPORTISTAS';
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `trans_detalle`
 --
 
@@ -3206,6 +3237,19 @@ CREATE TABLE `unidad_medida` (
 INSERT INTO `unidad_medida` (`id_und`, `des_und`, `status_und`, `sucursal_und`) VALUES
 (1, 'SET', 1, 1),
 (2, 'UNIDAD', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `unidad_transporte`
+--
+
+CREATE TABLE `unidad_transporte` (
+  `id_utransp` int(11) NOT NULL COMMENT 'ID UNICO',
+  `des_utransp` varchar(150) DEFAULT NULL COMMENT 'DESCRIPCION UNIDAD TRANSPORTISTA',
+  `status_utransp` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS UNIDAD TRANSPORTISTA',
+  `sucursal_utransp` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL UNIDAD TRANSPORTISTA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LAS UNIDADES TRANSPORTISTAS';
 
 -- --------------------------------------------------------
 
@@ -3611,6 +3655,14 @@ ALTER TABLE `transaccion`
   ADD KEY `idrefdoc_trans` (`idrefdoc_trans`);
 
 --
+-- Indices de la tabla `transportista`
+--
+ALTER TABLE `transportista`
+  ADD PRIMARY KEY (`id_transp`),
+  ADD KEY `status_transp` (`status_transp`),
+  ADD KEY `sucursal_transp` (`sucursal_transp`);
+
+--
 -- Indices de la tabla `trans_detalle`
 --
 ALTER TABLE `trans_detalle`
@@ -3624,6 +3676,14 @@ ALTER TABLE `trans_detalle`
 ALTER TABLE `unidad_medida`
   ADD PRIMARY KEY (`id_und`),
   ADD KEY `sucursal_und` (`sucursal_und`);
+
+--
+-- Indices de la tabla `unidad_transporte`
+--
+ALTER TABLE `unidad_transporte`
+  ADD PRIMARY KEY (`id_utransp`),
+  ADD KEY `status_utransp` (`status_utransp`),
+  ADD KEY `sucursal_utransp` (`sucursal_utransp`);
 
 --
 -- Indices de la tabla `user`
@@ -3698,7 +3758,7 @@ ALTER TABLE `distrito`
 -- AUTO_INCREMENT de la tabla `documento`
 --
 ALTER TABLE `documento`
-  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=6;
+  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
 
 --
 -- AUTO_INCREMENT de la tabla `empresa`
@@ -3746,13 +3806,13 @@ ALTER TABLE `pais`
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=13;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `pedido_detalle`
 --
 ALTER TABLE `pedido_detalle`
-  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=21;
+  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -3824,19 +3884,31 @@ ALTER TABLE `tipo_proveedor`
 -- AUTO_INCREMENT de la tabla `transaccion`
 --
 ALTER TABLE `transaccion`
-  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=33;
+  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+
+--
+-- AUTO_INCREMENT de la tabla `transportista`
+--
+ALTER TABLE `transportista`
+  MODIFY `id_transp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
 
 --
 -- AUTO_INCREMENT de la tabla `trans_detalle`
 --
 ALTER TABLE `trans_detalle`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=75;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
 
 --
 -- AUTO_INCREMENT de la tabla `unidad_medida`
 --
 ALTER TABLE `unidad_medida`
   MODIFY `id_und` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `unidad_transporte`
+--
+ALTER TABLE `unidad_transporte`
+  MODIFY `id_utransp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
 
 --
 -- AUTO_INCREMENT de la tabla `user`

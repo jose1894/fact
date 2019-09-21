@@ -139,7 +139,7 @@ class DocumentoController extends Controller
     {
       //$this->layout = "justStuff";
       $searchModel = new PedidoSearch();
-      $searchModel->estatus_pedido = Pedido::STATUS_INACTIVO;
+      $searchModel->estatus_pedido = [Pedido::STATUS_INACTIVO,Pedido::GUIA_GENERADA];
       $searchModel->tipo_pedido = Pedido::PEDIDO;
       $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -194,6 +194,7 @@ class DocumentoController extends Controller
           $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
           $model->fecha_doc = $fecha;
           $modelNotaSalida->fecha_trans =  $fecha;
+          $modelPedido->estatus_pedido = $modelPedido::DOCUMENTO_GENERADO;
 
           // validate all models
           $valid = $model->validate();
@@ -284,6 +285,148 @@ class DocumentoController extends Controller
 
         $this->layout = 'justStuff';
         return $this->render('_formDocumento', [
+            'model' => $model,
+            'modelPedido' => $modelPedido,
+            'IMPUESTO' => SiteController::getImpuesto(),
+        ]);
+    }
+
+    /**
+     * Creates a new Documento model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionGuiaCreate( $id )
+    {
+        $model = new Documento();
+        $model->scenario = Documento::SCENARIO_FACTURA;
+        $modelPedido = Pedido::findOne( $id );
+
+        if ( $modelPedido === null) {
+            throw new NotFoundHttpException(Yii::t('documento', 'The requested page does not exist.'));
+        }
+
+        $post = Yii::$app->request->post();
+
+
+        if ($model->load($post)) {
+          $modelNotaSalida = new NotaSalida();
+          $modelNotaSalidaDetalle = [new NotaSalidaDetalle()];
+
+
+
+          $notaSalidaDetalle = [];
+          foreach ($post['PedidoDetalle'] as $key => $value) {
+            $notaSalidaDetalle[$key] = ['prod_detalle' => $value['prod_pdetalle'],'cant_detalle' => $value['cant_pdetalle']];
+          }
+
+          $sucursal = SiteController::getSucursal();
+          $modelNotaSalida->sucursal_trans = $sucursal;
+          $model->sucursal_doc = $sucursal;
+          $model->status_doc = 1;
+          $modelNotaSalida->usuario_trans = Yii::$app->user->id;
+          $modelNotaSalida->ope_trans = $modelNotaSalida::OPE_TRANS;
+          $num = Numeracion::getNumeracion( $modelNotaSalida::NOTA_SALIDA );
+          $codigo = intval( $num['numero_num'] ) + 1;
+          $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
+          $modelNotaSalida->codigo_trans = $codigo;
+          $modelNotaSalida->tipo_trans = $model::TIPO_FACTURA;
+          $modelNotaSalida->almacen_trans = $modelPedido->almacen_pedido;
+          $fecha = explode("/",$model->fecha_doc);
+          $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
+          $model->fecha_doc = $fecha;
+          $modelNotaSalida->fecha_trans =  $fecha;
+          $modelPedido->estatus_pedido = $modelPedido::DOCUMENTO_GENERADO;
+
+          // validate all models
+          $valid = $model->validate();
+          $valid = $modelNotaSalida->validate() && $valid;
+
+
+          if (!$valid) {
+            if (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ArrayHelper::merge(
+                    ActiveForm::validate($model),
+                    ActiveForm::validate($modelNotaSalida)
+                );
+            }
+          } else {
+            $modelPedido->estatus_pedido = 1;
+
+            $numDoc = Numeracion::getNumeracion( $model::FACTURA_DOC,$model->tipo_doc );
+            $codigoDoc = intval( $numDoc['numero_num'] ) + 1;
+            $codigoDoc = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
+
+            $transaction = \Yii::$app->db->beginTransaction();
+            $model->cod_doc = $codigoDoc;
+            $flag = $model->save();
+            $flag = $modelPedido->save() && $flag;
+
+            try {
+              $modelNotaSalida->idrefdoc_trans = $model->id_doc;
+              $modelNotaSalida->status_trans = $modelNotaSalida::STATUS_APPROVED;
+              $flag = $modelNotaSalida->save() && $flag;
+              if ( $flag ) {
+                for($i = 0; $i < count($notaSalidaDetalle); $i++) {
+                      $modelNotaSalidaDetalle = new NotaSalidaDetalle();
+                      $modelNotaSalidaDetalle->trans_detalle = $modelNotaSalida->id_trans;
+                      $modelNotaSalidaDetalle->prod_detalle = $notaSalidaDetalle[$i]['prod_detalle'];
+                      $modelNotaSalidaDetalle->cant_detalle = $notaSalidaDetalle[$i]['cant_detalle'];
+
+                      if ( !($flag = $modelNotaSalidaDetalle->save()) ) {
+                          $transaction->rollBack();
+                          throw new \Exception("Error Processing Request", 1);
+                          break;
+                      }
+
+                      $producto = Producto::findOne(['id_prod' => $notaSalidaDetalle[$i]['prod_detalle']]);
+                      $producto->stock_prod -= $notaSalidaDetalle[$i]['cant_detalle'];
+
+                      if (! ($flag = $producto->save(false))) {
+                          $transaction->rollBack();
+                          throw new \Exception("Error Processing Request", 1);
+                          break;
+                      }
+                  }
+              }
+
+              $numeracion = Numeracion::findOne($num['id_num']);
+              $numeracion->numero_num = $codigo;
+              $flag = $numeracion->save() && $flag;
+
+              $numeracion = Numeracion::findOne($numDoc['id_num']);
+              $numeracion->numero_num = $codigoDoc;
+              $flag = $numeracion->save() && $flag;
+
+              if ( $flag ) {
+                $transaction->commit();
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $return = [
+                  'success' => true,
+                  'title' => Yii::t('documento', 'Document'),
+                  'id' => $model->id_doc,
+                  'message' => Yii::t('app','Record has been saved successfully!'),
+                  'type' => 'success'
+                ];
+                return $return;
+              }
+            } catch (Exception $e) {
+                $transaction->rollBack();
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $return = [
+                  'success' => false,
+                  'title' => Yii::t('salida', 'Exit note'),
+                  'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                  'type' => 'error'
+                ];
+                return $return;
+            }
+          }
+        }
+
+        $this->layout = 'justStuff';
+        return $this->render('_formGuia', [
             'model' => $model,
             'modelPedido' => $modelPedido,
             'IMPUESTO' => SiteController::getImpuesto(),

@@ -10,8 +10,7 @@ $this->title = Yii::t('pedido', 'Update order: {number} / {name}', [
     'name' => $model->cltePedido->nombre_clte,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('pedido', 'Order'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->cod_pedido . " - " . $tipo ." / ". $model->cltePedido->nombre_clte, 
-                                  'url' => ['view', 'id' => $model->id_pedido]];
+$this->params['breadcrumbs'][] = ['label' => $model->cod_pedido . " - " . $tipo ." / ". $model->cltePedido->nombre_clte];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="pedido-update">
