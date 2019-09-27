@@ -231,7 +231,7 @@ return [
             'basePath' => '@app/messages',
             'sourceLanguage' => 'en-US',
             'fileMap' => [
-              'unidad_transporte' => 'unidaTransporte.php',
+              'unidad_transporte' => 'unidadTransporte.php',
             ],
         ],
         'unidad_medida' => [

@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Transportista;
+use app\models\UnidadTransporte;
 
 /**
- * TransportistaSearch represents the model behind the search form of `app\models\Transportista`.
+ * UnidadTransporteSearch represents the model behind the search form of `app\models\UnidadTransporte`.
  */
-class TransportistaSearch extends Transportista
+class UnidadTransporteSearch extends UnidadTransporte
 {
     /**
      * {@inheritdoc}
@@ -18,8 +18,8 @@ class TransportistaSearch extends Transportista
     public function rules()
     {
         return [
-            [['id_transp', 'status_transp', 'sucursal_transp'], 'integer'],
-            [['des_transp'], 'safe'],
+            [['id_utransp', 'status_utransp', 'sucursal_utransp'], 'integer'],
+            [['des_utransp'], 'safe'],
         ];
     }
 
@@ -43,8 +43,8 @@ class TransportistaSearch extends Transportista
     {
         $user = User::findOne(Yii::$app->user->id);
         $sucursal = $user->sucursal0->id_suc;
-        $query = Transportista::find()
-                 ->where('sucursal_transp = :sucursal')
+        $query = UnidadTransporte::find()
+                 ->where('sucursal_utransp = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
@@ -63,12 +63,12 @@ class TransportistaSearch extends Transportista
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_transp' => $this->id_transp,
-            'status_transp' => $this->status_transp,
-            'sucursal_transp' => $this->sucursal_transp,
+            'id_utransp' => $this->id_utransp,
+            'status_utransp' => $this->status_utransp,
+            'sucursal_utransp' => $this->sucursal_utransp,
         ]);
 
-        $query->andFilterWhere(['like', 'des_transp', $this->des_transp]);
+        $query->andFilterWhere(['like', 'des_utransp', $this->des_utransp]);
 
         return $dataProvider;
     }

@@ -7,20 +7,20 @@ use yii\web\View;
 use kartik\grid\GridView;
 use yii\web\JqueryAsset;
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\TransportistaSearch */
+/* @var $searchModel app\models\UnidadTransporteSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('transportista', 'Carrier');
+$this->title = Yii::t('unidad_transporte', 'Transport unit');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="transportista-index">
+<div class="unidad-transporte-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin([ 'id' => 'grid']); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('transportista', 'Create carrier'), ['create'], ['id' => 'create','class' => 'btn btn-flat btn-success']) ?>
+        <?= Html::a(Yii::t('unidad_transporte', 'Create transport unit'), ['create'], ['id' => 'create','class' => 'btn-flat btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -28,13 +28,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
           [
-            'attribute'=>'id_transp',
+            'attribute'=>'id_utransp',
             'width' => '5%'
           ],
-          'des_transp',
+          'des_utransp',
           [
               'class' => 'kartik\grid\BooleanColumn',
-              'attribute' => 'status_transp',
+              'attribute' => 'status_utransp',
               'vAlign' => 'middle',
               'width' => '10%'
           ],
@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'title' => Yii::t('app', 'View'),
                                 'class' => 'pjax-view',
                                 'data' => [
-                                  'id' => $model->id_transp,
+                                  'id' => $model->id_utransp,
                                 ]
                     ]);
                 },
@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'title' => Yii::t('app', 'Update'),
                                 'class' => 'pjax-update',
                                 'data' => [
-                                  'id' => $model->id_transp,
+                                  'id' => $model->id_utransp,
                                 ]
                     ]);
                 },
@@ -72,10 +72,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'method' => 'post',
                                     'pjax' => 0,
                                     'icon' => 'warning',
-                                    'title' => Yii::t('transportista', 'Carrier'),
+                                    'title' => Yii::t('unidad_transporte', 'Transport unit'),
                                     'ok' => Yii::t('app', 'Confirm'),
                                     'cancel' => Yii::t('app', 'Cancel'),
-                                    'id' => $model->id_transp
+                                    'id' => $model->id_utransp
                                 ],
                     ]);
                 }
@@ -83,17 +83,17 @@ $this->params['breadcrumbs'][] = $this->title;
               ],
               'urlCreator' => function ($action, $model, $key, $index) {
                 if ($action === 'view') {
-                    $url = Url::to(['transportista/view','id'=>$model->id_transp]);
+                    $url = Url::to(['unidad-transporte/view','id'=>$model->id_utransp]);
                     return $url;
                 }
 
                 if ($action === 'update') {
-                    $url = Url::to(['transportista/update','id'=>$model->id_transp]);
+                    $url = Url::to(['unidad-transporte/update','id'=>$model->id_utransp]);
                     return $url;
                 }
                 if ($action === 'delete') {
-                    $url = Url::to(['transportista/delete','id'=>$model->id_transp]);
-                    return $url;
+                  $url = Url::to(['unidad-transporte/delete','id'=>$model->id_utransp]);
+                  return $url;
                 }
 
               }
@@ -105,13 +105,11 @@ $this->params['breadcrumbs'][] = $this->title;
            'neverTimeout'=>true,
         ],
         'krajeeDialogSettings' => ['overrideYiiConfirm' => false]
-    ]); ?>
-    <?php Pjax::end(); ?>
+  ]); ?>
+  <?php Pjax::end(); ?>
 </div>
 <?php
 $this->registerJsVar( "buttonCreate", "#create" );
-$this->registerJsVar( "buttonPrint", "#imprimir" );
-$this->registerJsVar( "frameRpt", "#frame-rpt" );
 $this->registerJsVar( "buttonSubmit", "#submit" );
 $this->registerJsVar( "buttonCancel", ".close-btn" );
 $this->registerJsVar( "frame", "#frame" );

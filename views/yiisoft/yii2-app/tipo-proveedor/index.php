@@ -31,13 +31,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute'=>'id_tprov',
             'width' => '5%'
           ],
-            'des_tprov',
-            [
-                'class' => 'kartik\grid\BooleanColumn',
-                'attribute' => 'status_tprov',
-                'vAlign' => 'middle',
-                'width' => '10%'
-            ],
+          'des_tprov',
+          [
+              'class' => 'kartik\grid\BooleanColumn',
+              'attribute' => 'status_tprov',
+              'vAlign' => 'middle',
+              'width' => '10%'
+          ],
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],

@@ -3,13 +3,13 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\TipoProveedor */
+/* @var $model app\models\UnidadMedida */
 
-$this->title = Yii::t('transportista', 'Create carrier');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('transportista', 'Carrier'), 'url' => ['index']];
+$this->title = Yii::t('unidad_transporte', 'Create transport unit');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('unidad_transporte', 'Transport unit'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="transportista-create">
+<div class="unidad-medida-create">
   <div class="box box-success">
     <div class="box-header with-border">
       <h3 class="box-title"><?= Html::encode($this->title) ?></h3>

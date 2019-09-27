@@ -6,34 +6,37 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Transportista */
 
-$this->title = $model->id_transp;
+$this->title = Yii::t('transportista','Carrier: <span class="label label-primary">{number}</span> {name}',[
+  'number' => $model->id_transp,
+  'name' => $model->des_transp
+]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('transportista', 'Transportistas'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="transportista-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a(Yii::t('transportista', 'Update'), ['update', 'id' => $model->id_transp], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('transportista', 'Delete'), ['delete', 'id' => $model->id_transp], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('transportista', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id_transp',
-            'des_transp',
-            'status_transp',
-            'sucursal_transp',
-        ],
-    ]) ?>
-
+  <div class="box box-success">
+    <div class="box-header with-border">
+      <h3 class="box-title">
+        <?= $this->title ?>
+      </h3>
+    </div>
+    <div class="box-body">
+        <div class="container-fluid">
+          <?= DetailView::widget([
+              'model' => $model,
+              'attributes' => [
+                  'id_transp',
+                  'des_transp',
+                  [
+                    'attribute' => 'status_transp',
+                    'format' => 'raw',
+                    'value' => $model->status_transp ? '<span class="label label-success">On</span>' : '<span class="label label-danger">Off</span>'
+                  ],
+              ],
+          ]) ?>
+        </div>
+    </div>
+            <!-- /.box-body -->
+  </div>
 </div>
