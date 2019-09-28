@@ -70,7 +70,6 @@ class TipoDocumento extends \yii\db\ActiveRecord
         $condicion[ 1 ][ ':documento' ] = self::ES_DOCUMENTO;
       }
 
-
       if ( !is_null($tipo) ){
         $condicion[ 0 ] .= ' and ope_tipod like :tipo ';
         $condicion[ 1 ][ ':tipo' ] = $tipo;
@@ -91,7 +90,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
                   ->orderBy('des_tipod')
                   ->all();
       }
-    return  ArrayHelper::map( $tipom, 'id_tipod', 'des_tipod');
+      return  ArrayHelper::map( $tipom, 'id_tipod', 'des_tipod');
     }
 
     /**

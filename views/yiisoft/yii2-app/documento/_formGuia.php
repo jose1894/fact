@@ -7,6 +7,7 @@ use app\models\Almacen;
 use app\models\CondPago;
 use app\models\Producto;
 use app\models\TipoDocumento;
+use app\models\Transportista;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 use kartik\date\DatePicker;
@@ -29,13 +30,18 @@ if ( $model->isNewRecord ) {
   $disabled = true;
 }
 ?>
-
+<div class="row">
+  <h2 class="page-header">
+      <i class="fa fa-globe"></i> <?= Yii::t('documento','Referral guide') ?>
+      <small class="pull-right"><?= Yii::t('app','Date'). ': '.date('d/m/Y')?></small>
+  </h2>
+</div>
 <div class="pedido-form">
       <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true]); ?>
       <div class="row">
-        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
           <div class="row"><!--Cliente-->
-              <div class="box box-success">
+              <div class="box box-success box-solid">
                 <div class="box-header with-border">
                   <h3 class="box-title">
                     <?= Yii::t('cliente','Customer') ?>
@@ -97,9 +103,9 @@ if ( $model->isNewRecord ) {
               </div>
           </div><!-- Cliente -->
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"> <!-- Pedido -->
           <div class="row">
-            <div class="box box-warning">
+            <div class="box box-warning box-solid">
               <div class="box-header with-border">
                 <h3 class="box-title">
                   <?= Yii::t('pedido','Order') ?>
@@ -136,12 +142,75 @@ if ( $model->isNewRecord ) {
               </div>
             </div>
           </div>
-        </div>
+        </div> <!-- Pedido -->
+        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12"> <!-- Documento -->
+          <div class="row">
+            <div class="box box-primary box-solid">
+              <div class="box-header with-border">
+                <h3 class="box-title">
+                  <?= Yii::t('documento','Referral guide') ?>
+                </h3>
+              </div>
+              <div class="box-body">
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row">
+                      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <?php
+                        $tipoDoc = "";
+                        $tipoDocText = "";
+
+                        if ( $model->tipo_doc) {
+                          $tipoDoc = TipoDocumento::findOne($model->tipo_doc);
+                          $tipoDocText = $tipoDoc->des_tipod;
+                        }
+
+                        $tipoDocs = TipoDocumento::getTipoDocumento( 'N', TipoDocumento::ES_DOCUMENTO );
+                        ?>
+                        <?= $form->field($model, 'tipo_doc',[
+                          'addClass' => 'form-control input-sm',
+                          ])->widget(Select2::classname(), [
+                                    'data' => $tipoDocs,
+                                    'size' => Select2::SMALL,
+                                    'initValueText' => $tipoDocText,
+                                    'language' => Yii::$app->language,
+                                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                                    'options' => [
+                                      'placeholder' => Yii::t('tipo_documento','Select a document type').'...',
+                                    ],
+                            ])?>
+                      </div>
+                      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <?= $form->field($model, 'cod_doc',[
+                          'addClass' => 'form-control input-sm',
+                          ])->textInput([
+                            'readonly' => true,
+                            'maxlength' => true,
+                            'style' => ['text-align' => 'right']
+                          ])?>
+                      </div>
+                      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <?php
+                          $model->fecha_doc = date('d/m/Y');
+                          echo $form->field($model, 'fecha_doc',[
+                            'addClass' => 'form-control input-sm',
+                          ])->textInput([
+                                'value' => date('d/m/Y'),
+                                'readonly' => 'readonly',
+                                'style' => ['text-align' => 'right']
+                            ]) ?>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- Documento -->
       </div>
 
-
-      <div class="row">
-        <div class="box box-danger">
+      <div class="row">   <!-- Direccion de partida y envío-->
+        <div class="box box-danger box-solid">
           <div class="box-header with-border">
             <h3 class="box-title">
               <?= Yii::t('documento','Shipment info') ?>
@@ -162,7 +231,43 @@ if ( $model->isNewRecord ) {
                     ]); ?>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <label for=""><?= Yii::t('empresa','Arrival point') ?></label>
+                    <label for=""><?= Yii::t('documento','Arrival point') ?></label>
+                    <?= Html::textArea('pedido',$cliente->direcc_clte,[
+                      'id'=>'pedido-direccion_pedido',
+                      'class' => 'form-control input-sm',
+                      'rows' => 2,
+                      'readonly' => $disabledPedido
+                    ]); ?>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                  <?php
+                  $transportista = "";
+                  $transportistaText = "";
+
+                  if ( $model->tipo_doc) {
+                    $tipoDoc = $transportista::findOne($model->tipo_doc);
+                    $tipoDocText = $tipoDoc->des_tipod;
+                  }
+
+                  $tipoDocs = Transportista::getTransportista( );
+                  ?>
+                  <?= $form->field($model, 'tipo_doc',[
+                    'addClass' => 'form-control input-sm',
+                    ])->widget(Select2::classname(), [
+                              'data' => $tipoDocs,
+                              'size' => Select2::SMALL,
+                              'initValueText' => $transportistaText,
+                              'language' => Yii::$app->language,
+                              'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                              'options' => [
+                                'placeholder' => Yii::t('tipo_documento','Select a document type').'...',
+                              ],
+                      ])?>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <label for=""><?= Yii::t('documento','Arrival point') ?></label>
                     <?= Html::textArea('pedido',$cliente->direcc_clte,[
                       'id'=>'pedido-direccion_pedido',
                       'class' => 'form-control input-sm',
@@ -173,6 +278,8 @@ if ( $model->isNewRecord ) {
               </div>
           </div>
         </div>
+      </div>      <!-- Direccion de partida y envío-->
+
       </div>
 
 

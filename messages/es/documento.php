@@ -4,6 +4,8 @@ return [
     'Name' => 'Nombre',
     'Status' => 'Estatus',
     'Name' => 'Nombre',
+    'Date' => 'Fecha',
+    'Select a document' => 'Seleccione un documento',
     'Department / County / Municipality' => 'Departamento / Condado / Municipalidad',
     'Input a name' => 'Ingrese un nombre',
     'Input a code' => 'Ingrese un código',
@@ -16,4 +18,8 @@ return [
     'Generate guide' => 'Generar guía',
     'Invoice' => 'Factura',
     'Comments' => 'Observaciones',
+    'Referral guide' => 'Guía de remisión',
+    'Shipment info' => 'Información de envío',
+    'Starting point' => 'Punto de partida',
+    'Arrival point' => 'Punto de llegada',
 ];
