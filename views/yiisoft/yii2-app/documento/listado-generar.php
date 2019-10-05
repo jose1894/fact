@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        //'filterModel' => $searchModel,
+        'filterModel' => $searchModel,
         'columns' => [
             [
               'attribute'=>'tipo_pedido',
@@ -46,6 +46,22 @@ $this->params['breadcrumbs'][] = $this->title;
                    return Yii::$app->formatter->asDate($data->fecha_pedido, 'dd/MM/yyyy');
               },
               'width' => '8%'
+            ],
+            //'estatus_pedido',
+            [
+              'attribute' => 'estatus_pedido',
+              'vAlign' => 'middle',
+              'width' => '180px',
+              'value' => function ($model, $key, $index, $widget) {
+                  return $model->estatus_pedido;
+              },
+              'filterType' => GridView::FILTER_SELECT2,
+              'filter' => [Pedido::STATUS_INACTIVO => 0, Pedido::GUIA_GENERADA => 1, Pedido::DOCUMENTO_GENERADO => 2,Pedido::PEDIDO_FINALIZADO => 3, Pedido::PEDIDO_ANULADO => 4] ,
+              'filterWidgetOptions' => [
+                  'pluginOptions' => ['allowClear' => true],
+              ],
+              'filterInputOptions' => ['placeholder' => 'Any author', 'multiple' => true], // allows multiple authors to be chosen
+              'format' => 'raw'
             ],
             [
               'attribute'=>'clte_pedido',
@@ -129,6 +145,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsVar( "buttonGuide", ".pjax-guide" );
 $this->registerJsVar( "frameGuide", "#frame-guide" );
 $this->registerJsVar( "modalGuide", "#modal-guide" );
+$this->registerJsVar( "submitGuide", "#submitGuia" );
 echo   $this->render('//site/_modalGuide',[]);
 
 //Factura

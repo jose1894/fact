@@ -5,7 +5,7 @@ return [
     'Description' => 'Descripción',
     'Input a name' => 'Ingrese un nombre',
     'Warehouses' => 'Almacenes',
-    'Select a type' => 'Seleccione un tipo',
+    'Select a warehouse' => 'Seleccione un almacén',
     'Warehouse' => 'Almacén',
     'Warehouse: <span class="label label-primary">{number}</span> {name}' => 'Almacén: <span class="label label-primary">{number}</span> {name}',
     'Create warehouse' => 'Crear almacén',

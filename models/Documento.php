@@ -25,11 +25,14 @@ use Yii;
 class Documento extends \yii\db\ActiveRecord
 {
     const SCENARIO_FACTURA = 'factura';
-    const FACTURA_DOC = 'FE'; //TIPO DE DOCUMENTO
+    const SCENARIO_GUIA = 'guia';
+    const FACTURA_DOC = 'FE'; //TIPO DE DOCUMENTO PARA FACTURA
+    const GUIA_DOC = 'GR'; //TIPO DE DOCUMENTO PARA GUIAS
     const TIPO_FACTURA = 4; //Tipo de operacion para la tabla transaccion cuando tenga que aumentar o descontar almacen
-    const GUIA_GENERADA = 1;
-    const DOCUMENTO_GENERADO = 2;
+    const GUIA_GENERADA = 1; // ESTATUS DEL DOCUMENTO
+    const DOCUMENTO_GENERADO = 2; //ESTATUS DEL DOCUMENTO
     const DOCUMENTO_ANULADO = 3;
+    const MOTIVO_GUIAFACTURA = 1; //MOTICOO DE LA GUIA
     /**
      * {@inheritdoc}
      */
@@ -45,6 +48,7 @@ class Documento extends \yii\db\ActiveRecord
     {
         return [
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc'], 'required', 'on' => self::SCENARIO_FACTURA],
+            [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc','transp_doc','utransp_doc','motivo_doc'], 'required', 'on' => self::SCENARIO_GUIA],
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc'], 'integer'],
             [['fecha_doc'], 'safe'],
             [['obsv_doc'], 'string'],
@@ -70,6 +74,10 @@ class Documento extends \yii\db\ActiveRecord
             'totalimp_doc' => Yii::t('documento', 'Tax'),
             'totaldsc_doc' => Yii::t('documento', 'Discount'),
             'total_doc' => Yii::t('documento', 'Total'),
+            'transp_doc' => Yii::t('transportista', 'Carrier'),
+            'utransp_doc' => Yii::t('unidad_transporte', 'Transport unit'),
+            'almacen_doc' => Yii::t('almacen', 'Warehouse'),
+            'motivo_doc' => Yii::t('motivo_traslado', 'Transfer reason'),
             'status_doc' => Yii::t('documento', 'Status'),
             'sucursal_doc' => Yii::t('documento', 'Sucursal '),
         ];
@@ -89,5 +97,27 @@ class Documento extends \yii\db\ActiveRecord
     public function getPedidoDoc()
     {
         return $this->hasOne(Pedido::className(), ['id_pedido' => 'pedido_doc']);
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTransportista()
+    {
+        return $this->hasOne(Transportista::className(), ['id_transp' => 'transp_doc']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUnidadTransporte()
+    {
+        return $this->hasOne(UnidadTransporte::className(), ['id_utransp' => 'utransp_doc']);
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMotivoTraslado()
+    {
+        return $this->hasOne(MotivoTraslado::className(), ['id_motivo' => 'motivo_doc']);
     }
 }

@@ -2,14 +2,15 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Documento;
+use app\models\MotivoTraslado;
 
 /**
- * DocumentoSearch represents the model behind the search form of `app\models\Documento`.
+ * MotivoTrasladoSearch represents the model behind the search form of `app\models\MotivoTraslado`.
  */
-class DocumentoSearch extends Documento
+class MotivoTrasladoSearch extends MotivoTraslado
 {
     /**
      * {@inheritdoc}
@@ -17,9 +18,8 @@ class DocumentoSearch extends Documento
     public function rules()
     {
         return [
-            [['id_doc', 'tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc'], 'integer'],
-            [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc'], 'safe'],
-            [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
+            [['id_motivo', 'status_motivo', 'sucursal_motivo'], 'integer'],
+            [['des_motivo'], 'safe'],
         ];
     }
 
@@ -43,8 +43,8 @@ class DocumentoSearch extends Documento
     {
         $user = User::findOne(Yii::$app->user->id);
         $sucursal = $user->sucursal0->id_suc;
-        $query = Documento::find()
-                 ->where('sucursal_doc = :sucursal')
+        $query = MotivoTraslado::find()
+                 ->where('sucursal_motivo = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
@@ -63,19 +63,12 @@ class DocumentoSearch extends Documento
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_doc' => $this->id_doc,
-            'tipo_doc' => $this->tipo_doc,
-            'pedido_doc' => $this->pedido_doc,
-            'fecha_doc' => $this->fecha_doc,
-            'totalimp_doc' => $this->totalimp_doc,
-            'totaldsc_doc' => $this->totaldsc_doc,
-            'total_doc' => $this->total_doc,
-            'sucursal_doc' => $this->sucursal_doc,
+            'id_motivo' => $this->id_motivo,
+            'status_motivo' => $this->status_motivo,
+            'sucursal_motivo' => $this->sucursal_motivo,
         ]);
 
-        $query->andFilterWhere(['like', 'cod_doc', $this->cod_doc])
-            ->andFilterWhere(['like', 'obsv_doc', $this->obsv_doc])
-            ->andFilterWhere(['in', 'status_doc', $this->status_doc]);
+        $query->andFilterWhere(['like', 'des_motivo', $this->des_motivo]);
 
         return $dataProvider;
     }

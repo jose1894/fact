@@ -15,6 +15,9 @@ use yii\helpers\ArrayHelper;
  */
 class TipoMovimiento extends \yii\db\ActiveRecord
 {
+
+    const TIPO_SALIDA = 'S';
+    const TIPO_ENTRADA = 'E';
     /**
      * {@inheritdoc}
      */

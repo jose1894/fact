@@ -29,6 +29,24 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('pedido', 'Create order'), ['create'], ['class' => 'btn btn-flat btn-success']) ?>
     </p>
 
+    <?php
+      $dataProvider->setSort([
+          'attributes' => [
+              'fecha_pedido' => [
+                  'desc' => ['fecha_pedido' => SORT_DESC],
+                  'default' => SORT_DESC
+              ],
+              'cod_pedido' => [
+                  'desc' => ['cod_pedido' => SORT_DESC],
+                  'default' => SORT_ASC,
+              ],
+          ],
+          'defaultOrder' => [
+              'fecha_pedido' => SORT_DESC
+          ]
+      ]);
+    ?>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -74,7 +92,7 @@ $this->params['breadcrumbs'][] = $this->title;
                   'pluginEvents' =>[],
                   'options' => ['prompt' => ''],
               ],
-              'width' => '50%'
+              'width' => '40%'
             ],
             [
               'attribute'=>'vend_pedido',
@@ -95,7 +113,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
-                'template' => ' {print} {view} {update} {delete}',
+                'template' => ' {print} &nbsp; {view} &nbsp; {update} &nbsp; {delete}',
                 'buttons' => [
                   'print' => function ($url, $model) {
                       return Html::a('<span class="glyphicon glyphicon-print"></span>', $url, [

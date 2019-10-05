@@ -18,7 +18,8 @@ $( document ).ready( function( e ){
   $( 'body' ).on( 'click', buttonSubmit, function( e ){
     e.preventDefault();
     e.stopPropagation();
-    var $form = $( frame ).contents().find('form');
+    //var $form = $( frame ).contents().find('form');
+    let $form = window.frames[ 0 ].$( 'form' );
 
       $.ajax( {
         'url'    : $( $form ).attr( 'action' ),
@@ -33,11 +34,23 @@ $( document ).ready( function( e ){
 
             if ( $( $form ).attr( 'action' ).indexOf( 'create' ) != -1) {
               $( $form ).trigger( 'reset' );
-              $selects = window.frames[ 0 ].$( $form ).find( 'select' );
+              $selects = window.frames[ 0 ].$( 'form' ).find( 'select' );
 
               if ( $selects.length ) {
                 $selects.trigger( 'change' );
               }
+
+              swal({
+                title: 'Do you want to issue the document?',
+                icon: 'info',
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willIssue) => {
+                if (willIssue) {
+                  window.open('documento/guia-rpt&id=' + data.id,'_blank');
+                }
+              });
             }
 
 
@@ -74,6 +87,11 @@ $( document ).ready( function( e ){
   $( 'body' ).on( 'click', buttonCancel, function(){
     $( frame ).attr( 'src', 'about:blank' );
     $( modal ).modal("hide");
+
+    if ( frameRpt && modalRpt){
+      $( frameRpt ).attr( 'src', 'about:blank' );
+      $( modalRpt ).modal("hide");
+    }
   });
 
   $( 'body' ).on( 'click', '.pjax-delete', function( e ){
@@ -111,10 +129,13 @@ $( document ).ready( function( e ){
                 data: {id:id},
                 success: function (data) {
                     var res = $.parseJSON(data);
-                    if(res !== false) {
+                    if( res ) {
                         swal(title, succMessage, "success")
-                        window.parent.$.pjax.reload( { container: '#grid' } )
+                        window.parent.$.pjax.reload( { container: '#grid' } );
+
+                        return;
                     }
+
                 },
                 error: function(data) {
                     let message;
@@ -169,7 +190,27 @@ $( document ).ready( function( e ){
     $( modal ).modal("show");
   });
 
-  $( 'body' ).on("show.bs.modal","#frame", function() {
+
+  $( 'body' ).on( 'click', buttonPrint, function( e ){
+
+    e.preventDefault();
+
+    $( buttonSubmit ).css( 'display', 'none' );
+
+    $( frameRpt ).attr( "src", $( this ).attr( 'href' ));
+    $( modalRpt ).modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+    $( modalRpt ).modal("show");
+  });
+
+  $( 'body' ).on("show.bs.modal",frame, function() {
+    let height = $(window).height() - 200;
+    $(this).find(".modal-body").css("max-height", height);
+  });
+
+  $( 'body' ).on("show.bs.modal",frameRpt, function() {
     let height = $(window).height() - 200;
     $(this).find(".modal-body").css("max-height", height);
   });

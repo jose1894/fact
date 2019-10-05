@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-09-2019 a las 17:21:59
+-- Tiempo de generación: 30-09-2019 a las 15:19:26
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -2390,7 +2390,8 @@ INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `s
 (5, 4, '0000000000', 1, '00', 1),
 (6, 5, '0000000000', 1, '00', 1),
 (7, 2, '0000000000', 1, '01', 1),
-(8, 9, '0000000000', 1, '01', 1);
+(8, 9, '0000000000', 1, '01', 1),
+(9, 3, '0000000000', 1, '01', 1);
 
 -- --------------------------------------------------------
 
@@ -3070,7 +3071,7 @@ CREATE TABLE `tipo_documento` (
 INSERT INTO `tipo_documento` (`id_tipod`, `des_tipod`, `abrv_tipod`, `ope_tipod`, `tipo_tipod`, `sucursal_tipod`, `status_tipod`) VALUES
 (1, 'PEDIDO', 'NP', 'N', 0, 1, 1),
 (2, 'FACTURA', 'FE', 'S', 1, 1, 1),
-(3, 'GUIA DE REMISION', 'GR', 'N', 0, 1, 1),
+(3, 'GUIA DE REMISION', 'GR', 'N', 1, 1, 1),
 (4, 'NOTA DE INGRESO', 'NI', 'E', 0, 1, 1),
 (5, 'NOTA DE SALIDA', 'NS', 'S', 0, 1, 1),
 (6, 'ORDEN DE COMPRA', 'OC', 'N', 0, 1, 1),
@@ -3204,6 +3205,13 @@ CREATE TABLE `transportista` (
   `sucursal_transp` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TRANSPORTISTA'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LOS TRANSPORTISTAS';
 
+--
+-- Volcado de datos para la tabla `transportista`
+--
+
+INSERT INTO `transportista` (`id_transp`, `des_transp`, `status_transp`, `sucursal_transp`) VALUES
+(1, 'LEOPHARD S.A.C..', 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -3250,6 +3258,13 @@ CREATE TABLE `unidad_transporte` (
   `status_utransp` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS UNIDAD TRANSPORTISTA',
   `sucursal_utransp` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL UNIDAD TRANSPORTISTA'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LAS UNIDADES TRANSPORTISTAS';
+
+--
+-- Volcado de datos para la tabla `unidad_transporte`
+--
+
+INSERT INTO `unidad_transporte` (`id_utransp`, `des_utransp`, `status_utransp`, `sucursal_utransp`) VALUES
+(1, 'KIA', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -3794,7 +3809,7 @@ ALTER TABLE `moneda`
 -- AUTO_INCREMENT de la tabla `numeracion`
 --
 ALTER TABLE `numeracion`
-  MODIFY `id_num` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=9;
+  MODIFY `id_num` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `pais`
@@ -3890,7 +3905,7 @@ ALTER TABLE `transaccion`
 -- AUTO_INCREMENT de la tabla `transportista`
 --
 ALTER TABLE `transportista`
-  MODIFY `id_transp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+  MODIFY `id_transp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `trans_detalle`
@@ -3908,7 +3923,7 @@ ALTER TABLE `unidad_medida`
 -- AUTO_INCREMENT de la tabla `unidad_transporte`
 --
 ALTER TABLE `unidad_transporte`
-  MODIFY `id_utransp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+  MODIFY `id_utransp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `user`

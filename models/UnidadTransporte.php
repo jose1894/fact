@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "unidad_transporte".
@@ -14,6 +15,8 @@ use Yii;
  */
 class UnidadTransporte extends \yii\db\ActiveRecord
 {
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
     /**
      * {@inheritdoc}
      */
@@ -45,5 +48,22 @@ class UnidadTransporte extends \yii\db\ActiveRecord
             'status_utransp' => Yii::t('unidad_transporte', 'Status'),
             'sucursal_utransp' => Yii::t('unidad_transporte', 'Sucursal Utransp'),
         ];
+    }
+
+    public static function getUnidadTransporte( )
+    {
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      $condicion = ['status_utransp = :status and sucursal_utransp = :sucursal', [':status' => self::STATUS_ACTIVE, ':sucursal' => $sucursal]];
+
+
+      $undTransp = UnidadTransporte::find()
+      ->select(['id_utransp','des_utransp'])
+      ->where($condicion[0], $condicion[1])
+      ->orderBy('des_utransp')
+      ->all();
+
+      return  ArrayHelper::map( $undTransp, 'id_utransp', 'des_utransp');
     }
 }

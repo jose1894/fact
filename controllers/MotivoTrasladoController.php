@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\TipoMovimiento;
-use app\models\TipoMovimientoSearch;
+use app\models\MotivoTraslado;
+use app\models\MotivoTrasladoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,9 +13,9 @@ use yii\helpers\ArrayHelper;
 use kartik\widgets\ActiveForm;
 
 /**
- * TipoMovimientoController implements the CRUD actions for TipoMovimiento model.
+ * MotivoTrasladoController implements the CRUD actions for MotivoTraslado model.
  */
-class TipoMovimientoController extends Controller
+class MotivoTrasladoController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -33,12 +33,12 @@ class TipoMovimientoController extends Controller
     }
 
     /**
-     * Lists all TipoMovimiento models.
+     * Lists all MotivoTraslado models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new TipoMovimientoSearch();
+        $searchModel = new MotivoTrasladoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class TipoMovimientoController extends Controller
     }
 
     /**
-     * Displays a single TipoMovimiento model.
+     * Displays a single MotivoTraslado model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -56,24 +56,21 @@ class TipoMovimientoController extends Controller
     public function actionView($id)
     {
         $this->layout = 'justStuff';
-        
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new TipoMovimiento model.
+     * Creates a new MotivoTraslado model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new TipoMovimiento();
-
+        $model = new MotivoTraslado();
         $this->layout = 'justStuff';
-
-
 
         if ($model->load(Yii::$app->request->post())) {
 
@@ -90,7 +87,7 @@ class TipoMovimientoController extends Controller
           }
           else
           {
-              $model->sucursal_tipom = SiteController::getSucursal();
+              $model->sucursal_motivo = SiteController::getSucursal();
               $transaction = \Yii::$app->db->beginTransaction();
 
               try {
@@ -100,7 +97,7 @@ class TipoMovimientoController extends Controller
                       Yii::$app->response->format = Response::FORMAT_JSON;
                       $return = [
                         'success' => true,
-                        'title' => Yii::t('tipo_movimiento', 'Movement type'),
+                        'title' => Yii::t('motivo_traslado', 'Transfer reason'),
                         'message' => Yii::t('app','Record has been saved successfully!'),
                         'type' => 'success'
                       ];
@@ -111,7 +108,7 @@ class TipoMovimientoController extends Controller
                   Yii::$app->response->format = Response::FORMAT_JSON;
                   $return = [
                     'success' => false,
-                    'title' => Yii::t('tipo_movimiento', 'Movement type'),
+                    'title' => Yii::t('motivo_traslado', 'Transfer reason'),
                     'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
                     'type' => 'error'
 
@@ -127,7 +124,7 @@ class TipoMovimientoController extends Controller
     }
 
     /**
-     * Updates an existing TipoMovimiento model.
+     * Updates an existing MotivoTraslado model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -136,7 +133,6 @@ class TipoMovimientoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
         $this->layout = "justStuff";
 
         if ($model->load(Yii::$app->request->post())) {
@@ -154,7 +150,7 @@ class TipoMovimientoController extends Controller
             }
             else
             {
-                $model->sucursal_tipom = SiteController::getSucursal();
+                $model->sucursal_motivo = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
 
                 try {
@@ -163,7 +159,7 @@ class TipoMovimientoController extends Controller
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         $return = [
                           'success' => true,
-                          'title' => Yii::t('tipo_movimiento', 'Movement type'),
+                          'title' => Yii::t('motivo_traslado', 'Transfer reason'),
                           'message' => Yii::t('app','Record has been saved successfully!'),
                           'type' => 'success'
                         ];
@@ -173,7 +169,7 @@ class TipoMovimientoController extends Controller
                     Yii::$app->response->format = Response::FORMAT_JSON;
                     $return = [
                       'success' => false,
-                      'title' => Yii::t('tipo_movimiento', 'Movement type'),
+                      'title' => Yii::t('motivo_traslado', 'Transfer reason'),
                       'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
                       'type' => 'error'
 
@@ -186,11 +182,10 @@ class TipoMovimientoController extends Controller
         return $this->render('update', [
             'model' => $model,
         ]);
-
     }
 
     /**
-     * Deletes an existing TipoMovimiento model.
+     * Deletes an existing MotivoTraslado model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -199,26 +194,28 @@ class TipoMovimientoController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+
         if (Yii::$app->request->isAjax) {
              Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
              return  true;
          }
+
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the TipoMovimiento model based on its primary key value.
+     * Finds the MotivoTraslado model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return TipoMovimiento the loaded model
+     * @return MotivoTraslado the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = TipoMovimiento::findOne($id)) !== null) {
+        if (($model = MotivoTraslado::findOne($id)) !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException(Yii::t('tipo_movimiento', 'The requested page does not exist.'));
+        throw new NotFoundHttpException(Yii::t('motivo_traslado', 'The requested page does not exist.'));
     }
 }

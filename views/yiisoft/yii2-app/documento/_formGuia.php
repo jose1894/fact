@@ -8,6 +8,9 @@ use app\models\CondPago;
 use app\models\Producto;
 use app\models\TipoDocumento;
 use app\models\Transportista;
+use app\models\UnidadTransporte;
+use app\models\TipoMovimiento;
+use app\models\MotivoTraslado;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 use kartik\date\DatePicker;
@@ -155,7 +158,7 @@ if ( $model->isNewRecord ) {
                 <div class="row">
                   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="row">
-                      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                         <?php
                         $tipoDoc = "";
                         $tipoDocText = "";
@@ -180,7 +183,7 @@ if ( $model->isNewRecord ) {
                                     ],
                             ])?>
                       </div>
-                      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                         <?= $form->field($model, 'cod_doc',[
                           'addClass' => 'form-control input-sm',
                           ])->textInput([
@@ -189,7 +192,7 @@ if ( $model->isNewRecord ) {
                             'style' => ['text-align' => 'right']
                           ])?>
                       </div>
-                      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                         <?php
                           $model->fecha_doc = date('d/m/Y');
                           echo $form->field($model, 'fecha_doc',[
@@ -247,34 +250,112 @@ if ( $model->isNewRecord ) {
                   $transportistaText = "";
 
                   if ( $model->tipo_doc) {
-                    $tipoDoc = $transportista::findOne($model->tipo_doc);
-                    $tipoDocText = $tipoDoc->des_tipod;
+                    $transportista = Transportista::findOne($model->transp_doc);
+                    $transportistaText = $transportista->des_transp;
                   }
 
-                  $tipoDocs = Transportista::getTransportista( );
+                  $transportista = Transportista::getTransportista( );
                   ?>
-                  <?= $form->field($model, 'tipo_doc',[
+                  <?= $form->field($model, 'transp_doc',[
                     'addClass' => 'form-control input-sm',
                     ])->widget(Select2::classname(), [
-                              'data' => $tipoDocs,
+                              'data' => $transportista,
                               'size' => Select2::SMALL,
                               'initValueText' => $transportistaText,
                               'language' => Yii::$app->language,
-                              'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                              'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-globe"></i>']],
                               'options' => [
-                                'placeholder' => Yii::t('tipo_documento','Select a document type').'...',
+                                'placeholder' => Yii::t('transportista','Select a carrier').'...',
                               ],
                       ])?>
+                      <?php
+                      $undTransp = "";
+                      $undTranspText = "";
+
+                      if ( $model->utransp_doc) {
+                        $undTransp = UnidadTransporte::findOne($model->utransp_doc);
+                        $undTranspText = $tipoDoc->des_utransp;
+                      }
+
+                      $undTransp = UnidadTransporte::getUnidadTransporte( );
+                      ?>
+                      <?= $form->field($model, 'utransp_doc',[
+                        'addClass' => 'form-control input-sm',
+                        ])->widget(Select2::classname(), [
+                                  'data' => $undTransp,
+                                  'size' => Select2::SMALL,
+                                  'initValueText' => $undTranspText,
+                                  'language' => Yii::$app->language,
+                                  'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-truck"></i>']],
+                                  'options' => [
+                                    'placeholder' => Yii::t('unidad_transporte','Select a transport unit').'...',
+                                  ],
+                          ])?>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <label for=""><?= Yii::t('documento','Arrival point') ?></label>
-                    <?= Html::textArea('pedido',$cliente->direcc_clte,[
-                      'id'=>'pedido-direccion_pedido',
-                      'class' => 'form-control input-sm',
-                      'rows' => 2,
-                      'readonly' => $disabledPedido
-                    ]); ?>
+                  <?php
+                    $almacenes = Almacen::getAlmacenList();
+
+                    $model->almacen_doc = $modelPedido->almacen_pedido;
+                  ?>
+                  <?= $form->field($model, 'almacen_doc',[
+                    'addClass' => 'form-control input-sm',
+                    ])->widget(Select2::classname(), [
+                              'data' => $almacenes,
+                              'language' => Yii::$app->language,
+                              'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-archive"></i>']],
+                              'options' => [
+                                'placeholder' => Yii::t('almacen','Select a warehouse').'...',
+                              ],
+                              'size' => Select2::SMALL,
+                               'disabled' => true,
+                      ])?>
                 </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                  <label><?= Yii::t('tipo_movimiento','Movement type')?></label>
+                  <?php
+                    $tipoMovimiento = TipoMovimiento::getTipoMovList(TipoMovimiento::TIPO_SALIDA);
+
+                  ?>
+                  <?= Select2::widget([
+                        'name' => 'tipo_movimiento',
+                        'language' => Yii::$app->language,
+                        'data' => $tipoMovimiento,
+                        'value' => $model->almacen_doc,
+                        //'theme' => Select2::THEME_DEFAULT,
+                        'size' => Select2::SMALL,
+                        'disabled' => true,
+                        'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-archive"></i>']],
+                        'options' => [
+                            'placeholder' => Yii::t('tipo_movimiento','Select a type'),
+                            'options' => [
+                                $model::TIPO_FACTURA => ['selected' => true],
+                            ]
+                        ],
+                    ]);?>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                  <?php
+                    $motivoTraslado = MotivoTraslado::getMotivos();
+                  ?>
+                  <?=  $form->field($model, 'motivo_doc',[
+                      'addClass' => 'form-control input-sm',
+                      ])->widget(Select2::classname(), [
+                          'language' => Yii::$app->language,
+                          'data' => $motivoTraslado,
+                          //'theme' => Select2::THEME_DEFAULT,
+                          'size' => Select2::SMALL,
+                          //'disabled' => true,
+                          'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-archive"></i>']],
+                          'options' => [
+                              'placeholder' => Yii::t('motivo_traslado','Select a reason'),
+                              'options' => [
+                                $model::MOTIVO_GUIAFACTURA => [ 'selected' => true]
+                              ]
+                          ],
+                    ]);?>
+                </div>
+
               </div>
           </div>
         </div>
@@ -413,7 +494,7 @@ if ( $model->isNewRecord ) {
           <hr>
           <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-              <?= $form->field($model, 'obsv_doc')->textarea(['rows' => 11, 'disabled' => $disabled])?>
+              <?= $form->field($model, 'obsv_doc')->textarea(['rows' => 3, 'disabled' => $disabled])?>
             </div>
           </div>
         </div>
@@ -427,8 +508,6 @@ if ( $model->isNewRecord ) {
 
 
       <?php ActiveForm::end(); ?>
-<button type="button" name="button" id="imprimir" data-toggle="modal" class="btn btn-flat btn-primary "><span class="fa fa-print"></span> <?= Yii::t('app', 'Print')?></button>
-
 </div>
 
 <?php

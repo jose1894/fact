@@ -106,6 +106,14 @@ return [
                 'moneda' => 'moneda.php',
             ],
         ],
+        'motivo_traslado' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+                'motivo_traslado' => 'motivoTraslado.php',
+            ],
+        ],
         'lista_precios' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',

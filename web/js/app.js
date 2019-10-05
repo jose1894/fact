@@ -18,7 +18,8 @@ $( document ).ready( function( e ){
   $( 'body' ).on( 'click', buttonSubmit, function( e ){
     e.preventDefault();
     e.stopPropagation();
-    var $form = $( frame ).contents().find('form');
+    //var $form = $( frame ).contents().find('form');
+    let $form = window.frames[ 0 ].$( 'form' );
 
       $.ajax( {
         'url'    : $( $form ).attr( 'action' ),
@@ -33,14 +34,12 @@ $( document ).ready( function( e ){
 
             if ( $( $form ).attr( 'action' ).indexOf( 'create' ) != -1) {
               $( $form ).trigger( 'reset' );
-              $selects = window.frames[ 0 ].$( $form ).find( 'select' );
+              $selects = window.frames[ 0 ].$( 'form' ).find( 'select' );
 
               if ( $selects.length ) {
                 $selects.trigger( 'change' );
               }
             }
-
-
 
             return;
           }
@@ -78,6 +77,11 @@ $( document ).ready( function( e ){
     if ( frameRpt && modalRpt){
       $( frameRpt ).attr( 'src', 'about:blank' );
       $( modalRpt ).modal("hide");
+    }
+
+    if ( frameGuide && modalGuide){
+      $( frameGuide ).attr( 'src', 'about:blank' );
+      $( modalGuide ).modal("hide");
     }
   });
 
@@ -177,6 +181,19 @@ $( document ).ready( function( e ){
     $( modal ).modal("show");
   });
 
+  $( 'body' ).on( 'click', '.pjax-guide', function( e ){
+    e.preventDefault();
+
+    $( buttonSubmit ).css( 'display', 'none' );
+
+    $( frameGuide ).attr( "src", $( this ).attr( 'href' ));
+    $( modalGuide ).modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+    $( modalGuide ).modal("show");
+  });
+
 
   $( 'body' ).on( 'click', buttonPrint, function( e ){
 
@@ -201,6 +218,7 @@ $( document ).ready( function( e ){
     let height = $(window).height() - 200;
     $(this).find(".modal-body").css("max-height", height);
   });
+
 
 });
 

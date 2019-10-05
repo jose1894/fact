@@ -791,6 +791,7 @@ JS
               selects.trigger( 'change' );
             }
 
+
             swal({
               title: '".Yii::t('pedido','Do you want to issue the document?')."',
               icon: 'info',
@@ -799,7 +800,19 @@ JS
             })
             .then((willIssue) => {
               if (willIssue) {
-                window.open('".Url::to(['pedido/pedido-rpt'])."&id=' + data.id,'_blank');
+                window.open(
+                  '".Url::to(['pedido/pedido-rpt'])."?id=' + data.id,
+                  '". Yii::t('pedido','Order')."',
+                  'toolbar=no,' +
+                  'location=no,' +
+                  'statusbar=no,' +
+                  'menubar=no,' +
+                  'resizable=0,' +
+                  'width=600,' +
+                  'height=400,' +
+                  'left = 490,' +
+                  'top=300');
+                swal(data.title, data.message, data.type);
               }
             });
 
@@ -810,7 +823,7 @@ JS
             $( '#pedido-cod_pedido' ).val( data.codigo );
           }
 
-          swal(data.title, data.message, data.type);
+          //swal(data.title, data.message, data.type);
 
           return;
         } else {

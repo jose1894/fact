@@ -47,7 +47,7 @@ class PedidoController extends Controller
     public function actionIndex()
     {
         $searchModel = new PedidoSearch();
-        $request = Yii::$app->request->queryParams;        
+        $request = Yii::$app->request->queryParams;
         $dataProvider = $searchModel->search($request);
 
         return $this->render('index', [
@@ -336,7 +336,7 @@ class PedidoController extends Controller
       $cotizacion = Yii::t('pedido','QUOTATION');
       $pedido = Yii::t('pedido','ORDER');
 
-      $tipopedido  = $modelPedido->tipo_pedido > 0 ?  $modelPedido->tipo_pedido == 1 ? $proforma : $cotizacion : $pedido;
+      $tipoPedido  = $modelPedido->tipo_pedido > 0 ?  $modelPedido->tipo_pedido == 1 ? $proforma : $cotizacion : $pedido;
 
       $f = Yii::$app->formatter;
       $date = $f->asDate($modelPedido->fecha_pedido, 'php:j/m/Y');
@@ -358,7 +358,7 @@ class PedidoController extends Controller
       <br>
       <table >
         <tr>
-          <td class="center bold" > ' . $tipopedido . ': ' . $modelPedido->cod_pedido . ' </td>
+          <td class="center bold" > ' . $tipoPedido . ': ' . $modelPedido->cod_pedido . ' </td>
         </tr>
       </table>
       <br>
@@ -461,9 +461,8 @@ class PedidoController extends Controller
       $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
       $mpdf->WriteHtml( $content ); // call mpdf write html
       $mpdf->SetHTMLFooter( $footer );
-
-      $tipo = ($modelPedido->tipo_pedido === Pedido::PEDIDO) ? 'PEDIDO' : ($modelPedido->tipo_pedido === Pedido::PROFORMA) ? 'PROFORMA' : 'COTIZACION';
-      $titulo = $modelPedido->cod_pedido. '-'. $tipo .'-'.$modelPedido->cltePedido->nombre_clte.'.pdf';
+      
+      $titulo = $modelPedido->cod_pedido. '-'. $tipoPedido .'-'.$modelPedido->cltePedido->nombre_clte.'.pdf';
 
       $mpdf->SetTitle($titulo);
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
