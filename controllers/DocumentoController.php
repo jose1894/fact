@@ -411,5 +411,79 @@ class DocumentoController extends Controller
         ]);
     }
 
+    public function actionGuiaRpt( $id ) {
+      Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+      $modelDocumento = Documento::findOne($id);
+      $this->layout = 'reports';
+      $modelDetalle = $modelDocumento->detalles;
+
+      $content = $this->render('guiaRpt', [
+          'guia' => $modelDocumento,
+      ]);
+
+
+      $pdf = Yii::$app->pdf; // or new Pdf();
+      //$pdf->cssFile = "@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css";
+      $mpdf = $pdf->api; // fetches mpdf api
+
+      $f = Yii::$app->formatter;
+      $date = $f->asDate($modelDocumento->fecha_doc, 'php:d/m/Y');
+
+      $header = '
+      <table class="datos-cliente" style="margin: 0px 0 15px 0;">
+          <tr>
+              <td width="15%">&nbsp;</td>
+              <td width="25%" class="left">'.$date.'</td>
+              <td width="10%">&nbsp;</td>
+              <td width="35%" class="left">'.$date.'</td>
+              <td width="25%">&nbsp;</td>
+          </tr>
+      </table>
+      <table style="margin: 0px 0 24px 0;">
+        <tr>
+          <td class="left" style="padding:3px 100px"> ' . strtoupper(SiteController::getEmpresa()->direcc_empresa) . ' </td>
+        </tr>
+        <tr>
+          <td class="left " style="padding:3px 100px"> ' . strtoupper($modelDocumento->pedidoDoc->cltePedido->direcc_clte) . ' </td>
+        </tr>
+      </table>
+      <table style="margin: 0px 0 0px 0;">
+        <tr>
+          <td  width="80%" class="left celdas" style="padding-left:50px">' . $modelDocumento->pedidoDoc->cltePedido->nombre_clte . '</td>
+          <td  width="20%" class="left celdas" >' . $modelDocumento->unidadTransporte->des_utransp  . '</td>
+        </tr>
+        <tr>
+          <td class="left celdas"  style="padding-left:50px">' . $modelDocumento->pedidoDoc->cltePedido->ruc_clte . '</td>
+          <td class="left celdas">&nbsp;</td>
+        </tr>
+      </table>
+      ';
+
+      $footer = '
+      <table class="datos-cliente" style="margin: 0px 0 55px 0;">
+          <tr>
+              <td style="padding-left:50px" class="left">'.$modelDocumento->transportista->des_transp.'</td>
+          </tr>
+          <tr>
+              <td style="padding-left:50px; padding-top: 5px;" class="left">'.$modelDocumento->transportista->ruc_transp.'</td>
+          </tr>
+      </table>';
+
+      //$content = "Hi";
+      $sheet = file_get_contents( Yii::getAlias( '@rptcss' ).'/rptCss.css' );
+      $mpdf->WriteHTML( $sheet, 1 );
+      //$mpdf->marginTop = 120;
+
+      $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
+      $mpdf->AddPage('P','','','','',10,10,100,50,50,12);
+      $mpdf->WriteHtml( $content ); // call mpdf write html
+       $mpdf->SetHTMLFooter( $footer );
+
+      $titulo = $modelDocumento->cod_doc. '-'. Yii::t('documento','Referral guide') .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
+
+      $mpdf->SetTitle($titulo);
+      $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
+    }
+
 
 }

@@ -31,12 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'tipo_doc',
             'pedido_doc',
             'fecha_doc',
-            //'obsv_doc:ntext',
-            //'totalimp_doc',
-            //'totaldsc_doc',
-            //'total_doc',
-            //'status_doc',
-            //'sucursal_doc',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

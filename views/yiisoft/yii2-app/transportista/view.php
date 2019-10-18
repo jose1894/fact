@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'model' => $model,
               'attributes' => [
                   'id_transp',
+                  'ruc_transp',
                   'des_transp',
                   [
                     'attribute' => 'status_transp',

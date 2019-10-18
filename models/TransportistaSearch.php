@@ -18,7 +18,7 @@ class TransportistaSearch extends Transportista
     public function rules()
     {
         return [
-            [['id_transp', 'status_transp', 'sucursal_transp'], 'integer'],
+            [['id_transp', 'ruc_transp','status_transp', 'sucursal_transp'], 'integer'],
             [['des_transp'], 'safe'],
         ];
     }

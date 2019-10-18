@@ -1,3 +1,7 @@
+body{
+  font-family: 'Lucida Console';
+}
+
 .center {
   text-align: center;
 }
@@ -15,8 +19,8 @@
 }
 
 .datos-cliente {
-  font-size: 0.65rem;
-  border-bottom:1px solid black;
+  font-size: 17px;
+  /*border-bottom:1px solid black;*/
 }
 
 .celdas {
@@ -25,6 +29,12 @@
 
 .mayus {
   text-transform: uppercase;
+}
+
+.enc-fechas{
+  width: 100%;
+  border: 1px solid red;
+  padding; 0 350px 0 0;
 }
 
 table {

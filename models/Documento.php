@@ -120,4 +120,9 @@ class Documento extends \yii\db\ActiveRecord
     {
         return $this->hasOne(MotivoTraslado::className(), ['id_motivo' => 'motivo_doc']);
     }
+
+    public function getDetalles()
+    {
+       return $this->hasMany(DocumentoDetalle::className(), ['documento_ddetalle' => 'id_doc']);
+    }
 }

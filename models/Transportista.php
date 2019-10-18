@@ -33,6 +33,7 @@ class Transportista extends \yii\db\ActiveRecord
             [['des_transp','status_transp'], 'required'],
             [['status_transp', 'sucursal_transp'], 'integer'],
             [['des_transp'], 'string', 'max' => 150],
+            [['ruc_transp'], 'string', 'max' => 12],
         ];
     }
 
@@ -43,6 +44,7 @@ class Transportista extends \yii\db\ActiveRecord
     {
         return [
             'id_transp' => Yii::t('transportista', 'Id'),
+            'ruc_transp' => Yii::t('transportista', 'Ruc'),
             'des_transp' => Yii::t('transportista', 'Description'),
             'status_transp' => Yii::t('transportista', 'Status'),
             'sucursal_transp' => Yii::t('transportista', 'Sucursal Transp'),

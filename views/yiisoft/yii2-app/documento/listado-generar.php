@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        //'filterModel' => $searchModel,
         'columns' => [
             [
               'attribute'=>'tipo_pedido',
@@ -49,21 +49,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             //'estatus_pedido',
             [
-              'attribute' => 'estatus_pedido',
-              'vAlign' => 'middle',
-              'width' => '180px',
-              'value' => function ($model, $key, $index, $widget) {
-                  return $model->estatus_pedido;
-              },
-              'filterType' => GridView::FILTER_SELECT2,
-              'filter' => [Pedido::STATUS_INACTIVO => 0, Pedido::GUIA_GENERADA => 1, Pedido::DOCUMENTO_GENERADO => 2,Pedido::PEDIDO_FINALIZADO => 3, Pedido::PEDIDO_ANULADO => 4] ,
-              'filterWidgetOptions' => [
-                  'pluginOptions' => ['allowClear' => true],
-              ],
-              'filterInputOptions' => ['placeholder' => 'Any author', 'multiple' => true], // allows multiple authors to be chosen
-              'format' => 'raw'
-            ],
-            [
               'attribute'=>'clte_pedido',
               'value' => function($data){
                    return $data->cltePedido->nombre_clte;
@@ -80,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'width' => '50%'
             ],
             [
-              'attribute'=>'Total',
+              'attribute'=>'total_pedido',
               'value' => function($data){
                    $total = Yii::$app->formatter->asDecimal($data->sumChildTotal());
                    return $total;

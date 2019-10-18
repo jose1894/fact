@@ -21,6 +21,7 @@ class PedidoSearch extends Pedido
             [['id_pedido', 'clte_pedido', 'vend_pedido', 'moneda_pedido', 'almacen_pedido', 'usuario_pedido','condp_pedido', 'estatus_pedido', 'sucursal_pedido'], 'integer'],
             [['tipo_pedido'],'string'],
             [['cod_pedido', 'fecha_pedido', 'tipo_pedido','estatus_pedido', 'string'], 'safe'],
+            [['total_pedido', 'integer'], 'safe'],
         ];
     }
 
@@ -105,7 +106,7 @@ class PedidoSearch extends Pedido
         $sucursal = $user->sucursal0->id_suc;
         $query = Pedido::find()
                  ->where('sucursal_pedido = :sucursal',[':sucursal' => $sucursal])
-                 ->andWhere('in','estatus_pedido',[Pedido::STATUS_INACTIVO,Pedido::GUIA_GENERADA])
+                 ->andWhere(['estatus_pedido' => [Pedido::STATUS_INACTIVO,Pedido::GUIA_GENERADA]])
                  ->andWhere('tipo_pedido = :tipo',[':tipo' => Pedido::PEDIDO]);
         // add conditions that should always apply here
 

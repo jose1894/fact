@@ -194,7 +194,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 //Maestro
 $this->registerJsVar( "buttonCreate", "#create" );
-$this->registerJsVar( "buttonSubmit", "#submit" );
 $this->registerJsVar( "buttonCancel", ".close-btn" );
 $this->registerJsVar( "frame", "#frame" );
 $this->registerJsVar( "modal", "#modal" );

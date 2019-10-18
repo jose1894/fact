@@ -33,7 +33,7 @@ $js = '
   $( "body" ).on( "click", submitGuide, function( e ){
     e.preventDefault();
     e.stopPropagation();
-    let $form = $( frame-guide ).contents().find("form");
+    let $form = $( frameGuide ).contents().find("form");
     //let $form = window.frames[ 0 ].$( "form" );
 
       $.ajax( {

@@ -41,6 +41,8 @@
                         ['label' => Yii::t('app', 'Maintenance'), 'icon' => 'gears',
                           'items' => [
                             ['label' => Yii::t('tipo_producto','Product types'), 'url' => ['/tipo-producto'], 'icon' => 'cube'],
+                            ['label' => Yii::t('transportista','Carrier'), 'url' => ['/transportista'], 'icon' => 'truck'],
+                            ['label' => Yii::t('unidad_transporte','Transport unit'), 'url' => ['/unidad-transporte'], 'icon' => 'truck'],
                             ['label' => Yii::t('tipo_movimiento','Movement type'), 'url' => ['/tipo-movimiento'], 'icon' => 'exchange'],
                             ['label' => Yii::t('tipo_documento','Document type'), 'url' => ['/tipo-documento'], 'icon' => 'list'],
                             ['label' => Yii::t('serie','Series'), 'url' => ['/series'], 'icon' => 'tachometer'],
@@ -69,7 +71,7 @@
                     ['label' => Yii::t('app', 'Sales'), 'icon' => 'inbox',
                       'items' => [
                         ['label' => Yii::t('pedido','Order').'s', 'url' => ['/pedido'], 'icon' => 'inbox'],
-                        [ 'label' => Yii::t('documento','Orders to bill'), 'url' => ['/documento/pedidos-pendientes'],'icon' => 'play-circle',], 
+                        [ 'label' => Yii::t('documento','Orders to bill'), 'url' => ['/documento/pedidos-pendientes'],'icon' => 'play-circle',],
                         [ 'label' => Yii::t('documento','Invoice list'), 'url' => ['/documento/listado-factura']],
                       ]
                     ],

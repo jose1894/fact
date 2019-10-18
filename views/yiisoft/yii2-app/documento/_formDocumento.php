@@ -35,7 +35,6 @@ if ( $model->isNewRecord ) {
       <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
           <div class="row">
-
               <div class="box box-success">
                 <div class="box-header with-border">
                   <h3 class="box-title">
@@ -249,7 +248,7 @@ if ( $model->isNewRecord ) {
                       $condiciones = CondPago::getCondPagoList();
                       ?>
                       <?= $form->field($modelPedido, 'condp_pedido',[
-                          'addClass' => 'form-control input-sm',
+                          'addClass' => 'form-control',
                         ])->widget(Select2::classname(), [
                                   'data' => $condiciones,
                                   'language' => Yii::$app->language,
@@ -393,13 +392,13 @@ if ( $model->isNewRecord ) {
                       </div>
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
-                        ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control number-decimals'])
+                        ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control number-decimals input-sm'])
                         ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'readonly' => $disabledPedido])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
-                        ->field($modelDetalle,"[{$index}]plista_pdetalle", [ 'addClass' => 'form-control number-decimals'])
+                        ->field($modelDetalle,"[{$index}]plista_pdetalle", [ 'addClass' => 'form-control number-decimals input-sm'])
                         ->textInput([ 'type' => 'number','readonly' => true, 'readonly' => $disabledPedido])
                         ->label(false)?>
                         <?php echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle"); ?>
@@ -414,19 +413,19 @@ if ( $model->isNewRecord ) {
                       </div-->
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
-                        ->field($modelDetalle,"[{$index}]descu_pdetalle", [ 'addClass' => 'form-control number-decimals'])
+                        ->field($modelDetalle,"[{$index}]descu_pdetalle", [ 'addClass' => 'form-control number-decimals  input-sm'])
                         ->textInput([ 'type'=>'number','width' => '200px', 'readonly' => $disabledPedido])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
-                        ->field($modelDetalle,"[{$index}]precio_pdetalle",[ 'addClass' => 'form-control number-decimals'])
+                        ->field($modelDetalle,"[{$index}]precio_pdetalle",[ 'addClass' => 'form-control number-decimals  input-sm'])
                         ->textInput(['type'=>'number','width' => '200px', 'readonly' => $disabledPedido])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-2 col-xs-12">
                         <?= $form
-                        ->field($modelDetalle,"[{$index}]total_pdetalle",[ 'addClass' => 'form-control number-decimals'])
+                        ->field($modelDetalle,"[{$index}]total_pdetalle",[ 'addClass' => 'form-control number-decimals  input-sm'])
                         ->textInput(['type'=>'number','readonly' => true, 'readonly' => $disabledPedido])
                         ->label(false)?>
                       </div>
@@ -450,7 +449,7 @@ if ( $model->isNewRecord ) {
                     <?= Yii::t('app', 'Subtotal') ?>
                   </td>
                   <td class="col-xs-4">
-                    <input type="text" id="subtotal1" name="subtotal" readonly class="form-control totales" value="">
+                    <input type="text" id="subtotal1" name="subtotal" readonly class="form-control input-sm totales" value="">
                   </td>
                 </tr>
                 <tr>
@@ -458,7 +457,7 @@ if ( $model->isNewRecord ) {
                     <?= Yii::t('app', 'Discount') ?>
                   </td>
                   <td class="col-xs-4">
-                    <input type="text" id="descuento" name="descuento" readonly class="form-control totales" value="">
+                    <input type="text" id="descuento" name="descuento" readonly class="form-control input-sm totales" value="">
                   </td>
                 </tr>
                 <tr>
@@ -466,7 +465,7 @@ if ( $model->isNewRecord ) {
                     <?= Yii::t('app', 'Subtotal') ?>
                   </td>
                   <td class="col-xs-4">
-                    <input type="text" id="subtotal2" name="subtotal" readonly class="form-control totales" value="">
+                    <input type="text" id="subtotal2" name="subtotal" readonly class="form-control input-sm totales" value="">
                   </td>
                 </tr>
                 <tr>
@@ -474,7 +473,7 @@ if ( $model->isNewRecord ) {
                     <?= Yii::t('app', 'Tax')?> <?= $IMPUESTO ?>%
                   </td>
                   <td class="col-xs-4">
-                    <input type="text" name="impuesto" id="impuesto" readonly class="form-control totales" value="">
+                    <input type="text" name="impuesto" id="impuesto" readonly class="form-control input-sm totales" value="">
                   </td>
                 </tr>
                 <tr>
@@ -482,7 +481,7 @@ if ( $model->isNewRecord ) {
                     <?= Yii::t('app', 'Total')?>
                   </td>
                   <td class="col-xs-4">
-                    <input type="text" name="total" id="total" readonly  class="form-control totales" value="">
+                    <input type="text" name="total" id="total" readonly  class="form-control input-sm totales" value="">
                   </td>
                 </tr>
               </table>

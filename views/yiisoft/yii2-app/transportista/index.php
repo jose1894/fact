@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute'=>'id_transp',
             'width' => '5%'
           ],
+          'ruc_transp',
           'des_transp',
           [
               'class' => 'kartik\grid\BooleanColumn',

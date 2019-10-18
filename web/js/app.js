@@ -18,8 +18,8 @@ $( document ).ready( function( e ){
   $( 'body' ).on( 'click', buttonSubmit, function( e ){
     e.preventDefault();
     e.stopPropagation();
-    //var $form = $( frame ).contents().find('form');
-    let $form = window.frames[ 0 ].$( 'form' );
+    let $form = $( frame ).contents().find('form');
+    //let $form = window.frames[ 0 ].$( 'form' );
 
       $.ajax( {
         'url'    : $( $form ).attr( 'action' ),
@@ -34,7 +34,7 @@ $( document ).ready( function( e ){
 
             if ( $( $form ).attr( 'action' ).indexOf( 'create' ) != -1) {
               $( $form ).trigger( 'reset' );
-              $selects = window.frames[ 0 ].$( 'form' ).find( 'select' );
+              $selects = window.frames[ 1 ].$( 'form' ).find( 'select' );
 
               if ( $selects.length ) {
                 $selects.trigger( 'change' );
@@ -44,7 +44,7 @@ $( document ).ready( function( e ){
             return;
           }
 
-          window.frames[ 0 ].$( $form ).yiiActiveForm( 'updateMessages', data);
+          window.frames[ 1 ].$( $form ).yiiActiveForm( 'updateMessages', data);
         },
         error: function(data) {
             let message;
