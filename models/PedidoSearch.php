@@ -21,7 +21,7 @@ class PedidoSearch extends Pedido
             [['id_pedido', 'clte_pedido', 'vend_pedido', 'moneda_pedido', 'almacen_pedido', 'usuario_pedido','condp_pedido', 'estatus_pedido', 'sucursal_pedido'], 'integer'],
             [['tipo_pedido'],'string'],
             [['cod_pedido', 'fecha_pedido', 'tipo_pedido','estatus_pedido', 'string'], 'safe'],
-            [['total_pedido', 'integer'], 'safe'],
+            [['total_pedido','vend_pedido',  'clte_pedido', 'integer'], 'safe'],
         ];
     }
 
@@ -56,12 +56,12 @@ class PedidoSearch extends Pedido
             'pagination' => [
                 'pageSize' => 10,
             ],
-            // 'sort' => [
-            //     'defaultOrder' => [
-            //         'fecha_pedido' => SORT_DESC,
-            //         'cod_pedido' => SORT_DESC,
-            //     ]
-            // ],
+            'sort' => [
+                'defaultOrder' => [
+                    'fecha_pedido' => SORT_DESC,
+                    'cod_pedido' => SORT_DESC,
+                ]
+            ],
         ]);
 
         $this->load($params);

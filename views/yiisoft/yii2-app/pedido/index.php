@@ -29,24 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('pedido', 'Create order'), ['create'], ['class' => 'btn btn-flat btn-success']) ?>
     </p>
 
-    <?php
-      $dataProvider->setSort([
-          'attributes' => [
-              'fecha_pedido' => [
-                  'desc' => ['fecha_pedido' => SORT_DESC],
-                  'default' => SORT_DESC
-              ],
-              'cod_pedido' => [
-                  'desc' => ['cod_pedido' => SORT_DESC],
-                  'default' => SORT_ASC,
-              ],
-          ],
-          'defaultOrder' => [
-              'fecha_pedido' => SORT_DESC
-          ]
-      ]);
-    ?>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -56,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'value' => function($data){
                    return $data->tipo_pedido !== Pedido::PEDIDO  ? $data->tipo_pedido === Pedido::PROFORMA ? 'PROFORMA' : 'COTIZACION' : 'PEDIDO' ;
               },
-              'filter'=>[ Pedido::PEDIDO => 'PEDIDO', Pedido::PROFORMA => 'PROFORMA', Pedido::COTIZACION=> 'COTIZACION' ],
+              //'filter'=>[ Pedido::PEDIDO => 'PEDIDO', Pedido::PROFORMA => 'PROFORMA', Pedido::COTIZACION=> 'COTIZACION' ],
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,
@@ -194,6 +176,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 //Maestro
 $this->registerJsVar( "buttonCreate", "#create" );
+$this->registerJsVar( "buttonSubmit", "submit" );
 $this->registerJsVar( "buttonCancel", ".close-btn" );
 $this->registerJsVar( "frame", "#frame" );
 $this->registerJsVar( "modal", "#modal" );

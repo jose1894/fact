@@ -359,7 +359,7 @@ $( "#submit" ).on( "click", function() {
     swal("'.Yii::t('ingreso','Entry note').'", "'.Yii::t('compra','The order must have at least one item to be saved').'", "info");
     return false;
   }
-  
+
   $.ajax( {
     "url"    : $( form ).attr( "action" ),
     "method" : $( form ).attr( "method" ),

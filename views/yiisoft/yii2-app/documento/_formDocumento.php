@@ -34,8 +34,8 @@ if ( $model->isNewRecord ) {
       <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true]); ?>
       <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
-          <div class="row">
-              <div class="box box-success">
+          <!--div class="row"-->
+              <div class="box box-success box-solid">
                 <div class="box-header with-border">
                   <h3 class="box-title">
                     <?= Yii::t('cliente','Customer') ?>
@@ -104,9 +104,9 @@ if ( $model->isNewRecord ) {
                   </div>
                 </div>
               </div>
-          </div>
-          <div class="row">
-            <div class="box box-danger">
+          <!--/div-->
+          <!--div class="row"-->
+            <div class="box box-danger box-solid">
               <div class="box-header with-border">
                 <h3 class="box-title">
                   <?= Yii::t('documento','Invoice') ?>
@@ -166,11 +166,11 @@ if ( $model->isNewRecord ) {
                 </div>
               </div>
             </div>
-          </div>
+          <!--/div-->
         </div>
         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
           <div class="row">
-            <div class="box box-warning">
+            <div class="box box-warning box-solid">
               <div class="box-header with-border">
                 <h3 class="box-title">
                   <?= Yii::t('pedido','Order') ?>
@@ -498,7 +498,7 @@ if ( $model->isNewRecord ) {
 
 
       <?php ActiveForm::end(); ?>
-<button type="button" name="button" id="imprimir" data-toggle="modal" class="btn btn-flat btn-primary "><span class="fa fa-print"></span> <?= Yii::t('app', 'Print')?></button>
+      <!--button type="button" name="button" id="imprimir" data-toggle="modal" class="btn btn-flat btn-primary "><span class="fa fa-print"></span> <?= Yii::t('app', 'Print')?></button-->
 
 </div>
 

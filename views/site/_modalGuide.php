@@ -1,5 +1,6 @@
 <?php
 use yii\web\View;
+use yii\helpers\Url;
 ?>
 <div class="modal modal-info fade modal-wide" id="modal-guide" style="display: none;">
   <div class="modal-dialog modal-lg">
@@ -33,6 +34,7 @@ $js = '
   $( "body" ).on( "click", submitGuide, function( e ){
     e.preventDefault();
     e.stopPropagation();
+
     let $form = $( frameGuide ).contents().find("form");
     //let $form = window.frames[ 0 ].$( "form" );
 
@@ -42,9 +44,7 @@ $js = '
         "data"   : $( $form ).serialize(),
         "async"  : false,
         "success": function ( data ) {
-          if ( data.success )
-          {
-            swal(data.title, data.message, data.type);
+          if ( data.success ) {
             window.parent.$.pjax.reload( { container: "#grid" } );
 
             if ( $( $form ).attr( "action" ).indexOf( "create" ) != -1) {
@@ -55,6 +55,22 @@ $js = '
                 $selects.trigger( "change" );
               }
             }
+
+            swal({
+              title: "'.Yii::t("documento","Do you want to issue the document?").'",
+              icon: "info",
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((willIssue) => {
+              if (willIssue) {
+                window.open("'.Url::to(['documento/guia-rpt']).'?id=" + data.id,"_blank");
+              }
+
+              swal(data.title, data.message, data.type);
+              $( ".close-btn" ).trigger( "click" );
+
+            });
 
             return;
           }

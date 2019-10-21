@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-10-2019 a las 00:30:30
+-- Tiempo de generación: 22-10-2019 a las 00:29:51
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -2084,7 +2084,11 @@ INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `pedido_doc`, `fecha_d
 (4, '0000000001', 2, 1, '2019-10-02', '', '0.00', '0.00', '0.00', NULL, NULL, 0, 0, 1, 1),
 (5, '0000000002', 3, 2, '2019-10-02', '', '0.00', '0.00', '0.00', 1, 1, 0, 1, 1, 1),
 (6, '0000000003', 3, 3, '2019-10-07', '', '0.00', '0.00', '0.00', 1, 1, 0, 1, 1, 1),
-(7, '0000000002', 2, 2, '2019-10-18', '', '0.00', '0.00', '0.00', NULL, NULL, 0, 0, 1, 1);
+(7, '0000000002', 2, 2, '2019-10-18', '', '0.00', '0.00', '0.00', NULL, NULL, 0, 0, 1, 1),
+(8, '0000000003', 2, 3, '2019-10-21', '', '0.00', '0.00', '0.00', NULL, NULL, 0, 0, 1, 1),
+(9, '0000000004', 3, 4, '2019-10-21', '', '0.00', '0.00', '0.00', 1, 1, 0, 1, 1, 1),
+(10, '0000000005', 3, 5, '2019-10-21', '', '0.00', '0.00', '0.00', 1, 1, 0, 1, 1, 1),
+(11, '0000000006', 3, 6, '2019-10-21', '', '0.00', '0.00', '0.00', 1, 1, 0, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2116,7 +2120,10 @@ INSERT INTO `documento_detalle` (`id_ddetalle`, `prod_ddetalle`, `cant_ddetalle`
 (14, 44, '2.00', '0.00', '0.00', '0', 1, 3, '0.00', '0.00'),
 (15, 97, '2.00', '0.00', '0.00', '0', 1, 3, '0.00', '0.00'),
 (16, 42, '5.00', '0.00', '0.00', '0', 1, 5, '0.00', '0.00'),
-(17, 44, '3.00', '0.00', '0.00', '0', 1, 6, '0.00', '0.00');
+(17, 44, '3.00', '0.00', '0.00', '0', 1, 6, '0.00', '0.00'),
+(18, 71, '3.00', '0.00', '0.00', '0', 1, 9, '0.00', '0.00'),
+(19, 135, '5.00', '0.00', '0.00', '0', 1, 10, '0.00', '0.00'),
+(20, 65, '5.00', '0.00', '0.00', '0', 1, 11, '0.00', '0.00');
 
 -- --------------------------------------------------------
 
@@ -2348,7 +2355,8 @@ INSERT INTO `lista_precios` (`id_lista`, `tipo_lista`, `prod_lista`, `precio_lis
 (165, 1, 169, '109.50', 1, '0.00', '0.00', '0.00', '0.00'),
 (166, 1, 170, '138.00', 1, '0.00', '0.00', '0.00', '0.00'),
 (167, 1, 171, '60.00', 1, '0.00', '0.00', '0.00', '0.00'),
-(168, 1, 172, '40.00', 1, '0.00', '0.00', '0.00', '0.00');
+(168, 1, 172, '40.00', 1, '0.00', '0.00', '0.00', '0.00'),
+(169, 2, 42, '30.00', 0, '0.00', '0.00', '0.00', '0.00');
 
 -- --------------------------------------------------------
 
@@ -2466,11 +2474,11 @@ INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `s
 (2, 7, '0000000001', 1, '00', 1),
 (3, 8, '0000000000', 1, '00', 1),
 (4, 6, '0000000000', 1, '00', 1),
-(5, 4, '0000000000', 1, '00', 1),
-(6, 5, '0000000002', 1, '00', 1),
-(7, 2, '0000000002', 1, '01', 1),
+(5, 4, '0000000001', 1, '00', 1),
+(6, 5, '0000000003', 1, '00', 1),
+(7, 2, '0000000003', 1, '01', 1),
 (8, 9, '0000000000', 1, '01', 1),
-(9, 3, '0000000003', 1, '01', 1);
+(9, 3, '0000000006', 1, '01', 1);
 
 -- --------------------------------------------------------
 
@@ -2763,10 +2771,10 @@ CREATE TABLE `pedido` (
 INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, `vend_pedido`, `moneda_pedido`, `almacen_pedido`, `usuario_pedido`, `estatus_pedido`, `sucursal_pedido`, `condp_pedido`, `tipo_pedido`, `edicion_pedido`, `nrodoc_pedido`) VALUES
 (1, '0000000001', '2019-09-20', 330, 2, 1, 1, 2, 2, 1, 1, 'NP', 'N', '1111'),
 (2, '0000000002', '2019-10-01', 234, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
-(3, '0000000003', '2019-10-01', 234, 3, 1, 1, 2, 1, 1, 1, 'NP', 'N', ''),
-(4, '0000000004', '2019-10-01', 19, 2, 1, 1, 2, 0, 1, 1, 'NP', 'N', ''),
-(5, '0000000005', '2019-10-01', 19, 2, 1, 1, 2, 0, 1, 1, 'NP', 'N', ''),
-(6, '0000000006', '2019-10-01', 234, 3, 1, 1, 2, 0, 1, 1, 'NP', 'N', ''),
+(3, '0000000003', '2019-10-01', 234, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(4, '0000000004', '2019-10-01', 19, 2, 1, 1, 2, 1, 1, 1, 'NP', 'N', ''),
+(5, '0000000005', '2019-10-01', 19, 2, 1, 1, 2, 1, 1, 1, 'NP', 'N', ''),
+(6, '0000000006', '2019-10-01', 234, 3, 1, 1, 2, 1, 1, 1, 'NP', 'N', ''),
 (7, '0000000007', '2019-10-02', 99, 3, 1, 1, 2, 0, 1, 1, 'NP', 'N', ''),
 (8, '0000000008', '2019-10-02', 99, 3, 1, 1, 2, 0, 1, 2, 'NP', 'N', ''),
 (9, '0000000009', '2019-10-02', 387, 1, 1, 1, 2, 0, 1, 1, 'NP', 'N', ''),
@@ -2892,7 +2900,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (41, 'LP-ST4', 'CM05-SX2', 'FARO NEBLI.PARACH. HY.STAREX 2005(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
 (43, 'LP-AC2B', 'CM98-AC4', 'FARO NEBLI.PARACH. HY ACCENT BLANCO 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(44, 'LP-AC4', 'CM-9172', 'FARO NEBLI.PARACH. HY ACCENT 2006...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(44, 'LP-AC4', 'CM-9172', 'FARO NEBLI.PARACH. HY ACCENT 2006...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (45, 'LP-AC4B', 'CM10-AC04', 'FARO NEBLI.PARACH. HY ACCENT 2011-2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (46, 'LP-EL2', 'CM-9071', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (47, 'LP-EL2C', 'CM07-EL02', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -3303,7 +3311,9 @@ CREATE TABLE `transaccion` (
 
 INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_trans`, `tipo_trans`, `ope_trans`, `idrefdoc_trans`, `seriedocref_trans`, `docref_trans`, `almacen_trans`, `sucursal_trans`, `usuario_trans`, `status_trans`) VALUES
 (1, '0000000001', '2019-10-02', NULL, 4, 'S', 4, NULL, NULL, 1, 1, 2, 1),
-(2, '0000000002', '2019-10-18', NULL, 4, 'S', 7, NULL, NULL, 1, 1, 2, 1);
+(2, '0000000002', '2019-10-18', NULL, 4, 'S', 7, NULL, NULL, 1, 1, 2, 1),
+(3, '0000000001', '2019-10-21', '', 5, 'E', NULL, NULL, '111', 1, 1, 2, 0),
+(4, '0000000003', '2019-10-21', NULL, 4, 'S', 8, NULL, NULL, 1, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -3349,7 +3359,12 @@ INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `can
 (3, 1, 43, 2),
 (4, 1, 44, 2),
 (5, 1, 97, 2),
-(6, 2, 42, 5);
+(6, 2, 42, 5),
+(7, 3, 43, 5),
+(8, 3, 44, 5),
+(9, 3, 124, 5),
+(10, 3, 45, 5),
+(11, 4, 44, 3);
 
 -- --------------------------------------------------------
 
@@ -3459,8 +3474,6 @@ CREATE TABLE `v_productos` (
 ,`texto` varchar(149)
 ,`sucursal_prod` int(11)
 ,`status_prod` int(11)
-,`precio_lista` decimal(18,2)
-,`tipo_lista` int(11)
 ,`id_suc` int(11)
 ,`impuesto_suc` decimal(7,2)
 ,`id_und` int(11)
@@ -3468,7 +3481,7 @@ CREATE TABLE `v_productos` (
 ,`compra_prod` int(11)
 ,`venta_prod` int(11)
 ,`stock_prod` decimal(41,2)
-,`estatus_pedido` bigint(11)
+,`estatus_pedido` int(1)
 );
 
 -- --------------------------------------------------------
@@ -3502,7 +3515,7 @@ INSERT INTO `zona` (`id_zona`, `nombre_zona`, `desc_zona`, `estatus_zona`, `sucu
 --
 DROP TABLE IF EXISTS `v_productos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,concat(`producto`.`cod_prod`,' ',`producto`.`des_prod`,' - ',`unidad_medida`.`des_und`) AS `texto`,`producto`.`sucursal_prod` AS `sucursal_prod`,`producto`.`status_prod` AS `status_prod`,`lista_precios`.`precio_lista` AS `precio_lista`,`lista_precios`.`tipo_lista` AS `tipo_lista`,`sucursal`.`id_suc` AS `id_suc`,`sucursal`.`impuesto_suc` AS `impuesto_suc`,`unidad_medida`.`id_und` AS `id_und`,`unidad_medida`.`des_und` AS `des_und`,`producto`.`compra_prod` AS `compra_prod`,`producto`.`venta_prod` AS `venta_prod`,(`producto`.`stock_prod` - sum(coalesce(`pedido_detalle`.`cant_pdetalle`,0))) AS `stock_prod`,coalesce(`pedido`.`estatus_pedido`,0) AS `estatus_pedido` from (((((`producto` join `lista_precios` on((`producto`.`id_prod` = `lista_precios`.`prod_lista`))) join `sucursal` on((`producto`.`sucursal_prod` = `sucursal`.`id_suc`))) join `unidad_medida` on((`producto`.`umed_prod` = `unidad_medida`.`id_und`))) left join `pedido_detalle` on((`pedido_detalle`.`prod_pdetalle` = `producto`.`id_prod`))) left join `pedido` on(((`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`) and (coalesce(`pedido`.`estatus_pedido`,0) in (0,1))))) group by `producto`.`id_prod`,`producto`.`cod_prod`,`producto`.`des_prod`,`producto`.`sucursal_prod`,`producto`.`status_prod`,`lista_precios`.`precio_lista`,`lista_precios`.`tipo_lista`,`producto`.`stock_prod`,`sucursal`.`id_suc`,`sucursal`.`impuesto_suc`,`unidad_medida`.`id_und`,`unidad_medida`.`des_und`,`producto`.`compra_prod`,`producto`.`venta_prod`,`pedido`.`estatus_pedido` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,concat(`producto`.`cod_prod`,' ',`producto`.`des_prod`,' - ',`unidad_medida`.`des_und`) AS `texto`,`producto`.`sucursal_prod` AS `sucursal_prod`,`producto`.`status_prod` AS `status_prod`,`sucursal`.`id_suc` AS `id_suc`,`sucursal`.`impuesto_suc` AS `impuesto_suc`,`unidad_medida`.`id_und` AS `id_und`,`unidad_medida`.`des_und` AS `des_und`,`producto`.`compra_prod` AS `compra_prod`,`producto`.`venta_prod` AS `venta_prod`,(`producto`.`stock_prod` - sum(coalesce(`pedido_detalle`.`cant_pdetalle`,0))) AS `stock_prod`,(`pedido`.`estatus_pedido` = 0) AS `estatus_pedido` from ((((`producto` join `sucursal` on((`producto`.`sucursal_prod` = `sucursal`.`id_suc`))) join `unidad_medida` on((`producto`.`umed_prod` = `unidad_medida`.`id_und`))) left join `pedido_detalle` on((`pedido_detalle`.`prod_pdetalle` = `producto`.`id_prod`))) left join `pedido` on(((`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`) and (coalesce(`pedido`.`estatus_pedido`,0) in (0,1))))) group by `producto`.`id_prod`,`producto`.`cod_prod`,`producto`.`des_prod`,`producto`.`sucursal_prod`,`producto`.`status_prod`,`producto`.`stock_prod`,`sucursal`.`id_suc`,`sucursal`.`impuesto_suc`,`unidad_medida`.`id_und`,`unidad_medida`.`des_und`,`producto`.`compra_prod`,`producto`.`venta_prod` ;
 
 --
 -- Índices para tablas volcadas
@@ -3917,13 +3930,13 @@ ALTER TABLE `distrito`
 -- AUTO_INCREMENT de la tabla `documento`
 --
 ALTER TABLE `documento`
-  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=8;
+  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `documento_detalle`
 --
 ALTER TABLE `documento_detalle`
-  MODIFY `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=18;
+  MODIFY `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `empresa`
@@ -3941,7 +3954,7 @@ ALTER TABLE `inventario`
 -- AUTO_INCREMENT de la tabla `lista_precios`
 --
 ALTER TABLE `lista_precios`
-  MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=169;
+  MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=170;
 
 --
 -- AUTO_INCREMENT de la tabla `menu`
@@ -4055,7 +4068,7 @@ ALTER TABLE `tipo_proveedor`
 -- AUTO_INCREMENT de la tabla `transaccion`
 --
 ALTER TABLE `transaccion`
-  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `transportista`
@@ -4067,7 +4080,7 @@ ALTER TABLE `transportista`
 -- AUTO_INCREMENT de la tabla `trans_detalle`
 --
 ALTER TABLE `trans_detalle`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=7;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `unidad_medida`

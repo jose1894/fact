@@ -50,6 +50,8 @@ class PedidoController extends Controller
         $request = Yii::$app->request->queryParams;
         $dataProvider = $searchModel->search($request);
 
+        
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -461,7 +463,7 @@ class PedidoController extends Controller
       $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
       $mpdf->WriteHtml( $content ); // call mpdf write html
       $mpdf->SetHTMLFooter( $footer );
-      
+
       $titulo = $modelPedido->cod_pedido. '-'. $tipoPedido .'-'.$modelPedido->cltePedido->nombre_clte.'.pdf';
 
       $mpdf->SetTitle($titulo);

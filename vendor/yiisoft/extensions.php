@@ -57,15 +57,6 @@ return array (
       '@kartik/base' => $vendorDir . '/kartik-v/yii2-krajee-base/src',
     ),
   ),
-  'kartik-v/yii2-widget-activeform' => 
-  array (
-    'name' => 'kartik-v/yii2-widget-activeform',
-    'version' => '9999999-dev',
-    'alias' => 
-    array (
-      '@kartik/form' => $vendorDir . '/kartik-v/yii2-widget-activeform/src',
-    ),
-  ),
   'kartik-v/yii2-dialog' => 
   array (
     'name' => 'kartik-v/yii2-dialog',
@@ -82,15 +73,6 @@ return array (
     'alias' => 
     array (
       '@kartik/detail' => $vendorDir . '/kartik-v/yii2-detail-view/src',
-    ),
-  ),
-  'wbraganca/yii2-dynamicform' => 
-  array (
-    'name' => 'wbraganca/yii2-dynamicform',
-    'version' => '9999999-dev',
-    'alias' => 
-    array (
-      '@wbraganca/dynamicform' => $vendorDir . '/wbraganca/yii2-dynamicform/src',
     ),
   ),
   'kartik-v/yii2-helpers' => 
@@ -118,15 +100,6 @@ return array (
     'alias' => 
     array (
       '@kartik/number' => $vendorDir . '/kartik-v/yii2-number/src',
-    ),
-  ),
-  'kartik-v/yii2-mpdf' => 
-  array (
-    'name' => 'kartik-v/yii2-mpdf',
-    'version' => '9999999-dev',
-    'alias' => 
-    array (
-      '@kartik/mpdf' => $vendorDir . '/kartik-v/yii2-mpdf/src',
     ),
   ),
   'yiisoft/yii2-swiftmailer' => 
@@ -336,6 +309,33 @@ return array (
       '@yii/faker' => $vendorDir . '/yiisoft/yii2-faker',
     ),
   ),
+  'kartik-v/yii2-grid' => 
+  array (
+    'name' => 'kartik-v/yii2-grid',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@kartik/grid' => $vendorDir . '/kartik-v/yii2-grid/src',
+    ),
+  ),
+  'kartik-v/yii2-mpdf' => 
+  array (
+    'name' => 'kartik-v/yii2-mpdf',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@kartik/mpdf' => $vendorDir . '/kartik-v/yii2-mpdf/src',
+    ),
+  ),
+  'kartik-v/yii2-widget-activeform' => 
+  array (
+    'name' => 'kartik-v/yii2-widget-activeform',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@kartik/form' => $vendorDir . '/kartik-v/yii2-widget-activeform/src',
+    ),
+  ),
   'kartik-v/yii2-widget-select2' => 
   array (
     'name' => 'kartik-v/yii2-widget-select2',
@@ -345,13 +345,13 @@ return array (
       '@kartik/select2' => $vendorDir . '/kartik-v/yii2-widget-select2/src',
     ),
   ),
-  'kartik-v/yii2-grid' => 
+  'wbraganca/yii2-dynamicform' => 
   array (
-    'name' => 'kartik-v/yii2-grid',
+    'name' => 'wbraganca/yii2-dynamicform',
     'version' => '9999999-dev',
     'alias' => 
     array (
-      '@kartik/grid' => $vendorDir . '/kartik-v/yii2-grid/src',
+      '@wbraganca/dynamicform' => $vendorDir . '/wbraganca/yii2-dynamicform/src',
     ),
   ),
 );

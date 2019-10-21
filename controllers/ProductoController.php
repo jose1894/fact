@@ -113,7 +113,7 @@ class ProductoController extends Controller
                     }
                     if ($flag) {
                         $transaction->commit();
-                        
+
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         $return = [
                           'success' => true,
@@ -275,7 +275,7 @@ class ProductoController extends Controller
 
             $query = new Query;
             $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','des_und','stock_prod'])
-                ->from(['v_productos as p'])
+                ->from(['v_productos as p'])                
                 ->where('p.status_prod = 1')
                 ->andWhere(['like', 'p.texto', $desc])
                 ->andWhere(['>', 'p.stock_prod', 0])
