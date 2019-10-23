@@ -63,6 +63,10 @@ function getRow( row = null ) {
     }
   }
 }
+
+function round( num ){
+  return Math.round(num * 100) / 100;
+}
 /*
 formatMoney(number, a): string {
         const separador = JSON.parse(localStorage.getItem('languageInt'));

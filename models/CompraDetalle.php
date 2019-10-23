@@ -39,7 +39,7 @@ class CompraDetalle extends \yii\db\ActiveRecord
         return [
             [['prod_cdetalle'], 'required'],
             [['prod_cdetalle', 'status_cdetalle', 'compra_cdetalle'], 'integer'],
-            [['cant_cdetalle', 'precio_cdetalle', 'descu_cdetalle', 'impuesto_cdetalle', 'plista_cdetalle', 'total_cdetalle'], 'number'],
+            [['cant_cdetalle', 'precio_cdetalle', 'descu_cdetalle', 'impuestouni_cdetalle', 'impuestototal_cdetalle', 'plista_cdetalle', 'total_cdetalle'], 'number'],
             [['compra_cdetalle'], 'exist', 'skipOnError' => true, 'targetClass' => Compra::className(), 'targetAttribute' => ['compra_cdetalle' => 'id_compra']],
             [['prod_cdetalle'], 'exist', 'skipOnError' => true, 'targetClass' => Producto::className(), 'targetAttribute' => ['prod_cdetalle' => 'id_prod']],
         ];
@@ -56,7 +56,8 @@ class CompraDetalle extends \yii\db\ActiveRecord
             'cant_cdetalle' => Yii::t('compra', 'Qtty'),
             'precio_cdetalle' => Yii::t('compra', 'Price'),
             'descu_cdetalle' => Yii::t('compra', 'Disc'),
-            'impuesto_cdetalle' => Yii::t('compra', 'Tax'),
+            'impuestouni_cdetalle' => Yii::t('compra', 'Unit tax'),
+            'impuestototal_cdetalle' => Yii::t('compra', 'Total tax'),
             'status_cdetalle' => Yii::t('compra', 'Status'),
             'compra_cdetalle' => Yii::t('compra', 'Compra Cdetalle'),
             'plista_cdetalle' => Yii::t('compra', 'Plista Cdetalle'),

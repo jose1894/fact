@@ -172,25 +172,29 @@ if ( $model->isNewRecord ) {
             'cant_cdetalle',
             'precio_cdetalle',
             'descu_cdetalle',
+            'plista_cdetalle',
             'impuesto_cdetalle',
             'status_cdetalle'
           ],
         ]); ?>
         <div class="row">
-          <div class="col-sm-6 col-xs-12">
-            <h5>Producto</H5>
+          <div class="col-sm-5 col-xs-12">
+            <h5><?= Yii::t('producto', 'Product')?></H5>
           </div>
           <div class="col-sm-1 col-xs-12">
-            <h5>Cantidad</h5>
+            <h5><?= Yii::t('compra','Qtty')?></h5>
           </div>
           <div class="col-sm-1 col-xs-12">
-            <h5>Precio</h5>
+            <h5><?= Yii::t('compra','List price')?></h5>
           </div>
           <div class="col-sm-1 col-xs-12">
-            <h5>Descuento</h5>
+            <h5><?= Yii::t('compra', 'Discount')?></h5>
+          </div>
+          <div class="col-sm-1 col-xs-12">
+            <h5><?= Yii::t('compra','Price')?></h5>
           </div>
           <div class="col-sm-2 col-xs-12">
-            <h5>Total</h5>
+            <h5><?= Yii::t('compra', 'Total')?></h5>
           </div>
           <div class="col-sm-1 col-xs-12">
             <button type="button" class="pull-right add-item btn-flat btn btn-success btn-md" style="width:100%"><i class="fa fa-plus"></i></button>
@@ -200,13 +204,15 @@ if ( $model->isNewRecord ) {
         <div class="table-body">
           <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
             <div class="row detalle-item">
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-5 col-xs-12">
                 <?php
                   // necessary for update action.
                   if (!$modelDetalle->isNewRecord) {
                       echo Html::activeHiddenInput($modelDetalle, "[{$index}]id_cdetalle");
                       //$modelSucursal->empresa_suc[$index] = $model->id_empresa;
                       echo Html::activeHiddenInput($modelDetalle, "[{$index}]compra_cdetalle");
+                      echo Html::activeHiddenInput($modelDetalle, "[{$index}]impuestouni_cdetalle",['class' => 'impuesto_cdetalle']);
+                      echo Html::activeHiddenInput($modelDetalle, "[{$index}]impuestototal_cdetalle",['class' => 'impuesto_cdetalle']);
                   }
                   $url = Url::to(['producto/producto-list']);
                   $productos = empty($modelDetalle->prod_cdetalle) ? '' : Producto::findOne($modelDetalle->prod_cdetalle)->cod_prod.' '.Producto::findOne($modelDetalle->prod_cdetalle)->des_prod;
@@ -247,7 +253,7 @@ if ( $model->isNewRecord ) {
               </div>
               <div class="col-sm-1 col-xs-12">
                 <?= $form
-                ->field($modelDetalle,"[{$index}]precio_cdetalle",[ 'addClass' => 'form-control number-decimals'])
+                ->field($modelDetalle,"[{$index}]plista_cdetalle",[ 'addClass' => 'form-control number-decimals'])
                 ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'placeholder' => Yii::t('compra' , 'Price')])
                 ->label(false)?>
               </div>
@@ -255,6 +261,12 @@ if ( $model->isNewRecord ) {
                 <?= $form
                 ->field($modelDetalle,"[{$index}]descu_cdetalle",[ 'addClass' => 'form-control number-decimals'])
                 ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'placeholder' => Yii::t('compra' ,  'Discount')])
+                ->label(false)?>
+              </div>
+              <div class="col-sm-1 col-xs-12">
+                <?= $form
+                ->field($modelDetalle,"[{$index}]precio_cdetalle",[ 'addClass' => 'form-control number-decimals'])
+                ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'readonly' => true, 'placeholder' => Yii::t('compra' , 'List price')])
                 ->label(false)?>
               </div>
               <div class="col-sm-2 col-xs-12">
@@ -376,6 +388,11 @@ $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
   return false;
 });
 
+$("#compra-excento_compra").on("ifChanged",function(event) {
+  calculateTotals( IMPUESTO );
+  console.log("Excento");
+});
+
 $(".dynamicform_wrapper").on("afterDelete", function(e) {
     console.log("Deleted item!");
     calculateTotals( IMPUESTO );
@@ -423,7 +440,7 @@ $( ".table-body" ).on( "keyup","input[id$=\'cant_cdetalle\']",function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
 
-    $( "#compradetalle-" + row + "-precio_cdetalle" ).focus();
+    $( "#compradetalle-" + row + "-plista_cdetalle" ).focus();
 
   }
 });
@@ -432,29 +449,13 @@ $( ".table-body" ).on( "change", "input[id$=\'cant_cdetalle\']", function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     let cant = $( this ).val();
-    let precio = $( "#compradetalle-" + row + "-precio_cdetalle").val();
+    let precioUni = $( "#compradetalle-" + row + "-plista_cdetalle").val();
     let descu = $( "#compradetalle-" + row + "-descu_cdetalle").val();
-    let total = 0.00;
-    let descuento = 0;
 
-    if ( cant ) {
-
-      if ( descu ) {
-        total = ( cant * ( precio - (precio * ( descu / 100 ) ) ) );
-        descuento = ( precio * ( descu / 100 ) );
-      } else {
-        total = cant * precio;
-      }
-
-      total = parseFloat(  total  ).toFixed( 2 );
-      $( "#compradetalle-" + row + "-total_cdetalle" ).val( total );
-      $( "#compradetalle-" + row + "-descu_cdetalle").data( "descuento", descuento);
-
-      calculateTotals( IMPUESTO );
-    }
+    calculoFila( row, descu, precioUni, cant );
 });
 
-$( ".table-body" ).on( "keyup","input[id$=\'precio_cdetalle\']",function( e ) {
+$( ".table-body" ).on( "keyup","input[id$=\'plista_cdetalle\']",function( e ) {
   if ( e.keyCode === 13 && $( this ).val() ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
@@ -464,30 +465,14 @@ $( ".table-body" ).on( "keyup","input[id$=\'precio_cdetalle\']",function( e ) {
 });
 
 
-$( ".table-body" ).on( "change", "input[id$=\'precio_cdetalle\']", function( e ) {
+$( ".table-body" ).on( "change", "input[id$=\'plista_cdetalle\']", function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     let cant = $( "#compradetalle-" + row + "-cant_cdetalle").val();
     let descu = $( "#compradetalle-" + row + "-descu_cdetalle").val();
-    let precio = $( this ).val();
-    let total = 0;
-    let descuento = 0;
+    let precioUni = $( this ).val();
 
-    if ( cant ) {
-
-      if ( descu ) {
-        total = ( cant * ( precio - (precio * ( descu / 100 ) ) ) );
-        descuento = ( precio * ( descu / 100 ) );
-      } else {
-        total = cant * precio;
-      }
-
-      total = parseFloat(  total  ).toFixed( 2 );
-      $( "#compradetalle-" + row + "-total_cdetalle" ).val( total );
-      $( "#compradetalle-" + row + "-descu_cdetalle").data( "descuento", descuento);
-
-      calculateTotals( IMPUESTO );
-    }
+    calculoFila( row, descu, precioUni, cant );
 
 });
 
@@ -519,29 +504,60 @@ $( ".table-body" ).on( "change", "input[id$=\'descu_cdetalle\']", function( e ) 
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     let descu = $( this ).val();
-    let precio = $( "#compradetalle-" + row + "-precio_cdetalle").val();
+    let precioUni = $( "#compradetalle-" + row + "-plista_cdetalle").val();
     let cant = $( "#compradetalle-" + row + "-cant_cdetalle").val();
-    let total = 0.00;
-    let descuento = 0;
 
-    if ( cant ) {
-
-      if ( descu ) {
-        total = ( cant * ( precio - ( precio * ( descu / 100 ) ) ) );
-        descuento = ( precio * ( descu / 100 ) );
-      } else {
-        total = cant * precio;
-      }
-
-      total = parseFloat(  total  ).toFixed( 2 );
-      $( "#compradetalle-" + row + "-total_cdetalle" ).val( total );
-      $( "#compradetalle-" + row + "-descu_cdetalle").data( "descuento", descuento);
-
-      calculateTotals( IMPUESTO );
-    }
+    calculoFila( row, descu, precioUni, cant );
 });
 
-function calculateTotals( IMPUESTO ) {
+
+function calculoFila( row, descu, precioUni, cant )
+{
+  let total = 0.00;
+  let descuento = 0;
+  let impuestoUni = 0;
+  let impuestoTotal = 0;
+
+  if ( cant ) {
+
+    if ( descu ) {
+      descuento = ( precioUni * ( descu / 100 ) );
+      precioUni = precioUni - descuento;
+      total = cant * precioUni;
+    } else {
+      total = cant * precioUni;
+    }
+
+    //SI APLICA IMPUESTO
+    if ( !$("#compra-excento_compra").prop("checked") ) {
+      //CALCULO DEL IMPUESTO UNITARIO
+      impuestoUni = precioUni * IMPUESTO;
+      impuestoUni = parseFloat( impuestoUni );
+      //CALCULO DEL IMPUESTO TOTAL
+      impuestoTotal +=  impuestoUni * cant;
+      //SUMA DEL PRECIO UNITARIO Y TOTAL
+      precioUni += impuestoUni;
+      total += impuestoTotal;
+      impuestoUni = round( impuestoUni );
+      impuestoTotal = round( impuestoTotal );
+      //ASIGNACION DE VALORES A LA VISTA
+      $( "#compradetalle-" + row + "-impuestouni_cdetalle").val( impuestoUni );
+      $( "#compradetalle-" + row + "-impuestototal_cdetalle").val( impuestoTotal );
+    }
+
+    precioUni = round( precioUni );
+    total = round( total );
+
+    $( "#compradetalle-" + row + "-total_cdetalle" ).val( total );
+    $( "#compradetalle-" + row + "-descu_cdetalle").data( "descuento", descuento);
+    $( "#compradetalle-" + row + "-precio_cdetalle").val( precioUni );
+
+    calculateTotals( IMPUESTO );
+  }
+}
+
+function calculateTotals( IMPUESTO )
+{
   let total = 0,
       totalImp = 0,
       precioNeto = 0,
@@ -560,38 +576,46 @@ function calculateTotals( IMPUESTO ) {
 
   $( "input[id$=\'-total_cdetalle\']" ).each(function (i, element) {
     let row = $( this ).attr( "id" ).split( "-" );
+    let descUni = 0;
+    let precioUni = 0;
+    let impuestoUni = 0;
+    let cant = 0;
+
     row = row[ 1 ];
     total += parseFloat(element.value);
+    precioUni = parseFloat( $( "#compradetalle-" + row + "-precio_cdetalle" ).val() );
+    impuestoUni =  parseFloat( $( "#compradetalle-" + row + "-impuestouni_cdetalle" ).val());
+    descUni = parseFloat( $( "#compradetalle-" + row + "-descu_cdetalle" ).data( "descuento" ) );
+    cant =parseFloat( $( "#compradetalle-" + row + "-cant_cdetalle" ).val() );
 
-    if ( $("#compra-excento_compra").prop( "checked" ) ) {
-      subT = $( "#compradetalle-" + row + "-precio_cdetalle" ).val()  *  $( "#compradetalle-" + row + "-cant_cdetalle" ).val();
-      desc = parseFloat( $( "#compradetalle-" + row + "-descu_cdetalle" ).data( "descuento" ) * $( "#compradetalle-" + row + "-cant_cdetalle" ).val() );
-    } else {
-      subT = $( "#compradetalle-" + row + "-precio_cdetalle" ).val()  *  $( "#compradetalle-" + row + "-cant_cdetalle" ).val() / ( IMPUESTO + 1 ) ;
-      desc = parseFloat( $( "#compradetalle-" + row + "-descu_cdetalle" ).data( "descuento" ) * $( "#compradetalle-" + row + "-cant_cdetalle" ).val()   / ( IMPUESTO + 1 ) );
-    }
+    subT =  ( precioUni - impuestoUni + descUni) * cant;
+    desc = parseFloat( descUni * cant );
 
+    totalImp += parseFloat( $( "#compradetalle-" + row + "-impuestototal_cdetalle" ).val() );
     subTotal1 += subT;
     descuento += desc;
   });
 
   descuento = descuento ? descuento : 0;
+  subTotal2 = subTotal1 - descuento
 
 
-  precioNeto = total;
-  subTotal2 = precioNeto;
+  if ( $("#compra-excento_compra").prop( "checked" ) ) {
+    subTotal2 = subTotal1 - descuento;
+    total = subTotal2;
+    totalImp = 0;
+  // } else {
+  //   subTotal2 = subTotal1 - descuento
+  //   precioNeto = ( total / ( IMPUESTO + 1 ) );
+  //   totalImp = total - precioNeto;
 
-  if ( !$("#compra-excento_compra").prop( "checked" ) ) {
-    precioNeto = ( total / ( IMPUESTO + 1 ) );
-    totalImp = total - precioNeto;
-    subTotal2 = precioNeto;
   }
 
-  totals.total = parseFloat(  total  ).toFixed( 2 );
-  totals.impuesto = parseFloat( totalImp  ).toFixed( 2 );
-  totals.subtotal1 = parseFloat( subTotal1  ).toFixed( 2 );
-  totals.subtotal2 = parseFloat( subTotal2  ).toFixed( 2 );
-  totals.descuento = parseFloat( descuento  ).toFixed( 2 );
+  totals.total = round(  total );
+  totals.impuesto = round( totalImp  );
+  totals.subtotal1 = round( subTotal1  );
+  totals.subtotal2 = round( subTotal2  );
+  totals.descuento = round( descuento  );
 
   $( "#subtotal1" ).val( totals.subtotal1 );
   $( "#subtotal2" ).val( totals.subtotal2 );
@@ -612,6 +636,12 @@ $( "#submit" ).on( "click", function() {
     swal("'.Yii::t('compra','Purchase order').'", "'.Yii::t('compra','The order must have at least one item to be saved').'", "info");
     return false;
   }
+
+  console.log("save");
+
+  // if ( $("#compra-excento_compra").prop( "checked" ) ) {
+  //   $( ".impuesto_cdetalle" ).val( 0 );
+  // }
 
   $.ajax( {
     "url"    : $( form ).attr( "action" ),
@@ -638,14 +668,14 @@ $( "#submit" ).on( "click", function() {
           })
           .then((willIssue) => {
             if (willIssue) {
-              window.open("'.Url::to(['pedido/pedido-rpt']).'&id=" + data.id,"_blank");
+              window.open("'.Url::to(['compra/compra-rpt']).'?id=" + data.id,"_blank");
             }
+            swal(data.title, data.message, data.type);
           });
 
           $( ".table-body" ).empty();
         }
 
-        swal(data.title, data.message, data.type);
 
         return;
       } else {

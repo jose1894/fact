@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-10-2019 a las 00:29:51
+-- Tiempo de generación: 24-10-2019 a las 00:12:29
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -1354,6 +1354,13 @@ CREATE TABLE `compra` (
   `sucursal_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL COMPRA'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA ORDEN DE COMPRAS';
 
+--
+-- Volcado de datos para la tabla `compra`
+--
+
+INSERT INTO `compra` (`id_compra`, `cod_compra`, `fecha_compra`, `provee_compra`, `moneda_compra`, `condp_compra`, `usuario_compra`, `estatus_compra`, `edicion_compra`, `excento_compra`, `afectaalm_compra`, `nrodoc_compra`, `sucursal_compra`) VALUES
+(1, '0000000001', '2019-10-23', 1, 2, 1, 2, 0, 'N', 0, 1, '', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -1366,12 +1373,27 @@ CREATE TABLE `compra_detalle` (
   `cant_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'CANTIDAD COMPRA DETALLE',
   `precio_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO COMPRA DETALLE',
   `descu_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'DESCUENTO % COMPRA DETALLE',
-  `impuesto_cdetalle` decimal(18,0) NOT NULL DEFAULT '0' COMMENT 'IMPUESTO COMPRA DETALLE',
+  `impuestouni_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'IMPUESTO UNITARIO COMPRA DETALLE',
   `status_cdetalle` int(11) NOT NULL DEFAULT '1' COMMENT 'ESTATUS COMPRA DETALLE',
   `compra_cdetalle` int(11) NOT NULL DEFAULT '0',
   `plista_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA COMPRA DETALLE',
-  `total_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL COMPRA DETALLE'
+  `total_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL COMPRA DETALLE',
+  `impuestototal_cdetalle` decimal(18,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT 'IMPUESTO TOTAL COMPRA DETALLE'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE COMPRAS';
+
+--
+-- Volcado de datos para la tabla `compra_detalle`
+--
+
+INSERT INTO `compra_detalle` (`id_cdetalle`, `prod_cdetalle`, `cant_cdetalle`, `precio_cdetalle`, `descu_cdetalle`, `impuestouni_cdetalle`, `status_cdetalle`, `compra_cdetalle`, `plista_cdetalle`, `total_cdetalle`, `impuestototal_cdetalle`) VALUES
+(1, 7, '5.00', '11.21', '5.00', '1.71', 1, 1, '10.00', '56.05', '8.55'),
+(2, 43, '5.00', '11.45', '3.00', '1.75', 1, 1, '10.00', '57.23', '8.73'),
+(3, 108, '5.00', '22.89', '3.00', '3.49', 1, 1, '20.00', '114.46', '17.46'),
+(4, 49, '5.00', '11.45', '3.00', '1.75', 1, 1, '10.00', '57.23', '8.73'),
+(5, 97, '5.00', '9.56', '3.00', '1.46', 1, 1, '8.35', '47.79', '7.29'),
+(6, 89, '5.00', '3.43', '3.00', '0.52', 1, 1, '3.00', '17.17', '2.62'),
+(7, 154, '5.00', '6.01', '3.00', '0.92', 1, 1, '5.25', '30.05', '4.58'),
+(8, 152, '3.00', '9.27', '3.00', '1.41', 1, 1, '8.10', '27.81', '4.24');
 
 -- --------------------------------------------------------
 
@@ -2473,7 +2495,7 @@ INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `s
 (1, 1, '0000000012', 1, '00', 1),
 (2, 7, '0000000001', 1, '00', 1),
 (3, 8, '0000000000', 1, '00', 1),
-(4, 6, '0000000000', 1, '00', 1),
+(4, 6, '0000000001', 1, '00', 1),
 (5, 4, '0000000001', 1, '00', 1),
 (6, 5, '0000000003', 1, '00', 1),
 (7, 2, '0000000003', 1, '01', 1),
@@ -3900,13 +3922,13 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `compra_detalle`
 --
 ALTER TABLE `compra_detalle`
-  MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+  MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `cond_pago`

@@ -50,7 +50,7 @@ class PedidoController extends Controller
         $request = Yii::$app->request->queryParams;
         $dataProvider = $searchModel->search($request);
 
-        
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -341,15 +341,18 @@ class PedidoController extends Controller
       $tipoPedido  = $modelPedido->tipo_pedido > 0 ?  $modelPedido->tipo_pedido == 1 ? $proforma : $cotizacion : $pedido;
 
       $f = Yii::$app->formatter;
-      $date = $f->asDate($modelPedido->fecha_pedido, 'php:j/m/Y');
+      $date = $f->asDate($modelPedido->fecha_pedido, 'php:d/m/Y');
+
+      $empresa = SiteController::getEmpresa();
+
 
       $header = '
       <table>
           <tr>
-              <td width="33%" class="center">MARVIG<!-- *-empresa-* --></td>
+              <td width="33%" class="center"><b>'.$empresa->nombre_empresa.'</b><br><b> RUC: '.$empresa->ruc_empresa.'</td>
               <td width="33%" class="center"></td>
               <td width="33%" style="font-size:0.75rem" class="right">
-                ' . Yii::t('app','Date') . ': {DATE j/m/Y}
+                ' . Yii::t('app','Date') . ': {DATE d/m/Y}
                 <br>
                 ' . Yii::t('app','Hour') . ': {DATE H:i:s}
                 <br>
@@ -368,7 +371,7 @@ class PedidoController extends Controller
         <tr>
           <td class="left celdas"><span class="bold">' . Yii::t( 'cliente', 'Customer') . ' :</span> ' . $modelPedido->cltePedido->nombre_clte . '</td>
           <td>&nbsp;</td>
-          <td class="right celdas"><span class="bold">' . Yii::t('app','Date') . ' :</span> ' . $date  . '</td>
+          <td class="right celdas"><span class="bold">' . Yii::t('app','Date') . ' :</span> ' . $date . ' </td>
         </tr>
         <tr>
           <td class="left celdas"><span class="bold">' . Yii::t( 'cliente', 'Address') . ' :</span> ' . $modelPedido->cltePedido->direcc_clte . '

@@ -18,7 +18,7 @@ class CompraDetalleSearch extends CompraDetalle
     {
         return [
             [['id_cdetalle', 'prod_cdetalle', 'status_cdetalle', 'compra_cdetalle'], 'integer'],
-            [['cant_cdetalle', 'precio_cdetalle', 'descu_cdetalle', 'impuesto_cdetalle', 'plista_cdetalle', 'total_cdetalle'], 'number'],
+            [['cant_cdetalle', 'precio_cdetalle', 'descu_cdetalle', 'impuestouni_cdetalle', 'impuestototal_cdetalle', 'plista_cdetalle', 'total_cdetalle'], 'number'],
         ];
     }
 

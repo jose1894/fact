@@ -365,7 +365,7 @@ class CompraController extends Controller
         if ( $value->impuesto_cdetalle ){
           $subt = ( $value->plista_cdetalle * $value->cant_cdetalle  ) / ( ( $value->impuesto_cdetalle / 100 ) + 1) ;
         } else {
-          $subt = ( $value->precio_cdetalle * $value->cant_cdetalle  ) ;
+          $subt = ( $value->plista_cdetalle * $value->cant_cdetalle  ) ;
         }
 
         $subtotal += $subt;
