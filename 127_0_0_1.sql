@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-10-2019 a las 00:12:29
+-- Tiempo de generación: 25-10-2019 a las 00:32:33
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -3494,17 +3494,15 @@ CREATE TABLE `v_productos` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` varchar(70)
-,`texto` varchar(149)
-,`sucursal_prod` int(11)
+,`compra_prod` int(11)
+,`venta_prod` int(11)
 ,`status_prod` int(11)
-,`id_suc` int(11)
+,`sucursal_prod` int(11)
+,`texto` varchar(149)
 ,`impuesto_suc` decimal(7,2)
 ,`id_und` int(11)
 ,`des_und` varchar(50)
-,`compra_prod` int(11)
-,`venta_prod` int(11)
 ,`stock_prod` decimal(41,2)
-,`estatus_pedido` int(1)
 );
 
 -- --------------------------------------------------------
@@ -3538,7 +3536,7 @@ INSERT INTO `zona` (`id_zona`, `nombre_zona`, `desc_zona`, `estatus_zona`, `sucu
 --
 DROP TABLE IF EXISTS `v_productos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,concat(`producto`.`cod_prod`,' ',`producto`.`des_prod`,' - ',`unidad_medida`.`des_und`) AS `texto`,`producto`.`sucursal_prod` AS `sucursal_prod`,`producto`.`status_prod` AS `status_prod`,`sucursal`.`id_suc` AS `id_suc`,`sucursal`.`impuesto_suc` AS `impuesto_suc`,`unidad_medida`.`id_und` AS `id_und`,`unidad_medida`.`des_und` AS `des_und`,`producto`.`compra_prod` AS `compra_prod`,`producto`.`venta_prod` AS `venta_prod`,(`producto`.`stock_prod` - sum(coalesce(`pedido_detalle`.`cant_pdetalle`,0))) AS `stock_prod`,(`pedido`.`estatus_pedido` = 0) AS `estatus_pedido` from ((((`producto` join `sucursal` on((`producto`.`sucursal_prod` = `sucursal`.`id_suc`))) join `unidad_medida` on((`producto`.`umed_prod` = `unidad_medida`.`id_und`))) left join `pedido_detalle` on((`pedido_detalle`.`prod_pdetalle` = `producto`.`id_prod`))) left join `pedido` on(((`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`) and (coalesce(`pedido`.`estatus_pedido`,0) in (0,1))))) group by `producto`.`id_prod`,`producto`.`cod_prod`,`producto`.`des_prod`,`producto`.`sucursal_prod`,`producto`.`status_prod`,`producto`.`stock_prod`,`sucursal`.`id_suc`,`sucursal`.`impuesto_suc`,`unidad_medida`.`id_und`,`unidad_medida`.`des_und`,`producto`.`compra_prod`,`producto`.`venta_prod` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `pr`.`id_prod` AS `id_prod`,`pr`.`cod_prod` AS `cod_prod`,`pr`.`des_prod` AS `des_prod`,`pr`.`compra_prod` AS `compra_prod`,`pr`.`venta_prod` AS `venta_prod`,`pr`.`status_prod` AS `status_prod`,`suc`.`id_suc` AS `sucursal_prod`,concat(`pr`.`cod_prod`,' ',`pr`.`des_prod`,' - ',`um`.`des_und`) AS `texto`,`suc`.`impuesto_suc` AS `impuesto_suc`,`um`.`id_und` AS `id_und`,`um`.`des_und` AS `des_und`,(`pr`.`stock_prod` - (select coalesce(sum(`pedido_detalle`.`cant_pdetalle`),0) AS `cant_pedido` from (`pedido_detalle` join `pedido` on((`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`))) where ((`pedido_detalle`.`prod_pdetalle` = `pr`.`id_prod`) and (`pedido`.`sucursal_pedido` = `suc`.`id_suc`)))) AS `stock_prod` from ((`producto` `pr` join `unidad_medida` `um` on((`um`.`id_und` = `pr`.`umed_prod`))) join `sucursal` `suc` on((`pr`.`sucursal_prod` = `suc`.`id_suc`))) group by `pr`.`id_prod`,`pr`.`cod_prod`,`pr`.`des_prod`,`pr`.`compra_prod`,`pr`.`venta_prod`,`pr`.`status_prod`,`pr`.`stock_prod`,`suc`.`id_suc`,`suc`.`impuesto_suc`,`um`.`id_und`,`um`.`des_und` order by `pr`.`cod_prod` ;
 
 --
 -- Índices para tablas volcadas

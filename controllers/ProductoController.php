@@ -271,11 +271,11 @@ class ProductoController extends Controller
         $tipo_listap = is_null(Yii::$app->request->post( 'tipo_listap' )) ? null : Yii::$app->request->post( 'tipo_listap' );
         $sucursal = SiteController::getSucursal();
 
-        if ( !is_null( $desc ) && is_null( $tipo_listap ) ) {
+        if ( !is_null( $desc ) && (is_null( $tipo_listap ) || trim($tipo_listap) === '' ) ) {
 
             $query = new Query;
             $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','des_und','stock_prod'])
-                ->from(['v_productos as p'])                
+                ->from(['v_productos as p'])
                 ->where('p.status_prod = 1')
                 ->andWhere(['like', 'p.texto', $desc])
                 ->andWhere(['>', 'p.stock_prod', 0])
@@ -290,16 +290,19 @@ class ProductoController extends Controller
             $data = $command->queryAll();
             $out['results'] = array_values( $data );
 
-        } elseif ( !is_null( $desc ) && !is_null( $tipo_listap ) ) {
+        } elseif ( !is_null( $desc ) && (!is_null( $tipo_listap ) || trim($tipo_listap) !== '' )) {
 
             $query = new Query;
-            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio', 'des_und','stock_prod'])
+            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','lp.precio_lista as precio', 'des_und','stock_prod'])
                 ->from(['v_productos as p'])
+                ->join('LEFT JOIN',
+                       'lista_precios lp',
+                       'lp.prod_lista =p.id_prod')
                 ->where('p.status_prod = 1')
                 ->andWhere(['like', 'p.texto', $desc])
                 ->andWhere(['=', 'p.venta_prod', 1])
                 ->andWhere(['=', 'p.status_prod', 1])
-                ->andWhere('p.tipo_lista = :tipo_listap and p.sucursal_prod = :sucursal',[':tipo_listap' =>  $tipo_listap, ':sucursal' => $sucursal])
+                ->andWhere('lp.tipo_lista = :tipo_listap and p.sucursal_prod = :sucursal',[':tipo_listap' =>  $tipo_listap, ':sucursal' => $sucursal])
                 ->orderBy('p.cod_prod ASC');
 
             $command = $query->createCommand();

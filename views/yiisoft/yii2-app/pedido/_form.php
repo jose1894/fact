@@ -451,6 +451,11 @@ $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
 });
 $(".dynamicform_wrapper").on("afterInsert", function(e, item) {
     //console.log("afterInsert");
+    $(item).find("input,textarea,select").each(function(index,element){
+          $(element).val("");
+    });
+    let row = $(".table-body select").length - 1;
+    $( "#pedidodetalle-" + row + "-prod_pdetalle" ).val(null).trigger("change");
 });
 $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
   if ( confirm("'.Yii::t('producto','Are you sure to delete this product?').'") ) {
@@ -485,7 +490,7 @@ $( "#pedido-clte_pedido" ).on( "select2:select",function () {
     data:{ id : $(this).val()},
     async: false,
     success: function( cliente ) {
-
+      console.log("cliente");
       cliente = cliente[ 0 ];
       let direccion = cliente.direcc_clte ? cliente.direcc_clte : " ",
           geo = cliente.geo ? cliente.geo : " ",
@@ -507,7 +512,27 @@ $( "#pedido-clte_pedido" ).on( "select2:select",function () {
 
 });
 ';
-$this->registerJs($js,View::POS_LOAD);
+
+$jsTrigger = "";
+
+if ( !$model->isNewRecord ){
+  $jsTrigger = "
+console.log('trigger');
+$('#pedido-clte_pedido').trigger('change');
+$('select[id$=\"prod_pdetalle\"]').trigger('change');
+
+$('select[id$=\"prod_pdetalle\"]').each(function( i ){
+
+  let row = $( this ).attr( \"id\" ).split( \"-\" );
+  row = row[ 1 ];
+
+  setPrices( $( this ).val(), row,   $( \"#pedido-tipo_listap\" ).val() );
+  $('#pedidodetalle-' + row + '-descu_pdetalle').trigger( 'change' );
+  $('#pedidodetalle-' + row + '-precio_pdetalle').trigger( 'blur' );
+});
+  ";
+}
+$this->registerJs($js.$jsTrigger,View::POS_LOAD);
 $this->registerJs(<<<JS
 
 $('#pedido_tipo  input[type="radio"]').iCheck({
@@ -712,26 +737,6 @@ function calculateTotals( IMPUESTO ) {
 JS
 , VIEW::POS_END);
 
-  $jsTrigger = "";
-
-  if ( !$model->isNewRecord ){
-    $jsTrigger = "
-
-      $('#pedido-clte_pedido').trigger('select2:select');
-      $('select[id$=\"prod_pdetalle\"]').trigger('change');
-
-      $('select[id$=\"prod_pdetalle\"]').each(function( i ){
-
-        let row = $( this ).attr( \"id\" ).split( \"-\" );
-        row = row[ 1 ];
-
-        setPrices( $( this ).val(), row,   $( \"#pedido-tipo_listap\" ).val() );
-        $('#pedidodetalle-' + row + '-descu_pdetalle').trigger( 'change' );
-        $('#pedidodetalle-' + row + '-precio_pdetalle').trigger( 'blur' );
-      });
-    ";
-  }
-
   $jsSave = "
   function setPrices( value = null, row, tipo_lista ) {
     if ( value ) {
@@ -854,7 +859,7 @@ JS
   });
   ";
 
-$this->registerJs($jsTrigger.$jsSave,View::POS_END);
+$this->registerJs($jsSave,View::POS_END);
 
 
 $this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',

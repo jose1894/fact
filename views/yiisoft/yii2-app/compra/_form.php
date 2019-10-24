@@ -379,7 +379,12 @@ $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
     //console.log("beforeInsert");
 });
 $(".dynamicform_wrapper").on("afterInsert", function(e, item) {
-    //console.log("afterInsert");
+    console.log("afterInsert");
+    $(item).find("input,textarea,select").each(function(index,element){
+          $(element).val("");
+    });
+    let row = $(".table-body select").length - 1;
+    $( "#compradetalle-" + row + "-prod_cdetalle" ).val(null).trigger("change");
 });
 $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
   if ( confirm("'.Yii::t('producto','Are you sure to delete this product?').'") ) {
