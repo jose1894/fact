@@ -247,32 +247,32 @@ if ( $model->isNewRecord ) {
               </div>
               <div class="col-sm-1 col-xs-12">
                 <?= $form
-                ->field($modelDetalle,"[{$index}]cant_cdetalle",[ 'addClass' => 'form-control b number-decimals'])
-                ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'placeholder' => Yii::t('compra' , 'Quantity')])
+                ->field($modelDetalle,"[{$index}]cant_cdetalle",[ 'addClass' => 'form-control number-integer'])
+                ->textInput(['type' => 'text', 'placeholder' => Yii::t('compra' , 'Quantity')])
                 ->label(false)?>
               </div>
               <div class="col-sm-1 col-xs-12">
                 <?= $form
                 ->field($modelDetalle,"[{$index}]plista_cdetalle",[ 'addClass' => 'form-control number-decimals'])
-                ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'placeholder' => Yii::t('compra' , 'Price')])
+                ->textInput(['type' => 'text','placeholder' => Yii::t('compra' , 'Price')])
                 ->label(false)?>
               </div>
               <div class="col-sm-1 col-xs-12">
                 <?= $form
                 ->field($modelDetalle,"[{$index}]descu_cdetalle",[ 'addClass' => 'form-control number-decimals'])
-                ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'placeholder' => Yii::t('compra' ,  'Discount')])
+                ->textInput(['type' => 'text', 'placeholder' => Yii::t('compra' ,  'Discount')])
                 ->label(false)?>
               </div>
               <div class="col-sm-1 col-xs-12">
                 <?= $form
                 ->field($modelDetalle,"[{$index}]precio_cdetalle",[ 'addClass' => 'form-control number-decimals'])
-                ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'readonly' => true, 'placeholder' => Yii::t('compra' , 'List price')])
+                ->textInput(['type' => 'text', 'readonly' => true, 'placeholder' => Yii::t('compra' , 'List price')])
                 ->label(false)?>
               </div>
               <div class="col-sm-2 col-xs-12">
                 <?= $form
                 ->field($modelDetalle,"[{$index}]total_cdetalle",[ 'addClass' => 'form-control number-decimals'])
-                ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'readonly'=> true,'placeholder' => Yii::t('compra', 'Total')])
+                ->textInput(['type' => 'text', 'readonly'=> true,'placeholder' => Yii::t('compra', 'Total')])
                 ->label(false)?>
               </div>
               <div class="col-sm-1 col-xs-12">
@@ -389,6 +389,7 @@ $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
 });
 
 $("#compra-excento_compra").on("ifChanged",function(event) {
+  calculateTaxes();
   calculateTotals( IMPUESTO );
   console.log("Excento");
 });
@@ -417,6 +418,15 @@ $( "#compra-provee_compra" ).on( "select2:select",function (e) {
       e.preventDefault();
   }
 });
+
+// $( ".number-decimal" ).on("keypress",function( e ){
+//   return isDecimal( e, this);
+// });
+//
+// $( ".number-integer" ).on("keypress",function( e ){
+//   return isInteger( e, this);
+// });
+
 
 $( ".table-body" ).on("select2:select","select[id$=\'prod_cdetalle\']",function() {
 	let _currSelect = $( this );
@@ -470,7 +480,7 @@ $( ".table-body" ).on( "change", "input[id$=\'plista_cdetalle\']", function( e )
     row = row[ 1 ];
     let cant = $( "#compradetalle-" + row + "-cant_cdetalle").val();
     let descu = $( "#compradetalle-" + row + "-descu_cdetalle").val();
-    let precioUni = $( this ).val();
+    let precioUni = $( this ).val().replace(",",".");
 
     calculoFila( row, descu, precioUni, cant );
 
@@ -503,7 +513,7 @@ $( ".table-body" ).on( "keyup", "input[id$=\'descu_cdetalle\']", function( e ) {
 $( ".table-body" ).on( "change", "input[id$=\'descu_cdetalle\']", function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
-    let descu = $( this ).val();
+    let descu = $( this ).val().replace(",",".");
     let precioUni = $( "#compradetalle-" + row + "-plista_cdetalle").val();
     let cant = $( "#compradetalle-" + row + "-cant_cdetalle").val();
 
@@ -540,14 +550,14 @@ function calculoFila( row, descu, precioUni, cant )
       total += impuestoTotal;
       impuestoUni = round( impuestoUni );
       impuestoTotal = round( impuestoTotal );
-      //ASIGNACION DE VALORES A LA VISTA
-      $( "#compradetalle-" + row + "-impuestouni_cdetalle").val( impuestoUni );
-      $( "#compradetalle-" + row + "-impuestototal_cdetalle").val( impuestoTotal );
     }
 
     precioUni = round( precioUni );
     total = round( total );
 
+    //ASIGNACION DE VALORES A LA VISTA
+    $( "#compradetalle-" + row + "-impuestouni_cdetalle").val( impuestoUni );
+    $( "#compradetalle-" + row + "-impuestototal_cdetalle").val( impuestoTotal );
     $( "#compradetalle-" + row + "-total_cdetalle" ).val( total );
     $( "#compradetalle-" + row + "-descu_cdetalle").data( "descuento", descuento);
     $( "#compradetalle-" + row + "-precio_cdetalle").val( precioUni );
@@ -604,11 +614,6 @@ function calculateTotals( IMPUESTO )
     subTotal2 = subTotal1 - descuento;
     total = subTotal2;
     totalImp = 0;
-  // } else {
-  //   subTotal2 = subTotal1 - descuento
-  //   precioNeto = ( total / ( IMPUESTO + 1 ) );
-  //   totalImp = total - precioNeto;
-
   }
 
   totals.total = round(  total );
@@ -626,6 +631,18 @@ function calculateTotals( IMPUESTO )
   //return totals;
 }
 
+function calculateTaxes()
+{
+    $( "input[id$=\'-plista_cdetalle\']" ).each(function( i,value ){
+      let cant = parseFloat( $( "#compradetalle-" + i + "-cant_cdetalle" ).val() );
+      let precioUni = parseFloat( $( "#compradetalle-" + i + "-plista_cdetalle" ).val() );
+      let descu = parseFloat( $( "#compradetalle-" + i + "-descu_cdetalle" ).val() );
+
+      calculoFila( i, descu, precioUni, cant );
+
+    });
+}
+
 
 $( "#submit" ).on( "click", function() {
   let form = $( "form#Compra" );
@@ -636,12 +653,6 @@ $( "#submit" ).on( "click", function() {
     swal("'.Yii::t('compra','Purchase order').'", "'.Yii::t('compra','The order must have at least one item to be saved').'", "info");
     return false;
   }
-
-  console.log("save");
-
-  // if ( $("#compra-excento_compra").prop( "checked" ) ) {
-  //   $( ".impuesto_cdetalle" ).val( 0 );
-  // }
 
   $.ajax( {
     "url"    : $( form ).attr( "action" ),

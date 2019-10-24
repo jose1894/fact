@@ -354,16 +354,16 @@ class CompraController extends Controller
       foreach ( $modelCompra->detalles as $value ) {
         $total += $value->total_cdetalle;
 
-        if ( $value->descu_cdetalle && $value->impuesto_cdetalle ){
-          $desc = ( ( $value->plista_cdetalle  *  $value->descu_cdetalle ) / 100 ) * $value->cant_cdetalle / ( ( $value->impuesto_cdetalle / 100 ) + 1)  ;
+        if ( $value->descu_cdetalle && $modelCompra->excento_compra ){
+          $desc = ( ( $value->plista_cdetalle  *  $value->descu_cdetalle ) / 100 ) * $value->cant_cdetalle / ( ( $value->impuestouni_cdetalle / 100 ) + 1)  ;
           $descuento += $desc;
-        } else if ( $value->descu_cdetalle && !$value->impuesto_cdetalle){
+        } else if ( $value->descu_cdetalle && !$modelCompra->excento_compra){
           $desc = ( ( $value->plista_cdetalle  *  $value->descu_cdetalle ) / 100 ) * $value->cant_cdetalle  ;
           $descuento += $desc;
         }
 
-        if ( $value->impuesto_cdetalle ){
-          $subt = ( $value->plista_cdetalle * $value->cant_cdetalle  ) / ( ( $value->impuesto_cdetalle / 100 ) + 1) ;
+        if ( $modelCompra->excento_compra ){
+          $subt = ( $value->plista_cdetalle * $value->cant_cdetalle  ) / ( ( $value->impuestouni_cdetalle / 100 ) + 1) ;
         } else {
           $subt = ( $value->plista_cdetalle * $value->cant_cdetalle  ) ;
         }
@@ -373,9 +373,13 @@ class CompraController extends Controller
 
 
       $descuento =  $descuento > 0  ? $descuento : 0;
-      $precioNeto = $total / ( $impuesto + 1);
-      $totalImp = $total - $precioNeto;
-      $subtotal2 = $precioNeto;
+      $subtotal2 = $subtotal - $descuento;
+
+      if ( $modelCompra->excento_compra ){
+        $totalImp = 0;
+      }else{
+        $totalImp = $subtotal2 * $impuesto;
+      }
 
 
       $footer = '

@@ -125,7 +125,7 @@ a.desc:after {
   text-align: right;
 }
 
-.number-decimals{
+.number-decimals, .number-integer{
   text-align: right;
 }
 

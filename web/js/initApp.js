@@ -16,23 +16,38 @@ $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
 
 //FUNCIONES
 
+$( 'body' ).on( 'keypress', '.number-integer', function ( e ){
+  return isInteger( e, this );
+});
+
 $( 'body' ).on( 'keypress', '.number-decimals', function ( e ){
-  return isNumber( e, this );
+  return isDecimal( e, this );
 });
 
 $( 'body' ).on( 'blur', '.number-decimals', function ( e ){
   let valor = parseFloat( $( this ).val() );
-  $( this ).val( valor.toFixed( 2 ) );
+  $( this ).val( round(valor) );
 });
 
 // THE SCRIPT THAT CHECKS IF THE KEY PRESSED IS A NUMERIC OR DECIMAL VALUE.
-function isNumber(evt, element) {
+function isDecimal(evt, element) {
 
     var charCode = (evt.which) ? evt.which : event.keyCode
 
     if (
         (charCode != 46 || $(element).val().indexOf('.') != -1) &&      // “.” CHECK DOT, AND ONLY ONE.
         (charCode < 48 || charCode > 57))
+        return false;
+
+    return true;
+}
+
+  // THE SCRIPT THAT CHECKS IF THE KEY PRESSED IS A INTEGER VALUE.
+function isInteger(evt, element) {
+
+    var charCode = (evt.which) ? evt.which : event.keyCode;
+
+    if ( evt.which != 8 && evt.which != 0 && (charCode < 48 || charCode > 57))
         return false;
 
     return true;

@@ -21,6 +21,7 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `fact`
 --
+DROP DATABASE IF EXISTS `fact`;
 CREATE DATABASE IF NOT EXISTS `fact` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `fact`;
 
