@@ -392,14 +392,14 @@ if ( $model->isNewRecord ) {
                       </div>
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
-                        ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control number-decimals input-sm'])
-                        ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'readonly' => $disabledPedido])
+                        ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control number-integer input-sm'])
+                        ->textInput(['type' => 'text', 'readonly' => $disabledPedido])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]plista_pdetalle", [ 'addClass' => 'form-control number-decimals input-sm'])
-                        ->textInput([ 'type' => 'number','readonly' => true, 'readonly' => $disabledPedido])
+                        ->textInput([ 'type' => 'text','readonly' => true, 'readonly' => $disabledPedido])
                         ->label(false)?>
                         <?php echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle"); ?>
                       </div>
@@ -414,19 +414,19 @@ if ( $model->isNewRecord ) {
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]descu_pdetalle", [ 'addClass' => 'form-control number-decimals  input-sm'])
-                        ->textInput([ 'type'=>'number','width' => '200px', 'readonly' => $disabledPedido])
+                        ->textInput([ 'type'=>'text', 'readonly' => $disabledPedido])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]precio_pdetalle",[ 'addClass' => 'form-control number-decimals  input-sm'])
-                        ->textInput(['type'=>'number','width' => '200px', 'readonly' => $disabledPedido])
+                        ->textInput(['type'=>'text','width' => '200px', 'readonly' => $disabledPedido])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-2 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]total_pdetalle",[ 'addClass' => 'form-control number-decimals  input-sm'])
-                        ->textInput(['type'=>'number','readonly' => true, 'readonly' => $disabledPedido])
+                        ->textInput(['type'=>'text','readonly' => true, 'readonly' => $disabledPedido])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-1 col-xs-12">
@@ -858,7 +858,7 @@ $( "#submit" ).on( "click", function() {
           })
           .then((willIssue) => {
             if (willIssue) {
-              window.open("'.Url::to(['pedido/pedido-rpt']).'&id=" + data.id,"_blank");
+              window.open("'.Url::to(['documento/factura-rpt']).'?id=" + data.id,"_blank");
             }
           });
 

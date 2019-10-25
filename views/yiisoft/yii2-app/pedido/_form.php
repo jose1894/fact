@@ -328,14 +328,14 @@ if ( $model->isNewRecord ) {
                       </div>
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
-                        ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control number-decimals'])
-                        ->textInput(['type' => 'number','min' => 0, 'step' => 1])
+                        ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control number-integer'])
+                        ->textInput(['type' => 'text'])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]plista_pdetalle", [ 'addClass' => 'form-control number-decimals'])
-                        ->textInput([ 'type' => 'number','readonly' => true])
+                        ->textInput([ 'type' => 'text','readonly' => true])
                         ->label(false)?>
                         <?php echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle"); ?>
                       </div>
@@ -350,19 +350,19 @@ if ( $model->isNewRecord ) {
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]descu_pdetalle", [ 'addClass' => 'form-control number-decimals'])
-                        ->textInput([ 'type'=>'number','width' => '200px'])
+                        ->textInput([ 'type'=>'text','width' => '200px'])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]precio_pdetalle",[ 'addClass' => 'form-control number-decimals'])
-                        ->textInput(['type'=>'number','width' => '200px'])
+                        ->textInput(['type'=>'text','width' => '200px'])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-2 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]total_pdetalle",[ 'addClass' => 'form-control number-decimals'])
-                        ->textInput(['type'=>'number','readonly' => true])
+                        ->textInput(['type'=>'text','readonly' => true])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-1 col-xs-12">
@@ -481,9 +481,8 @@ $( buttonPrint ).on( "click", function(){
   $( modalRpt ).modal("show");
 });
 
-
-$( "#pedido-clte_pedido" ).on( "select2:select",function () {
-
+$( "#pedido-clte_pedido" ).on( "change",function () {
+  console.log("changed");
   $.ajax({
     url: "'. Url::to(['cliente/cliente-list']).'",
     method: "GET",
@@ -822,13 +821,15 @@ JS
             });
 
             $( '.table-body' ).empty();
+
+            return;
           }
 
           if ( data.codigo ) {
             $( '#pedido-cod_pedido' ).val( data.codigo );
           }
 
-          //swal(data.title, data.message, data.type);
+          swal(data.title, data.message, data.type);
 
           return;
         } else {

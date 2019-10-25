@@ -293,16 +293,20 @@ class ProductoController extends Controller
         } elseif ( !is_null( $desc ) && (!is_null( $tipo_listap ) || trim($tipo_listap) !== '' )) {
 
             $query = new Query;
-            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','lp.precio_lista as precio', 'des_und','stock_prod'])
+            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod',
+                            'p.texto AS text','lp.precio_lista as precio', 'des_und','stock_prod'])
                 ->from(['v_productos as p'])
                 ->join('LEFT JOIN',
                        'lista_precios lp',
                        'lp.prod_lista =p.id_prod')
                 ->where('p.status_prod = 1')
+                ->andWhere(['>', 'p.stock_prod', 0])
                 ->andWhere(['like', 'p.texto', $desc])
                 ->andWhere(['=', 'p.venta_prod', 1])
                 ->andWhere(['=', 'p.status_prod', 1])
-                ->andWhere('lp.tipo_lista = :tipo_listap and p.sucursal_prod = :sucursal',[':tipo_listap' =>  $tipo_listap, ':sucursal' => $sucursal])
+                ->andWhere('lp.tipo_lista = :tipo_listap and p.sucursal_prod = :sucursal',
+                          [':tipo_listap' =>  $tipo_listap, ':sucursal' => $sucursal])
+                ->groupBy(['p.id_prod','p.cod_prod', 'p.des_prod','p.texto','lp.precio_lista', 'des_und','stock_prod'])
                 ->orderBy('p.cod_prod ASC');
 
             $command = $query->createCommand();
@@ -313,8 +317,12 @@ class ProductoController extends Controller
 
             $query = new Query;
 
-            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','p.precio_lista as precio','des_und','stock_prod'])
+            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod',
+                            'p.texto AS text','lp.precio_lista as precio','des_und','stock_prod'])
                 ->from(['v_productos as p'])
+                ->join('LEFT JOIN',
+                      'lista_precios lp',
+                      'lp.prod_lista =p.id_prod')
                 ->where('p.status_prod = 1')
                 ->andWhere(['p.id_prod = :id',['id' =>  $id]]);
 
@@ -338,11 +346,15 @@ class ProductoController extends Controller
           $tipo_lista = Yii::$app->request->get( 'tipo_listap' );
 
           $query = new Query;
-          $query->select(['p.precio_lista as precio', 'p.impuesto_suc as impuesto'])
+          $query->select(['lp.precio_lista as precio', 'p.impuesto_suc as impuesto'])
               ->from(['v_productos as p'])
+              ->join('LEFT JOIN',
+                    'lista_precios lp',
+                    'lp.prod_lista =p.id_prod')
               ->where('p.status_prod = 1')
               ->andWhere('p.id_prod = :id',['id' =>  $id])
-              ->andWhere('p.tipo_lista = :tipo_lista and p.sucursal_prod = :sucursal' , [':tipo_lista' =>  $tipo_lista, ':sucursal' => $sucursal])
+              ->andWhere('lp.tipo_lista = :tipo_lista and p.sucursal_prod = :sucursal' ,
+                          [':tipo_lista' =>  $tipo_lista, ':sucursal' => $sucursal])
               ->limit(1);
 
           $command = $query->createCommand();

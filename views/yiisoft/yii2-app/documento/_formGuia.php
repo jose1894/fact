@@ -482,8 +482,8 @@ if ( $model->isNewRecord ) {
                       </div>
                       <div class="col-sm-4 col-xs-12">
                         <?= $form
-                        ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control input-sm number-decimals'])
-                        ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'readonly' => $disabledPedido])
+                        ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control input-sm number-integer'])
+                        ->textInput(['type' => 'text', 'readonly' => $disabledPedido])
                         ->label(false)?>
                       </div>
                   </div>
