@@ -15,6 +15,9 @@ nbproject
 # composer vendor dir
 #/vendor
 
+# web assets
+/web/assets
+
 #logs
 /logs
 
