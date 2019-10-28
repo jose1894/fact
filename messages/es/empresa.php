@@ -3,6 +3,8 @@ return [
     'Name' => 'Nombre',
     'Status' => 'Estatus',
     'Phone' => 'Teléfono',
+    'Mobile' => 'Móvil',
+    'Email' => 'Correo',
     'Address' => 'Dirección',
     'People type' => 'Tipo persona',
     'Input a name' => 'Ingrese un nombre',

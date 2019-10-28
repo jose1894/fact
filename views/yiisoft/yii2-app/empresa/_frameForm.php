@@ -101,7 +101,7 @@ $this->registerJs($js,View::POS_LOAD);
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
           <?= $form->field($model, 'tipopers_empresa',[
             'addClass' => 'form-control '
             ])->dropDownList(
@@ -113,11 +113,23 @@ $this->registerJs($js,View::POS_LOAD);
             ],
             ['custom' => true, 'prompt' => Yii::t('app','Select...')]) ?>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">  
           <?= $form->field($model, 'tlf_empresa',[
             'addClass' => 'form-control ',
             'addon' => ['prepend'=> ['content'=>'<i class="fa fa-phone"></i>']]
             ])->textInput(['maxlength' => true,'placeholder' => Yii::t("empresa","Input a phone")."..."]) ?>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+          <?= $form->field($model, 'movil_empresa',[
+            'addClass' => 'form-control ',
+            'addon' => ['prepend'=> ['content'=>'<i class="fa fa-mobile"></i>']]
+            ])->textInput(['maxlength' => true,'placeholder' => Yii::t("empresa","Input a phone")."..."]) ?>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+          <?= $form->field($model, 'correo_empresa',[
+            'addClass' => 'form-control ',
+            'addon' => ['prepend'=> ['content'=>'<i class="fa fa-envelope"></i>']]
+            ])->textInput(['maxlength' => true,'placeholder' => Yii::t("empresa","Email")."..."]) ?>
         </div>
       </div>
       <div class="row">

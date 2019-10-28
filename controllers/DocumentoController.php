@@ -506,62 +506,26 @@ class DocumentoController extends Controller
       $date = $f->asDate($modelDocumento->fecha_doc, 'php:d/m/Y');
 
       $header = '
-      <table class="datos-cliente" style="">
+      <table class="documento_enc" style="">
           <tr>
               <td width="33.33%">
-                <div class="profile_img" style="background-image:url('.Url::to(['@web/img/logo.jpg']).');"></div>
+                <div class="rounded"> <img src="'.Url::base().'/img/logo.jpg'.'" width="160px"/> </div>
+
               </td>
               <td width="33.33%" align="center">
                 <div>' . SiteController::getEmpresa()->nombre_empresa . '</div>
+                <br>
+                <div>' . SiteController::getEmpresa()->direcc_empresa . '</div>
+                <br>
+                <div>' . SiteController::getEmpresa()->tlf_empresa . '</div>
+                <br>
+                <div>' . SiteController::getEmpresa()->movil_empresa . '</div>
+                <br>
+                <div>' . SiteController::getEmpresa()->correo_empresa . '</div>
               </td>
               <td width="33.33%">&nbsp;</td>
           </tr>
       </table>';
-
-      $header = '<table>
-                    <tr>
-                      <td width="33.33%">
-                        <div class="profile_img" style="background-image:url('.Url::to(['@web/img/logo.jpg']).');"></div>
-                      </td>
-                      <td width="33.33%" align="center">
-                        <div>'.strtoupper(SiteController::getEmpresa()->nombre_empresa).'</div>
-                      </td>
-                      <td width="33.33%">&nbsp;</td>
-                    </tr>
-                 </table>';
-
-
-      //return $header;
-      // '
-      // <table style="margin: 0px 0 24px 0;">
-      //   <tr>
-      //     <td class="left" style="padding:3px 100px"> ' . strtoupper(SiteController::getEmpresa()->direcc_empresa) . ' </td>
-      //   </tr>
-      //   <tr>
-      //     <td class="left " style="padding:3px 100px"> ' . strtoupper($modelDocumento->pedidoDoc->cltePedido->direcc_clte) . ' </td>
-      //   </tr>
-      // </table>
-      // <table style="margin: 0px 0 0px 0;">
-      //   <tr>
-      //     <td  width="80%" class="left celdas" style="padding-left:50px">' . $modelDocumento->pedidoDoc->cltePedido->nombre_clte . '</td>
-      //     <td  width="20%" class="left celdas" >' . $modelDocumento->unidadTransporte->des_utransp  . '</td>
-      //   </tr>
-      //   <tr>
-      //     <td class="left celdas"  style="padding-left:50px">' . $modelDocumento->pedidoDoc->cltePedido->ruc_clte . '</td>
-      //     <td class="left celdas">&nbsp;</td>
-      //   </tr>
-      // </table>
-      // ';
-
-      // $footer = '
-      // <table class="datos-cliente" style="margin: 0px 0 55px 0;">
-      //     <tr>
-      //         <td style="padding-left:50px" class="left">'.$modelDocumento->transportista->des_transp.'</td>
-      //     </tr>
-      //     <tr>
-      //         <td style="padding-left:50px; padding-top: 5px;" class="left">'.$modelDocumento->transportista->ruc_transp.'</td>
-      //     </tr>
-      // </table>';
 
       $content = "Hi";
       $sheet = file_get_contents( Yii::getAlias( '@rptcss' ).'/rptCss.css' );

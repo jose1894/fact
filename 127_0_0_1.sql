@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-10-2019 a las 00:32:33
+-- Tiempo de generación: 28-10-2019 a las 21:45:52
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -2162,6 +2162,8 @@ CREATE TABLE `empresa` (
   `ruc_empresa` varchar(11) NOT NULL COMMENT 'RUC EMPRESA',
   `tipopers_empresa` int(11) NOT NULL COMMENT 'TIPO PERSONA',
   `tlf_empresa` varchar(150) NOT NULL COMMENT 'TELEFONO EMPRESA',
+  `movil_empresa` varchar(150) DEFAULT NULL COMMENT 'TELEFONO MOVIL EMPRESA',
+  `correo_empresa` varchar(70) DEFAULT NULL COMMENT 'CORREO EMPRESA',
   `direcc_empresa` text NOT NULL COMMENT 'DIRECCION EMPRESA'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -2169,8 +2171,8 @@ CREATE TABLE `empresa` (
 -- Volcado de datos para la tabla `empresa`
 --
 
-INSERT INTO `empresa` (`id_empresa`, `nombre_empresa`, `estatus_empresa`, `dni_empresa`, `ruc_empresa`, `tipopers_empresa`, `tlf_empresa`, `direcc_empresa`) VALUES
-(1, 'CORPORACION LEOPHARD S.A.C.', 1, '0000000000', '20604954241', 1, '', 'Jr. Las Alcaparras N° 467 Urb. Las Flores - S.J.L. ');
+INSERT INTO `empresa` (`id_empresa`, `nombre_empresa`, `estatus_empresa`, `dni_empresa`, `ruc_empresa`, `tipopers_empresa`, `tlf_empresa`, `movil_empresa`, `correo_empresa`, `direcc_empresa`) VALUES
+(1, 'CORPORACION LEOPHARD S.A.C.', 1, '0000000000', '20604954241', 1, '', '969889630 / 996349451', 'leophard.corp@gmail.com', 'Jr. Las Alcaparras N° 467 Urb. Las Flores - S.J.L. ');
 
 -- --------------------------------------------------------
 

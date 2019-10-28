@@ -2,6 +2,8 @@ body{
   font-family: 'Lucida Console';
 }
 
+
+
 .center {
   text-align: center;
 }
@@ -41,17 +43,14 @@ table {
   width: 100%;
 }
 
-.profile_img {
-    position: absolute;
-    width: 160px;
-    height: 120px;
-    border-radius: 160px;
-    border-style: solid;
-    /*border-color: white;
-    border-width: medium;*/
-    overflow: hidden;
-    background-size: 180px 170px;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
- }
+.documento_enc{
+  font-family: Arial;
+}
+
+.rounded{
+  border:0.1mm solid #220044;
+  background-color: #f0f2ff;
+  background-gradient: linear #c7cdde #f0f2ff 0 1 0 0.5;
+  border-radius: 2mm;
+  background-clip: border-box;
+}
