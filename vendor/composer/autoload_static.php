@@ -436,6 +436,13 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
                 0 => __DIR__ . '/..' . '/cebe/yii2-gravatar',
             ),
         ),
+        'N' => 
+        array (
+            'NumerosEnLetras' => 
+            array (
+                0 => __DIR__ . '/..' . '/villca/numeros-en-letras/src',
+            ),
+        ),
         'H' => 
         array (
             'HTMLPurifier' => 

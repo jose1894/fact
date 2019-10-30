@@ -21,6 +21,7 @@ use app\base\Model;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\ActiveForm;
+use NumerosEnLetras;
 
 /**
  * DocumentoController implements the CRUD actions for Documento model.
@@ -491,49 +492,83 @@ class DocumentoController extends Controller
       Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
       $modelDocumento = Documento::findOne($id);
       $this->layout = 'reports';
-      $modelDetalle = $modelDocumento->detalles;
+      $modelDetalle = $modelDocumento->pedidoDoc;
 
-      // $content = $this->render('guiaRpt', [
-      //     'guia' => $modelDocumento,
-      // ]);
+      $content = $this->render('documentoRpt', [
+          'documento' => $modelDetalle,
+          'IMPUESTO' => SiteController::getImpuesto()
+      ]);
 
 
       $pdf = Yii::$app->pdf; // or new Pdf();
-      $pdf->cssFile = "@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css";
+      // $pdf->cssFile = "@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css";
       $mpdf = $pdf->api; // fetches mpdf api
 
       $f = Yii::$app->formatter;
       $date = $f->asDate($modelDocumento->fecha_doc, 'php:d/m/Y');
 
       $header = '
-      <table class="documento_enc" style="">
+      <table class="documento_enc" style="border-collapse: collapse;">
           <tr>
-              <td width="33.33%">
-                <div class="rounded"> <img src="'.Url::base().'/img/logo.jpg'.'" width="160px"/> </div>
-
+              <td width="25%">
+                <div class="rounded"> <img src="'.Url::base().'/img/logo.jpg'.'" width="180px"/> </div>
               </td>
-              <td width="33.33%" align="center">
-                <div>' . SiteController::getEmpresa()->nombre_empresa . '</div>
-                <br>
-                <div>' . SiteController::getEmpresa()->direcc_empresa . '</div>
-                <br>
-                <div>' . SiteController::getEmpresa()->tlf_empresa . '</div>
-                <br>
-                <div>' . SiteController::getEmpresa()->movil_empresa . '</div>
-                <br>
-                <div>' . SiteController::getEmpresa()->correo_empresa . '</div>
+              <td width="50%" align="center" >
+                <div class="titulo-emp" style="font-size:20px;font-weight:bold;">' . SiteController::getEmpresa()->nombre_empresa . '</div><br>
+                <div class="datos-emp">' . SiteController::getEmpresa()->direcc_empresa . '</div>
+                <div class="datos-emp">' . SiteController::getEmpresa()->tlf_empresa . '</div>
+                <div class="datos-emp">' . SiteController::getEmpresa()->movil_empresa . '</div>
+                <div class="datos-emp">' . SiteController::getEmpresa()->correo_empresa . '</div>
               </td>
-              <td width="33.33%">&nbsp;</td>
+              <td width="25%" style="border:1px solid black;text-align:center;font-weight:bold;">
+                <div style="margin: 70px auto;"> R.U.C. ' . SiteController::getEmpresa()->ruc_empresa . '</div><br>
+                <div style="font-size:18px"> ' . $modelDocumento->tipoDoc->des_tipod. ' </div><br>
+                <div style="margin: 70px auto;"> N° ' . $modelDocumento->tipoDoc->abrv_tipod. '-' . $modelDocumento->cod_doc . '</div>
+              </td>
           </tr>
+      </table>
+      <br>
+      <table class="datos_documento" border="1">
+        <tr>
+          <td width="20%" align="right" style="font-weight:bold;">'.Yii::t('cliente','Customer').'</td>
+          <td>' . $modelDocumento->pedidoDoc->cltePedido->nombre_clte . '</td>
+        </tr>
+        <tr>
+          <td align="right" style="font-weight:bold;">'.Yii::t('cliente','R.U.C.').'</td>
+          <td>' . $modelDocumento->pedidoDoc->cltePedido->ruc_clte . '</td>
+        </tr>
+        <tr>
+          <td align="right" style="font-weight:bold;border:1px solid black">'.Yii::t('cliente','Address').'</td>
+          <td>' . $modelDocumento->pedidoDoc->cltePedido->direcc_clte . '</td>
+        </tr>
+      </table>
+      <table class="datos_documento" border="1">
+        <tr>
+          <td align="center" style="font-weight:bold">'.Yii::t('documento','Emission date').'</td>
+          <td align="center" style="font-weight:bold">'.Yii::t('pedido','Order').'</td>
+          <td align="center" style="font-weight:bold">'.Yii::t('condicionp','Payment condition').'</td>
+          <td align="center" style="font-weight:bold">'.Yii::t('documento','Referral guide').'</td>
+        </tr>
+        <tr>
+          <td align="center">'.$date.'</td>
+          <td align="center">'.$modelDocumento->pedidoDoc->nrodoc_pedido.'</td>
+          <td align="center">'.$modelDocumento->pedidoDoc->condpPedido->desc_condp.'</td>
+          <td align="center">'.$modelDocumento->guiaRem->tipoDoc->abrv_tipod.'-'.$modelDocumento->guiaRem->cod_doc.'</td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <td>'.'Formato #1 ' . NumerosEnLetras::convertir(123.01,'Soles', false, 'centimos') . '<br>'.'</td>
+        </tr>
       </table>';
 
-      $content = "Hi";
       $sheet = file_get_contents( Yii::getAlias( '@rptcss' ).'/rptCss.css' );
       $mpdf->WriteHTML( $sheet, 1 );
       //$mpdf->marginTop = 120;
 
+
       $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
-      $mpdf->AddPage('P','','','','',10,10,100,50,10,12);
+      $mpdf->AddPage('P','','','','',10,10,80,50,10,12);
       $mpdf->WriteHtml( $content ); // call mpdf write html
       // $mpdf->SetHTMLFooter( $footer );
 
@@ -542,301 +577,5 @@ class DocumentoController extends Controller
       $mpdf->SetTitle($titulo);
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
     }
-
-    public function actionMpdfExample(){
-      $html = '
-      <html>
-      <head>
-      <style>
-      body {font-family: sans-serif;
-      	font-size: 10pt;
-      }
-      p {	margin: 0pt; }
-      table.items {
-      	border: 0.1mm solid #000000;
-      }
-      td { vertical-align: top; }
-      .items td {
-      	border-left: 0.1mm solid #000000;
-      	border-right: 0.1mm solid #000000;
-      }
-      table thead td { background-color: #EEEEEE;
-      	text-align: center;
-      	border: 0.1mm solid #000000;
-      	font-variant: small-caps;
-      }
-      .items td.blanktotal {
-      	background-color: #EEEEEE;
-      	border: 0.1mm solid #000000;
-      	background-color: #FFFFFF;
-      	border: 0mm none #000000;
-      	border-top: 0.1mm solid #000000;
-      	border-right: 0.1mm solid #000000;
-      }
-      .items td.totals {
-      	text-align: right;
-      	border: 0.1mm solid #000000;
-      }
-      .items td.cost {
-      	text-align: "." center;
-      }
-      </style>
-      </head>
-      <body>
-
-      <!--mpdf
-      <htmlpageheader name="myheader">
-      <table width="100%"><tr>
-      <td width="50%" style="color:#0000BB; "><span style="font-weight: bold; font-size: 14pt;">Acme Trading Co.</span><br />123 Anystreet<br />Your City<br />GD12 4LP<br /><span style="font-family:dejavusanscondensed;">&#9742;</span> 01777 123 567</td>
-      <td width="50%" style="text-align: right;">Invoice No.<br /><span style="font-weight: bold; font-size: 12pt;">0012345</span></td>
-      </tr></table>
-      </htmlpageheader>
-
-      <htmlpagefooter name="myfooter">
-      <div style="border-top: 1px solid #000000; font-size: 9pt; text-align: center; padding-top: 3mm; ">
-      Page {PAGENO} of {nb}
-      </div>
-      </htmlpagefooter>
-
-      <sethtmlpageheader name="myheader" value="on" show-this-page="1" />
-      <sethtmlpagefooter name="myfooter" value="on" />
-      mpdf-->
-
-      <div style="text-align: right">Date: 13th November 2008</div>
-
-      <table width="100%" style="font-family: serif;" cellpadding="10"><tr>
-      <td width="45%" style="border: 0.1mm solid #888888; "><span style="font-size: 7pt; color: #555555; font-family: sans;">SOLD TO:</span><br /><br />345 Anotherstreet<br />Little Village<br />Their City<br />CB22 6SO</td>
-      <td width="10%">&nbsp;</td>
-      <td width="45%" style="border: 0.1mm solid #888888;"><span style="font-size: 7pt; color: #555555; font-family: sans;">SHIP TO:</span><br /><br />345 Anotherstreet<br />Little Village<br />Their City<br />CB22 6SO</td>
-      </tr></table>
-
-      <br />
-
-      <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse; " cellpadding="8">
-      <thead>
-      <tr>
-      <td width="15%">Ref. No.</td>
-      <td width="10%">Quantity</td>
-      <td width="45%">Description</td>
-      <td width="15%">Unit Price</td>
-      <td width="15%">Amount</td>
-      </tr>
-      </thead>
-      <tbody>
-      <!-- ITEMS HERE -->
-      <tr>
-      <td align="center">MF1234567</td>
-      <td align="center">10</td>
-      <td>Large pack Hoover bags</td>
-      <td class="cost">&pound;2.56</td>
-      <td class="cost">&pound;25.60</td>
-      </tr>
-      <tr>
-      <td align="center">MX37801982</td>
-      <td align="center">1</td>
-      <td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-      <td class="cost">&pound;102.11</td>
-      <td class="cost">&pound;102.11</td>
-      </tr>
-      <tr>
-      <td align="center">MR7009298</td>
-      <td align="center">25</td>
-      <td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-      <td class="cost">&pound;12.26</td>
-      <td class="cost">&pound;325.60</td>
-      </tr>
-      <tr>
-      <td align="center">MF1234567</td>
-      <td align="center">10</td>
-      <td>Large pack Hoover bags</td>
-      <td class="cost">&pound;2.56</td>
-      <td class="cost">&pound;25.60</td>
-      </tr>
-      <tr>
-      <td align="center">MX37801982</td>
-      <td align="center">1</td>
-      <td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-      <td class="cost">&pound;102.11</td>
-      <td class="cost">&pound;102.11</td>
-      </tr>
-      <tr>
-      <td align="center">MR7009298</td>
-      <td align="center">25</td>
-      <td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-      <td class="cost">&pound;12.26</td>
-      <td class="cost">&pound;325.60</td>
-      </tr>
-      <tr>
-      <td align="center">MF1234567</td>
-      <td align="center">10</td>
-      <td>Large pack Hoover bags</td>
-      <td class="cost">&pound;2.56</td>
-      <td class="cost">&pound;25.60</td>
-      </tr>
-      <tr>
-      <td align="center">MX37801982</td>
-      <td align="center">1</td>
-      <td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-      <td class="cost">&pound;102.11</td>
-      <td class="cost">&pound;102.11</td>
-      </tr>
-      <tr>
-      <td align="center">MR7009298</td>
-      <td align="center">25</td>
-      <td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-      <td class="cost">&pound;12.26</td>
-      <td class="cost">&pound;325.60</td>
-      </tr>
-      <tr>
-      <td align="center">MF1234567</td>
-      <td align="center">10</td>
-      <td>Large pack Hoover bags</td>
-      <td class="cost">&pound;2.56</td>
-      <td class="cost">&pound;25.60</td>
-      </tr>
-      <tr>
-      <td align="center">MX37801982</td>
-      <td align="center">1</td>
-      <td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-      <td class="cost">&pound;102.11</td>
-      <td class="cost">&pound;102.11</td>
-      </tr>
-      <tr>
-      <td align="center">MR7009298</td>
-      <td align="center">25</td>
-      <td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-      <td class="cost">&pound;12.26</td>
-      <td class="cost">&pound;325.60</td>
-      </tr>
-      <tr>
-      <td align="center">MF1234567</td>
-      <td align="center">10</td>
-      <td>Large pack Hoover bags</td>
-      <td class="cost">&pound;2.56</td>
-      <td class="cost">&pound;25.60</td>
-      </tr>
-      <tr>
-      <td align="center">MX37801982</td>
-      <td align="center">1</td>
-      <td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-      <td class="cost">&pound;102.11</td>
-      <td class="cost">&pound;102.11</td>
-      </tr>
-      <tr>
-      <td align="center">MF1234567</td>
-      <td align="center">10</td>
-      <td>Large pack Hoover bags</td>
-      <td class="cost">&pound;2.56</td>
-      <td class="cost">&pound;25.60</td>
-      </tr>
-      <tr>
-      <td align="center">MX37801982</td>
-      <td align="center">1</td>
-      <td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-      <td class="cost">&pound;102.11</td>
-      <td class="cost">&pound;102.11</td>
-      </tr>
-      <tr>
-      <td align="center">MR7009298</td>
-      <td align="center">25</td>
-      <td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-      <td class="cost">&pound;12.26</td>
-      <td class="cost">&pound;325.60</td>
-      </tr>
-      <tr>
-      <td align="center">MR7009298</td>
-      <td align="center">25</td>
-      <td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-      <td class="cost">&pound;12.26</td>
-      <td class="cost">&pound;325.60</td>
-      </tr>
-      <tr>
-      <td align="center">MF1234567</td>
-      <td align="center">10</td>
-      <td>Large pack Hoover bags</td>
-      <td class="cost">&pound;2.56</td>
-      <td class="cost">&pound;25.60</td>
-      </tr>
-      <tr>
-      <td align="center">MX37801982</td>
-      <td align="center">1</td>
-      <td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-      <td class="cost">&pound;102.11</td>
-      <td class="cost">&pound;102.11</td>
-      </tr>
-      <tr>
-      <td align="center">MR7009298</td>
-      <td align="center">25</td>
-      <td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-      <td class="cost">&pound;12.26</td>
-      <td class="cost">&pound;325.60</td>
-      </tr>
-      <!-- END ITEMS HERE -->
-      <tr>
-      <td class="blanktotal" colspan="3" rowspan="6"></td>
-      <td class="totals">Subtotal:</td>
-      <td class="totals cost">&pound;1825.60</td>
-      </tr>
-      <tr>
-      <td class="totals">Tax:</td>
-      <td class="totals cost">&pound;18.25</td>
-      </tr>
-      <tr>
-      <td class="totals">Shipping:</td>
-      <td class="totals cost">&pound;42.56</td>
-      </tr>
-      <tr>
-      <td class="totals"><b>TOTAL:</b></td>
-      <td class="totals cost"><b>&pound;1882.56</b></td>
-      </tr>
-      <tr>
-      <td class="totals">Deposit:</td>
-      <td class="totals cost">&pound;100.00</td>
-      </tr>
-      <tr>
-      <td class="totals"><b>Balance due:</b></td>
-      <td class="totals cost"><b>&pound;1782.56</b></td>
-      </tr>
-      </tbody>
-      </table>
-
-
-      <div style="text-align: center; font-style: italic;">Payment terms: payment due in 30 days</div>
-
-
-      </body>
-      </html>
-      ';
-
-      // $path = (getenv('MPDF_ROOT')) ? getenv('MPDF_ROOT') : __DIR__;
-      // require_once $path . '/vendor/autoload.php';
-
-      $pdf = Yii::$app->pdf; // or new Pdf();
-      $pdf->cssFile = "@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css";
-      $mpdf = $pdf->api; // fetches mpdf api
-
-      $mpdf->AddPage([
-      	'margin_left' => 20,
-      	'margin_right' => 15,
-      	'margin_top' => 48,
-      	'margin_bottom' => 25,
-      	'margin_header' => 10,
-      	'margin_footer' => 10
-      ]);
-
-      $mpdf->SetProtection(array('print'));
-      $mpdf->SetTitle("Acme Trading Co. - Invoice");
-      $mpdf->SetAuthor("Acme Trading Co.");
-      $mpdf->SetWatermarkText("Paid");
-      $mpdf->showWatermarkText = true;
-      $mpdf->watermark_font = 'DejaVuSansCondensed';
-      $mpdf->watermarkTextAlpha = 0.1;
-      $mpdf->SetDisplayMode('fullpage');
-
-      $mpdf->WriteHTML($html);
-
-      $mpdf->Output();
-    }
-
 
 }

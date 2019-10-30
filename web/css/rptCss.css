@@ -47,10 +47,22 @@ table {
   font-family: Arial;
 }
 
-.rounded{
-  border:0.1mm solid #220044;
-  background-color: #f0f2ff;
-  background-gradient: linear #c7cdde #f0f2ff 0 1 0 0.5;
-  border-radius: 2mm;
-  background-clip: border-box;
+.datos-emp{
+  font-size: 16px;
+}
+
+.datos_documento {
+  font-family: Arial;
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin-top: 10px;
+}
+
+.detalle_documento{
+  font-family: Arial;
+  font-size:13px;
+}
+.detalle_documento > tr > td {
+  margin: 100px auto;
+  padding:255px 0;
 }

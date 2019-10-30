@@ -125,4 +125,10 @@ class Documento extends \yii\db\ActiveRecord
     {
        return $this->hasMany(DocumentoDetalle::className(), ['documento_ddetalle' => 'id_doc']);
     }
+
+    public function getGuiaRem()
+    {
+       // return $this->hasOne(Documento::className(), [])->andOnCondition(['tipo_doc' => '3','pedido_doc'=>$this->pedido_doc]);;
+       return Documento::find()->where(['status_doc' => Documento::GUIA_GENERADA,'pedido_doc' => $this->pedido_doc, 'tipo_doc' => 3]);
+    }
 }

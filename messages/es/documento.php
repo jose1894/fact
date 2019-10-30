@@ -22,4 +22,5 @@ return [
     'Shipment info' => 'Información de envío',
     'Starting point' => 'Punto de partida',
     'Arrival point' => 'Punto de llegada',
+    'Emission date' => 'Fecha de emisión',    
 ];
