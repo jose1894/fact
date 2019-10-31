@@ -120,6 +120,7 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         ),
         'M' => 
         array (
+            'Mpdf\\QrCode\\' => 12,
             'Mpdf\\' => 5,
         ),
         'G' => 
@@ -396,6 +397,10 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         'Prophecy\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpspec/prophecy/src/Prophecy',
+        ),
+        'Mpdf\\QrCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/qrcode/src',
         ),
         'Mpdf\\' => 
         array (

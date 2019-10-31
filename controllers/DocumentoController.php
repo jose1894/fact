@@ -21,7 +21,6 @@ use app\base\Model;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\ActiveForm;
-use NumerosEnLetras;
 
 /**
  * DocumentoController implements the CRUD actions for Documento model.
@@ -479,8 +478,9 @@ class DocumentoController extends Controller
 
       $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
       $mpdf->AddPage('P','','','','',10,10,100,50,50,12);
+      $mpdf->mode = 'utf-8';
       $mpdf->WriteHtml( $content ); // call mpdf write html
-       $mpdf->SetHTMLFooter( $footer );
+      $mpdf->SetHTMLFooter( $footer );
 
       $titulo = $modelDocumento->cod_doc. '-'. Yii::t('documento','Referral guide') .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
 
@@ -492,11 +492,11 @@ class DocumentoController extends Controller
       Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
       $modelDocumento = Documento::findOne($id);
       $this->layout = 'reports';
-      $modelDetalle = $modelDocumento->pedidoDoc;
 
       $content = $this->render('documentoRpt', [
-          'documento' => $modelDetalle,
-          'IMPUESTO' => SiteController::getImpuesto()
+          'documento' => $modelDocumento,
+          'IMPUESTO' => SiteController::getImpuesto(),
+          'rucEmpresa' => SiteController::getEmpresa()->ruc_empresa,
       ]);
 
 
@@ -531,15 +531,15 @@ class DocumentoController extends Controller
       <table class="datos_documento" border="1">
         <tr>
           <td width="20%" align="right" style="font-weight:bold;">'.Yii::t('cliente','Customer').'</td>
-          <td>' . $modelDocumento->pedidoDoc->cltePedido->nombre_clte . '</td>
+          <td> &nbsp;' . $modelDocumento->pedidoDoc->cltePedido->nombre_clte . '</td>
         </tr>
         <tr>
           <td align="right" style="font-weight:bold;">'.Yii::t('cliente','R.U.C.').'</td>
-          <td>' . $modelDocumento->pedidoDoc->cltePedido->ruc_clte . '</td>
+          <td> &nbsp;' . $modelDocumento->pedidoDoc->cltePedido->ruc_clte . '</td>
         </tr>
         <tr>
           <td align="right" style="font-weight:bold;border:1px solid black">'.Yii::t('cliente','Address').'</td>
-          <td>' . $modelDocumento->pedidoDoc->cltePedido->direcc_clte . '</td>
+          <td> &nbsp;' . $modelDocumento->pedidoDoc->cltePedido->direcc_clte . '</td>
         </tr>
       </table>
       <table class="datos_documento" border="1">
@@ -554,11 +554,6 @@ class DocumentoController extends Controller
           <td align="center">'.$modelDocumento->pedidoDoc->nrodoc_pedido.'</td>
           <td align="center">'.$modelDocumento->pedidoDoc->condpPedido->desc_condp.'</td>
           <td align="center">'.$modelDocumento->guiaRem->tipoDoc->abrv_tipod.'-'.$modelDocumento->guiaRem->cod_doc.'</td>
-        </tr>
-      </table>
-      <table>
-        <tr>
-          <td>'.'Formato #1 ' . NumerosEnLetras::convertir(123.01,'Soles', false, 'centimos') . '<br>'.'</td>
         </tr>
       </table>';
 

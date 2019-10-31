@@ -1,4 +1,6 @@
 <?php
+use yii\web\View ;
+
 $total = 0;
 $subt = 0;
 $subtotal = 0;
@@ -19,7 +21,7 @@ $impuesto = $IMPUESTO/ 100;
     </thead>
     <tbody style="margin-top:10px">
     <?php
-      foreach ($documento->detalles as $key => $value) {
+      foreach ($documento->pedidoDoc->detalles as $key => $value) {
         // code...
         echo "<tr style='margin:10px 0;'>";
         echo "<td style='width:5%;  padding:3px 10px;' class='center'> ". Yii::$app->formatter->asInteger($value->cant_pdetalle) ."</td>";
@@ -36,61 +38,98 @@ $impuesto = $IMPUESTO/ 100;
         $subt = ( $value->plista_pdetalle * $value->cant_pdetalle  ) / ( ( $value->impuesto_pdetalle / 100 ) + 1) ;
         $subtotal += $subt;
       }
+      $descuento =  $descuento > 0  ? $descuento : 0;
+      $precioNeto = $total / ( $impuesto + 1);
+      $totalImp = $total - $precioNeto;
+      $subtotal2 = $precioNeto;
     ?>
     </tbody>
   </table>
-<?php
+  <br>
+  <table >
+    <tr>
+      <td colspan="3">
+        <b>SON : <?= NumerosEnLetras::convertir( $total ,$documento->pedidoDoc->monedaPedido->des_moneda, false, 'centimos') ?></b>
+        <hr>
+    </td>
+    </tr>
+    <tr>
+      <td colspan="3">
 
-  $descuento =  $descuento > 0  ? $descuento : 0;
-  $precioNeto = $total / ( $impuesto + 1);
-  $totalImp = $total - $precioNeto;
-  $subtotal2 = $precioNeto;
+      </td>
+    </tr>
+    <tr>
+      <td width="33%">
+        <?php
 
+          $tipoDoc = ($documento->tipo_doc == 3) ? 1 : 3;
 
-  echo $footer = '
-  <table style="font-size:0.78rem" class="table table-stripped">
-    <tr>
-      <td style="width:80%" class="right">
-      Subtotal
+          $code = $rucEmpresa ."|". $tipoDoc ."|".
+        ?>
+        <?= $code ?>
+        <barcode code="<?= $code ?>" type="QR" class="barcode" size="1" error="M" disableborder="1" />
       </td>
-      <td style="width:20%" class="right">
-      ' . Yii::$app->formatter->asDecimal($subtotal) . '
+      <td width="33%">
+        <table class="detalle_documento">
+          <tr>
+            <td width="50%"><b>Recibido por</b></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><b>DNI</b></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><b>Firma</b></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><b>Fecha</b></td>
+            <td></td>
+          </tr>
+        </table>
       </td>
-    </tr>
-    <tr>
-      <td class="right">
-      ' . Yii::t('pedido', 'Discount') . '
-      </td>
-      <td class="right">
-      '.Yii::$app->formatter->asDecimal($descuento).'
-      </td>
-    </tr>
-    <tr>
-      <td style="width:80%" class="right">
-      Subtotal
-      </td>
-      <td style="width:20%" class="right">
-      ' . Yii::$app->formatter->asDecimal($subtotal2) . '
-      </td>
-    </tr>
-    <tr>
-      <td class="right">
-      ' . Yii::t('pedido','Tax'). ' ' . $IMPUESTO .'%
-      </td>
-      <td class="right">
-      '.Yii::$app->formatter->asDecimal($totalImp).'
-      </td>
-    </tr>
-    <tr>
-      <td class="right">
-      Total
-      </td>
-      <td class="right">
-      '.Yii::$app->formatter->asDecimal($total).'
+      <td width="33%">
+        <?= '
+        <table  class="sumatoria_documento">
+          <tr>
+            <td width="60%" class="right">
+            Op. GRAVADA
+            </td>
+            <td class="right">
+            ' . Yii::$app->formatter->asDecimal($subtotal2) . '
+            </td>
+          </tr>
+          <tr>
+            <td class="right">
+              Op. INAFECTA
+            </td>
+            <td class="right">
+              0.00
+            </td>
+          </tr>
+          <tr>
+            <td class="right">
+            ' . Yii::t('pedido','Tax'). ' ' . $IMPUESTO .'%
+            </td>
+            <td class="right">
+            '.Yii::$app->formatter->asDecimal($totalImp).'
+            </td>
+          </tr>
+          <tr>
+            <td class="right">
+            Total
+            </td>
+            <td class="right">
+            '.Yii::$app->formatter->asDecimal($total).'
+            </td>
+          </tr>
+        </table>'
+        ?>
       </td>
     </tr>
   </table>
-  ';
+<?php
 // $this->registerCssFile("@rptcss/rptCss.css", [
 //     'depends' => [\yii\bootstrap\BootstrapAsset::className()],
 //     'media' => 'print',

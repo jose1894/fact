@@ -69,11 +69,15 @@ class NumerosEnLetras
         if(count($div_decimales) > 1){
             $base_number = $div_decimales[0];
             $decNumberStr = (string) $div_decimales[1];
-            if(strlen($decNumberStr) == 2){
-                $decNumberStrFill = str_pad($decNumberStr, 9, '0', STR_PAD_LEFT);
-                $decCientos = substr($decNumberStrFill, 6);
-                $decimales = self::convertGroup($decCientos);
+
+            if(strlen($decNumberStr) == 1){
+              $decNumberStr = (string) ($div_decimales[1] * 10);              
             }
+
+            $decNumberStrFill = str_pad($decNumberStr, 9, '0', STR_PAD_LEFT);
+            $decCientos = substr($decNumberStrFill, 6);
+            $decimales = self::convertGroup($decCientos);
+
         }
 
         $numberStr = (string) $base_number;
@@ -115,7 +119,7 @@ class NumerosEnLetras
             }
         }else{
             if(empty($decimales)){
-                $valor_convertido = ucfirst($converted) . $currency;
+                $valor_convertido = strtoupper($converted) . $currency;
             } else {
                 //$valor_convertido = ucfirst($converted) . $currency. ' con ' . $decimales . $decimals;
                 $valor_convertido =  strtoupper($converted) .' y '. $decNumberStr . '/100 '.$currency;
