@@ -134,10 +134,16 @@ $this->registerJsVar( "submitGuide", "#submitGuia" );
 echo   $this->render('//site/_modalGuide',[]);
 
 //Factura
+$this->registerJsVar( "frameDocumento", "#frame-document" );
+$this->registerJsVar( "modalDocumento", "#modal-document" );
+$this->registerJsVar( "submitDocumento", "#submitDocument" );
+echo   $this->render('//site/_modalDocumento',[]);
+
+//Base
 $this->registerJsVar( "buttonPrint", ".pjax-print" );
-$this->registerJsVar( "buttonCreate", ".pjax-document" );
 $this->registerJsVar( "buttonSubmit", "#submit" );
 $this->registerJsVar( "buttonCancel", ".close-btn" );
+$this->registerJsVar( "buttonCreate", "#create" );
 $this->registerJsVar( "frame", "#frame" );
 $this->registerJsVar( "modal", "#modal" );
 echo   $this->render('//site/_modalForm',[]);

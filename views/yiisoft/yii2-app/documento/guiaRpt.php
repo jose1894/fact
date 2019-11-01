@@ -1,4 +1,4 @@
-  <table style="font-size:15px; padding: 0 20px 0 0">
+  <table style="font-size:14px; padding: 0 20px 0 0">
     <tbody s>
     <?php
       foreach ($guia->detalles as $key => $value) {

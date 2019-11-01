@@ -422,22 +422,6 @@ class PedidoController extends Controller
           Subtotal
           </td>
           <td style="width:20%" class="right">
-          ' . Yii::$app->formatter->asDecimal($subtotal) . '
-          </td>
-        </tr>
-        <tr>
-          <td class="right">
-          ' . Yii::t('pedido', 'Discount') . '
-          </td>
-          <td class="right">
-          '.Yii::$app->formatter->asDecimal($descuento).'
-          </td>
-        </tr>
-        <tr>
-          <td style="width:80%" class="right">
-          Subtotal
-          </td>
-          <td style="width:20%" class="right">
           ' . Yii::$app->formatter->asDecimal($subtotal2) . '
           </td>
         </tr>

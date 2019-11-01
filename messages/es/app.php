@@ -23,6 +23,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Shopping' => 'Compras',
+    'Sales' => 'Ventas',
     'Approve' => 'Aprobar',
     'Cancel' => 'Anular',
     'Quantity' => 'Cantidad',

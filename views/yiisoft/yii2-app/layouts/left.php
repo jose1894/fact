@@ -75,7 +75,7 @@
                         [ 'label' => Yii::t('documento','Invoice list'), 'url' => ['/documento/listado-factura']],
                       ]
                     ],
-                    ['label' => Yii::t('app', 'Buy'), 'icon' => 'shopping-cart',
+                    ['label' => Yii::t('app', 'Shopping'), 'icon' => 'shopping-cart',
                     'items' => [
                         ['label' => Yii::t('compra','Purchase order').'s', 'url' => ['/compra'], 'icon' => 'shopping-cart'],
                       ]

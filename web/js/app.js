@@ -83,6 +83,11 @@ $( document ).ready( function( e ){
       $( frameGuide ).attr( 'src', 'about:blank' );
       $( modalGuide ).modal("hide");
     }
+
+    if ( frameDocumento && modalDocumento){
+      $( frameDocumento ).attr( 'src', 'about:blank' );
+      $( modalDocumento ).modal("hide");
+    }
   });
 
   $( 'body' ).on( 'click', '.pjax-delete', function( e ){
@@ -192,6 +197,19 @@ $( document ).ready( function( e ){
       keyboard: false
     });
     $( modalGuide ).modal("show");
+  });
+
+  $( 'body' ).on( 'click', '.pjax-document', function( e ){
+    e.preventDefault();
+
+    $( submitDocumento ).css( 'display', 'block' );
+
+    $( frameDocumento ).attr( "src", $( this ).attr( 'href' ));
+    $( modalDocumento ).modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+    $( modalDocumento ).modal("show");
   });
 
 

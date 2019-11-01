@@ -197,6 +197,7 @@ class DocumentoController extends Controller
           $model->fecha_doc = $fecha;
           $modelNotaSalida->fecha_trans =  $fecha;
           $modelPedido->estatus_pedido = $modelPedido::DOCUMENTO_GENERADO;
+          $model->almacen_doc = $modelPedido->almacen_pedido;
 
           // validate all models
           $valid = $model->validate();
@@ -220,6 +221,7 @@ class DocumentoController extends Controller
 
             $transaction = \Yii::$app->db->beginTransaction();
             $model->cod_doc = $codigoDoc;
+            $model->serie_doc = $numDoc[ 'id_num' ];
             $flag = $model->save();
             $flag = $modelPedido->save() && $flag;
 
@@ -324,6 +326,7 @@ class DocumentoController extends Controller
           $model->fecha_doc = $fecha;
           $modelPedido->estatus_pedido = $modelPedido::GUIA_GENERADA;
           $model->status_doc = $model::GUIA_GENERADA;
+          $model->almacen_doc = $modelPedido->almacen_pedido;
           $model->sucursal_doc = SiteController::getSucursal();
 
           // validate all models
@@ -340,6 +343,7 @@ class DocumentoController extends Controller
             $numDoc = Numeracion::getNumeracion( $model::GUIA_DOC,$model->tipo_doc );
             $codigoDoc = intval( $numDoc['numero_num'] ) + 1;
             $codigoDoc = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
+            $model->serie_doc = $numDoc[ 'id_num' ];
 
             $transaction = \Yii::$app->db->beginTransaction();
             try {
@@ -478,7 +482,6 @@ class DocumentoController extends Controller
 
       $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
       $mpdf->AddPage('P','','','','',10,10,100,50,50,12);
-      $mpdf->mode = 'utf-8';
       $mpdf->WriteHtml( $content ); // call mpdf write html
       $mpdf->SetHTMLFooter( $footer );
 

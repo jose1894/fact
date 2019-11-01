@@ -22,5 +22,6 @@ return [
     'Shipment info' => 'Información de envío',
     'Starting point' => 'Punto de partida',
     'Arrival point' => 'Punto de llegada',
-    'Emission date' => 'Fecha de emisión',    
+    'Emission date' => 'Fecha de emisión',
+    'Do you want to issue the document?' => '¿Deseas emitir el documento?',
 ];
