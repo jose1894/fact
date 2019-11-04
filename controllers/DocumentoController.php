@@ -12,6 +12,7 @@ use app\models\DocumentoDetalle;
 use app\models\Pedido;
 use app\models\Producto;
 use app\models\Numeracion;
+use app\models\TipoIdentificacion;
 use app\models\DocumentoSearch;
 use app\models\PedidoSearch;
 use yii\web\Controller;
@@ -21,6 +22,7 @@ use app\base\Model;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\ActiveForm;
+
 
 /**
  * DocumentoController implements the CRUD actions for Documento model.
@@ -162,6 +164,8 @@ class DocumentoController extends Controller
         $model->scenario = Documento::SCENARIO_FACTURA;
         $modelPedido = Pedido::findOne( $id );
 
+        $IMPUESTO = SiteController::getImpuesto();
+
         if ( $modelPedido === null) {
             throw new NotFoundHttpException(Yii::t('documento', 'The requested page does not exist.'));
         }
@@ -199,6 +203,10 @@ class DocumentoController extends Controller
           $modelPedido->estatus_pedido = $modelPedido::DOCUMENTO_GENERADO;
           $model->almacen_doc = $modelPedido->almacen_pedido;
 
+          $model->totalimp_doc = $post['impuesto'];
+          $model->total_doc = $post['total'];
+
+
           // validate all models
           $valid = $model->validate();
           $valid = $modelNotaSalida->validate() && $valid;
@@ -221,7 +229,7 @@ class DocumentoController extends Controller
 
             $transaction = \Yii::$app->db->beginTransaction();
             $model->cod_doc = $codigoDoc;
-            $model->serie_doc = $numDoc[ 'id_num' ];
+            $model->numeracion_doc = $numDoc[ 'id_num' ];
             $flag = $model->save();
             $flag = $modelPedido->save() && $flag;
 
@@ -291,7 +299,7 @@ class DocumentoController extends Controller
         return $this->render('_formDocumento', [
             'model' => $model,
             'modelPedido' => $modelPedido,
-            'IMPUESTO' => SiteController::getImpuesto(),
+            'IMPUESTO' => $IMPUESTO,
         ]);
     }
 
@@ -343,7 +351,7 @@ class DocumentoController extends Controller
             $numDoc = Numeracion::getNumeracion( $model::GUIA_DOC,$model->tipo_doc );
             $codigoDoc = intval( $numDoc['numero_num'] ) + 1;
             $codigoDoc = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
-            $model->serie_doc = $numDoc[ 'id_num' ];
+            $model->numeracion_doc = $numDoc[ 'id_num' ];
 
             $transaction = \Yii::$app->db->beginTransaction();
             try {
@@ -526,7 +534,7 @@ class DocumentoController extends Controller
               <td width="25%" style="border:1px solid black;text-align:center;font-weight:bold;">
                 <div style="margin: 70px auto;"> R.U.C. ' . SiteController::getEmpresa()->ruc_empresa . '</div><br>
                 <div style="font-size:18px"> ' . $modelDocumento->tipoDoc->des_tipod. ' </div><br>
-                <div style="margin: 70px auto;"> N° ' . $modelDocumento->tipoDoc->abrv_tipod. '-' . $modelDocumento->cod_doc . '</div>
+                <div style="margin: 70px auto;"> N° ' . $modelDocumento->tipoDoc->abrv_tipod . $modelDocumento->numeracion->serie_num . "-" . substr($modelDocumento->cod_doc,-8) . '</div>
               </td>
           </tr>
       </table>
@@ -547,10 +555,10 @@ class DocumentoController extends Controller
       </table>
       <table class="datos_documento" border="1">
         <tr>
-          <td align="center" style="font-weight:bold">'.Yii::t('documento','Emission date').'</td>
-          <td align="center" style="font-weight:bold">'.Yii::t('pedido','Order').'</td>
-          <td align="center" style="font-weight:bold">'.Yii::t('condicionp','Payment condition').'</td>
-          <td align="center" style="font-weight:bold">'.Yii::t('documento','Referral guide').'</td>
+          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('documento','Emission date').'</td>
+          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('pedido','Order').'</td>
+          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('condicionp','Payment condition').'</td>
+          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('documento','Referral guide').'</td>
         </tr>
         <tr>
           <td align="center">'.$date.'</td>
@@ -562,13 +570,11 @@ class DocumentoController extends Controller
 
       $sheet = file_get_contents( Yii::getAlias( '@rptcss' ).'/rptCss.css' );
       $mpdf->WriteHTML( $sheet, 1 );
-      //$mpdf->marginTop = 120;
-
+      $mpdf->charset_in = 'UTF-8';
 
       $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
       $mpdf->AddPage('P','','','','',10,10,80,50,10,12);
       $mpdf->WriteHtml( $content ); // call mpdf write html
-      // $mpdf->SetHTMLFooter( $footer );
 
       $titulo = $modelDocumento->cod_doc. '-'. Yii::t('documento','Document') .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
 

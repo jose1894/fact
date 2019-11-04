@@ -18,8 +18,8 @@ class ClienteSearch extends Cliente
     public function rules()
     {
         return [
-            [['id_clte', 'pais_cte', 'depto_cte', 'provi_cte', 'dtto_clte', 'vendedor_clte', 'estatus_ctle', 'condp_clte', 'sucursal_clte'], 'integer'],
-            [['dni_clte', 'ruc_clte', 'nombre_clte', 'direcc_clte', 'tlf_ctle'], 'safe'],
+            [['id_clte','tipoid_clte', 'pais_cte', 'depto_cte', 'provi_cte', 'dtto_clte', 'vendedor_clte', 'estatus_ctle', 'condp_clte', 'sucursal_clte'], 'integer'],
+            [['dni_clte', 'ruc_clte', 'nombre_clte', 'direcc_clte', 'tlf_ctle', 'tipoid_clte'], 'safe'],
         ];
     }
 
@@ -73,6 +73,7 @@ class ClienteSearch extends Cliente
             'estatus_ctle' => $this->estatus_ctle,
             'condp_clte' => $this->condp_clte,
             'sucursal_clte' => $this->sucursal_clte,
+            'tipoid_clte' => $this->tipoid_clte,
         ]);
 
         $query->andFilterWhere(['like', 'dni_clte', $this->dni_clte])

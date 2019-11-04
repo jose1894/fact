@@ -48,8 +48,8 @@ class Documento extends \yii\db\ActiveRecord
     {
         return [
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc'], 'required', 'on' => self::SCENARIO_FACTURA],
-            [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc','transp_doc','utransp_doc','motivo_doc'], 'required', 'on' => self::SCENARIO_GUIA],
-            [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc'], 'integer'],
+            [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc','transp_doc','utransp_doc','motivo_doc',], 'required', 'on' => self::SCENARIO_GUIA],
+            [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','numeracion_doc'], 'integer'],
             [['fecha_doc'], 'safe'],
             [['obsv_doc'], 'string'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
@@ -68,6 +68,7 @@ class Documento extends \yii\db\ActiveRecord
             'id_doc' => Yii::t('compra', 'Id'),
             'cod_doc' => Yii::t('compra', 'Code'),
             'tipo_doc' => Yii::t('tipo_documento', 'Type'),
+            'numeracion_doc' => Yii::t('tipo_documento', 'Serie'),
             'pedido_doc' => Yii::t('pedido', 'Order'),
             'fecha_doc' => Yii::t('documento', 'Date'),
             'obsv_doc' => Yii::t('documento', 'Comments'),
@@ -130,5 +131,10 @@ class Documento extends \yii\db\ActiveRecord
     {
        // return $this->hasOne(Documento::className(), [])->andOnCondition(['tipo_doc' => '3','pedido_doc'=>$this->pedido_doc]);;
        return Documento::find()->where(['status_doc' => Documento::GUIA_GENERADA,'pedido_doc' => $this->pedido_doc, 'tipo_doc' => 3]);
+    }
+
+    public function getNumeracion()
+    {
+       return $this->hasOne(Numeracion::className(), ['id_num' => 'numeracion_doc']);
     }
 }

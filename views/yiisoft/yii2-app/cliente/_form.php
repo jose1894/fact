@@ -9,6 +9,7 @@ use app\models\Distrito;
 use app\models\CondPago;
 use app\models\Vendedor;
 use app\models\TipoListap;
+use app\models\TipoIdentificacion;
 use yii\web\View ;
 use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
 use kartik\select2\Select2;
@@ -26,18 +27,35 @@ use yii\helpers\Url;
     <?php $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientScript' => true]); ?>
     <div class="row">
       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+          <?php
+            $tipoid = TipoIdentificacion::getTipoIdList();
+          ?>
+          <?= $form->field($model, 'tipoid_clte',[
+            'addClass' => 'form-control'
+            ])->widget(Select2::classname(), [
+                      'data' => $tipoid,
+                      'language' => Yii::$app->language,
+                      'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                      'options' => ['placeholder' => Yii::t('pais','Select a id type').'...'],
+                      'theme' => Select2::THEME_DEFAULT,
+                      'pluginOptions' => [
+                          'allowClear' => true
+                      ],
+              ]) ?>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
         <?= $form->field($model, 'dni_clte',[
           'addClass' => 'form-control ',
           'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-tag"></i>']]
         ])->textInput(['maxlength' => true]) ?>
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
         <?= $form->field($model, 'ruc_clte',[
           'addClass' => 'form-control ',
           'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-tag"></i>']]
         ])->textInput(['maxlength' => true]) ?>
       </div>
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
         <?= $form->field($model, 'nombre_clte',[
           'addClass' => 'form-control ',
           'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-pencil-square-o"></i>']]
@@ -73,8 +91,8 @@ use yii\helpers\Url;
                           'allowClear' => true
                       ],
               ]) ?>
-      </div>
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
           <?php
             $provs = Provincia::find()->where(['status_prov' => 1])
             ->orderBy('des_prov')

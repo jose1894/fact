@@ -1,6 +1,8 @@
 <?php
 use yii\web\View ;
 
+use app\models\TipoIdentificacion;
+
 $total = 0;
 $subt = 0;
 $subtotal = 0;
@@ -8,15 +10,15 @@ $descuento = 0;
 $totalImp = 0;
 $impuesto = $IMPUESTO/ 100;
 ?>
-  <table class="detalle_documento">
+  <table class="detalle_documento" style="border: 1px solid black;">
     <thead style="margin: 15px 0;">
       <tr>
-        <td class="center mayus bold" style="border:1px solid black;padding:5px 0;"> <?= Yii::t('pedido','Qtty')?></td>
-        <td class="center mayus bold" style="border:1px solid black;padding:5px 0;"> <?= Yii::t('pedido','U.M.')?></td>
-        <td class="center mayus bold" style="width:12%;border:1px solid black;padding:5px 0;"> <?= Yii::t('pedido','Code')?></td>
-        <td class="left mayus bold" style="border:1px solid black;padding: 5px 20px"> <?= Yii::t('pedido','Description')?></td>
-        <td class="center bold mayus" style="border:1px solid black;padding:5px 0;"> <?= Yii::t('pedido','N.Price')?></td>
-        <td class="center bold mayus" style="border:1px solid black;padding:5px 0;"> <?= Yii::t('pedido','Total')?></td>
+        <td width="5%" class="center mayus bold" style="border-left: 1px solid black;border-top: 1px solid black;border-bottom: 1px solid black;padding:5px 0;"> <?= Yii::t('pedido','Qtty')?></td>
+        <td width="9%" class="center mayus bold" style="padding:5px 0;border-top: 1px solid black;border-bottom: 1px solid black;"> <?= Yii::t('pedido','U.M.')?></td>
+        <td width="15%" class="center mayus bold" style="padding:5px 0;border-top: 1px solid black;border-bottom: 1px solid black;"> <?= Yii::t('pedido','Code')?></td>
+        <td class="left mayus bold" style="padding: 5px 20px;border-top: 1px solid black;border-bottom: 1px solid black;"> <?= Yii::t('pedido','Description')?></td>
+        <td class="center bold mayus" style="padding:5px 0;border-top: 1px solid black;border-bottom: 1px solid black;"> <?= Yii::t('pedido','N.Price')?></td>
+        <td class="center bold mayus" style="padding:5px 0;border-right:1px solid black;border-top: 1px solid black;border-bottom: 1px solid black;"> <?= Yii::t('pedido','Total')?></td>
       </tr>
     </thead>
     <tbody style="margin-top:10px">
@@ -24,12 +26,12 @@ $impuesto = $IMPUESTO/ 100;
       foreach ($documento->pedidoDoc->detalles as $key => $value) {
         // code...
         echo "<tr style='margin:10px 0;'>";
-        echo "<td style='width:5%;  padding:3px 10px;' class='center'> ". Yii::$app->formatter->asInteger($value->cant_pdetalle) ."</td>";
-        echo "<td style='width:10%;padding:3px 10px;' class='center'> {$value->productoPdetalle->umedProd->des_und }</td>";
+        echo "<td style='padding:3px 10px;' class='center'> ". Yii::$app->formatter->asInteger($value->cant_pdetalle) ."</td>";
+        echo "<td style='padding:3px 10px;' class='center'> {$value->productoPdetalle->umedProd->des_und }</td>";
         echo "<td style='padding:0 5px;padding:3px 10px;' class='center'>{$value->productoPdetalle->cod_prod }</td>";
-        echo "<td style='width:34%;word-wrap: break-word;padding:3px 10px;'>{$value->productoPdetalle->des_prod }</td>";
-        echo "<td style='width:8%;padding:3px 10px;' class='right'> {$value->precio_pdetalle }</td>";
-        echo "<td style='width:8%;padding:3px 10px;' class='right'> {$value->total_pdetalle}</td>";
+        echo "<td style='word-wrap: break-word;padding:3px 10px;'>{$value->productoPdetalle->des_prod }</td>";
+        echo "<td style='padding:3px 10px;' class='right'> {$value->precio_pdetalle }</td>";
+        echo "<td style='padding:3px 10px;' class='right'> {$value->total_pdetalle}</td>";
         echo "</tr>";
 
         $total += $value->total_pdetalle;
@@ -64,9 +66,19 @@ $impuesto = $IMPUESTO/ 100;
 
           $tipoDoc = ($documento->tipo_doc == 3) ? 1 : 3;
 
-          $code = $rucEmpresa ."|". $tipoDoc ."|".
+          if ( $documento->pedidoDoc->cltePedido->tipoIdentificacion->cod_tipoi == TipoIdentificacion::TIPO_RUC ){
+            $tipoDocClte = TipoIdentificacion::TIPO_RUC;
+            $docClte = $documento->pedidoDoc->cltePedido->ruc_clte;
+          } else {
+            $tipoDocClte = TipoIdentificacion::TIPO_DNI;
+            $docClte = $documento->pedidoDoc->cltePedido->dni_clte;
+          }
+
+          $code = $rucEmpresa ."|". $tipoDoc ."|". $documento->numeracion->serie_num . "|" . substr($documento->cod_doc,-8) . "|" . $documento->totalimp_doc . "|" . $documento->total_doc ."|";
+          echo $code .= $documento->fecha_doc . "|" . $tipoDocClte . "|" . $docClte;
+
         ?>
-        <?= $code ?>
+
         <barcode code="<?= $code ?>" type="QR" class="barcode" size="1" error="M" disableborder="1" />
       </td>
       <td width="33%">

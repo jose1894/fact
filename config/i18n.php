@@ -186,20 +186,36 @@ return [
               'sucursal' => 'sucursal.php',
             ],
         ],
-        'tipo_movimiento' => [
-            'class' => 'yii\i18n\PhpMessageSource',
-            'basePath' => '@app/messages',
-            'sourceLanguage' => 'en-US',
-            'fileMap' => [
-              'tipo_movimiento' => 'tipoMovimiento.php',
-            ],
-        ],
         'tipo_documento' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',
             'sourceLanguage' => 'en-US',
             'fileMap' => [
               'tipo_documento' => 'tipoDocumento.php',
+            ],
+        ],
+        'tipo_identificacion' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'tipo_identificacion' => 'tipoIdentificacion.php',
+            ],
+        ],
+        'tipo_listap' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'tipo_listap' => 'tipo_listap.php',
+            ],
+        ],
+        'tipo_movimiento' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'tipo_movimiento' => 'tipoMovimiento.php',
             ],
         ],
         'tipo_producto' => [
@@ -216,14 +232,6 @@ return [
             'sourceLanguage' => 'en-US',
             'fileMap' => [
               'tipo_proveedor' => 'tipoproveedor.php',
-            ],
-        ],
-        'tipo_listap' => [
-            'class' => 'yii\i18n\PhpMessageSource',
-            'basePath' => '@app/messages',
-            'sourceLanguage' => 'en-US',
-            'fileMap' => [
-              'tipo_listap' => 'tipo_listap.php',
             ],
         ],
         'transportista' => [

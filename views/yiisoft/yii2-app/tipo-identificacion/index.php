@@ -1,28 +1,29 @@
 <?php
 
+
 use yii\helpers\Html;
+//use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
 use yii\web\View;
 use kartik\grid\GridView;
 use yii\web\JqueryAsset;
-use yii\helpers\ArrayHelper;
-use app\models\Provincia;
-use app\models\TipoIdentificacion;
 use kartik\select2\Select2;
+
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\ClienteSearch */
+/* @var $searchModel app\models\TipoidentificacionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('cliente', 'Customer');
+$this->title = Yii::t('tipo_identificacion', 'Document type');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="cliente-index">
+<div class="tipo-identificacion-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(['id'=>'grid']); ?>
+    <?php Pjax::begin([ 'id' => 'grid']); ?>
+
     <p>
-        <?= Html::a(Yii::t('cliente', 'Create customer'), ['create','asDialog' => 1], ['id'=>'create', 'class' => 'btn btn-flat btn-success']) ?>
+        <?= Html::a(Yii::t('tipo_identificacion', 'Create document type'), ['create','asDialog' => 1 ], [ 'id' => 'create','class' => 'btn btn-flat btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -30,36 +31,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             [
-               'attribute' => 'id_clte',
-               'width' => '5%',
+              'attribute'=>'cod_tipoi',
+              'width' => '5%'
             ],
-            [
-              'attribute'=>'tipoid_clte',
-              'value' => function($data){
-                   return $data->tipoIdentificacion->des_tipoi;
-              },
-              'filter'=>TipoIdentificacion::getTipoIdList(),
-              'filterType' => GridView::FILTER_SELECT2,
-              'filterWidgetOptions' => [
-                  'language' => Yii::$app->language,
-                  'theme' => Select2::THEME_DEFAULT,
-                  'pluginOptions' => ['allowClear' => true],
-                  'pluginEvents' =>[],
-                  'options' => ['prompt' => ''],
-              ],
-              'width' => '20%'
-            ],
-            'dni_clte',
-            'ruc_clte',
-            [
-              'attribute' => 'nombre_clte',
-              'format' => 'raw',
-              'contentOptions' => ['class' => 'text-wrap'],
-              'width' => '50%'
-            ],
+            'des_tipoi',
             [
                 'class' => 'kartik\grid\BooleanColumn',
-                'attribute' => 'estatus_ctle',
+                'attribute' => 'status_tipoi',
                 'vAlign' => 'middle',
                 'width' => '10%'
             ],
@@ -73,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                   'title' => Yii::t('app', 'View'),
                                   'class' => 'pjax-view',
                                   'data' => [
-                                    'id' => $model->id_clte,
+                                    'id' => $model->id_tipoi,
                                   ]
                       ]);
                   },
@@ -83,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                   'title' => Yii::t('app', 'Update'),
                                   'class' => 'pjax-update',
                                   'data' => [
-                                    'id' => $model->id_clte,
+                                    'id' => $model->id_tipoi,
                                   ]
                       ]);
                   },
@@ -97,10 +75,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                       'method' => 'post',
                                       'pjax' => 0,
                                       'icon' => 'warning',
-                                      'title' => Yii::t('cliente', 'Customer'),
+                                      'title' => Yii::t('tipo_identificacion', 'Id type'),
                                       'ok' => Yii::t('app', 'Confirm'),
                                       'cancel' => Yii::t('app', 'Cancel'),
-                                      'id' => $model->id_clte
+                                      'id' => $model->id_tipoi
                                   ],
                       ]);
                   }
@@ -108,28 +86,29 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'view') {
-                      $url = Url::to(['cliente/view','id' => $model->id_clte]);
+                      $url = Url::to(['tipo-identificacion/view','id'=>$model->id_tipoi]);
                       return $url;
                   }
 
                   if ($action === 'update') {
-                      $url = Url::to(['cliente/update','id' => $model->id_clte]);
+                      $url = Url::to(['tipo-identificacion/update','id'=>$model->id_tipoi]);
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url = Url::to(['cliente/delete','id' => $model->id_clte]);
+                      $url = Url::to(['tipo-identificacion/delete','id'=>$model->id_tipoi]);
                       return $url;
                   }
 
                 }
               ],
-          ],
-          'pjax'=>true,
-          'pjaxSettings'=>[
-             'neverTimeout'=>true,
-          ],
-          'krajeeDialogSettings' => ['overrideYiiConfirm' => false]
-        ]); ?>
+
+            ],
+            'pjax'=>true,
+            'pjaxSettings'=>[
+               'neverTimeout'=>true,
+            ],
+            'krajeeDialogSettings' => ['overrideYiiConfirm' => false]
+    ]); ?>
     <?php Pjax::end(); ?>
 </div>
 <?php

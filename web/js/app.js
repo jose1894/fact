@@ -33,8 +33,8 @@ $( document ).ready( function( e ){
             window.parent.$.pjax.reload( { container: '#grid' } );
 
             if ( $( $form ).attr( 'action' ).indexOf( 'create' ) != -1) {
-              $( $form ).trigger( 'reset' );
-              $selects = window.frames[ 1 ].$( 'form' ).find( 'select' );
+              $( $form ).trigger( 'reset' );                
+              $selects = window.frames[ 0 ].$( $form ).find( 'select' );
 
               if ( $selects.length ) {
                 $selects.trigger( 'change' );
@@ -44,7 +44,9 @@ $( document ).ready( function( e ){
             return;
           }
 
-          window.frames[ 1 ].$( $form ).yiiActiveForm( 'updateMessages', data);
+          window.frames[ 0 ].$( $form ).yiiActiveForm( 'updateMessages', data);
+          //window.$( frame ).contents( ).find($form).yiiActiveForm( 'updateMessages', data);
+
         },
         error: function(data) {
             let message;
