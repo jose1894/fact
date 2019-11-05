@@ -22,6 +22,8 @@ use app\base\Model;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\ActiveForm;
+use NumerosEnLetras;
+use sunat;
 
 
 /**
@@ -580,6 +582,39 @@ class DocumentoController extends Controller
 
       $mpdf->SetTitle($titulo);
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
+    }
+
+    public function actionConsultaRuc(){
+      $cookie = array(
+        'cookie' 		=> array(
+          'use' 		=> true,
+          'file' 		=> __DIR__ . "/cookie.txt"
+        )
+      );
+      $config = array(
+        'representantes_legales' 	=> true,
+        'cantidad_trabajadores' 	=> true,
+        'establecimientos' 			=> true,
+        'cookie' 					=> $cookie
+      );
+
+      $sunat = new sunat( $config );
+
+      $ruc = "20169004359";
+      $dni = "44274795";
+
+      $search1 = $sunat->consulta( $ruc );
+      $search2 = $sunat->consulta( $dni );
+
+      $search[ 'search1' ] = $search1;
+      $search[ 'search2' ] = $search2;
+
+      Yii::$app->response->format = Response::FORMAT_JSON;
+
+      return $search;
+
+    //  return NumerosEnLetras::convertir( 1000.00 );
+
     }
 
 }

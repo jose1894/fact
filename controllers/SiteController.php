@@ -198,4 +198,10 @@ class SiteController extends Controller
 
       return $user->sucursal0->impuesto_suc;
     }
+
+    public function actionConsultaRuc(){
+      return $this->render('_consultaRuc',[
+        
+      ]);
+    }
 }

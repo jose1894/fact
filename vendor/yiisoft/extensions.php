@@ -21,15 +21,6 @@ return array (
       '@cebe/gravatar' => $vendorDir . '/cebe/yii2-gravatar/cebe/gravatar',
     ),
   ),
-  'yiisoft/yii2-bootstrap' => 
-  array (
-    'name' => 'yiisoft/yii2-bootstrap',
-    'version' => '9999999-dev',
-    'alias' => 
-    array (
-      '@yii/bootstrap' => $vendorDir . '/yiisoft/yii2-bootstrap/src',
-    ),
-  ),
   'dmstr/yii2-adminlte-asset' => 
   array (
     'name' => 'dmstr/yii2-adminlte-asset',
@@ -336,6 +327,15 @@ return array (
       '@kartik/form' => $vendorDir . '/kartik-v/yii2-widget-activeform/src',
     ),
   ),
+  'wbraganca/yii2-dynamicform' => 
+  array (
+    'name' => 'wbraganca/yii2-dynamicform',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@wbraganca/dynamicform' => $vendorDir . '/wbraganca/yii2-dynamicform/src',
+    ),
+  ),
   'kartik-v/yii2-widget-select2' => 
   array (
     'name' => 'kartik-v/yii2-widget-select2',
@@ -345,13 +345,13 @@ return array (
       '@kartik/select2' => $vendorDir . '/kartik-v/yii2-widget-select2/src',
     ),
   ),
-  'wbraganca/yii2-dynamicform' => 
+  'yiisoft/yii2-bootstrap' => 
   array (
-    'name' => 'wbraganca/yii2-dynamicform',
+    'name' => 'yiisoft/yii2-bootstrap',
     'version' => '9999999-dev',
     'alias' => 
     array (
-      '@wbraganca/dynamicform' => $vendorDir . '/wbraganca/yii2-dynamicform/src',
+      '@yii/bootstrap' => $vendorDir . '/yiisoft/yii2-bootstrap/src',
     ),
   ),
 );

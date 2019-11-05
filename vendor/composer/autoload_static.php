@@ -40,6 +40,7 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         'r' => 
         array (
             'rmrevin\\yii\\fontawesome\\' => 24,
+            'response\\' => 9,
         ),
         'p' => 
         array (
@@ -91,6 +92,7 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         'c' => 
         array (
             'cebe\\markdown\\' => 14,
+            'cURL\\' => 5,
         ),
         'W' => 
         array (
@@ -110,6 +112,7 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
             'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\BrowserKit\\' => 29,
+            'Sunat\\' => 6,
         ),
         'P' => 
         array (
@@ -183,6 +186,10 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         'rmrevin\\yii\\fontawesome\\' => 
         array (
             0 => __DIR__ . '/..' . '/rmrevin/yii2-fontawesome',
+        ),
+        'response\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jossmp/sunatphp/src',
         ),
         'phpDocumentor\\Reflection\\' => 
         array (
@@ -330,6 +337,10 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         array (
             0 => __DIR__ . '/..' . '/cebe/markdown',
         ),
+        'cURL\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jossmp/sunatphp/src',
+        ),
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
@@ -381,6 +392,10 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         'Symfony\\Component\\BrowserKit\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/browser-kit',
+        ),
+        'Sunat\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jossmp/sunatphp/src',
         ),
         'Psr\\Log\\' => 
         array (
