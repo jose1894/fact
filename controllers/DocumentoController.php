@@ -429,7 +429,14 @@ class DocumentoController extends Controller
 
     public function actionGuiaRpt( $id ) {
       Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
-      $modelDocumento = Documento::findOne($id);
+      $modelDocumento = Documento::find()
+                        ->where('id_doc = :id',[ ':id' => $id])
+                        ->andWhere(['tipo_doc' => Documento::TIPODOC_GUIA])->one();
+
+      if ( is_null($modelDocumento) ){
+        throw new NotFoundHttpException(Yii::t('empresa', 'The requested page does not exist.'));
+      }
+
       $this->layout = 'reports';
       $modelDetalle = $modelDocumento->detalles;
 
@@ -503,7 +510,14 @@ class DocumentoController extends Controller
 
     public function actionDocumentoRpt( $id ) {
       Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
-      $modelDocumento = Documento::findOne($id);
+      $modelDocumento = Documento::find()
+                                   ->where('id_doc = :id',[':id' => $id])
+                                   ->andWhere(['tipo_doc' => [Documento::TIPODOC_FACTURA,Documento::TIPODOC_BOLETA]])->one();
+
+
+      if ( is_null($modelDocumento) ){
+        throw new NotFoundHttpException(Yii::t('empresa', 'The requested page does not exist.'));
+      }
       $this->layout = 'reports';
 
       $content = $this->render('documentoRpt', [
@@ -566,7 +580,7 @@ class DocumentoController extends Controller
           <td align="center">'.$date.'</td>
           <td align="center">'.$modelDocumento->pedidoDoc->nrodoc_pedido.'</td>
           <td align="center">'.$modelDocumento->pedidoDoc->condpPedido->desc_condp.'</td>
-          <td align="center">'.$modelDocumento->guiaRem->tipoDoc->abrv_tipod.'-'.$modelDocumento->guiaRem->cod_doc.'</td>
+          <td align="center">'.$modelDocumento->guiaRem->tipoDoc->abrv_tipod . $modelDocumento->guiaRem->numeracion->serie_num .'-'.substr($modelDocumento->guiaRem->cod_doc,-8).'</td>
         </tr>
       </table>';
 
@@ -582,39 +596,6 @@ class DocumentoController extends Controller
 
       $mpdf->SetTitle($titulo);
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
-    }
-
-    public function actionConsultaRuc(){
-      $cookie = array(
-        'cookie' 		=> array(
-          'use' 		=> true,
-          'file' 		=> __DIR__ . "/cookie.txt"
-        )
-      );
-      $config = array(
-        'representantes_legales' 	=> true,
-        'cantidad_trabajadores' 	=> true,
-        'establecimientos' 			=> true,
-        'cookie' 					=> $cookie
-      );
-
-      $sunat = new sunat( $config );
-
-      $ruc = "20169004359";
-      $dni = "44274795";
-
-      $search1 = $sunat->consulta( $ruc );
-      $search2 = $sunat->consulta( $dni );
-
-      $search[ 'search1' ] = $search1;
-      $search[ 'search2' ] = $search2;
-
-      Yii::$app->response->format = Response::FORMAT_JSON;
-
-      return $search;
-
-    //  return NumerosEnLetras::convertir( 1000.00 );
-
     }
 
 }

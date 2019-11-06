@@ -33,6 +33,9 @@ class Documento extends \yii\db\ActiveRecord
     const DOCUMENTO_GENERADO = 2; //ESTATUS DEL DOCUMENTO
     const DOCUMENTO_ANULADO = 3;
     const MOTIVO_GUIAFACTURA = 1; //MOTICOO DE LA GUIA
+    const TIPODOC_FACTURA = 2;
+    const TIPODOC_BOLETA = 9;
+    const TIPODOC_GUIA = 3;
     /**
      * {@inheritdoc}
      */

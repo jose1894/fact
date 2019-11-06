@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-11-2019 a las 23:34:43
+-- Tiempo de generación: 06-11-2019 a las 23:30:12
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -1356,13 +1356,6 @@ CREATE TABLE `compra` (
   `sucursal_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL COMPRA'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA ORDEN DE COMPRAS';
 
---
--- Volcado de datos para la tabla `compra`
---
-
-INSERT INTO `compra` (`id_compra`, `cod_compra`, `fecha_compra`, `provee_compra`, `moneda_compra`, `condp_compra`, `usuario_compra`, `estatus_compra`, `edicion_compra`, `excento_compra`, `afectaalm_compra`, `nrodoc_compra`, `sucursal_compra`) VALUES
-(1, '0000000001', '2019-10-23', 1, 2, 1, 2, 0, 'N', 0, 1, '', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -1382,20 +1375,6 @@ CREATE TABLE `compra_detalle` (
   `total_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL COMPRA DETALLE',
   `impuestototal_cdetalle` decimal(18,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT 'IMPUESTO TOTAL COMPRA DETALLE'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE COMPRAS';
-
---
--- Volcado de datos para la tabla `compra_detalle`
---
-
-INSERT INTO `compra_detalle` (`id_cdetalle`, `prod_cdetalle`, `cant_cdetalle`, `precio_cdetalle`, `descu_cdetalle`, `impuestouni_cdetalle`, `status_cdetalle`, `compra_cdetalle`, `plista_cdetalle`, `total_cdetalle`, `impuestototal_cdetalle`) VALUES
-(1, 7, '5.00', '11.21', '5.00', '1.71', 1, 1, '10.00', '56.05', '8.55'),
-(2, 43, '5.00', '11.45', '3.00', '1.75', 1, 1, '10.00', '57.23', '8.73'),
-(3, 108, '5.00', '22.89', '3.00', '3.49', 1, 1, '20.00', '114.46', '17.46'),
-(4, 49, '5.00', '11.45', '3.00', '1.75', 1, 1, '10.00', '57.23', '8.73'),
-(5, 97, '5.00', '9.56', '3.00', '1.46', 1, 1, '8.35', '47.79', '7.29'),
-(6, 89, '5.00', '3.43', '3.00', '0.52', 1, 1, '3.00', '17.17', '2.62'),
-(7, 154, '5.00', '6.01', '3.00', '0.92', 1, 1, '5.25', '30.05', '4.58'),
-(8, 152, '3.00', '9.27', '3.00', '1.41', 1, 1, '8.10', '27.81', '4.24');
 
 -- --------------------------------------------------------
 
@@ -2105,8 +2084,8 @@ CREATE TABLE `documento` (
 --
 
 INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `pedido_doc`, `fecha_doc`, `obsv_doc`, `totalimp_doc`, `totaldsc_doc`, `total_doc`, `transp_doc`, `utransp_doc`, `almacen_doc`, `motivo_doc`, `status_doc`, `sucursal_doc`) VALUES
-(23, '0000000014', 3, 9, 14, '2019-11-04', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, 1, 1),
-(24, '0000000008', 2, 7, 14, '2019-11-04', '', '145.21', '0.00', '951.90', NULL, NULL, 1, 0, 1, 1);
+(25, '0000000001', 3, 9, 15, '2019-11-06', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, 1, 1),
+(26, '0000000001', 2, 7, 15, '2019-11-06', '', '145.21', '0.00', '951.90', NULL, NULL, 1, 0, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2132,23 +2111,23 @@ CREATE TABLE `documento_detalle` (
 --
 
 INSERT INTO `documento_detalle` (`id_ddetalle`, `prod_ddetalle`, `cant_ddetalle`, `precio_ddetalle`, `descu_ddetalle`, `impuesto_ddetalle`, `status_ddetalle`, `documento_ddetalle`, `plista_ddetalle`, `total_ddetalle`) VALUES
-(140, 634, '10.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(141, 633, '10.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(142, 636, '6.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(143, 635, '6.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(144, 638, '6.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(145, 637, '6.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(146, 639, '4.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(147, 626, '2.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(148, 625, '2.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(149, 649, '4.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(150, 648, '4.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(151, 645, '4.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(152, 644, '4.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(153, 647, '4.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(154, 646, '4.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(155, 624, '12.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00'),
-(156, 621, '4.00', '0.00', '0.00', '0', 1, 23, '0.00', '0.00');
+(157, 634, '10.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(158, 633, '10.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(159, 635, '6.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(160, 636, '6.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(161, 638, '6.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(162, 637, '6.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(163, 639, '4.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(164, 626, '2.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(165, 625, '2.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(166, 649, '4.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(167, 648, '4.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(168, 645, '4.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(169, 644, '4.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(170, 647, '4.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(171, 646, '4.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(172, 624, '12.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(173, 621, '4.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00');
 
 -- --------------------------------------------------------
 
@@ -2758,15 +2737,15 @@ CREATE TABLE `numeracion` (
 --
 
 INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `serie_num`, `status_num`) VALUES
-(1, 1, '0000000013', 1, '00', 1),
-(2, 7, '0000000001', 1, '00', 1),
+(1, 1, '0000000001', 1, '00', 1),
+(2, 7, '0000000000', 1, '00', 1),
 (3, 8, '0000000000', 1, '00', 1),
-(4, 6, '0000000001', 1, '00', 1),
-(5, 4, '0000000001', 1, '00', 1),
-(6, 5, '0000000008', 1, '00', 1),
-(7, 2, '0000000008', 1, '01', 1),
+(4, 6, '0000000000', 1, '00', 1),
+(5, 4, '0000000000', 1, '00', 1),
+(6, 5, '0000000001', 1, '00', 1),
+(7, 2, '0000000001', 1, '01', 1),
 (8, 9, '0000000000', 1, '01', 1),
-(9, 3, '0000000014', 1, '01', 1);
+(9, 3, '0000000001', 1, '01', 1);
 
 -- --------------------------------------------------------
 
@@ -3057,7 +3036,7 @@ CREATE TABLE `pedido` (
 --
 
 INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, `vend_pedido`, `moneda_pedido`, `almacen_pedido`, `usuario_pedido`, `estatus_pedido`, `sucursal_pedido`, `condp_pedido`, `tipo_pedido`, `edicion_pedido`, `nrodoc_pedido`) VALUES
-(14, '0000000013', '2019-11-01', 367, 2, 1, 1, 2, 2, 1, 1, 'NP', 'N', '');
+(15, '0000000001', '2019-11-06', 367, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', '');
 
 -- --------------------------------------------------------
 
@@ -3083,23 +3062,23 @@ CREATE TABLE `pedido_detalle` (
 --
 
 INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `precio_pdetalle`, `descu_pdetalle`, `impuesto_pdetalle`, `status_pdetalle`, `pedido_pdetalle`, `plista_pdetalle`, `total_pdetalle`) VALUES
-(20, 634, '10.00', '3.80', '5.00', '18', 1, 14, '4.00', '38.00'),
-(21, 633, '10.00', '3.80', '5.00', '18', 1, 14, '4.00', '38.00'),
-(22, 636, '6.00', '12.35', '5.00', '18', 1, 14, '13.00', '74.10'),
-(23, 635, '6.00', '12.35', '5.00', '18', 1, 14, '13.00', '74.10'),
-(24, 638, '6.00', '12.35', '5.00', '18', 1, 14, '13.00', '74.10'),
-(25, 637, '6.00', '12.35', '5.00', '18', 1, 14, '13.00', '74.10'),
-(26, 639, '4.00', '17.10', '5.00', '18', 1, 14, '18.00', '68.40'),
-(27, 626, '2.00', '21.85', '5.00', '18', 1, 14, '23.00', '43.70'),
-(28, 625, '2.00', '21.85', '5.00', '18', 1, 14, '23.00', '43.70'),
-(29, 649, '4.00', '8.07', '5.00', '18', 1, 14, '8.50', '32.30'),
-(30, 648, '4.00', '8.07', '5.00', '18', 1, 14, '8.50', '32.30'),
-(31, 645, '4.00', '19.00', '5.00', '18', 1, 14, '20.00', '76.00'),
-(32, 644, '4.00', '19.00', '5.00', '18', 1, 14, '20.00', '76.00'),
-(33, 647, '4.00', '20.90', '5.00', '18', 1, 14, '22.00', '83.60'),
-(34, 646, '4.00', '20.90', '5.00', '18', 1, 14, '22.00', '83.60'),
-(35, 624, '12.00', '1.90', '5.00', '18', 1, 14, '2.00', '22.80'),
-(36, 621, '4.00', '4.28', '5.00', '18', 1, 14, '4.50', '17.10');
+(37, 634, '10.00', '3.80', '5.00', '18', 1, 15, '4.00', '38.00'),
+(38, 633, '10.00', '3.80', '5.00', '18', 1, 15, '4.00', '38.00'),
+(39, 635, '6.00', '12.35', '5.00', '18', 1, 15, '13.00', '74.10'),
+(40, 636, '6.00', '12.35', '5.00', '18', 1, 15, '13.00', '74.10'),
+(41, 638, '6.00', '12.35', '5.00', '18', 1, 15, '13.00', '74.10'),
+(42, 637, '6.00', '12.35', '5.00', '18', 1, 15, '13.00', '74.10'),
+(43, 639, '4.00', '17.10', '5.00', '18', 1, 15, '18.00', '68.40'),
+(44, 626, '2.00', '21.85', '5.00', '18', 1, 15, '23.00', '43.70'),
+(45, 625, '2.00', '21.85', '5.00', '18', 1, 15, '23.00', '43.70'),
+(46, 649, '4.00', '8.07', '5.00', '18', 1, 15, '8.50', '32.30'),
+(47, 648, '4.00', '8.07', '5.00', '18', 1, 15, '8.50', '32.30'),
+(48, 645, '4.00', '19.00', '5.00', '18', 1, 15, '20.00', '76.00'),
+(49, 644, '4.00', '19.00', '5.00', '18', 1, 15, '20.00', '76.00'),
+(50, 647, '4.00', '20.90', '5.00', '18', 1, 15, '22.00', '83.60'),
+(51, 646, '4.00', '20.90', '5.00', '18', 1, 15, '22.00', '83.60'),
+(52, 624, '12.00', '1.90', '5.00', '18', 1, 15, '2.00', '22.80'),
+(53, 621, '4.00', '4.28', '5.00', '18', 1, 15, '4.50', '17.10');
 
 -- --------------------------------------------------------
 
@@ -3409,175 +3388,175 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_prod`, `umed_prod`, `contenido_prod`, `exctoigv_prod`, `compra_prod`, `venta_prod`, `stockini_prod`, `stockmax_prod`, `stockmin_prod`, `stock_prod`, `status_prod`, `sucursal_prod`) VALUES
-(1, 'LP-BC2', 'CM13-BC02', 'FARO NEBLINERO BAIC ANTIGUO (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(2, 'LP-BH2', 'CM-WHG2', 'FARO NEBLINERO BAOJUN HONGGUANG V(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(3, 'LP-F32', 'CM3-BYD2', 'FARO NEBLINERO BYD F3 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(4, 'LP-F62', 'CM6-BYD2', 'FARO NEBLINERO BYD F6 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(5, 'LP-CG2', 'CM12-CHG2', 'FARO NEBLINERO CHANGHAN 2012 (SET X 2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(6, 'LP-CF2', 'CM-CH02', 'FARO NEBLINERO MINIVAN CHANGHE FREEDOM(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(7, 'LP-A12', 'CM-A102', 'FARO NEBLINERO CHERRY A1 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(8, 'LP-AV2C', 'CM07-AV4', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(9, 'LP-AV2', 'CM-9416', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)NEGRO         ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(10, 'LP-N32', 'CM-N3004  ', 'FARO NEBLI.CHEV. N300 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(11, 'LP-N22L', 'CM-N2004L', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(12, 'LP-N22R', 'CM-N2004R', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(13, 'LP-SA2', 'CM10-SAL5', 'FARO NEBLI.CHEV. SAIL 2010 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(14, 'LP-SP2', 'CM5-SPK04', 'FARO NEBLI.CHEV. SPARK 2005 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(15, 'LP-SP2A', 'CM5-SPK8', 'FARO NEBLI.CHEV. SPARK 2005 POST RED', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(16, 'LP-SP2B', 'CM5-SPK5', 'FARO NEBLI.CHEV. SPARK 2005 POST.BLANCO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(17, 'LP-SP4', 'CM9-SPK02', 'FARO NEBLI.CHEV. SPARK 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(18, 'LP-OP2', 'CM-9342', 'FARO NEBLI.CHEV. OPTRA 2003-2008(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(19, 'LP-ES2L', 'CM92-DE4L', 'FARO NEBLI.DAEWOO ESPERO 92....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(20, 'LP-ES2R', 'CM92-DE4R', 'FARO NEBLI.DAEWOO ESPERO 92....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(21, 'LP-ES4', 'CM96-DE4A', 'FARO NEBLI.DAEWOO ESPERO 96(SET)  ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(22, 'LP-CI2', 'CM94-DC4A', 'FARO NEBLI.DAEWOO CIELO NEGRO 94-96 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(23, 'LP-CI2CL', 'CM94-DC4L', 'FARO NEBLI.DAEWOO CIELO CRISTAL 94-96', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(24, 'LP-CI2CR', 'CM94-DC4R', 'FARO NEBLI.DAEWOO CIELO CRISTAL 94-96', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(25, 'LP-LA2', 'CM-LN04', 'FARO NEBLI.DAEWOO LANOS (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(26, 'LP-LA2C', 'CM-LN04C', 'FARO NEBLI.DAEWOO LANOS CRYSTAL(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(27, 'LP-NB2', 'CM97-DN04', 'FARO NEBLI.DAEWOO NUBIRA 1997 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(28, 'LP-NB4', 'CM00-DN2', 'FARO NEBLI.DAEWOO NUBIRA 2000 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(29, 'LP-XI2', 'CM15-DX02', 'FARO NEBLI.DONGFENG XIAOKANG(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(30, 'LP-C372', 'CM37-DF02', 'FARO NEBLI.DONGFEND C37 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(31, 'LP-RA4', 'CM-9296', 'FARO NEBLI.FORD RANGER 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(32, 'LP-FL4', 'CM16-FLD2', 'FARO NEBLI.FORLAND 2016(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(33, 'LP-FT2L', 'CM06-FT02L', 'FARO NEBLI.FOTON 2007.....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(34, 'LP-FT2R', 'CM06-FT02R', 'FARO NEBLI.FOTON 2007.....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(35, 'LP-CK2', 'CM12-GY02', 'FARO NEBLI.GEELLY CK1 2012(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(36, 'LP-GY2', 'CM07-GY2', 'FARO NEBLI.GEELY 2012 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(37, 'LP-MK4', 'CM14-GY02', 'FARO NEBLI.GEELLY MK CROSS 2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(38, 'LP-GO4', 'CM14-GW02', 'FARO NEBLI.GONOW 2014(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(39, 'LP-FJ2', 'CM5-WIN2', 'FARO NEBLI.GREATWALL FENG JUN 5(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(40, 'LP-GH2', 'CM5-GH02', 'FARO NEBLI.GREATWALL HOVER(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(41, 'LP-ST4', 'CM05-SX2', 'FARO NEBLI.PARACH. HY.STAREX 2005(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(43, 'LP-AC2B', 'CM98-AC4', 'FARO NEBLI.PARACH. HY ACCENT BLANCO 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(44, 'LP-AC4', 'CM-9172', 'FARO NEBLI.PARACH. HY ACCENT 2006...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(45, 'LP-AC4B', 'CM10-AC04', 'FARO NEBLI.PARACH. HY ACCENT 2011-2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(46, 'LP-EL2', 'CM-9071', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(47, 'LP-EL2C', 'CM07-EL02', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(48, 'LP-EL4', 'CM11-EL5  ', 'FARO NEBLI.PARACH. HY ELANTRA 2011(SETX2)CHINO ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(49, 'LP-EL4B', 'CM13-EL4', 'FARO NEBLI.PARACH. HY ELANTRA 2013-2014 (SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(50, 'LP-I104L', 'CM12-I104L', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(51, 'LP-I104R', 'CM12-I104R', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(52, 'LP-I104A', 'CM14-I102', 'FARO NEBLI.PARACH. HY I10 2014 (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(53, 'LP-I104B', 'CM14-I102A', 'FARO NEBLI.PARACH. HY I10 2014FULL (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(54, 'LP-H12', 'CMH1-002', 'FARO NEBLI.PARACH. HY H1(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(55, 'LP-HD2', 'CM65-HD04', 'FARO NEBLI.PARACH. HY.HD 65 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(56, 'LP-HD4', 'CM75-HD05', 'FARO NEBLI.PARACH. HY.HD 75 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(57, 'LP-H1004', 'CM96-HP4', 'FARO NEBLI.PARACH. H100 PANEL VAN GRACE (SET2) 96', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(58, 'LP-PO4', 'CM13-PRT2', 'FARO NEBLI.PARACH. HY PORTER II 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(59, 'LP-SF2', 'CM09-SF2', 'FARO NEBLI.PARACH. HY SANTA FE 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(60, 'LP-MA2', 'CM07-MX2', 'FARO NEBLI.PARACH. HY MATRIX 2005(SET X 2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(61, 'LP-SO2L', 'CM03-SON4L', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(62, 'LP-SO2R', 'CM03-SON4R', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(63, 'LP-SO4', 'CM08-SON2', 'FARO NEBLI.PARACH.HY SONATA 2008(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(64, 'LP-TU2', 'CM03-TS2', 'FARO NEBLI.PARACH.HY TUCSON 2003 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(65, 'LP-EO4', 'CM11-EON4', 'FARO NEBLI.PARACH.HY EON 2011-2013 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(66, 'LP-JR2', 'CM-JRF02', 'FARO NEBLI.JAC REFINE(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(67, 'LP-JS4', 'CM13-JS02', 'FARO NEBLI.JAC STAR SEDAN 2013 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(68, 'LP-JM2', 'CM02-JB06', 'FARO NEBLI.JINBEI 2002 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(69, 'LP-K27004', 'CM12-BN02', 'FARO NEBLI.KIA K2700 2012-2013(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(71, 'LP-CE4', 'CM13-KC2', 'FARO NEBLI.KIA CERATO  2013 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(72, 'LP-CE4B', 'CM17-CR2', 'FARO NEBLI.KIA CERATO 2018(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(73, 'LP-PI2C', 'CM08-PI02', 'FARO NEBLI.KIA PICANTO 2008(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(74, 'LP-PI2', 'CM-9226', 'FARO NEBLI.KIA PICANTO 2008...(SET2)        ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(75, 'LP-PI4', 'CM12-PI02', 'FARO NEBLI.KIA PICANTO 2011-2013(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(76, 'LP-PI4C', 'CM14-PI02', 'FARO NEBLI.KIA PICANTO 2014 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(77, 'LP-PI4D', 'CM16-PI2A', 'FARO NEBLI.KIA PICANTO 2016  (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(78, 'LP-PI4B', 'CM16-PI02', 'FARO NEBLI.KIA PICANTO 2016 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(79, 'LP-RI2', 'CM10-KR02', 'FARO NEBLI.KIA RIO 2010 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(80, 'LP-RI4', 'CM11-KR02', 'FARO NEBLI.KIA RIO SEDAN 2011(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(81, 'LP-RI4D', 'CM16-KR4A', 'FARO NEBLI.KIA RIO 2016(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(82, 'LP-SG2', 'CM05-SP2', 'FARO NEBLI.KIA SPORTAGE 2005 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(83, 'LP-SG4', 'CM11-SP02', 'FARO NEBLI.KIA SPORTAGE 2011 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(84, 'LP-SG4A', 'CM11-SP2N', 'FARO NEBLI.KIA SPORTAGE 2011 (SETX2)(NEGRO)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(85, 'LP-LI2', 'CM-LF02', 'FARO NEBLI.LIFAN 520 SET X2', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(86, 'LP-LI4', 'CM-LF02B', 'FARO NEBLI.LIFAN 620 SET X 2', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(87, 'LP-MZ4', 'CM-9403', 'FARO NEBLI.PARACH MAZDA CX5 2013-2016(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(88, 'LP-MZ2', 'CM-9101', 'FARO NEBLI.PARACH MAZDA 3 2008(SET2)NEGRO              ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(89, 'LP-BT2', 'CM-9289', 'FARO NEBLI.PARACH.MAZDA BT-50 2008(SET2)NEGRO      ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(90, 'LP-BT4', 'CM-9295', 'FARO NEBLI.PARACH.MAZDA BT-50 2015 (SET2)CROMO       ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(91, 'LP-AM2', 'CM-9483', 'FARO NEBLI.AMAROK-JETTA III-GOLF V 2001-2016(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(92, 'LP-FU2', 'CM86-MF4', 'FARO NEBLI.PARACH.MITSUB.FUSO 1986(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(93, 'LP-RO2', 'CM-MR04', 'FARO NEBLI.PARACH MITSUB.ROSA(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(94, 'LP-TR2', 'CM-9236', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2008...(SET2)CROMADO     ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(95, 'LP-TR2S', 'CM-9242', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2008 S/TAPA..(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(96, 'LP-TR4', 'CM-9417', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2016...(SET2)CROMO     ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(97, 'LP-AD2', 'CM00-AD4L', 'FARO NEBLI.NISSAN AD WAGON WINGROAD 1998-2005', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(98, 'LP-FR2', 'CM-9097', 'FARO NEBLI.NISS FRONTIER 01-04(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(99, 'LP-NA2', 'CM-9150', 'FARO NEBLI.NISS.NAVARA 2005/X-TERRA 05-09(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(100, 'LP-NA4', 'CM-9406', 'FARO NEBLI.NISS.NAVARA 2009(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(101, 'LP-NA4B', 'CM-9449', 'FARO NEBLI.NISS.NAVARA 2010-2015(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(102, 'LP-UR4', 'CM25-UC5', 'FARO NEBLI.NISS.CARAVAN E25 2005(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(103, 'LP-UR4AL', 'CM26-UC5L', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(104, 'LP-UR4AR', 'CM26-UC5R', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(105, 'LP-UR4CL', 'CM26-UC5AL', 'FARO NEBLI.NISS.URVAN NV350 C/LED AZUL 2013', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(106, 'LP-UR4CR', 'CM26-UC5AR', 'FARO NEBLI.NISS.URVAN NV350 C/LED AZUL 2013', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(107, 'LP-AL2', 'CM-9141', 'FARO NEBLI.NISS.ALMERA 2000-2007(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(108, 'LP-AL2Q', 'CM-9281', 'FARO NEBLI.NISS.ALMERA 2007-QASHQAI(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(109, 'LP-VE4C', 'CM-9304', 'FARO NEBLI.NISS.VERSA 2011-2013(SET2)CROMAD', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(110, 'LP-VE4', 'CM-9290', 'FARO NEBLI.NISS.VERSA 2011-2013(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(111, 'LP-VE4K', 'CM-9454', 'FARO NEBLI.NISS.VERSA 2014...(SET2)CROMO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(112, 'LP-TI2', 'CM-9381', 'FARO NEBLI.NISS NOTE/MURANO 07-TIIDA/X-TRAIL 2007(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(113, 'LP-TI4', 'CM-9565', 'FARO NEBLI.NISS.TIIDA 2008-2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(114, 'LP-JU4', 'CM-9456', 'FARO NEBLI.NISS.JUKE 2015(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(115, 'LP-MH2', 'CM-9255', 'FARO NEBLI.NISS.MARCH 2010 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(116, 'LP-NE2', 'CM-9374', 'FARO NEBLI.NISS.NEO 2004 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(117, 'LP-SW2', 'CM4-SW02', 'FARO NEBLI.SUZ.SWIFT SX4 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(118, 'LP-SW4', 'CM-9197', 'FARO NEBLI.SUZ.SWIFT05-10/SX4 06-13/ALTO 09/CELERIO14/(SET2)UNIVERSAL', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(120, 'LP-SW4N', 'CM-9310', 'FARO NEBLI.SUZ.SWIFT 2012....(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(122, 'LP-AE2', 'CM03-AE02     ', 'FARO NEBLI.SUZ.AERIO 2003 (SET2)               ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(123, 'LP-AZ4', 'CM-9262', 'FARO NEBLI.TY AVANZA 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(124, 'LP-DI2L', 'CM99-DN4L', 'FARO NEBLI.TY DINA 1999-2008', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(125, 'LP-DI2T', 'CM99-DN4R', 'FARO NEBLI.TY DINA 1999-2008', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(126, 'LP-CA2', 'CM98-CA4', 'FARO NEBLI.TY CALDINA AVENSIS(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(127, 'LP-YS2', 'CM-9225', 'FARO NEBLI.TY YARIS SEDAN 2007...NEGRO (SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(128, 'LP-YS2C', 'CM-9235', 'FARO NEBLI.TY YARIS SEDAN 2007...CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(129, 'LP-YS4', 'CM-9333', 'FARO NEBLI.TY YARIS SEDAN 2013-2016 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(130, 'LP-YS4C', 'CM-9336', 'FARO NEBLI.TY YARIS SEDAN 2013-2016 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(131, 'LP-YH2', 'CM-9241', 'FARO NEBLI.TY YARIS HASHBACH 2009...NEGRO(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(132, 'LP-YH4', 'CM-9352', 'FARO NEBLI.TY.YARIS HASHBACK 2014-2017 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(133, 'LP-YP2', 'CM-9107', 'FARO NEBLI.TY.YARIS PLAST(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(134, 'LP-AT2D', 'CM-9128', 'FARO NEBLI.TY.ALTIS 2001-2006 DOBLE PUNTA(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(135, 'LP-AT2', 'CM-9282', 'FARO NEBLI.TY.ALTIS 2001-2006 UNA PUNTA(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(136, 'LP-AT2C', 'CM01-TA5L', 'FARO NEBLI.TY ALTIS 2001-2006 UNA PUNTA(CHINO)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(137, 'LP-AT2B', 'CM01-TA5C', 'FARO NEBLI.TY ALTIS 2001-2006 UNA PUNTA CRYSTAL CHINO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(138, 'LP-AT4C', 'CM-9228', 'FARO NEBLI.TY.ALTIS 2011-2013 CROMADO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(139, 'LP-AS2', 'CM-9174', 'FARO NEBLI.TY COROLLA 2001-ASISTA..(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(140, 'LP-CO2', 'CM01-TC4L', 'FARO NEBLI.TY COROLLA 2001..', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(141, 'LP-CO4', 'CM-9170', 'FARO NEBLI.TY.COROLLA 2008-2011 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(142, 'LP-CO4N', 'CM-9277', 'FARO NEBLI.TY.COROLLA 2011-2013 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(143, 'LP-CO4D', 'CM-9366', ' FARO NEBLI.TY.COROLLA 2014-2016 C/NEGRO(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(144, 'LP-FS2', 'CM-9024', 'FARO NEBLI.TY.FIELDER SEDAN 2004 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(145, 'LP-FS2C', 'CM04-TF4', 'FARO NEBLI.TY.FIELDER 2004 (212-2031-UEH)(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(146, 'LP-HX2', 'CM-9129', 'FARO NEBLI.TY HILUX VIGO 04-07(SET 2 )    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(147, 'LP-HX2D', 'CM-9222', 'FARO NEBLI.TY HILUX VIGO 2008-2010 (SETX2)      ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(148, 'LP-HX4C', 'CM15-HX4', 'FARO NEBLI.TY REVO 2015-AVANZA 2016-YARIS 2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(149, 'LP-HX4', 'CM-9430', 'FARO NEBLI.TY.REVO 2015 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(150, 'LP-HX4B', 'CM-9430C', 'FARO NEBLI.TY.REVO 2015 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(151, 'LP-TH2L', 'CM97-TH6L', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(152, 'LP-TH2R', 'CM97-TH6R', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(153, 'LP-TH2AL', 'CM04-TH9L', 'FARO NEBLI.TY HIACE 2004-2010', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(154, 'LP-TH2AR', 'CM04-TH9R', 'FARO NEBLI.TY HIACE 2004-2010', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(155, 'LP-TH4AL', 'CM11-TH7L ', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO CHINO        ', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(156, 'LP-TH4AR', 'CM11-TH7R ', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO CHINO        ', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(157, 'LP-TH4C', 'CM11-TH7-1', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO 9 FOCOS LED CHINO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(158, 'LP-TH4B', 'CM-9315', 'FARO NEBLI.TY.HIACE 2011-2013 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(159, 'LP-TH4E', 'CM11-TH7C', 'FARO NEBLI.TY HIACE 2011-2013 CROMO (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(160, 'LP-TH4D', 'CM11-TH7-2', 'FARO NEBLI.TY HIACE 2011-2013 CROMO 9FOCOS (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(161, 'LP-TH6', 'CM-9415', 'FARO NEBLI.TY HIACE 2014-2015 NEGRO(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(162, 'LP-TH6A', 'CM14-TH4', 'FARO NEBLI.TY HIACE 2014-2015 NEGRO(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(163, 'LP-TH6C', 'CM-9415C', 'FARO NEBLI.TY HIACE 2014-2015 CROMO(SET2)   ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(164, 'LP-NH2', 'CM96-TN4', 'FARO NEBLI.TY NOAH (SETX2)VIDRIO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(165, 'LP-SU2M', 'CM05-SC6M', 'FARO NEBLI.TY SUCCED MICA (SET X 2)C/BASE', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(166, 'LP-SU2VL', 'CM05-SC6L', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(167, 'LP-SU2VR', 'CM05-SC6R', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(168, 'LP-RV2C', 'CM-9431', 'FARO NEBLI.TY RAV4 2008-2012 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(169, 'LP-RV4', 'CM-9488', 'FARO NEBLI.TY RAV4 2013-2015 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(170, 'LP-RV6', 'CM-9455', 'FARO NEBLI.TY RAV4 2016-2017 NEGRO...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(171, 'LP-WR2', 'CM-WRG2', 'FARO NEBLI.WULING RONGGUANS  (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(172, 'LP-ZT2', 'CM08-ZT2', 'FARO NEBLI.ZOTYE 2008 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(1, 'LP-BC2', 'CM13-BC02', 'FARO NEBLINERO BAIC ANTIGUO (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(2, 'LP-BH2', 'CM-WHG2', 'FARO NEBLINERO BAOJUN HONGGUANG V(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(3, 'LP-F32', 'CM3-BYD2', 'FARO NEBLINERO BYD F3 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(4, 'LP-F62', 'CM6-BYD2', 'FARO NEBLINERO BYD F6 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(5, 'LP-CG2', 'CM12-CHG2', 'FARO NEBLINERO CHANGHAN 2012 (SET X 2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(6, 'LP-CF2', 'CM-CH02', 'FARO NEBLINERO MINIVAN CHANGHE FREEDOM(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(7, 'LP-A12', 'CM-A102', 'FARO NEBLINERO CHERRY A1 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(8, 'LP-AV2C', 'CM07-AV4', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(9, 'LP-AV2', 'CM-9416', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)NEGRO         ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(10, 'LP-N32', 'CM-N3004  ', 'FARO NEBLI.CHEV. N300 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(11, 'LP-N22L', 'CM-N2004L', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(12, 'LP-N22R', 'CM-N2004R', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(13, 'LP-SA2', 'CM10-SAL5', 'FARO NEBLI.CHEV. SAIL 2010 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(14, 'LP-SP2', 'CM5-SPK04', 'FARO NEBLI.CHEV. SPARK 2005 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(15, 'LP-SP2A', 'CM5-SPK8', 'FARO NEBLI.CHEV. SPARK 2005 POST RED', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(16, 'LP-SP2B', 'CM5-SPK5', 'FARO NEBLI.CHEV. SPARK 2005 POST.BLANCO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(17, 'LP-SP4', 'CM9-SPK02', 'FARO NEBLI.CHEV. SPARK 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(18, 'LP-OP2', 'CM-9342', 'FARO NEBLI.CHEV. OPTRA 2003-2008(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(19, 'LP-ES2L', 'CM92-DE4L', 'FARO NEBLI.DAEWOO ESPERO 92....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(20, 'LP-ES2R', 'CM92-DE4R', 'FARO NEBLI.DAEWOO ESPERO 92....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(21, 'LP-ES4', 'CM96-DE4A', 'FARO NEBLI.DAEWOO ESPERO 96(SET)  ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(22, 'LP-CI2', 'CM94-DC4A', 'FARO NEBLI.DAEWOO CIELO NEGRO 94-96 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(23, 'LP-CI2CL', 'CM94-DC4L', 'FARO NEBLI.DAEWOO CIELO CRISTAL 94-96', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(24, 'LP-CI2CR', 'CM94-DC4R', 'FARO NEBLI.DAEWOO CIELO CRISTAL 94-96', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(25, 'LP-LA2', 'CM-LN04', 'FARO NEBLI.DAEWOO LANOS (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(26, 'LP-LA2C', 'CM-LN04C', 'FARO NEBLI.DAEWOO LANOS CRYSTAL(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(27, 'LP-NB2', 'CM97-DN04', 'FARO NEBLI.DAEWOO NUBIRA 1997 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(28, 'LP-NB4', 'CM00-DN2', 'FARO NEBLI.DAEWOO NUBIRA 2000 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(29, 'LP-XI2', 'CM15-DX02', 'FARO NEBLI.DONGFENG XIAOKANG(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(30, 'LP-C372', 'CM37-DF02', 'FARO NEBLI.DONGFEND C37 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(31, 'LP-RA4', 'CM-9296', 'FARO NEBLI.FORD RANGER 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(32, 'LP-FL4', 'CM16-FLD2', 'FARO NEBLI.FORLAND 2016(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(33, 'LP-FT2L', 'CM06-FT02L', 'FARO NEBLI.FOTON 2007.....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(34, 'LP-FT2R', 'CM06-FT02R', 'FARO NEBLI.FOTON 2007.....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(35, 'LP-CK2', 'CM12-GY02', 'FARO NEBLI.GEELLY CK1 2012(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(36, 'LP-GY2', 'CM07-GY2', 'FARO NEBLI.GEELY 2012 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(37, 'LP-MK4', 'CM14-GY02', 'FARO NEBLI.GEELLY MK CROSS 2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(38, 'LP-GO4', 'CM14-GW02', 'FARO NEBLI.GONOW 2014(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(39, 'LP-FJ2', 'CM5-WIN2', 'FARO NEBLI.GREATWALL FENG JUN 5(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(40, 'LP-GH2', 'CM5-GH02', 'FARO NEBLI.GREATWALL HOVER(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(41, 'LP-ST4', 'CM05-SX2', 'FARO NEBLI.PARACH. HY.STAREX 2005(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(43, 'LP-AC2B', 'CM98-AC4', 'FARO NEBLI.PARACH. HY ACCENT BLANCO 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(44, 'LP-AC4', 'CM-9172', 'FARO NEBLI.PARACH. HY ACCENT 2006...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(45, 'LP-AC4B', 'CM10-AC04', 'FARO NEBLI.PARACH. HY ACCENT 2011-2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(46, 'LP-EL2', 'CM-9071', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(47, 'LP-EL2C', 'CM07-EL02', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(48, 'LP-EL4', 'CM11-EL5  ', 'FARO NEBLI.PARACH. HY ELANTRA 2011(SETX2)CHINO ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(49, 'LP-EL4B', 'CM13-EL4', 'FARO NEBLI.PARACH. HY ELANTRA 2013-2014 (SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(50, 'LP-I104L', 'CM12-I104L', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(51, 'LP-I104R', 'CM12-I104R', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(52, 'LP-I104A', 'CM14-I102', 'FARO NEBLI.PARACH. HY I10 2014 (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(53, 'LP-I104B', 'CM14-I102A', 'FARO NEBLI.PARACH. HY I10 2014FULL (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(54, 'LP-H12', 'CMH1-002', 'FARO NEBLI.PARACH. HY H1(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(55, 'LP-HD2', 'CM65-HD04', 'FARO NEBLI.PARACH. HY.HD 65 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(56, 'LP-HD4', 'CM75-HD05', 'FARO NEBLI.PARACH. HY.HD 75 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(57, 'LP-H1004', 'CM96-HP4', 'FARO NEBLI.PARACH. H100 PANEL VAN GRACE (SET2) 96', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(58, 'LP-PO4', 'CM13-PRT2', 'FARO NEBLI.PARACH. HY PORTER II 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(59, 'LP-SF2', 'CM09-SF2', 'FARO NEBLI.PARACH. HY SANTA FE 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(60, 'LP-MA2', 'CM07-MX2', 'FARO NEBLI.PARACH. HY MATRIX 2005(SET X 2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(61, 'LP-SO2L', 'CM03-SON4L', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(62, 'LP-SO2R', 'CM03-SON4R', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(63, 'LP-SO4', 'CM08-SON2', 'FARO NEBLI.PARACH.HY SONATA 2008(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(64, 'LP-TU2', 'CM03-TS2', 'FARO NEBLI.PARACH.HY TUCSON 2003 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(65, 'LP-EO4', 'CM11-EON4', 'FARO NEBLI.PARACH.HY EON 2011-2013 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(66, 'LP-JR2', 'CM-JRF02', 'FARO NEBLI.JAC REFINE(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(67, 'LP-JS4', 'CM13-JS02', 'FARO NEBLI.JAC STAR SEDAN 2013 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(68, 'LP-JM2', 'CM02-JB06', 'FARO NEBLI.JINBEI 2002 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(69, 'LP-K27004', 'CM12-BN02', 'FARO NEBLI.KIA K2700 2012-2013(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(71, 'LP-CE4', 'CM13-KC2', 'FARO NEBLI.KIA CERATO  2013 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(72, 'LP-CE4B', 'CM17-CR2', 'FARO NEBLI.KIA CERATO 2018(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(73, 'LP-PI2C', 'CM08-PI02', 'FARO NEBLI.KIA PICANTO 2008(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(74, 'LP-PI2', 'CM-9226', 'FARO NEBLI.KIA PICANTO 2008...(SET2)        ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(75, 'LP-PI4', 'CM12-PI02', 'FARO NEBLI.KIA PICANTO 2011-2013(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(76, 'LP-PI4C', 'CM14-PI02', 'FARO NEBLI.KIA PICANTO 2014 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(77, 'LP-PI4D', 'CM16-PI2A', 'FARO NEBLI.KIA PICANTO 2016  (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(78, 'LP-PI4B', 'CM16-PI02', 'FARO NEBLI.KIA PICANTO 2016 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(79, 'LP-RI2', 'CM10-KR02', 'FARO NEBLI.KIA RIO 2010 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(80, 'LP-RI4', 'CM11-KR02', 'FARO NEBLI.KIA RIO SEDAN 2011(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(81, 'LP-RI4D', 'CM16-KR4A', 'FARO NEBLI.KIA RIO 2016(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(82, 'LP-SG2', 'CM05-SP2', 'FARO NEBLI.KIA SPORTAGE 2005 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(83, 'LP-SG4', 'CM11-SP02', 'FARO NEBLI.KIA SPORTAGE 2011 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(84, 'LP-SG4A', 'CM11-SP2N', 'FARO NEBLI.KIA SPORTAGE 2011 (SETX2)(NEGRO)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(85, 'LP-LI2', 'CM-LF02', 'FARO NEBLI.LIFAN 520 SET X2', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(86, 'LP-LI4', 'CM-LF02B', 'FARO NEBLI.LIFAN 620 SET X 2', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(87, 'LP-MZ4', 'CM-9403', 'FARO NEBLI.PARACH MAZDA CX5 2013-2016(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(88, 'LP-MZ2', 'CM-9101', 'FARO NEBLI.PARACH MAZDA 3 2008(SET2)NEGRO              ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(89, 'LP-BT2', 'CM-9289', 'FARO NEBLI.PARACH.MAZDA BT-50 2008(SET2)NEGRO      ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(90, 'LP-BT4', 'CM-9295', 'FARO NEBLI.PARACH.MAZDA BT-50 2015 (SET2)CROMO       ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(91, 'LP-AM2', 'CM-9483', 'FARO NEBLI.AMAROK-JETTA III-GOLF V 2001-2016(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(92, 'LP-FU2', 'CM86-MF4', 'FARO NEBLI.PARACH.MITSUB.FUSO 1986(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(93, 'LP-RO2', 'CM-MR04', 'FARO NEBLI.PARACH MITSUB.ROSA(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(94, 'LP-TR2', 'CM-9236', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2008...(SET2)CROMADO     ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(95, 'LP-TR2S', 'CM-9242', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2008 S/TAPA..(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(96, 'LP-TR4', 'CM-9417', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2016...(SET2)CROMO     ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(97, 'LP-AD2', 'CM00-AD4L', 'FARO NEBLI.NISSAN AD WAGON WINGROAD 1998-2005', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(98, 'LP-FR2', 'CM-9097', 'FARO NEBLI.NISS FRONTIER 01-04(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(99, 'LP-NA2', 'CM-9150', 'FARO NEBLI.NISS.NAVARA 2005/X-TERRA 05-09(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(100, 'LP-NA4', 'CM-9406', 'FARO NEBLI.NISS.NAVARA 2009(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(101, 'LP-NA4B', 'CM-9449', 'FARO NEBLI.NISS.NAVARA 2010-2015(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(102, 'LP-UR4', 'CM25-UC5', 'FARO NEBLI.NISS.CARAVAN E25 2005(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(103, 'LP-UR4AL', 'CM26-UC5L', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(104, 'LP-UR4AR', 'CM26-UC5R', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(105, 'LP-UR4CL', 'CM26-UC5AL', 'FARO NEBLI.NISS.URVAN NV350 C/LED AZUL 2013', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(106, 'LP-UR4CR', 'CM26-UC5AR', 'FARO NEBLI.NISS.URVAN NV350 C/LED AZUL 2013', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(107, 'LP-AL2', 'CM-9141', 'FARO NEBLI.NISS.ALMERA 2000-2007(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(108, 'LP-AL2Q', 'CM-9281', 'FARO NEBLI.NISS.ALMERA 2007-QASHQAI(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(109, 'LP-VE4C', 'CM-9304', 'FARO NEBLI.NISS.VERSA 2011-2013(SET2)CROMAD', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(110, 'LP-VE4', 'CM-9290', 'FARO NEBLI.NISS.VERSA 2011-2013(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(111, 'LP-VE4K', 'CM-9454', 'FARO NEBLI.NISS.VERSA 2014...(SET2)CROMO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(112, 'LP-TI2', 'CM-9381', 'FARO NEBLI.NISS NOTE/MURANO 07-TIIDA/X-TRAIL 2007(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(113, 'LP-TI4', 'CM-9565', 'FARO NEBLI.NISS.TIIDA 2008-2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(114, 'LP-JU4', 'CM-9456', 'FARO NEBLI.NISS.JUKE 2015(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(115, 'LP-MH2', 'CM-9255', 'FARO NEBLI.NISS.MARCH 2010 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(116, 'LP-NE2', 'CM-9374', 'FARO NEBLI.NISS.NEO 2004 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(117, 'LP-SW2', 'CM4-SW02', 'FARO NEBLI.SUZ.SWIFT SX4 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(118, 'LP-SW4', 'CM-9197', 'FARO NEBLI.SUZ.SWIFT05-10/SX4 06-13/ALTO 09/CELERIO14/(SET2)UNIVERSAL', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(120, 'LP-SW4N', 'CM-9310', 'FARO NEBLI.SUZ.SWIFT 2012....(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(122, 'LP-AE2', 'CM03-AE02     ', 'FARO NEBLI.SUZ.AERIO 2003 (SET2)               ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(123, 'LP-AZ4', 'CM-9262', 'FARO NEBLI.TY AVANZA 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(124, 'LP-DI2L', 'CM99-DN4L', 'FARO NEBLI.TY DINA 1999-2008', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(125, 'LP-DI2T', 'CM99-DN4R', 'FARO NEBLI.TY DINA 1999-2008', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(126, 'LP-CA2', 'CM98-CA4', 'FARO NEBLI.TY CALDINA AVENSIS(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(127, 'LP-YS2', 'CM-9225', 'FARO NEBLI.TY YARIS SEDAN 2007...NEGRO (SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(128, 'LP-YS2C', 'CM-9235', 'FARO NEBLI.TY YARIS SEDAN 2007...CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(129, 'LP-YS4', 'CM-9333', 'FARO NEBLI.TY YARIS SEDAN 2013-2016 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(130, 'LP-YS4C', 'CM-9336', 'FARO NEBLI.TY YARIS SEDAN 2013-2016 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(131, 'LP-YH2', 'CM-9241', 'FARO NEBLI.TY YARIS HASHBACH 2009...NEGRO(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(132, 'LP-YH4', 'CM-9352', 'FARO NEBLI.TY.YARIS HASHBACK 2014-2017 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(133, 'LP-YP2', 'CM-9107', 'FARO NEBLI.TY.YARIS PLAST(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(134, 'LP-AT2D', 'CM-9128', 'FARO NEBLI.TY.ALTIS 2001-2006 DOBLE PUNTA(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(135, 'LP-AT2', 'CM-9282', 'FARO NEBLI.TY.ALTIS 2001-2006 UNA PUNTA(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(136, 'LP-AT2C', 'CM01-TA5L', 'FARO NEBLI.TY ALTIS 2001-2006 UNA PUNTA(CHINO)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(137, 'LP-AT2B', 'CM01-TA5C', 'FARO NEBLI.TY ALTIS 2001-2006 UNA PUNTA CRYSTAL CHINO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(138, 'LP-AT4C', 'CM-9228', 'FARO NEBLI.TY.ALTIS 2011-2013 CROMADO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(139, 'LP-AS2', 'CM-9174', 'FARO NEBLI.TY COROLLA 2001-ASISTA..(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(140, 'LP-CO2', 'CM01-TC4L', 'FARO NEBLI.TY COROLLA 2001..', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(141, 'LP-CO4', 'CM-9170', 'FARO NEBLI.TY.COROLLA 2008-2011 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(142, 'LP-CO4N', 'CM-9277', 'FARO NEBLI.TY.COROLLA 2011-2013 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(143, 'LP-CO4D', 'CM-9366', ' FARO NEBLI.TY.COROLLA 2014-2016 C/NEGRO(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(144, 'LP-FS2', 'CM-9024', 'FARO NEBLI.TY.FIELDER SEDAN 2004 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(145, 'LP-FS2C', 'CM04-TF4', 'FARO NEBLI.TY.FIELDER 2004 (212-2031-UEH)(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(146, 'LP-HX2', 'CM-9129', 'FARO NEBLI.TY HILUX VIGO 04-07(SET 2 )    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(147, 'LP-HX2D', 'CM-9222', 'FARO NEBLI.TY HILUX VIGO 2008-2010 (SETX2)      ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(148, 'LP-HX4C', 'CM15-HX4', 'FARO NEBLI.TY REVO 2015-AVANZA 2016-YARIS 2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(149, 'LP-HX4', 'CM-9430', 'FARO NEBLI.TY.REVO 2015 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(150, 'LP-HX4B', 'CM-9430C', 'FARO NEBLI.TY.REVO 2015 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(151, 'LP-TH2L', 'CM97-TH6L', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(152, 'LP-TH2R', 'CM97-TH6R', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(153, 'LP-TH2AL', 'CM04-TH9L', 'FARO NEBLI.TY HIACE 2004-2010', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(154, 'LP-TH2AR', 'CM04-TH9R', 'FARO NEBLI.TY HIACE 2004-2010', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(155, 'LP-TH4AL', 'CM11-TH7L ', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO CHINO        ', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(156, 'LP-TH4AR', 'CM11-TH7R ', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO CHINO        ', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(157, 'LP-TH4C', 'CM11-TH7-1', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO 9 FOCOS LED CHINO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(158, 'LP-TH4B', 'CM-9315', 'FARO NEBLI.TY.HIACE 2011-2013 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(159, 'LP-TH4E', 'CM11-TH7C', 'FARO NEBLI.TY HIACE 2011-2013 CROMO (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(160, 'LP-TH4D', 'CM11-TH7-2', 'FARO NEBLI.TY HIACE 2011-2013 CROMO 9FOCOS (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(161, 'LP-TH6', 'CM-9415', 'FARO NEBLI.TY HIACE 2014-2015 NEGRO(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(162, 'LP-TH6A', 'CM14-TH4', 'FARO NEBLI.TY HIACE 2014-2015 NEGRO(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(163, 'LP-TH6C', 'CM-9415C', 'FARO NEBLI.TY HIACE 2014-2015 CROMO(SET2)   ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(164, 'LP-NH2', 'CM96-TN4', 'FARO NEBLI.TY NOAH (SETX2)VIDRIO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(165, 'LP-SU2M', 'CM05-SC6M', 'FARO NEBLI.TY SUCCED MICA (SET X 2)C/BASE', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(166, 'LP-SU2VL', 'CM05-SC6L', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(167, 'LP-SU2VR', 'CM05-SC6R', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(168, 'LP-RV2C', 'CM-9431', 'FARO NEBLI.TY RAV4 2008-2012 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(169, 'LP-RV4', 'CM-9488', 'FARO NEBLI.TY RAV4 2013-2015 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(170, 'LP-RV6', 'CM-9455', 'FARO NEBLI.TY RAV4 2016-2017 NEGRO...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(171, 'LP-WR2', 'CM-WRG2', 'FARO NEBLI.WULING RONGGUANS  (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(172, 'LP-ZT2', 'CM08-ZT2', 'FARO NEBLI.ZOTYE 2008 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (428, 'LP-3004AL', NULL, 'MANIJA EXT PTA.DELANT.KIA TOWNER', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (429, 'LP-3004AR', NULL, 'MANIJA EXT PTA DELANT.KIA TOWNER', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (430, 'LP-1001G', NULL, 'MANIJA LEVANTULA DAEWOO MATIZ 98-2005 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -3771,35 +3750,35 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (618, 'LP-3700AFR', NULL, 'MANIJA EXT.PTA DELANT.MAZDA SCRUM WAGON 2004-2013', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (619, 'LP-3700ARL', NULL, 'MANIJA EXT.PTA POST.MAZDA SCRUM WAGON 2004-2013', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (620, 'LP-3700ARR', NULL, 'MANIJA EXT.PTA POST.MAZDA SCRUM WAGON 2004-2013', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(621, 'LP-1002G', NULL, 'MANIJA LEVANTALUNA TOYOTA VIGO 05 / HIACE 5L GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(621, 'LP-1002G', NULL, 'MANIJA LEVANTALUNA TOYOTA VIGO 05 / HIACE 5L GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
 (622, 'LP-2003PBLH', NULL, 'MANIJA INT.TY EHO-00-005(YARIS/VTZ 99-05)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (623, 'LP-2003PBRH', NULL, 'MANIJA INT.TY EHO-00-005(YARIS/VTZ 99-05)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(624, 'LP-1021A', NULL, 'MANIJA LEVANTALUNA TY HILUX VIGO 05-YARIS 2007-2012 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -40, 1, 1),
-(625, 'LP-2108ALH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(626, 'LP-2108ARH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(624, 'LP-1021A', NULL, 'MANIJA LEVANTALUNA TY HILUX VIGO 05-YARIS 2007-2012 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(625, 'LP-2108ALH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
+(626, 'LP-2108ARH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
 (627, 'LP-2501ALH', NULL, 'MANIJA INT TOYOTA COROLLA 88-91 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (628, 'LP-2501ARH', NULL, 'MANIJA INT TOYOTA COROLLA 88-91 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (629, 'LP-1001 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (630, 'LP-1001 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (631, 'LP-10010 L          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (632, 'LP-10010 R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(633, 'LP-2522GLH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, -30, 1, 1),
-(634, 'LP-2522GRH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, -30, 1, 1),
-(635, 'LP-3149AFL', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE100,101 92-01              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -10, 1, 1),
-(636, 'LP-3149AFR', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE100,101 92-01              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -10, 1, 1),
-(637, 'LP-3149ARL', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE100,101 92-01               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -10, 1, 1),
-(638, 'LP-3149ARR', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE100,101 92-01               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -10, 1, 1),
-(639, 'LP-3197AR          ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE110 96-01                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(633, 'LP-2522GLH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(634, 'LP-2522GRH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(635, 'LP-3149AFL', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE100,101 92-01              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(636, 'LP-3149AFR', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE100,101 92-01              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(637, 'LP-3149ARL', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE100,101 92-01               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(638, 'LP-3149ARR', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE100,101 92-01               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(639, 'LP-3197AR          ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE110 96-01                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
 (640, 'LP-2222L           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO TOYOTA COROLLA 09-13 GRIS         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (641, 'LP-2222R           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO TOYOTA COROLLA 09-13 GRIS         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (642, 'LP-2545GLH', NULL, 'MANIJA INT TOYOTA TOYOTA TERCEL 91-99/HILUX 89-98', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (643, 'LP-2545GRH', NULL, 'MANIJA INT TOYOTA TOYOTA TERCEL 91-99/HILUX 89-98', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(644, 'LP-31800SL         ', NULL, 'MANIJA EXT.PTA.DELANT.TOYOTA H.VIGO,ALTIS YARIS,CAMRY 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(645, 'LP-31800SR         ', NULL, 'MANIJA EXT.PTA.DELANT.TOYOTA H.VIGO,ALTIS YARIS,CAMRY 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(646, 'LP-3180MFL', NULL, 'MANIJA EXT.PTA.DELANT TOYOTA CAMRY,VIGO,YARIS 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(647, 'LP-3180MFRK', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA CAMRY,VIGO,YARIS 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(648, 'LP-2567 L           ', NULL, 'MANIJA INT.ABRE PTA.DELANT.TOY.HIACE-HILUX VIGO 2005.....             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(649, 'LP-2567 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANT.TOY.HIACE-HILUX VIGO 2005.....             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(644, 'LP-31800SL         ', NULL, 'MANIJA EXT.PTA.DELANT.TOYOTA H.VIGO,ALTIS YARIS,CAMRY 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(645, 'LP-31800SR         ', NULL, 'MANIJA EXT.PTA.DELANT.TOYOTA H.VIGO,ALTIS YARIS,CAMRY 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(646, 'LP-3180MFL', NULL, 'MANIJA EXT.PTA.DELANT TOYOTA CAMRY,VIGO,YARIS 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(647, 'LP-3180MFRK', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA CAMRY,VIGO,YARIS 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(648, 'LP-2567 L           ', NULL, 'MANIJA INT.ABRE PTA.DELANT.TOY.HIACE-HILUX VIGO 2005.....             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(649, 'LP-2567 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANT.TOY.HIACE-HILUX VIGO 2005.....             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
 (650, 'LP-3033 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN50,55 84-88                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (651, 'LP-3033 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN50,55 84-88                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (652, 'LP-3105 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -4149,15 +4128,7 @@ CREATE TABLE `transaccion` (
 --
 
 INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_trans`, `tipo_trans`, `ope_trans`, `idrefdoc_trans`, `seriedocref_trans`, `docref_trans`, `almacen_trans`, `sucursal_trans`, `usuario_trans`, `status_trans`) VALUES
-(1, '0000000001', '2019-10-02', NULL, 4, 'S', 4, NULL, NULL, 1, 1, 2, 1),
-(2, '0000000002', '2019-10-18', NULL, 4, 'S', 7, NULL, NULL, 1, 1, 2, 1),
-(3, '0000000001', '2019-10-21', '', 5, 'E', NULL, NULL, '111', 1, 1, 2, 0),
-(4, '0000000003', '2019-10-21', NULL, 4, 'S', 8, NULL, NULL, 1, 1, 2, 1),
-(5, '0000000004', '2019-11-01', NULL, 4, 'S', 14, NULL, NULL, 1, 1, 2, 1),
-(6, '0000000005', '2019-11-01', NULL, 4, 'S', 18, NULL, NULL, 1, 1, 2, 1),
-(7, '0000000006', '2019-11-04', NULL, 4, 'S', 20, NULL, NULL, 1, 1, 2, 1),
-(8, '0000000007', '2019-11-04', NULL, 4, 'S', 22, NULL, NULL, 1, 1, 2, 1),
-(9, '0000000008', '2019-11-04', NULL, 4, 'S', 24, NULL, NULL, 1, 1, 2, 1);
+(10, '0000000001', '2019-11-06', NULL, 4, 'S', 26, NULL, NULL, 1, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -4198,102 +4169,23 @@ CREATE TABLE `trans_detalle` (
 --
 
 INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `cant_detalle`) VALUES
-(1, 1, 7, 2),
-(2, 1, 42, 2),
-(3, 1, 43, 2),
-(4, 1, 44, 2),
-(5, 1, 97, 2),
-(6, 2, 42, 5),
-(7, 3, 43, 5),
-(8, 3, 44, 5),
-(9, 3, 124, 5),
-(10, 3, 45, 5),
-(11, 4, 44, 3),
-(12, 5, 634, 10),
-(13, 5, 633, 10),
-(14, 5, 636, 6),
-(15, 5, 635, 6),
-(16, 5, 638, 6),
-(17, 5, 637, 6),
-(18, 5, 639, 4),
-(19, 5, 626, 2),
-(20, 5, 625, 2),
-(21, 5, 649, 4),
-(22, 5, 648, 4),
-(23, 5, 645, 4),
-(24, 5, 644, 4),
-(25, 5, 647, 4),
-(26, 5, 646, 4),
-(27, 5, 624, 12),
-(28, 5, 621, 4),
-(29, 6, 634, 10),
-(30, 6, 633, 10),
-(31, 6, 636, 6),
-(32, 6, 635, 6),
-(33, 6, 638, 6),
-(34, 6, 637, 6),
-(35, 6, 639, 4),
-(36, 6, 626, 2),
-(37, 6, 625, 2),
-(38, 6, 649, 4),
-(39, 6, 648, 4),
-(40, 6, 645, 4),
-(41, 6, 644, 4),
-(42, 6, 647, 4),
-(43, 6, 646, 4),
-(44, 6, 624, 12),
-(45, 6, 621, 4),
-(46, 7, 634, 10),
-(47, 7, 633, 10),
-(48, 7, 636, 6),
-(49, 7, 635, 6),
-(50, 7, 638, 6),
-(51, 7, 637, 6),
-(52, 7, 639, 4),
-(53, 7, 626, 2),
-(54, 7, 625, 2),
-(55, 7, 649, 4),
-(56, 7, 648, 4),
-(57, 7, 645, 4),
-(58, 7, 644, 4),
-(59, 7, 647, 4),
-(60, 7, 646, 4),
-(61, 7, 624, 12),
-(62, 7, 621, 4),
-(63, 8, 634, 10),
-(64, 8, 633, 10),
-(65, 8, 636, 6),
-(66, 8, 635, 6),
-(67, 8, 638, 6),
-(68, 8, 637, 6),
-(69, 8, 639, 4),
-(70, 8, 626, 2),
-(71, 8, 625, 2),
-(72, 8, 649, 4),
-(73, 8, 648, 4),
-(74, 8, 645, 4),
-(75, 8, 644, 4),
-(76, 8, 647, 4),
-(77, 8, 646, 4),
-(78, 8, 624, 12),
-(79, 8, 621, 4),
-(80, 9, 634, 10),
-(81, 9, 633, 10),
-(82, 9, 636, 6),
-(83, 9, 635, 6),
-(84, 9, 638, 6),
-(85, 9, 637, 6),
-(86, 9, 639, 4),
-(87, 9, 626, 2),
-(88, 9, 625, 2),
-(89, 9, 649, 4),
-(90, 9, 648, 4),
-(91, 9, 645, 4),
-(92, 9, 644, 4),
-(93, 9, 647, 4),
-(94, 9, 646, 4),
-(95, 9, 624, 12),
-(96, 9, 621, 4);
+(97, 10, 634, 10),
+(98, 10, 633, 10),
+(99, 10, 635, 6),
+(100, 10, 636, 6),
+(101, 10, 638, 6),
+(102, 10, 637, 6),
+(103, 10, 639, 4),
+(104, 10, 626, 2),
+(105, 10, 625, 2),
+(106, 10, 649, 4),
+(107, 10, 648, 4),
+(108, 10, 645, 4),
+(109, 10, 644, 4),
+(110, 10, 647, 4),
+(111, 10, 646, 4),
+(112, 10, 624, 12),
+(113, 10, 621, 4);
 
 -- --------------------------------------------------------
 
@@ -4442,7 +4334,7 @@ INSERT INTO `zona` (`id_zona`, `nombre_zona`, `desc_zona`, `estatus_zona`, `sucu
 --
 DROP TABLE IF EXISTS `v_productos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `pr`.`id_prod` AS `id_prod`,`pr`.`cod_prod` AS `cod_prod`,`pr`.`des_prod` AS `des_prod`,`pr`.`compra_prod` AS `compra_prod`,`pr`.`venta_prod` AS `venta_prod`,`pr`.`status_prod` AS `status_prod`,`suc`.`id_suc` AS `sucursal_prod`,concat(`pr`.`cod_prod`,' ',`pr`.`des_prod`,' - ',`um`.`des_und`) AS `texto`,`suc`.`impuesto_suc` AS `impuesto_suc`,`um`.`id_und` AS `id_und`,`um`.`des_und` AS `des_und`,(`pr`.`stock_prod` - (select coalesce(sum(`pedido_detalle`.`cant_pdetalle`),0) AS `cant_pedido` from (`pedido_detalle` join `pedido` on((`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`))) where ((`pedido_detalle`.`prod_pdetalle` = `pr`.`id_prod`) and (`pedido`.`sucursal_pedido` = `suc`.`id_suc`)))) AS `stock_prod` from ((`producto` `pr` join `unidad_medida` `um` on((`um`.`id_und` = `pr`.`umed_prod`))) join `sucursal` `suc` on((`pr`.`sucursal_prod` = `suc`.`id_suc`))) group by `pr`.`id_prod`,`pr`.`cod_prod`,`pr`.`des_prod`,`pr`.`compra_prod`,`pr`.`venta_prod`,`pr`.`status_prod`,`pr`.`stock_prod`,`suc`.`id_suc`,`suc`.`impuesto_suc`,`um`.`id_und`,`um`.`des_und` order by `pr`.`cod_prod` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `pr`.`id_prod` AS `id_prod`,`pr`.`cod_prod` AS `cod_prod`,`pr`.`des_prod` AS `des_prod`,`pr`.`compra_prod` AS `compra_prod`,`pr`.`venta_prod` AS `venta_prod`,`pr`.`status_prod` AS `status_prod`,`suc`.`id_suc` AS `sucursal_prod`,concat(`pr`.`cod_prod`,' ',`pr`.`des_prod`,' - ',`um`.`des_und`) AS `texto`,`suc`.`impuesto_suc` AS `impuesto_suc`,`um`.`id_und` AS `id_und`,`um`.`des_und` AS `des_und`,(`pr`.`stock_prod` - (select coalesce(sum(`pedido_detalle`.`cant_pdetalle`),0) AS `cant_pedido` from (`pedido_detalle` join `pedido` on((`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`))) where ((`pedido_detalle`.`prod_pdetalle` = `pr`.`id_prod`) and (`pedido`.`sucursal_pedido` = `suc`.`id_suc`) and (`pedido`.`estatus_pedido` = 0)))) AS `stock_prod` from ((`producto` `pr` join `unidad_medida` `um` on((`um`.`id_und` = `pr`.`umed_prod`))) join `sucursal` `suc` on((`pr`.`sucursal_prod` = `suc`.`id_suc`))) group by `pr`.`id_prod`,`pr`.`cod_prod`,`pr`.`des_prod`,`pr`.`compra_prod`,`pr`.`venta_prod`,`pr`.`status_prod`,`pr`.`stock_prod`,`suc`.`id_suc`,`suc`.`impuesto_suc`,`um`.`id_und`,`um`.`des_und` order by `pr`.`cod_prod` ;
 
 --
 -- Índices para tablas volcadas
@@ -4871,13 +4763,13 @@ ALTER TABLE `distrito`
 -- AUTO_INCREMENT de la tabla `documento`
 --
 ALTER TABLE `documento`
-  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=25;
+  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `documento_detalle`
 --
 ALTER TABLE `documento_detalle`
-  MODIFY `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=157;
+  MODIFY `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=174;
 
 --
 -- AUTO_INCREMENT de la tabla `empresa`
@@ -4931,13 +4823,13 @@ ALTER TABLE `pais`
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=15;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `pedido_detalle`
 --
 ALTER TABLE `pedido_detalle`
-  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=37;
+  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -5015,7 +4907,7 @@ ALTER TABLE `tipo_proveedor`
 -- AUTO_INCREMENT de la tabla `transaccion`
 --
 ALTER TABLE `transaccion`
-  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=10;
+  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `transportista`
@@ -5027,7 +4919,7 @@ ALTER TABLE `transportista`
 -- AUTO_INCREMENT de la tabla `trans_detalle`
 --
 ALTER TABLE `trans_detalle`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=97;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT de la tabla `unidad_medida`

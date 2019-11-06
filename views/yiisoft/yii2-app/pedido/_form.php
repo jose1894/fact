@@ -812,8 +812,8 @@ JS
                   'statusbar=no,' +
                   'menubar=no,' +
                   'resizable=0,' +
-                  'width=600,' +
-                  'height=400,' +
+                  'width=800,' +
+                  'height=600,' +
                   'left = 490,' +
                   'top=300');
                 swal(data.title, data.message, data.type);

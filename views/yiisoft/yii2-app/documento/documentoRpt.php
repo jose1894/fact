@@ -61,7 +61,7 @@ $impuesto = $IMPUESTO/ 100;
       </td>
     </tr>
     <tr>
-      <td width="33%">
+      <td width="15%">
         <?php
 
           $tipoDoc = ($documento->tipo_doc == 3) ? 1 : 3;
@@ -75,13 +75,16 @@ $impuesto = $IMPUESTO/ 100;
           }
 
           $code = $rucEmpresa ."|". $tipoDoc ."|". $documento->numeracion->serie_num . "|" . substr($documento->cod_doc,-8) . "|" . $documento->totalimp_doc . "|" . $documento->total_doc ."|";
-          echo $code .= $documento->fecha_doc . "|" . $tipoDocClte . "|" . $docClte;
+          $code .= $documento->fecha_doc . "|" . $tipoDocClte . "|" . $docClte;
 
         ?>
 
-        <barcode code="<?= $code ?>" type="QR" class="barcode" size="1" error="M" disableborder="1" />
+        <barcode code="<?= $code ?>" type="QR" class="barcode" size="1" error="M" disableborder="1" style="width:100%" />
+          <br>
+          <br>          
+        <span style="font-size:8px;margin-top:25px;">Representaci&oacute;n impresa del documento electr&oacute;nico</span>
       </td>
-      <td width="33%">
+      <td width="48%">
         <table class="detalle_documento">
           <tr>
             <td width="50%"><b>Recibido por</b></td>

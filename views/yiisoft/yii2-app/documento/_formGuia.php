@@ -866,7 +866,17 @@ $( "#submit" ).on( "click", function() {
           })
           .then((willIssue) => {
             if (willIssue) {
-              window.open("'.Url::to(['pedido/pedido-rpt']).'&id=" + data.id,"_blank");
+              window.open("'.Url::to(['pedido/pedido-rpt']).'&id=" + data.id,
+              "'. Yii::t('documento','Referral guide').'",
+              "toolbar=no," +
+              "location=no," +
+              "statusbar=no," +
+              "menubar=no," +
+              "resizable=0," +
+              "width=800," +
+              "height=600," +
+              "left = 490," +
+              "top=300");
             }
           });
 
