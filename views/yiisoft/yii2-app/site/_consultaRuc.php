@@ -12,7 +12,7 @@ let soap = '<?xml version="1.0" encoding="utf-8"?> ';
     soap += '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"> ';
     soap += '<soap:Body>';
     soap += '<GET_CONTRIBUYENTE_DATA xmlns="http://tempuri.org/">';
-    soap +=   '<RUC>15603548458</RUC>';
+    soap +=   '<RUC>20600838386</RUC>';
     soap +=   '<TOKEN>OSYS20171010SERVER1</TOKEN>';
     soap += '</GET_CONTRIBUYENTE_DATA>';
     soap += '</soap:Body>';

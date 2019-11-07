@@ -534,6 +534,8 @@ class DocumentoController extends Controller
       $f = Yii::$app->formatter;
       $date = $f->asDate($modelDocumento->fecha_doc, 'php:d/m/Y');
 
+      $nroComprobante = $modelDocumento->tipoDoc->abrv_tipod . $modelDocumento->numeracion->serie_num . "-" . substr($modelDocumento->cod_doc,-8);
+
       $header = '
       <table class="documento_enc" style="border-collapse: collapse;">
           <tr>
@@ -550,7 +552,7 @@ class DocumentoController extends Controller
               <td width="25%" style="border:1px solid black;text-align:center;font-weight:bold;">
                 <div style="margin: 70px auto;"> R.U.C. ' . SiteController::getEmpresa()->ruc_empresa . '</div><br>
                 <div style="font-size:18px"> ' . $modelDocumento->tipoDoc->des_tipod. ' </div><br>
-                <div style="margin: 70px auto;"> N° ' . $modelDocumento->tipoDoc->abrv_tipod . $modelDocumento->numeracion->serie_num . "-" . substr($modelDocumento->cod_doc,-8) . '</div>
+                <div style="margin: 70px auto;"> N° ' . $nroComprobante . '</div>
               </td>
           </tr>
       </table>
@@ -589,10 +591,10 @@ class DocumentoController extends Controller
       $mpdf->charset_in = 'UTF-8';
 
       $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
-      $mpdf->AddPage('P','','','','',10,10,80,50,10,12);
+      $mpdf->AddPage('P','','','','',10,10,80,50,10,5);
       $mpdf->WriteHtml( $content ); // call mpdf write html
 
-      $titulo = $modelDocumento->cod_doc. '-'. Yii::t('documento','Document') .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
+      $titulo = $modelDocumento->cod_doc. '-'. $nroComprobante .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
 
       $mpdf->SetTitle($titulo);
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed

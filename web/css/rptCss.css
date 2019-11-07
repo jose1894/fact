@@ -66,6 +66,8 @@ table {
   font-family: Arial;
   font-size:14px;
   font-weight: bold;
+  float: right;
+  margin: 10px 10px;
 }
 .detalle_documento > tr > td {
   margin: 100px auto;
