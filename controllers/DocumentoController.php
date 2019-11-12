@@ -23,7 +23,8 @@ use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\ActiveForm;
 use NumerosEnLetras;
-use sunat;
+use Greenter\Ws\Services\SoapClient;
+use Greenter\Ws\Services\BillSender;
 
 
 /**
@@ -598,6 +599,20 @@ class DocumentoController extends Controller
 
       $mpdf->SetTitle($titulo);
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
+    }
+
+    function actionSendFactSunat()
+    {
+      $urlService = 'https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService';
+      $soap = new SoapClient($urlService);
+      $soap->setCredentials('20000000001MODDATOS', 'moddatos'); // usuario = ruc + usuario sol
+      $sender = new BillSender();
+      $sender->setClient($soap);
+
+      $xml = file_get_contents('factura.xml');
+      $result = $sender->send('20000000001-01-F001-1', $xml);
+
+      print_r($result);
     }
 
 }

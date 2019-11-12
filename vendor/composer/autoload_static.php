@@ -129,6 +129,7 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         'G' => 
         array (
             'GuzzleHttp\\Psr7\\' => 16,
+            'Greenter\\' => 9,
         ),
         'F' => 
         array (
@@ -424,6 +425,11 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         'GuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+        ),
+        'Greenter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/greenter/core/src/Core',
+            1 => __DIR__ . '/..' . '/greenter/ws/src',
         ),
         'Faker\\' => 
         array (

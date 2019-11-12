@@ -96,8 +96,7 @@ class PedidoController extends Controller
             $valid = $model->validate();
             $valid = Model::validateMultiple($modelsDetalles) && $valid;
             // ajax validation
-            if (!$valid)
-            {
+            if (!$valid){
                 if (Yii::$app->request->isAjax) {
                     Yii::$app->response->format = Response::FORMAT_JSON;
                     return ArrayHelper::merge(
@@ -105,9 +104,7 @@ class PedidoController extends Controller
                         ActiveForm::validate($model)
                     );
                 }
-            }
-            else
-            {
+            } else {
                 $num = Numeracion::getNumeracion( $model->tipo_pedido );
                 $codigo = intval( $num['numero_num'] ) + 1;
                 $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
