@@ -33,6 +33,7 @@ class Moneda extends \yii\db\ActiveRecord
             [['des_moneda', 'status_moneda', 'tipo_moneda'], 'required'],
             [['status_moneda', 'sucursal_moneda'], 'integer'],
             [['des_moneda'], 'string', 'max' => 50],
+            [['sunatm_moneda'], 'string', 'max' => 10],
             [['tipo_moneda'], 'string', 'max' => 1],
         ];
     }
@@ -45,6 +46,7 @@ class Moneda extends \yii\db\ActiveRecord
         return [
             'id_moneda' => Yii::t('moneda', 'Id'),
             'des_moneda' => Yii::t('moneda', 'Description'),
+            'sunatm_moneda' => Yii::t('moneda', 'SUNAT'),
             'tipo_moneda' => Yii::t('moneda', 'Type'),
             'status_moneda' => Yii::t('moneda', 'Status'),
             'sucursal_moneda' => Yii::t('moneda', 'Sucursal Moneda'),

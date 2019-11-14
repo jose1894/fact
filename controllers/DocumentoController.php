@@ -187,6 +187,16 @@ class DocumentoController extends Controller
             $notaSalidaDetalle[$key] = ['prod_detalle' => $value['prod_pdetalle'],'cant_detalle' => $value['cant_pdetalle']];
           }
 
+          $tipoDoc = ($model->tipo_doc == 3) ? 1 : 3;
+
+          if ( $model->pedidoDoc->cltePedido->tipoIdentificacion->cod_tipoi == TipoIdentificacion::TIPO_RUC ){
+            $tipoDocClte = TipoIdentificacion::TIPO_RUC;
+            $docClte = $model->pedidoDoc->cltePedido->ruc_clte;
+          } else {
+            $tipoDocClte = TipoIdentificacion::TIPO_DNI;
+            $docClte = $model->pedidoDoc->cltePedido->dni_clte;
+          }
+
           $sucursal = SiteController::getSucursal();
           $modelNotaSalida->sucursal_trans = $sucursal;
           $model->sucursal_doc = $sucursal;
@@ -236,6 +246,11 @@ class DocumentoController extends Controller
             $flag = $model->save();
             $flag = $modelPedido->save() && $flag;
 
+            $model->valorr_doc = SiteController::getEmpresa()->ruc_empresa ."|". $tipoDoc ."|".$model->tipoDoc->abrv_tipod . $model->numeracion->serie_num . "|";
+            $model->valorr_doc .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ."|";
+
+            $model->hash_doc = base64_encode(hash( 'sha256', $model->valorr_doc, false ));
+
             try {
               $modelNotaSalida->idrefdoc_trans = $model->id_doc;
               $modelNotaSalida->status_trans = $modelNotaSalida::STATUS_APPROVED;
@@ -262,6 +277,8 @@ class DocumentoController extends Controller
                           break;
                       }
                   }
+
+                  $flag = $model->save() && $flag;
               }
 
               $numeracion = Numeracion::findOne($num['id_num']);
@@ -601,18 +618,14 @@ class DocumentoController extends Controller
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
     }
 
-    function actionSendFactSunat()
+    function actionGenXml()
     {
-      $urlService = 'https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService';
-      $soap = new SoapClient($urlService);
-      $soap->setCredentials('20000000001MODDATOS', 'moddatos'); // usuario = ruc + usuario sol
-      $sender = new BillSender();
-      $sender->setClient($soap);
-
-      $xml = file_get_contents('factura.xml');
-      $result = $sender->send('20000000001-01-F001-1', $xml);
-
-      print_r($result);
+      return $this->render('_xmlDocumento', [
+          'model' => $model,
+          'modelPedido' => $modelPedido,
+          'IMPUESTO' => $IMPUESTO,
+          'empresa' => SiteController::getEmpresa,
+      ]);
     }
 
 }

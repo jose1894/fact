@@ -33,6 +33,7 @@ class UnidadMedida extends \yii\db\ActiveRecord
             [['des_und', 'status_und'], 'required'],
             [['status_und', 'sucursal_und'], 'integer'],
             [['des_und'], 'string', 'max' => 50],
+            [['sunatm_und'], 'string', 'max' => 10],
         ];
     }
 
@@ -44,6 +45,7 @@ class UnidadMedida extends \yii\db\ActiveRecord
         return [
             'id_und' => Yii::t('unidad_medida', 'Id'),
             'des_und' => Yii::t('unidad_medida', 'Description'),
+            'sunatm_und' => Yii::t('unidad_medida', 'SUNAT'),
             'status_und' => Yii::t('unidad_medida', 'Status'),
             'sucursal_und' => Yii::t('unidad_medida', 'Sucursal Und'),
         ];

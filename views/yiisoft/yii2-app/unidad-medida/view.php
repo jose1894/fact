@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attributes' => [
                 'id_und',
                 'des_und',
+                'sunatm_und',
                 [
                   'attribute' => 'status_und',
                   'format' => 'raw',

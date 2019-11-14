@@ -13,32 +13,65 @@
   <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
   <cbc:CustomizationID>1.0</cbc:CustomizationID>
   <!-- ///////////////////// Fecha de emision ///////////////////// -->
-  <cbc:IssueDate>2019-11-08</cbc:IssueDate>
+  <cbc:IssueDate><?= $model->fecha_doc ?></cbc:IssueDate>
   <!-- ///////////////////// Fecha de emision ///////////////////// -->
   <!-- ///////////////////// Certificado digital ///////////////////// -->
   <ext:UBLExtensions>
     <ext:UBLExtension>
       <ext:ExtensionContent>
         <ds:Signature Id="SignatureSP">
-          <ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-          <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+          <ds:SignedInfo>
+            <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
             <ds:Reference URI="">
-              <ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms>
-              <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-              <ds:DigestValue>ryg5Vl+6zuSrAlgSQUYr WeaSQjk=</ds:DigestValue>
+              <ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#envelopedsignature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+              <ds:DigestValue><?= $model->hash_doc?></ds:DigestValue>
             </ds:Reference>
           </ds:SignedInfo>
-          <ds:SignatureValue>SOiGQpmVz7hBg GjIOQNlcwyHkQLC4S7R2zBuNnOUj4KjZQb3//xNPJMRB67m8x1mpQE6pffiH85v MzYLJ9nt7MLLZXOfP+rPGfkJBmNbYxaGLj9v3qZWyyEzHFGKS+8OfVSgMsHNwZ3IqfuICzc/xo8L 7sFj+aT16IHf5TYffb0=</ds:SignatureValue>
+          <?php
+            $signedInfo = "<ds:SignedInfo>
+              <ds:CanonicalizationMethod Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/>
+              <ds:SignatureMethod Algorithm=\"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256\"/>
+              <ds:Reference URI=\"\">
+                <ds:Transforms><ds:Transform Algorithm=\"http://www.w3.org/2000/09/xmldsig#envelopedsignature\"/></ds:Transforms><ds:DigestMethod Algorithm=\"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256\"/>
+                <ds:DigestValue><?= $model->hash_doc?></ds:DigestValue>
+              </ds:Reference>
+            </ds:SignedInfo>";
+
+            $firma = base64_encode( hash( 'sha256', $signedInfo, false) );
+          ?>
+          <ds:SignatureValue><?= $firma?></ds:SignatureValue>
           <ds:KeyInfo>
             <ds:X509Data>
-              <ds:X509SubjectName>1.2 .840.113549.1.9.1=#161a4253554c434140534f55544845524e504552552e434f4d2e5045,CN=Juan Robles,OU=20100454523,O=SOPORTE TECNOLOGICOS EIRL,L=LIMA,ST=LIMA,C=PE</ds:X509SubjectName>
-              <ds:X509Certificate>MIIESTCCAzGgAwIBAgIKWOC RzgAAAAAAIjANBgkqhkiG9w0BAQUFADAnMRUwEwYKCZImiZPyLGQB GRYFU1VOQVQxDjAMBgNVBAMTBVNVTkFUMB4XDTEwMTIyODE5NTExMFoXDTExMTIyODIwMDExMFow
-                gZUxCzAJBgNVBAYTAlBFMQ0wCwYDVQQIEwRMSU1BMQ0wCwYDVQQHEwRMSU1BMREwDwYDVQQKEwhT T1VUSEVSTjEUMBIGA1UECxMLMjAxMDAxNDc1MTQxFDASBgNVBAMTC0JvcmlzIFN1bGNhMSkwJwYJ KoZIhvcNAQkBFhpCU1VMQ0FAU09VVEhFUk5QRVJVLkNPTS5QRTCBnzANBgkqhkiG9w0BAQEFAAOB
-                jQAwgYkCgYEAtRtcpfBLzyajuEmYt4mVH8EE02KQiETsdKStUThVYM7g3Lkx5zq3SH5nLH00EKGC tota6RR+V40sgIbnh+Nfs1SOQcAohNwRfWhho7sKNZFR971rFxj4cTKMEvpt8Dr98UYFkJhph6Wn sniGM2tJDq9KJ52UXrlScMfBityx0AsCAwEAAaOCAYowggGGMA4GA1UdDwEB/wQEAwIE8DBEBgkq
-                hkiG9w0BCQ8ENzA1MA4GCCqGSIb3DQMCAgIAgDAOBggqhkiG9w0DBAICAIAwBwYFKw4DAgcwCgYI KoZIhvcNAwcwHQYDVR0OBBYEFG/m6twbiRNzRINavjq+U0j/sZECMBMGA1UdJQQMMAoGCCsGAQUF BwMCMB8GA1UdIwQYMBaAFN9kHQDqWONmozw3xdNSIMFW2t+7MFkGA1UdHwRSMFAwTqBMoEqGImh0
-                dHA6Ly9wY2IyMjYvQ2VydEVucm9sbC9TVU5BVC5jcmyGJGZpbGU6Ly9cXHBjYjIyNlxDZXJ0RW5y b2xsXFNVTkFULmNybDB+BggrBgEFBQcBAQRyMHAwNQYIKwYBBQUHMAKGKWh0dHA6Ly9wY2IyMjYv Q2VydEVucm9sbC9wY2IyMjZfU1VOQVQuY3J0MDcGCCsGAQUFBzAChitmaWxlOi8vXFxwY2IyMjZc
-                Q2VydEVucm9sbFxwY2IyMjZfU1VOQVQuY3J0MA0GCSqGSIb3DQEBBQUAA4IBAQBI6wJ/QmRpz3C3 rorBflOvA9DOa3GNiiB7rtPIjF4mPmtgfo2pK9gvnxmV2pST3ovfu0nbG2kpjzzaaelRjEodHvkc M3abGsOE53wfxqQF5uf/jkzZA9hbLHtE1aLKBD0Mhzc6cvI072alnE6QU3RZ16ie9CYsHmMrs+sP
-                HMy8DJU5YrdnqHdSn2D3nhKBi4QfT/WURPOuo6DF4iWgrCyMf3eJgmGKSUN3At5fK4HSpfyURT0k boaJKNBgQwy0HhGh5BLM7DsTi/KwfdUYkoFgrY71Pm23+ra+xTow1Vk9gj5NqrlpMY5gAVQXEIo1 ++GxDtaK/5EiVKSqzJ6geIfz</ds:X509Certificate>
+              <ds:X509SubjectName>C=PE,L = LIMA,O = CORPORACION LEOPHARD S.A.C.,OU = Validated by Llama.pe ER;OU = 20604954241,SERIALNUMBER = 09246916,CN = MARCILLA FELIX CIRIACO CARLOS,E = marvigcompany@gmail.com,STREET = JR. LAS ALCAPARRAS NRO. 467 URB. LAS FLORES</ds:X509SubjectName>
+              <ds:X509Certificate>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
+              ImLCz50FlOWnti0qaWZR8Q==</ds:X509Certificate>
             </ds:X509Data>
           </ds:KeyInfo>
         </ds:Signature>
@@ -51,11 +84,11 @@
     <cbc:ID>IDLeophardSIGN</cbc:ID>
     <cac:SignatoryParty>
       <cac:PartyIdentification>
-        <cbc:ID>20604954241</cbc:ID>
+        <cbc:ID><?= $empresa->ruc_empresa?></cbc:ID>
       </cac:PartyIdentification>
       <cac:PartyName>
         <cbc:Name>
-          <![CDATA[CORPORACION LEOPHARD S.A.C.]]>
+          <![CDATA[<?= $empresa->nombre_empresa?>]]>
         </cbc:Name>
       </cac:PartyName>
     </cac:SignatoryParty>
@@ -63,28 +96,28 @@
   <!-- ///////////////////// Firma Electronica ///////////////////// -->
   <cac:AccountingSupplierParty>
     <!-- ///////////////////// RUC emisor ///////////////////// -->
-    <cbc:CustomerAssignedAccountID>20604954241</cbc:CustomerAssignedAccountID>
+    <cbc:CustomerAssignedAccountID><?= $empresa->ruc_empresa?></cbc:CustomerAssignedAccountID>
     <!-- ///////////////////// Tipo de documento emisor ///////////////////// -->
     <cbc:AdditionalAccountID>6</cbc:AdditionalAccountID>
     <cac:Party>
       <cac:PartyName>
         <!-- ///////////////////// Razon social emisor ///////////////////// -->
         <cbc:Name>
-          <![CDATA[CORPORACION LEOPHARD S.A.C.]]>
+          <![CDATA[<?= $empresa->nombre_empresa?>]]>
         </cbc:Name>
       </cac:PartyName>
       <cac:PostalAddress>
         <!-- ///////////////////// Ubigeo emisor ///////////////////// -->
-        <cbc:ID>070101</cbc:ID>
+        <cbc:ID>150132</cbc:ID>
         <!-- ///////////////////// Direccion emisor ///////////////////// -->
-        <cbc:StreetName>Calle Los Olivos 234</cbc:StreetName>
+        <cbc:StreetName>JR. LAS ALCAPARRAS NRO. 467 URB. LAS FLORES - LIMA LIMA SAN JUAN DE LURIGANCHO</cbc:StreetName>
         <cbc:CitySubdivisionName></cbc:CitySubdivisionName>
         <!-- ///////////////////// Departamento emisor ///////////////////// -->
         <cbc:CityName>Lima</cbc:CityName>
         <!-- ///////////////////// Provincia emisor ///////////////////// -->
-        <cbc:CountrySubentity>Callao</cbc:CountrySubentity>
+        <cbc:CountrySubentity>Lima</cbc:CountrySubentity>
         <!-- ///////////////////// Dsitrito emisor ///////////////////// -->
-        <cbc:District>Callao</cbc:District>
+        <cbc:District>San Juan de Lurigancho</cbc:District>
         <cac:Country>
           <!-- ///////////////////// Codigo pais emisor ///////////////////// -->
           <cbc:IdentificationCode>PE</cbc:IdentificationCode>
@@ -101,54 +134,61 @@
   <!-- ///////////////////// Tipo de documento ///////////////////// -->
   <cbc:InvoiceTypeCode>01</cbc:InvoiceTypeCode>
   <!-- ///////////////////// Numero de factura (Serie-Correlativo)///////////////////// -->
-  <cbc:ID>FA01-10</cbc:ID>
+  <cbc:ID><?= $model->tipoDoc->abrv_tipod . $model->numeracion->serie_num .'-'.substr($modelDocumento->guiaRem->cod_doc,-8)?></cbc:ID>
   <cac:AccountingCustomerParty>
     <!-- ///////////////////// Ruc usuario ///////////////////// -->
-    <cbc:CustomerAssignedAccountID>20382170114</cbc:CustomerAssignedAccountID>
+    <cbc:CustomerAssignedAccountID><?= $model->pedidoDoc->cltePedido->ruc_clte?></cbc:CustomerAssignedAccountID>
     <!-- ///////////////////// Tipo de documento usuario ///////////////////// -->
-    <cbc:AdditionalAccountID>6</cbc:AdditionalAccountID>
+    <cbc:AdditionalAccountID><?= $model->pedidoDoc->cltePedido->tipoid_clte?></cbc:AdditionalAccountID>
     <cac:Party>
       <cac:PartyLegalEntity>
         <cbc:RegistrationName>
           <!-- ///////////////////// Razon social usuario ///////////////////// -->
-          <![CDATA[CECI FARMA IMPORT S.R.L.]]>
+          <![CDATA[<?= $model->pedidoDoc->cltePedido->nombre_clte?>]]>
         </cbc:RegistrationName>
       </cac:PartyLegalEntity>
     </cac:Party>
   </cac:AccountingCustomerParty>
+  <?php
+    $total = 0;
+    foreach ($model->pedidoDoc->pedidoDetalle as $key => $value) {
+  ?>
+
   <cac:InvoiceLine>
     <!-- ///////////////////// Nro de orden de item ///////////////////// -->
-    <cbc:ID>1</cbc:ID>
+    <cbc:ID><?= $key + 1?></cbc:ID>
     <!-- ///////////////////// Cantidad con unidad de medida de item ///////////////////// -->
-    <cbc:InvoicedQuantity unitCode="NIU">1</cbc:InvoicedQuantity>
+    <cbc:InvoicedQuantity unitCode="<?= $model->pedidoDoc->pedidoDetalle->productoPdetalle->umedProd->sunatm_und?>"><?= $model->pedidoDoc->pedidoDetalle->cant_pdetalle?></cbc:InvoicedQuantity>
     <!-- ///////////////////// Precio unitario de item sin IGV y sin descuento por item ///////////////////// -->
-    <cac:Price>
-      <cbc:PriceAmount currencyID="PEN">678.0</cbc:PriceAmount>
+    <cac:Price><?php
+        $ivg = $model->pedidoDoc->pedidoDetalle->impuesto_pdetalle / 100;
+        $precioUnitario = ($model->pedidoDoc->pedidoDetalle->precio_pdetalle /( 1 + $igv));
+     ?><cbc:PriceAmount currencyID="<?= $model->pedidoDoc->monedaPedido->sunatm_moneda?>"><?= $precioUnitario?></cbc:PriceAmount>
     </cac:Price>
     <cac:Item>
       <!-- ///////////////////// Codigo de item ///////////////////// -->
       <cac:SellersItemIdentification>
-        <cbc:ID>Cap-258963</cbc:ID>
+        <cbc:ID><?= $model->pedidoDoc->pedidoDetalle->productoPdetalle->cod_prod?></cbc:ID>
       </cac:SellersItemIdentification>
       <!-- ///////////////////// Descripcion por item ///////////////////// -->
       <cbc:Description>
-        <![CDATA[CAPTOPRIL 25mg X 30]]>
+        <![CDATA[<?= $model->pedidoDoc->pedidoDetalle->productoPdetalle->des_prod?>]]>
       </cbc:Description>
     </cac:Item>
     <cac:PricingReference>
       <cac:AlternativeConditionPrice>
-        <!-- ///////////////////// Precio total con IGV por item (tipo de moneda) ///////////////////// -->
-        <cbc:PriceAmount currencyID="PEN">800.04</cbc:PriceAmount>
+        <!-- ///////////////////// Precio unitario con IGV por item (tipo de moneda) ///////////////////// -->
+        <cbc:PriceAmount currencyID="<?= $model->pedidoDoc->monedaPedido->sunatm_moneda?>"><?= $model->pedidoDoc->pedidoDetalle->productoPdetalle->precio_pdetalle?></cbc:PriceAmount>
         <!-- ///////////////////// Tipo de IGV por item ///////////////////// -->
         <cbc:PriceTypeCode>01</cbc:PriceTypeCode>
       </cac:AlternativeConditionPrice>
     </cac:PricingReference>
     <cac:TaxTotal>
       <!-- ///////////////////// Total de IGV por item ///////////////////// -->
-      <cbc:TaxAmount currencyID="PEN">122.04</cbc:TaxAmount>
+      <cbc:TaxAmount currencyID="<?= $model->pedidoDoc->monedaPedido->sunatm_moneda?>"><?= $precioUnitario * $igv?></cbc:TaxAmount>
       <cac:TaxSubtotal>
         <!-- ///////////////////// Total de IGV por item ///////////////////// -->
-        <cbc:TaxAmount currencyID="PEN">122.04</cbc:TaxAmount>
+        <cbc:TaxAmount currencyID="<?= $model->pedidoDoc->monedaPedido->sunatm_moneda?>"><?= $precioUnitario * $igv?></cbc:TaxAmount>
         <cac:TaxCategory>
           <cbc:TaxExemptionReasonCode>10</cbc:TaxExemptionReasonCode>
           <cac:TaxScheme>
@@ -160,15 +200,20 @@
       </cac:TaxSubtotal>
     </cac:TaxTotal>
     <!-- ///////////////////// Total de Precio unitario por item menos el descuento sin IGV por item ///////////////////// -->
-    <cbc:LineExtensionAmount currencyID="PEN">678.0</cbc:LineExtensionAmount>
+    <cbc:LineExtensionAmount currencyID="<?= $model->pedidoDoc->monedaPedido->sunatm_moneda?>"><?= $precioUnitario * $model->pedidoDoc->pedidoDetalle->cant_pdetalle?></cbc:LineExtensionAmount>
   </cac:InvoiceLine>
+  <?php
+      $total += $model->pedidoDoc->pedidoDetalle->total_pdetalle;
+    }
+    $subtotal = $total / ( 1 + $igv);
+    ?>
   <ext:UBLExtension>
     <ext:ExtensionContent>
       <sac:AdditionalInformation>
         <!-- ///////////////////// Total de valor de ventas sin IGV ///////////////////// -->
         <sac:AdditionalMonetaryTotal>
           <cbc:ID>1001</cbc:ID>
-          <cbc:PayableAmount currencyID="PEN">678.0</cbc:PayableAmount>
+          <cbc:PayableAmount currencyID="<?= $model->pedidoDoc->monedaPedido->sunatm_moneda?>"><?= $subtotal ?></cbc:PayableAmount>
         </sac:AdditionalMonetaryTotal>
       </sac:AdditionalInformation>
       <sac:AdditionalInformation>

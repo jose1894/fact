@@ -13,8 +13,13 @@ use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="row">
-      <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
         <?= $form->field($model, 'des_und',[
+          'addClass' => 'form-control ',
+          'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-edit"></i>']]])->textInput(['maxlength' => true]) ?>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+        <?= $form->field($model, 'sunatm_und',[
           'addClass' => 'form-control ',
           'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-edit"></i>']]])->textInput(['maxlength' => true]) ?>
       </div>

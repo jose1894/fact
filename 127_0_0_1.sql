@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-11-2019 a las 23:30:12
+-- Tiempo de generación: 14-11-2019 a las 23:29:13
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -682,7 +682,7 @@ INSERT INTO `cliente` (`id_clte`, `dni_clte`, `ruc_clte`, `nombre_clte`, `direcc
 (99, '', '10005202341', 'CAHUAYA MAMANI RICARDO                                      ', 'AV.J.BASADRE CON P MELENDEZ S/N INT.AS CC.VILDOSO INT22-23-TACNA-TACNA     ', 241, 216, 29, 217, '952293919', '', 3, 1, 0, 1, 1, 4),
 (100, '', '10701840891', 'CALIZAYA CANAHUIRI ROCIO DEL PILAR                          ', 'JR.LAMBAYEQUE 473A  PUNO-JULIACA // GERONIMO CALIZAYA                      ', 241, 216, 29, 217, '950834377', 'SUDAMERICA26@HOTMAIL.COM ', 1, 1, 0, 1, 1, 4),
 (101, '', '10295680518', 'CALLATA TICONA JULIO ALFREDO                                ', 'CAL.PUENTE ARNAO NRO. 220 AREQUIPA - AREQUIPA - MIRAFLORES                 ', 241, 216, 29, 217, '996868008', '', 1, 1, 0, 1, 1, 4),
-(102, '', '10435029928', 'CALSINA NAVARRO REGINA ANASTACIA                            ', 'CAR.PANAMERICANA S/N SANTA CRUZ DE ACCOTA-CUSCO-CANCHIS-SICUANI            ', 241, 216, 29, 217, '953535355-950977649-984641481     ', '', 3, 1, 0, 1, 1, 4),
+(102, '', '10435029928', 'CALSINA NAVARRO REGINA ANASTACIA                            ', 'CAR.PANAMERICANA S/N SANTA CRUZ DE ACCOTA-CUSCO-CANCHIS-SICUANI            ', 241, 72, 8, 72, '953535355-950977649-984641481     ', '', 3, 1, 1, 1, 1, 4),
 (103, '', '10181331921', 'CANCHUCAJA BONARRIBA ANA PATRICIA                           ', 'AV.CONDORCANQUI #1089 LA ESPERANZA-TRUJILLO-LA LIBERTAD                    ', 241, 216, 29, 217, '\"*516968, #990426885                \"', '', 1, 1, 0, 1, 1, 4),
 (104, '', '10404531595', 'CANCHUCAJA BONARRIBA KARLA NOEMI                            ', 'AV.CONDORCANQUI #1089-LA ESPERANZA-TRUJILLO-LA LIBERTAD                    ', 241, 216, 29, 217, '\"990426885,*516968                  \"', '', 1, 1, 0, 1, 1, 4),
 (105, '', '', 'CANDIOTTI ROJAS MARICELA                                    ', 'AV. GERARDO UNGER URB.EL NARANJAL LIMA -INDEPENDENCIA                      ', 241, 216, 29, 217, '992423799-967643967      ', '', 1, 1, 0, 1, 1, 1),
@@ -2075,6 +2075,8 @@ CREATE TABLE `documento` (
   `utransp_doc` int(11) DEFAULT NULL COMMENT 'UNIDAD DE TRANSPORTE DOCUMENTO',
   `almacen_doc` int(11) NOT NULL COMMENT 'ALMACEN DOCUMENTO',
   `motivo_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'MOTIVO TRASLADO, PARA LAS GUIAS DE REMISION',
+  `hash_doc` varchar(255) DEFAULT NULL COMMENT 'CODIGO HASH DEL DOCUMENTO',
+  `valorr_doc` varchar(255) DEFAULT NULL COMMENT 'VALOR RESUMEN DEL DOCUMENTO ELECTRONICO',
   `status_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTADO DEL DOCUMENTO: 0 = SIN GENERAR, 1 = GUIA GENERADA, 2 = DOCUMENTO GENERADO, 3 = DOCUMENTO ANULADO',
   `sucursal_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL DEL DOCUMENTO'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE LOS DOCUMENTOS: FACTURAS, GUIAS DE REMISION, NOTAS DE CREDITO, NOTAS DE DEBITO';
@@ -2083,9 +2085,11 @@ CREATE TABLE `documento` (
 -- Volcado de datos para la tabla `documento`
 --
 
-INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `pedido_doc`, `fecha_doc`, `obsv_doc`, `totalimp_doc`, `totaldsc_doc`, `total_doc`, `transp_doc`, `utransp_doc`, `almacen_doc`, `motivo_doc`, `status_doc`, `sucursal_doc`) VALUES
-(25, '0000000001', 3, 9, 15, '2019-11-06', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, 1, 1),
-(26, '0000000001', 2, 7, 15, '2019-11-06', '', '145.21', '0.00', '951.90', NULL, NULL, 1, 0, 1, 1);
+INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `pedido_doc`, `fecha_doc`, `obsv_doc`, `totalimp_doc`, `totaldsc_doc`, `total_doc`, `transp_doc`, `utransp_doc`, `almacen_doc`, `motivo_doc`, `hash_doc`, `valorr_doc`, `status_doc`, `sucursal_doc`) VALUES
+(25, '0000000001', 3, 9, 15, '2019-11-06', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, NULL, NULL, 1, 1),
+(26, '0000000001', 2, 7, 15, '2019-11-06', '', '145.21', '0.00', '951.90', NULL, NULL, 1, 0, NULL, NULL, 1, 1),
+(27, '0000000002', 3, 9, 16, '2019-11-14', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, NULL, NULL, 1, 1),
+(28, '0000000002', 2, 7, 16, '2019-11-14', '', '214.13', '0.00', '1403.72', NULL, NULL, 1, 0, '20604954241|3|FE01|00000002|214.13|1403.72|2019-11-14|6|20481609136|OTFhODA0MTgwMTNkOTRmMmI5MTY1YTA4NGIyYzEyOWNmNGRjNzgxOTUxMWQyNzNhNDJiODZjNDA2ODAwMTZiNQ==', '20604954241|3|FE01|00000002|214.13|1403.72|2019-11-14|6|20481609136|', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2127,7 +2131,26 @@ INSERT INTO `documento_detalle` (`id_ddetalle`, `prod_ddetalle`, `cant_ddetalle`
 (170, 647, '4.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
 (171, 646, '4.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
 (172, 624, '12.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
-(173, 621, '4.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00');
+(173, 621, '4.00', '0.00', '0.00', '0', 1, 25, '0.00', '0.00'),
+(174, 527, '6.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(175, 526, '3.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(176, 525, '3.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(177, 626, '4.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(178, 625, '4.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(179, 630, '4.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(180, 629, '4.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(181, 632, '4.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(182, 631, '4.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(183, 655, '6.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(184, 656, '6.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(185, 657, '6.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(186, 654, '6.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(187, 628, '6.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(188, 627, '6.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(189, 583, '30.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(190, 624, '30.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(191, 677, '2.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(192, 676, '2.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00');
 
 -- --------------------------------------------------------
 
@@ -2672,6 +2695,7 @@ CREATE TABLE `moneda` (
   `id_moneda` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_moneda` varchar(50) NOT NULL COMMENT 'DESCRIPCION MONEDA',
   `tipo_moneda` varchar(1) NOT NULL DEFAULT 'N' COMMENT 'TIPO MONEDA',
+  `sunatm_moneda` varchar(10) DEFAULT NULL COMMENT 'ABREVIACION DE MONEDA SEGUN SUNAT',
   `status_moneda` int(11) NOT NULL COMMENT 'ESTATUS MONEDA',
   `sucursal_moneda` int(11) NOT NULL COMMENT 'SUCURSAL MONEDA'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT=' GUARDA DATOS DE MONEDAS';
@@ -2680,9 +2704,9 @@ CREATE TABLE `moneda` (
 -- Volcado de datos para la tabla `moneda`
 --
 
-INSERT INTO `moneda` (`id_moneda`, `des_moneda`, `tipo_moneda`, `status_moneda`, `sucursal_moneda`) VALUES
-(1, 'Soles', 'N', 1, 1),
-(2, 'Dolares', 'E', 1, 1);
+INSERT INTO `moneda` (`id_moneda`, `des_moneda`, `tipo_moneda`, `sunatm_moneda`, `status_moneda`, `sucursal_moneda`) VALUES
+(1, 'Soles', 'N', 'PEN', 1, 1),
+(2, 'Dolares', 'E', 'USD', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2737,15 +2761,15 @@ CREATE TABLE `numeracion` (
 --
 
 INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `serie_num`, `status_num`) VALUES
-(1, 1, '0000000001', 1, '00', 1),
+(1, 1, '0000000002', 1, '00', 1),
 (2, 7, '0000000000', 1, '00', 1),
 (3, 8, '0000000000', 1, '00', 1),
 (4, 6, '0000000000', 1, '00', 1),
 (5, 4, '0000000000', 1, '00', 1),
-(6, 5, '0000000001', 1, '00', 1),
-(7, 2, '0000000001', 1, '01', 1),
+(6, 5, '0000000002', 1, '00', 1),
+(7, 2, '0000000002', 1, '01', 1),
 (8, 9, '0000000000', 1, '01', 1),
-(9, 3, '0000000001', 1, '01', 1);
+(9, 3, '0000000002', 1, '01', 1);
 
 -- --------------------------------------------------------
 
@@ -3036,7 +3060,8 @@ CREATE TABLE `pedido` (
 --
 
 INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, `vend_pedido`, `moneda_pedido`, `almacen_pedido`, `usuario_pedido`, `estatus_pedido`, `sucursal_pedido`, `condp_pedido`, `tipo_pedido`, `edicion_pedido`, `nrodoc_pedido`) VALUES
-(15, '0000000001', '2019-11-06', 367, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', '');
+(15, '0000000001', '2019-11-06', 367, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(16, '0000000002', '2019-11-14', 71, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', '');
 
 -- --------------------------------------------------------
 
@@ -3078,7 +3103,26 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 (50, 647, '4.00', '20.90', '5.00', '18', 1, 15, '22.00', '83.60'),
 (51, 646, '4.00', '20.90', '5.00', '18', 1, 15, '22.00', '83.60'),
 (52, 624, '12.00', '1.90', '5.00', '18', 1, 15, '2.00', '22.80'),
-(53, 621, '4.00', '4.28', '5.00', '18', 1, 15, '4.50', '17.10');
+(53, 621, '4.00', '4.28', '5.00', '18', 1, 15, '4.50', '17.10'),
+(54, 527, '6.00', '30.00', '0.00', '18', 1, 16, '30.00', '180.00'),
+(55, 526, '3.00', '30.00', '0.00', '18', 1, 16, '30.00', '90.00'),
+(56, 525, '3.00', '30.00', '0.00', '18', 1, 16, '30.00', '90.00'),
+(57, 626, '4.00', '23.00', '0.00', '18', 1, 16, '23.00', '92.00'),
+(58, 625, '4.00', '23.00', '0.00', '18', 1, 16, '23.00', '92.00'),
+(59, 630, '4.00', '15.50', '0.00', '18', 1, 16, '15.50', '62.00'),
+(60, 629, '4.00', '15.50', '0.00', '18', 1, 16, '15.50', '62.00'),
+(61, 632, '4.00', '15.50', '0.00', '18', 1, 16, '15.50', '62.00'),
+(62, 631, '4.00', '15.50', '0.00', '18', 1, 16, '15.50', '62.00'),
+(63, 655, '6.00', '15.07', '4.00', '18', 1, 16, '15.70', '90.43'),
+(64, 656, '6.00', '15.07', '4.00', '18', 1, 16, '15.70', '90.43'),
+(65, 657, '6.00', '15.07', '4.00', '18', 1, 16, '15.70', '90.43'),
+(66, 654, '6.00', '15.07', '4.00', '18', 1, 16, '15.70', '90.43'),
+(67, 628, '6.00', '4.00', '0.00', '18', 1, 16, '4.00', '24.00'),
+(68, 627, '6.00', '4.00', '0.00', '18', 1, 16, '4.00', '24.00'),
+(69, 583, '30.00', '2.00', '0.00', '18', 1, 16, '2.00', '60.00'),
+(70, 624, '30.00', '2.00', '0.00', '18', 1, 16, '2.00', '60.00'),
+(71, 677, '2.00', '20.50', '0.00', '18', 1, 16, '20.50', '41.00'),
+(72, 676, '2.00', '20.50', '0.00', '18', 1, 16, '20.50', '41.00');
 
 -- --------------------------------------------------------
 
@@ -3654,9 +3698,9 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (522, 'LP-3236ARR', NULL, 'MANIJA EXT.PTA POST.HYUNDAI ACCENT 2006/2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (523, 'LP-3237PFLK', NULL, 'MANIJA EXT.PTA.DELANT.HY.ACCENT 2012-C ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (524, 'LP-3237PFRK', NULL, 'MANIJA PTA.DELANT HYUNDAI ACCENT 2012-C ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(525, 'LP-2004AFL', NULL, 'MANIJA INT.PTA DELANT.KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(526, 'LP-2004AFR', NULL, 'MANIJA INT.PTA DELANT.KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(527, 'LP-2004ARR', NULL, 'MANIJA INT.PTA POST KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(525, 'LP-2004AFL', NULL, 'MANIJA INT.PTA DELANT.KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
+(526, 'LP-2004AFR', NULL, 'MANIJA INT.PTA DELANT.KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
+(527, 'LP-2004ARR', NULL, 'MANIJA INT.PTA POST KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
 (528, 'LP-2009GFL', NULL, 'MANIJA INT.PTA DELANT KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (529, 'LP-2009GRL', NULL, 'MANIJA INT.PTA POST.KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (530, 'LP-2009GRR', NULL, 'MANIJA INT.PTA POST.KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -3712,7 +3756,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (580, 'LP-31951CRR        ', NULL, 'MANIJA EXT.PTA.POSTERIOR MITSUBISHI TRITON L200 05 (CROMO)            ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (581, 'LP-3195STG           ', NULL, 'MANIJA DE COMPUERTA POST.MITSUB.TRITON L200 2005...NEGRO          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (582, 'LP-31952CR          ', NULL, 'MANIJA DE COMPUERTA POST.MITSUBISHI TRITON L200 2005 CROMADO          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(583, 'LP-1104             ', NULL, 'MANIJA INT.LEVANTA LUNA NISSAN SUNNY B11 1982-1986 GRIS CLARO         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(583, 'LP-1104             ', NULL, 'MANIJA INT.LEVANTA LUNA NISSAN SUNNY B11 1982-1986 GRIS CLARO         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -10, 1, 1),
 (584, 'LP-1152A', NULL, 'MANIJA LEVANTALUNA NISSAN FRONTIER 2005-2015', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (585, 'LP-2911MGLH', NULL, 'MANIJA INT.NISSAN NAVARA D23 2015-GRIS C/CROMO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (586, 'LP-2911MGRH', NULL, 'MANIJA INT.NISSAN NAVARA D23 2015-GRIS C/CROMO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -3753,15 +3797,15 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (621, 'LP-1002G', NULL, 'MANIJA LEVANTALUNA TOYOTA VIGO 05 / HIACE 5L GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
 (622, 'LP-2003PBLH', NULL, 'MANIJA INT.TY EHO-00-005(YARIS/VTZ 99-05)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (623, 'LP-2003PBRH', NULL, 'MANIJA INT.TY EHO-00-005(YARIS/VTZ 99-05)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(624, 'LP-1021A', NULL, 'MANIJA LEVANTALUNA TY HILUX VIGO 05-YARIS 2007-2012 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(625, 'LP-2108ALH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(626, 'LP-2108ARH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(627, 'LP-2501ALH', NULL, 'MANIJA INT TOYOTA COROLLA 88-91 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(628, 'LP-2501ARH', NULL, 'MANIJA INT TOYOTA COROLLA 88-91 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(629, 'LP-1001 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(630, 'LP-1001 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(631, 'LP-10010 L          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(632, 'LP-10010 R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(624, 'LP-1021A', NULL, 'MANIJA LEVANTALUNA TY HILUX VIGO 05-YARIS 2007-2012 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -22, 1, 1),
+(625, 'LP-2108ALH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(626, 'LP-2108ARH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(627, 'LP-2501ALH', NULL, 'MANIJA INT TOYOTA COROLLA 88-91 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(628, 'LP-2501ARH', NULL, 'MANIJA INT TOYOTA COROLLA 88-91 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(629, 'LP-1001 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(630, 'LP-1001 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(631, 'LP-10010 L          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(632, 'LP-10010 R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
 (633, 'LP-2522GLH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (634, 'LP-2522GRH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (635, 'LP-3149AFL', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE100,101 92-01              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
@@ -3783,10 +3827,10 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (651, 'LP-3033 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN50,55 84-88                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (652, 'LP-3105 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (653, 'LP-31050L         ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(654, 'LP-31070MAL        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(655, 'LP-31070MAR        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(656, 'LP-3107MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(657, 'LP-3107MAR         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(654, 'LP-31070MAL        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(655, 'LP-31070MAR        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(656, 'LP-3107MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(657, 'LP-3107MAR         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
 (658, 'LP-3190ATG', NULL, 'MANIJA DE COMPUERTA POSTERIOR TOYOTA HILUX RN50,RN55 84-88            ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (659, 'LP-31620MAL        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN95 98-04 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (660, 'LP-3162MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN95 98-04 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -3800,14 +3844,14 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (668, 'LP-3215TG    ', NULL, 'REGLA DE COMPUERTA POSTERIOR TY HIACE COMMUTER 91-01                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (669, 'LP-3217ATL', NULL, 'MANIJA DE LA REGLA DE COMPUERTA POST.TY HIACE 2005...   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (670, 'LP-32171 L          ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005..                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(671, 'LP-3217MMR', NULL, 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005.(R=L) CROMO                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(672, 'LP-7217FL', NULL, 'CERRADURA DE PTA DELANT.TY HIACE H200 05-C', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1);
+(671, 'LP-3217MMR', NULL, 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005.(R=L) CROMO                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1);
 INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_prod`, `umed_prod`, `contenido_prod`, `exctoigv_prod`, `compra_prod`, `venta_prod`, `stockini_prod`, `stockmax_prod`, `stockmin_prod`, `stock_prod`, `status_prod`, `sucursal_prod`) VALUES
+(672, 'LP-7217FL', NULL, 'CERRADURA DE PTA DELANT.TY HIACE H200 05-C', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (673, 'LP-7217FR', NULL, 'CERRADURA DE PTA DELANT.TY HIACE H200 05-C', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (674, 'LP-3116TL           ', NULL, 'MANIJA DE LA REGLA DE COMPUERTA POSTERIOR TOYOTA HIACE 1984-1989      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (675, 'LP-B217A', NULL, 'SEGURO DE VENTANA TOY HIACE 2005', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(676, 'LP-31120L          ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(677, 'LP-31120R          ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(676, 'LP-31120L          ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
+(677, 'LP-31120R          ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
 (678, 'LP-31121L          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (679, 'LP-31121R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (680, 'LP-2576ELH', NULL, 'MANIJA INT.PTA DELANT.TOYOTA HIACE 90-94 BEIGE', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -4128,7 +4172,8 @@ CREATE TABLE `transaccion` (
 --
 
 INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_trans`, `tipo_trans`, `ope_trans`, `idrefdoc_trans`, `seriedocref_trans`, `docref_trans`, `almacen_trans`, `sucursal_trans`, `usuario_trans`, `status_trans`) VALUES
-(10, '0000000001', '2019-11-06', NULL, 4, 'S', 26, NULL, NULL, 1, 1, 2, 1);
+(10, '0000000001', '2019-11-06', NULL, 4, 'S', 26, NULL, NULL, 1, 1, 2, 1),
+(11, '0000000002', '2019-11-14', NULL, 4, 'S', 28, NULL, NULL, 1, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -4185,7 +4230,26 @@ INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `can
 (110, 10, 647, 4),
 (111, 10, 646, 4),
 (112, 10, 624, 12),
-(113, 10, 621, 4);
+(113, 10, 621, 4),
+(114, 11, 527, 6),
+(115, 11, 526, 3),
+(116, 11, 525, 3),
+(117, 11, 626, 4),
+(118, 11, 625, 4),
+(119, 11, 630, 4),
+(120, 11, 629, 4),
+(121, 11, 632, 4),
+(122, 11, 631, 4),
+(123, 11, 655, 6),
+(124, 11, 656, 6),
+(125, 11, 657, 6),
+(126, 11, 654, 6),
+(127, 11, 628, 6),
+(128, 11, 627, 6),
+(129, 11, 583, 30),
+(130, 11, 624, 30),
+(131, 11, 677, 2),
+(132, 11, 676, 2);
 
 -- --------------------------------------------------------
 
@@ -4197,6 +4261,7 @@ CREATE TABLE `unidad_medida` (
   `id_und` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_und` varchar(50) NOT NULL COMMENT 'DESCRIPCION UNIDAD MEDIDA',
   `status_und` int(11) NOT NULL COMMENT 'ESTATUS UNIDAD MEDIDA',
+  `sunatm_und` varchar(10) DEFAULT NULL COMMENT 'UNIDAD DE MEDIDA DE LA SUNAT',
   `sucursal_und` int(11) NOT NULL COMMENT 'SUCURSAL UNIDAD MEDIDA'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS UNIDAD MEDIDA';
 
@@ -4204,9 +4269,9 @@ CREATE TABLE `unidad_medida` (
 -- Volcado de datos para la tabla `unidad_medida`
 --
 
-INSERT INTO `unidad_medida` (`id_und`, `des_und`, `status_und`, `sucursal_und`) VALUES
-(1, 'SET', 1, 1),
-(2, 'UNIDAD', 1, 1);
+INSERT INTO `unidad_medida` (`id_und`, `des_und`, `status_und`, `sunatm_und`, `sucursal_und`) VALUES
+(1, 'SET', 1, 'SET', 1),
+(2, 'UNIDAD', 1, 'NIU', 1);
 
 -- --------------------------------------------------------
 
@@ -4733,13 +4798,13 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
 
 --
 -- AUTO_INCREMENT de la tabla `compra_detalle`
 --
 ALTER TABLE `compra_detalle`
-  MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=9;
+  MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
 
 --
 -- AUTO_INCREMENT de la tabla `cond_pago`
@@ -4763,13 +4828,13 @@ ALTER TABLE `distrito`
 -- AUTO_INCREMENT de la tabla `documento`
 --
 ALTER TABLE `documento`
-  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=27;
+  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `documento_detalle`
 --
 ALTER TABLE `documento_detalle`
-  MODIFY `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=174;
+  MODIFY `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=193;
 
 --
 -- AUTO_INCREMENT de la tabla `empresa`
@@ -4823,13 +4888,13 @@ ALTER TABLE `pais`
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=16;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `pedido_detalle`
 --
 ALTER TABLE `pedido_detalle`
-  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=54;
+  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -4907,7 +4972,7 @@ ALTER TABLE `tipo_proveedor`
 -- AUTO_INCREMENT de la tabla `transaccion`
 --
 ALTER TABLE `transaccion`
-  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
+  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `transportista`
@@ -4919,7 +4984,7 @@ ALTER TABLE `transportista`
 -- AUTO_INCREMENT de la tabla `trans_detalle`
 --
 ALTER TABLE `trans_detalle`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=114;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=133;
 
 --
 -- AUTO_INCREMENT de la tabla `unidad_medida`

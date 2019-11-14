@@ -54,9 +54,10 @@ class Documento extends \yii\db\ActiveRecord
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc','transp_doc','utransp_doc','motivo_doc',], 'required', 'on' => self::SCENARIO_GUIA],
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','numeracion_doc'], 'integer'],
             [['fecha_doc'], 'safe'],
-            [['obsv_doc'], 'string'],
+            [['obsv_doc','valorr_doc','hash_doc'], 'string'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
             [['cod_doc'], 'string', 'max' => 10],
+            [['valorr_doc','hash_doc'], 'string', 'max' => 255],
             [['tipo_doc'], 'exist', 'skipOnError' => true, 'targetClass' => TipoDocumento::className(), 'targetAttribute' => ['tipo_doc' => 'id_tipod']],
             [['pedido_doc'], 'exist', 'skipOnError' => true, 'targetClass' => Pedido::className(), 'targetAttribute' => ['pedido_doc' => 'id_pedido']],
         ];

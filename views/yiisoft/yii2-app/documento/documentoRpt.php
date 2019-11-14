@@ -56,18 +56,22 @@ $impuesto = $IMPUESTO/ 100;
       <div class="gradient" style="float: left; width: 15%; margin-top: 5pt;margin-bottom: 1pt">
         <?php
 
-          $tipoDoc = ($documento->tipo_doc == 3) ? 1 : 3;
-
-          if ( $documento->pedidoDoc->cltePedido->tipoIdentificacion->cod_tipoi == TipoIdentificacion::TIPO_RUC ){
-            $tipoDocClte = TipoIdentificacion::TIPO_RUC;
-            $docClte = $documento->pedidoDoc->cltePedido->ruc_clte;
-          } else {
-            $tipoDocClte = TipoIdentificacion::TIPO_DNI;
-            $docClte = $documento->pedidoDoc->cltePedido->dni_clte;
-          }
-
-          $code = $rucEmpresa ."|". $tipoDoc ."|". $documento->numeracion->serie_num . "|" . substr($documento->cod_doc,-8) . "|" . $documento->totalimp_doc . "|" . $documento->total_doc ."|";
-          $code .= $documento->fecha_doc . "|" . $tipoDocClte . "|" . $docClte;
+          // $tipoDoc = ($documento->tipo_doc == 3) ? 1 : 3;
+          //
+          // if ( $documento->pedidoDoc->cltePedido->tipoIdentificacion->cod_tipoi == TipoIdentificacion::TIPO_RUC ){
+          //   $tipoDocClte = TipoIdentificacion::TIPO_RUC;
+          //   $docClte = $documento->pedidoDoc->cltePedido->ruc_clte;
+          // } else {
+          //   $tipoDocClte = TipoIdentificacion::TIPO_DNI;
+          //   $docClte = $documento->pedidoDoc->cltePedido->dni_clte;
+          // }
+          //
+          // $code = $rucEmpresa ."|". $tipoDoc ."|". $documento->tipoDoc->abrv_tipod . $documento->numeracion->serie_num . "|" . substr($documento->cod_doc,-8) . "|" . $documento->totalimp_doc . "|22684.32|";
+          // $code .= $documento->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ."|";
+          //
+          // $valorResumen = base64_encode(hash("sha256",$code,false));
+          // $code .= $code . $valorResumen;
+          $code = $documento->valorr_doc . $documento->hash_doc;
 
         ?>
 
@@ -114,7 +118,7 @@ $impuesto = $IMPUESTO/ 100;
         </div>
       </div>
   </div>
-  <!-- <?php /*
+   <?php /*
       <table>
         <tr>
           <td colspan="3">

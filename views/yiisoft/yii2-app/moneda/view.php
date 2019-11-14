@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                   'format' => 'raw',
                   'value' => $model->tipo_moneda == 'N' ? 'Nacional' : 'Extranjero'
                 ],
+                'sunatm_moneda',
                 [
                   'attribute' => 'status_moneda',
                   'format' => 'raw',
