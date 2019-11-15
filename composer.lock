@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e08fb7bdf4430b986d03935841f9ce4",
+    "content-hash": "284f98794327be036ff0d8b3645399bc",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -96,7 +96,7 @@
             "version": "3.4.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jquery/jquery-dist.git",
+                "url": "git@github.com:jquery/jquery-dist.git",
                 "reference": "15bc73803f76bc53b654b9fdbbbc096f56d7c03d"
             },
             "dist": {
@@ -114,7 +114,7 @@
             "version": "v1.3.2",
             "source": {
                 "type": "git",
-                "url": "git@github.com:bestiejs/punycode.js.git",
+                "url": "https://github.com/bestiejs/punycode.js.git",
                 "reference": "38c8d3131a82567bfef18da09f7f4db68c84f8a3"
             },
             "dist": {
@@ -307,6 +307,47 @@
                 "yii2"
             ],
             "time": "2018-07-24T14:47:13+00:00"
+        },
+        {
+            "name": "drmad/semeele",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/drmad/semeele.git",
+                "reference": "bb2239e1ce6ee82e95bb8bd0d8828b3f675adbc7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/drmad/semeele/zipball/bb2239e1ce6ee82e95bb8bd0d8828b3f675adbc7",
+                "reference": "bb2239e1ce6ee82e95bb8bd0d8828b3f675adbc7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "drmad\\semeele\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL3"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Etchebarne",
+                    "email": "yo@drmad.org"
+                }
+            ],
+            "description": "Extremely simple and minimalistic XML generator for PHP. Really, very simple.",
+            "keywords": [
+                "php",
+                "xml"
+            ],
+            "time": "2017-11-15T22:32:44+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -2658,6 +2699,44 @@
                 "yii"
             ],
             "time": "2017-01-11T14:05:47+00:00"
+        },
+        {
+            "name": "robrichards/xmlseclibs",
+            "version": "3.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/robrichards/xmlseclibs.git",
+                "reference": "0a53d3c3aa87564910cae4ed01416441d3ae0db5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/0a53d3c3aa87564910cae4ed01416441d3ae0db5",
+                "reference": "0a53d3c3aa87564910cae4ed01416441d3ae0db5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "php": ">= 5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RobRichards\\XMLSecLibs\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "A PHP library for XML Security",
+            "homepage": "https://github.com/robrichards/xmlseclibs",
+            "keywords": [
+                "security",
+                "signature",
+                "xml",
+                "xmldsig"
+            ],
+            "time": "2019-11-05T11:44:22+00:00"
         },
         {
             "name": "select2/select2",

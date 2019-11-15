@@ -36,7 +36,9 @@
         "villca/numeros-en-letras": "^1.2",
         "mpdf/qrcode": "^1.0",
         "jossmp/sunatphp": "^3.0",
-        "greenter/ws": "^2.2"
+        "greenter/ws": "^2.2",
+        "robrichards/xmlseclibs": "^3.0",
+        "drmad/semeele": "^1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

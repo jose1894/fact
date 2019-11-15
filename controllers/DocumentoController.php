@@ -25,6 +25,9 @@ use kartik\widgets\ActiveForm;
 use NumerosEnLetras;
 use Greenter\Ws\Services\SoapClient;
 use Greenter\Ws\Services\BillSender;
+use DOMDocument;
+use drmad\semeele\Document;
+use drmad\semeele\Node;
 
 
 /**
@@ -618,14 +621,133 @@ class DocumentoController extends Controller
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
     }
 
-    function actionGenXml()
-    {
-      return $this->render('_xmlDocumento', [
-          'model' => $model,
-          'modelPedido' => $modelPedido,
-          'IMPUESTO' => $IMPUESTO,
-          'empresa' => SiteController::getEmpresa,
-      ]);
+    function actionGenXml( $id = 26 ){
+
+      $model = Documento::find()
+                                   ->where('id_doc = :id',[':id' => $id])
+                                   ->andWhere(['tipo_doc' => [Documento::TIPODOC_FACTURA,Documento::TIPODOC_BOLETA]])->one();
+
+      $empresa = SiteController::getEmpresa();
+      $IMPUESTO = SiteController::getImpuesto();
+
+
+      if ( is_null($model) ){
+        throw new NotFoundHttpException(Yii::t('empresa', 'The requested page does not exist.'));
+      }
+      $xml = new DOMDocument( "1.0", "ISO-8859-1"); // Crea el documento
+
+      $Invoice = $xml->createElement( 'Invoice' ); // Crea el Invoice
+      $Invoice->setAttribute( 'xmlns', "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2");
+      $Invoice->setAttribute( 'xmlns:cac', "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2");
+      $Invoice->setAttribute( 'xmlns:cbc', "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2");
+      $Invoice->setAttribute( 'xmlns:ccts',"urn:un:unece:uncefact:documentation:2");
+      $Invoice->setAttribute( 'xmlns:ds', "http://www.w3.org/2000/09/xmldsig#");
+      $Invoice->setAttribute( 'xmlns:ext',"urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2");
+      $Invoice->setAttribute( 'xmlns:qdt',"urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2");
+      $Invoice->setAttribute( 'xmlns:sac',"urn:sunat:names:specification:ubl:peru:schema:xsd:SunatAggregateComponents-1");
+      $Invoice->setAttribute( 'xmlns:udt',"urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2");
+      $Invoice->setAttribute( 'xmlns:xsi',"http://www.w3.org/2001/XMLSchema-instance");
+        // *************************************************************************************************
+        $ublVersion = $xml->createElement( 'cbc:UBLVersionID', '2.0' );// Crea la version del xml
+        // *************************************************************************************************
+        $ublCustomizationID = $xml->createElement( 'cbc:CustomizationID', '1.0' );// Id de customizacion
+        // *************************************************************************************************
+        $issueDate = $xml->createElement( 'cbc:IssueDate', $model->fecha_doc);//Fecha
+        // *************************************************************************************************
+        $accountingSupplierParty = $xml->createElement('cac:AccountingSupplierParty'); //Crea AccountingSupplierParty (DATOS DEL EMISOR)
+          // *************************************************************************************************
+          $customerAssignedAccountID = $xml->createElement('cbc:CustomerAssignedAccountID', $empresa->ruc_empresa); //Ruc emisor
+          // *************************************************************************************************
+          $additionalAccountID = $xml->createElement('cbc:AdditionalAccountID',6);//Tipo de documento emisor
+          // *************************************************************************************************
+          $party = $xml->createElement( "cac:Party" ); //Datos de razon social y direccion del emisor
+            $partyName = $xml->createElement( "cac:PartyName" ); //Elemento padre de razon social
+              $partyName_name = $xml->createElement( 'cbc:Name' );      //  Elemento padre de CDATA
+                $cDataName = $xml->createCDATASection( $empresa->nombre_empresa ); // CDATA razonSocial
+            // Añadiendo datos de razon social
+              $partyName_name->appendChild( $cDataName);
+            $partyName->appendChild( $partyName_name );
+            // *************************************************************************************************
+            $postalAddress = $xml->createElement('cac:PostalAddress');// Datos de direccion del emisor
+              $postalAddress_id = $xml->createElement( 'cbc:ID',150132 ); // Ubigeo emisor
+              $postalAddress_streetname = $xml->createElement( 'cbc:StreetName','JR. LAS ALCAPARRAS NRO. 467 URB. LAS FLORES - LIMA LIMA SAN JUAN DE LURIGANCHO'); //Direccion del emisor
+              $postalAddress_CitySubdivisionName = $xml->createElement( 'cbc:CitySubdivisionName' );
+              $postalAddress_CityName = $xml->createElement( 'cbc:CityName', 'Llima'); //Departamento del emisor
+              $postalAddress_CountrySubentity = $xml->createElement( 'cbc:CountrySubentity', 'Llima'); //Provincia del emisor
+              $postalAddress_District = $xml->createElement( 'cbc:District', 'San Juan de Lurigancho'); //Distrito del emisor
+              $postalAddress_Country = $xml->createElement( 'cbc:Country', 'PE'); //Pais del emisor
+            // *************************************************************************************************
+            //Añadiendo datos de PostalAddress
+            $postalAddress->appendChild( $postalAddress_id );
+            $postalAddress->appendChild( $postalAddress_streetname );
+            $postalAddress->appendChild( $postalAddress_CitySubdivisionName );
+            $postalAddress->appendChild( $postalAddress_CityName );
+            $postalAddress->appendChild( $postalAddress_CountrySubentity );
+            $postalAddress->appendChild( $postalAddress_District );
+            $postalAddress->appendChild( $postalAddress_Country );
+          // *************************************************************************************************
+          $partyLegalEntity = $xml->createElement( 'cac:PartyLegalEntity'); //Datos de nombre comercial del emisor
+            $partyLegalEntity_RegistrationName = $xml->createElement( 'cbc:RegistrationName');
+              $cDataRegistrationName = $xml->createCDATASection( $empresa->nombre_empresa ); // CDATA razonSocial
+          //Añadiendo datos
+            $partyLegalEntity_RegistrationName->appendChild( $cDataRegistrationName );
+          $partyLegalEntity->appendChild( $partyLegalEntity_RegistrationName );
+          // *************************************************************************************************
+          //Añadiendo datos a Party
+          $party->appendChild( $partyName );
+          $party->appendChild( $postalAddress );
+          $party->appendChild( $partyLegalEntity );
+        // Añadiendo datos del emisor
+        $accountingSupplierParty->appendChild( $customerAssignedAccountID );
+        $accountingSupplierParty->appendChild( $additionalAccountID );
+        $accountingSupplierParty->appendChild( $party );
+        $accountingSupplierParty->appendChild($postalAddress);
+      // *************************************************************************************************
+      $invoiceTypeCode = $xml->createElement('cbc:InvoiceTypeCode',($model->tipo_doc == 3) ? 1 : 3); //Tipo de documento
+      // *************************************************************************************************
+      $cbcId = $xml->createElement( 'cbc:ID', $model->tipoDoc->abrv_tipod . $model->numeracion->serie_num .'-'.substr($model->cod_doc,-8)); // Numero de documento Serie-Numeracion
+      // *************************************************************************************************
+      $accountingCustomerParty = $xml->createElement( 'cac:AccountingCustomerParty' ); //Datos de cliente
+        $customerAssignedAcountId = $xml->createElement( 'cbc:CustomerAssignedAccountID', $model->pedidoDoc->cltePedido->ruc_clte); // Ruc de Cliente
+        $customer_additionalAccountID = $xml->createElement( 'cbc:AdditionalAccountID', $model->pedidoDoc->cltePedido->tipoid_clte); // Tipo de documento usuario
+        $customer_party = $xml->createElement( 'cac:Party' );
+          $customer_partyLegalEntity = $xml->createElement( 'cac:PartyLegalEntity' );
+            $customer_RegistrationName = $xml->createElement( 'cbc:RegistrationName' );
+              $customer_cData = $xml->createCDATASection( trim($model->pedidoDoc->cltePedido->nombre_clte) ); //Razon social Cliente
+            //Añadir datos
+            $customer_RegistrationName->appendChild( $customer_cData );
+          $customer_partyLegalEntity->appendChild( $customer_RegistrationName );
+        $customer_party->appendChild( $customer_partyLegalEntity );
+      $accountingCustomerParty->appendChild( $customer_party );
+      // *************************************************************************************************
+
+      $total = 0;
+      foreach ($model->pedidoDoc->pedidoDetalle as $key => $value) {
+        
+
+        $total += $model->pedidoDoc->pedidoDetalle->total_pdetalle;
+      }
+      $subtotal = $total / ( 1 + $IMPUESTO);
+
+
+      $Invoice->appendChild( $ublVersion ); //Añade al Invoice
+      $Invoice->appendChild( $ublCustomizationID ); //Añade al Invoice
+      $Invoice->appendChild( $issueDate ); //Añade al Invoice
+      $Invoice->appendChild( $accountingSupplierParty ); //Añade al Invoice
+      $Invoice->appendChild( $invoiceTypeCode ); // Añade al invoice
+      $Invoice->appendChild( $cbcId ); // Añade al invoice
+      $Invoice->appendChild( $accountingCustomerParty ); // Añade al invoice
+
+
+      $xml->appendChild( $Invoice );//Agrega Invoice al documento
+
+      Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+      Yii::$app->response->headers->add('Content-Type', 'text/xml');
+
+      print $xml->saveXML();
+
+
+
     }
 
 }

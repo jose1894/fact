@@ -157,7 +157,7 @@
         "version_normalized": "3.4.1.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/jquery/jquery-dist.git",
+            "url": "git@github.com:jquery/jquery-dist.git",
             "reference": "15bc73803f76bc53b654b9fdbbbc096f56d7c03d"
         },
         "dist": {
@@ -177,7 +177,7 @@
         "version_normalized": "1.3.2.0",
         "source": {
             "type": "git",
-            "url": "git@github.com:bestiejs/punycode.js.git",
+            "url": "https://github.com/bestiejs/punycode.js.git",
             "reference": "38c8d3131a82567bfef18da09f7f4db68c84f8a3"
         },
         "dist": {
@@ -665,6 +665,49 @@
         "keywords": [
             "constructor",
             "instantiate"
+        ]
+    },
+    {
+        "name": "drmad/semeele",
+        "version": "v1.0.3",
+        "version_normalized": "1.0.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/drmad/semeele.git",
+            "reference": "bb2239e1ce6ee82e95bb8bd0d8828b3f675adbc7"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/drmad/semeele/zipball/bb2239e1ce6ee82e95bb8bd0d8828b3f675adbc7",
+            "reference": "bb2239e1ce6ee82e95bb8bd0d8828b3f675adbc7",
+            "shasum": ""
+        },
+        "require": {
+            "ext-mbstring": "*",
+            "php": ">=5.6"
+        },
+        "time": "2017-11-15T22:32:44+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "drmad\\semeele\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL3"
+        ],
+        "authors": [
+            {
+                "name": "Oliver Etchebarne",
+                "email": "yo@drmad.org"
+            }
+        ],
+        "description": "Extremely simple and minimalistic XML generator for PHP. Really, very simple.",
+        "keywords": [
+            "php",
+            "xml"
         ]
     },
     {
@@ -4150,6 +4193,46 @@
             "bundle",
             "font",
             "yii"
+        ]
+    },
+    {
+        "name": "robrichards/xmlseclibs",
+        "version": "3.0.4",
+        "version_normalized": "3.0.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/robrichards/xmlseclibs.git",
+            "reference": "0a53d3c3aa87564910cae4ed01416441d3ae0db5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/0a53d3c3aa87564910cae4ed01416441d3ae0db5",
+            "reference": "0a53d3c3aa87564910cae4ed01416441d3ae0db5",
+            "shasum": ""
+        },
+        "require": {
+            "ext-openssl": "*",
+            "php": ">= 5.4"
+        },
+        "time": "2019-11-05T11:44:22+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "RobRichards\\XMLSecLibs\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "A PHP library for XML Security",
+        "homepage": "https://github.com/robrichards/xmlseclibs",
+        "keywords": [
+            "security",
+            "signature",
+            "xml",
+            "xmldsig"
         ]
     },
     {
