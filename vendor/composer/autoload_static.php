@@ -99,6 +99,10 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         array (
             'Webmozart\\Assert\\' => 17,
         ),
+        'T' => 
+        array (
+            'Twig\\' => 5,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Php73\\' => 23,
@@ -134,6 +138,7 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         'G' => 
         array (
             'GuzzleHttp\\Psr7\\' => 16,
+            'Greenter\\XMLSecLibs\\' => 20,
             'Greenter\\' => 9,
         ),
         'F' => 
@@ -355,6 +360,10 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
+        'Twig\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/twig/twig/src',
+        ),
         'Symfony\\Polyfill\\Php73\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php73',
@@ -439,10 +448,16 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
+        'Greenter\\XMLSecLibs\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/greenter/xmldsig/src',
+        ),
         'Greenter\\' => 
         array (
             0 => __DIR__ . '/..' . '/greenter/core/src/Core',
-            1 => __DIR__ . '/..' . '/greenter/ws/src',
+            1 => __DIR__ . '/..' . '/greenter/greenter/src/Greenter',
+            2 => __DIR__ . '/..' . '/greenter/ws/src',
+            3 => __DIR__ . '/..' . '/greenter/xml/src',
         ),
         'Faker\\' => 
         array (
@@ -473,6 +488,13 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
             'cebe\\gravatar\\' => 
             array (
                 0 => __DIR__ . '/..' . '/cebe/yii2-gravatar',
+            ),
+        ),
+        'T' => 
+        array (
+            'Twig_' => 
+            array (
+                0 => __DIR__ . '/..' . '/twig/twig/lib',
             ),
         ),
         'N' => 
