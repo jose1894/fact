@@ -186,6 +186,14 @@ return [
               'sucursal' => 'sucursal.php',
             ],
         ],
+        'tipo_cambio' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'tipo_cambio' => 'tipoCambio.php',
+            ],
+        ],
         'tipo_documento' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',

@@ -261,7 +261,7 @@ class DocumentoController extends Controller
             $model->valorr_doc = SiteController::getEmpresa()->ruc_empresa ."|". $tipoDoc ."|".$model->tipoDoc->abrv_tipod . $model->numeracion->serie_num . "|";
             $model->valorr_doc .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ."|";
 
-            $model->hash_doc = base64_encode(hash( 'sha256', $model->valorr_doc, false ));
+            $model->hash_doc = base64_encode(hash( 'sha1', $model->valorr_doc, false ));
 
             try {
               $modelNotaSalida->idrefdoc_trans = $model->id_doc;
@@ -702,7 +702,7 @@ class DocumentoController extends Controller
         $item[] = (new SaleDetail())
             ->setCodProducto(trim($value->productoPdetalle->cod_prod))
             ->setUnidad($value->productoPdetalle->umedProd->sunatm_und)
-            ->setCantidad($cantidad)
+            ->setCantidad(floatval($cantidad))
             ->setDescripcion(trim($value->productoPdetalle->des_prod))
             ->setMtoBaseIgv($totalSIGV) //Total por item sin IGV
             ->setPorcentajeIgv($value->impuesto_pdetalle) // 18%
@@ -712,23 +712,23 @@ class DocumentoController extends Controller
             ->setMtoValorVenta($totalIGV)
             ->setMtoValorUnitario($precioUnitarioSIGV)
             ->setMtoPrecioUnitario($value->precio_pdetalle);
-            break;
+            // break;
       }
 
-      var_dump($item);
-      exit();
+      // var_dump($item);
+      // exit();
 
       $legend = (new Legend())
           ->setCode('1000')
           ->setValue(NumerosEnLetras::convertir($model->total_doc));
 
-      $invoice->setDetails([$item])
+      $invoice->setDetails($item)
               ->setLegends([$legend]);
 
       $result = $see->send($invoice);
 
       // Guardar XML
-      file_put_contents($invoice->getName().'.xml',
+      file_put_contents(Yii::getAlias('@app') . '/xml/sent/' . $invoice->getName().'.xml',
                         $see->getFactory()->getLastXml());
       if (!$result->isSuccess()) {
           var_dump($result->getError());
@@ -737,7 +737,7 @@ class DocumentoController extends Controller
 
       echo $result->getCdrResponse()->getDescription();
       // Guardar CDR
-      file_put_contents('R-'.$invoice->getName().'.zip', $result->getCdrZip());
+      file_put_contents(Yii::getAlias('@app') . '/xml/response/' . 'R-'.$invoice->getName().'.zip', $result->getCdrZip());
       /*
 
       if ( is_null($model) ){
