@@ -52,6 +52,8 @@ class TipoCambioController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'justStuff';
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -66,11 +68,121 @@ class TipoCambioController extends Controller
     {
         $model = new TipoCambio();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_tipoc]);
+        $this->layout = 'justStuff';
+
+
+
+        if ($model->load(Yii::$app->request->post())) {
+
+          $valid = $model->validate();
+
+          // ajax validation
+          if (!$valid)
+          {
+              if (Yii::$app->request->isAjax) {
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  return ActiveForm::validate($model);
+
+              }
+          }
+          else
+          {
+              $model->sucursal_tipoc = SiteController::getSucursal();
+              $transaction = \Yii::$app->db->beginTransaction();
+
+              try {
+                      $model->save();
+                      $transaction->commit();
+                      //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      $return = [
+                        'success' => true,
+                        'title' => Yii::t('tipo_cambio', 'Exchange'),
+                        'message' => Yii::t('app','Record has been saved successfully!'),
+                        'type' => 'success'
+                      ];
+                      return $return;
+
+              } catch (Exception $e) {
+                  $transaction->rollBack();
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  $return = [
+                    'success' => false,
+                    'title' => Yii::t('tipo_cambio', 'Exchange'),
+                    'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                    'type' => 'error'
+
+                  ];
+                  return $return;
+              }
+          }
         }
 
         return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Creates a new TipoCambio model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionDiario()
+    {
+        $model = new TipoCambio();
+
+        $this->layout = 'justStuff';
+
+
+
+        if ($model->load(Yii::$app->request->post())) {
+
+          $valid = $model->validate();
+
+          // ajax validation
+          if (!$valid)
+          {
+              if (Yii::$app->request->isAjax) {
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  return ActiveForm::validate($model);
+
+              }
+          }
+          else
+          {
+              $model->sucursal_tipoc = SiteController::getSucursal();
+              $transaction = \Yii::$app->db->beginTransaction();
+
+              try {
+                      $model->save();
+                      $transaction->commit();
+                      //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                      Yii::$app->response->format = Response::FORMAT_JSON;
+                      $return = [
+                        'success' => true,
+                        'title' => Yii::t('tipo_cambio', 'Exchange'),
+                        'message' => Yii::t('app','Record has been saved successfully!'),
+                        'type' => 'success'
+                      ];
+                      return $return;
+
+              } catch (Exception $e) {
+                  $transaction->rollBack();
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  $return = [
+                    'success' => false,
+                    'title' => Yii::t('tipo_cambio', 'Exchange'),
+                    'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                    'type' => 'error'
+
+                  ];
+                  return $return;
+              }
+          }
+        }
+
+        return $this->render('diario', [
             'model' => $model,
         ]);
     }
@@ -85,9 +197,50 @@ class TipoCambioController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $this->layout = "justStuff";
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_tipoc]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            $valid = $model->validate();
+
+            // ajax validation
+            if (!$valid)
+            {
+                if (Yii::$app->request->isAjax) {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ActiveForm::validate($model);
+
+                }
+            }
+            else
+            {
+                $model->sucursal_tipod = SiteController::getSucursal();
+                $transaction = \Yii::$app->db->beginTransaction();
+
+                try {
+                        $model->save();
+                        $transaction->commit();
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        $return = [
+                          'success' => true,
+                          'title' => Yii::t('tipo_cambio', 'Exchange'),
+                          'message' => Yii::t('app','Record has been saved successfully!'),
+                          'type' => 'success'
+                        ];
+                        return $return;
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    $return = [
+                      'success' => false,
+                      'title' => Yii::t('tipo_cambio', 'Exchange'),
+                      'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                      'type' => 'error'
+
+                    ];
+                    return $return;
+                }
+            }
         }
 
         return $this->render('update', [
@@ -105,7 +258,10 @@ class TipoCambioController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        if (Yii::$app->request->isAjax) {
+             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+             return  true;
+         }
         return $this->redirect(['index']);
     }
 
@@ -123,5 +279,18 @@ class TipoCambioController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('tipo_cambio', 'The requested page does not exist.'));
+    }
+
+    public function actionConsultaTipoc()
+    {
+      $return = [ 'success' => false ];
+      $fecha = Yii::$app->request->post('fecha');
+      $model = TipoCambio::find(['fecha_tipoc' => $fecha ])->one();
+
+      if ( !is_null($model) ){
+        $return = ['success' => true];
+      }
+
+      echo json_encode( $return );
     }
 }

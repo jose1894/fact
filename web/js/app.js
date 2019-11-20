@@ -33,7 +33,7 @@ $( document ).ready( function( e ){
             window.parent.$.pjax.reload( { container: '#grid' } );
 
             if ( $( $form ).attr( 'action' ).indexOf( 'create' ) != -1) {
-              $( $form ).trigger( 'reset' );                
+              $( $form ).trigger( 'reset' );
               $selects = window.frames[ 0 ].$( $form ).find( 'select' );
 
               if ( $selects.length ) {
@@ -90,6 +90,10 @@ $( document ).ready( function( e ){
       $( frameDocumento ).attr( 'src', 'about:blank' );
       $( modalDocumento ).modal("hide");
     }
+    
+    $( '#modal-tipoc' ).attr( 'src', 'about:blank' );
+    $( '#modal-tipoc' ).modal("hide");
+
   });
 
   $( 'body' ).on( 'click', '.pjax-delete', function( e ){

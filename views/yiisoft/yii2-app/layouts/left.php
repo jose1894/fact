@@ -68,6 +68,7 @@
                         ['label' => Yii::t('serie','Numeration'), 'url' => ['/numeracion'], 'icon' => 'tachometer'],
                       ]
                     ],
+                    ['label' => Yii::t('tipo_cambio', 'Exchange'), 'icon' => 'money', 'url' => ['/tipo-cambio/']],
                     ['label' => Yii::t('app', 'Sales'), 'icon' => 'inbox',
                       'items' => [
                         ['label' => Yii::t('pedido','Order').'s', 'url' => ['/pedido'], 'icon' => 'inbox'],

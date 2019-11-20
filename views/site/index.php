@@ -1,6 +1,8 @@
 <?php
 
 /* @var $this yii\web\View */
+use yii\helpers\Url;
+use yii\web\View;
 
 $this->title = 'My Yii Application';
 ?>
@@ -51,3 +53,7 @@ $this->title = 'My Yii Application';
 
     </div>
 </div>
+
+
+<?php
+echo   $this->render('//site/_modalForm',[]);
