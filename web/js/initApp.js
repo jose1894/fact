@@ -20,13 +20,20 @@ $( 'body' ).on( 'keypress', '.number-integer', function ( e ){
   return isInteger( e, this );
 });
 
-$( 'body' ).on( 'keypress', '.number-decimals', function ( e ){
+$( 'body' ).on( 'keypress', '.number-decimals,.number-decimals3', function ( e ){
   return isDecimal( e, this );
 });
 
 $( 'body' ).on( 'blur', '.number-decimals', function ( e ){
   let valor = parseFloat( $( this ).val() );
+  valor = ( valor ) ? valor : 0;
   $( this ).val( round(valor) );
+});
+
+$( 'body' ).on( 'blur', '.number-decimals3', function ( e ){
+    let valor = parseFloat( $( this ).val() );
+    valor = ( valor ) ? valor : 0;
+    $( this ).val( decimals3(valor) );
 });
 
 // THE SCRIPT THAT CHECKS IF THE KEY PRESSED IS A NUMERIC OR DECIMAL VALUE.
@@ -79,8 +86,16 @@ function getRow( row = null ) {
     }
   }
 }
-
+// Redondea a 2 digitos decimales
 function round( num )
 {
   return parseFloat(Math.round(num * 100) / 100).toFixed(2);
+}
+
+/*
+*  Establece 3 digitos decimales
+*/
+function decimals3( num )
+{
+    return parseFloat( num ).toFixed(3);
 }

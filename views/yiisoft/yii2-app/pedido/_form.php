@@ -300,7 +300,6 @@ if ( $model->isNewRecord ) {
                             'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
                             'templateSelection' => new JsExpression( 'function (repo) { return repo.text; }'),
                             'templateResult' => new JsExpression('function (producto) {
-                                //debugger;
                                 if (producto.loading) {
                                     return producto.text;
                                 }

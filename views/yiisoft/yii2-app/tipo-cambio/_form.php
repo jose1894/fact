@@ -17,7 +17,7 @@ $model->fecha_tipoc =  date('d/m/Y');
   <?php $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientScript' => true]); ?>
 
   <div class="row">
-    <div class=" col-lg-12">
+    <div class=" col-xs-12">
       <?= $form->field($model, 'fecha_tipoc',[
         'addClass' => 'form-control ',
         ])->widget(DatePicker::classname(), [
@@ -28,29 +28,28 @@ $model->fecha_tipoc =  date('d/m/Y');
           'disabled' => true,
         ]); ?>
     </div>
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-      <?= $form->field($model, 'monedac_tipoc')->dropDownList(
-      [1 => 'Activo', 0 => 'Inactivo'],
-      ['custom' => true, 'prompt' => Yii::t('app','Select...')]) ?>
+    <div class="col-xs-12">
+        <?= $form->field($model, 'cambioc_tipoc',
+            [ 'addClass' => 'form-control number-decimals3']
+        )->textInput([ 'type'=>'text'])?>
     </div>
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-      <?= $form->field($model, 'moneda_tipoc')->dropDownList(
-      [1 => 'Activo', 0 => 'Inactivo'],
-      ['custom' => true, 'prompt' => Yii::t('app','Select...')]) ?>
+    <div class="col-xs-12">
+        <?= $form->field($model, 'valorf_tipoc',
+            [ 'addClass' => 'form-control number-decimals3']
+        )->textInput([ 'type'=>'text']) ?>
     </div>
+
+    <div class="col-xs-12">
+      <?= $form->field($model, 'venta_tipoc',
+          [ 'addClass' => 'form-control number-decimals3']
+      )->textInput([ 'type'=>'text']) ?>
+    </div>
+
+
   </div>
-
-
-
-    <?= $form->field($model, 'cambioc_tipoc')->textInput() ?>
-
-    <?= $form->field($model, 'venta_tipoc')->textInput() ?>
-
-    <?= $form->field($model, 'valorf_tipoc')->textInput() ?>
-
-    <div class="form-group">
+    <!--div class="form-group">
         <?= Html::submitButton(Yii::t('tipo_cambio', 'Save'), ['class' => 'btn btn-success']) ?>
-    </div>
+    </div-->
 
     <?php ActiveForm::end(); ?>
 

@@ -31,9 +31,10 @@ class TipoCambio extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fecha_tipoc', 'monedac_tipoc', 'moneda_tipoc', 'cambioc_tipoc', 'venta_tipoc', 'valorf_tipoc'], 'required'],
+            [[ 'cambioc_tipoc', 'venta_tipoc', 'valorf_tipoc'], 'required'],
             [['fecha_tipoc'], 'safe'],
-            [['monedac_tipoc', 'moneda_tipoc', 'cambioc_tipoc', 'venta_tipoc', 'valorf_tipoc'], 'integer'],
+            [['monedac_tipoc', 'moneda_tipoc'], 'integer'],
+            [['cambioc_tipoc', 'venta_tipoc', 'valorf_tipoc'], 'number', 'min' => 1],
         ];
     }
 
@@ -44,12 +45,12 @@ class TipoCambio extends \yii\db\ActiveRecord
     {
         return [
             'id_tipoc' => Yii::t('tipo_cambio', 'Id Tipoc'),
-            'fecha_tipoc' => Yii::t('tipo_cambio', 'Fecha Tipoc'),
+            'fecha_tipoc' => Yii::t('tipo_cambio', 'Date'),
             'monedac_tipoc' => Yii::t('tipo_cambio', 'Monedac Tipoc'),
             'moneda_tipoc' => Yii::t('tipo_cambio', 'Moneda Tipoc'),
-            'cambioc_tipoc' => Yii::t('tipo_cambio', 'Cambioc Tipoc'),
-            'venta_tipoc' => Yii::t('tipo_cambio', 'Venta Tipoc'),
-            'valorf_tipoc' => Yii::t('tipo_cambio', 'Valorf Tipoc'),
+            'cambioc_tipoc' => Yii::t('tipo_cambio', 'Change to bill'),
+            'venta_tipoc' => Yii::t('tipo_cambio', 'Buy'),
+            'valorf_tipoc' => Yii::t('tipo_cambio', 'Sell'),
         ];
     }
 }

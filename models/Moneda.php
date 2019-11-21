@@ -53,15 +53,29 @@ class Moneda extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function getMonedasList()
+    public static function getMonedasList( $extr = false, $nac = false)
     {
       $user = User::findOne(Yii::$app->user->id);
       $sucursal = $user->sucursal0->id_suc;
 
-      $monedas = Moneda::find()
-                 ->where('status_moneda = :status and sucursal_moneda = :sucursal',[':status' => 1, ':sucursal' => $sucursal])
-                ->orderBy('des_moneda')
-                ->all();
-      return  ArrayHelper::map( $monedas, 'id_moneda', 'des_moneda');
+      if ( !$nac && !$extr ){
+        $monedas = Moneda::find()
+                   ->where('status_moneda = :status and sucursal_moneda = :sucursal',[':status' => 1, ':sucursal' => $sucursal])
+                  ->orderBy('des_moneda')
+                  ->all();
+        return  ArrayHelper::map( $monedas, 'id_moneda', 'des_moneda');
+      } else if ( $nac && !$extr ) {
+
+        $monedas = Moneda::find()
+        ->where('status_moneda = :status and sucursal_moneda = :sucursal and tipo_moneda = :tipo',[':status' => 1, ':sucursal' => $sucursal, ':tipo' => 'N'])
+        ->orderBy('des_moneda')->all();
+        return  ArrayHelper::map( $monedas, 'id_moneda', 'des_moneda');
+      }else if ( !$nac && $extr ){
+        $monedas = Moneda::find()
+        ->where('status_moneda = :status and sucursal_moneda = :sucursal and tipo_moneda = :tipo',[':status' => 1, ':sucursal' => $sucursal, ':tipo' => 'E'])
+        ->orderBy('des_moneda')
+        ->all();
+        return  ArrayHelper::map( $monedas, 'id_moneda', 'des_moneda');
+      }
     }
 }

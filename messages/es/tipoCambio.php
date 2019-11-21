@@ -12,5 +12,9 @@ return [
     'Document type: <span class="label label-primary">{number}</span> {name}' => 'Tipo de documento: <span class="label label-primary">{number}</span> {name}',
     'Create document type' => 'Crear tipo de documento',
     'Update document type: <span class="label label-primary">{number}</span> {name}' => 'Actualizar tipo de documento: <span class="label label-primary">{number}</span> {name}',
-    'Exchange' => 'Tipo de cambio'
+    'Date' => 'Fecha',
+    'Exchange' => 'Tipo de cambio',
+    'Change to bill' => 'Cambio a facturar',
+    'Buy' => 'Compra',
+    'Sell' => 'Venta'
 ];

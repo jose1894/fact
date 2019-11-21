@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-11-2019 a las 23:21:45
+-- Tiempo de generación: 21-11-2019 a las 23:27:11
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -21,6 +21,7 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `fact`
 --
+DROP DATABASE IF EXISTS `fact`;
 CREATE DATABASE IF NOT EXISTS `fact` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `fact`;
 
@@ -30,7 +31,6 @@ USE `fact`;
 -- Estructura de tabla para la tabla `almacen`
 --
 
-DROP TABLE IF EXISTS `almacen`;
 CREATE TABLE `almacen` (
   `id_almacen` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_almacen` varchar(50) NOT NULL COMMENT 'DESCRIPCION ALMACEN',
@@ -51,7 +51,6 @@ INSERT INTO `almacen` (`id_almacen`, `des_almacen`, `status_almacen`, `sucursal_
 -- Estructura de tabla para la tabla `auth_assignment`
 --
 
-DROP TABLE IF EXISTS `auth_assignment`;
 CREATE TABLE `auth_assignment` (
   `item_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `user_id` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
@@ -72,7 +71,6 @@ INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
 -- Estructura de tabla para la tabla `auth_item`
 --
 
-DROP TABLE IF EXISTS `auth_item`;
 CREATE TABLE `auth_item` (
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `type` smallint(6) NOT NULL,
@@ -309,7 +307,6 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 -- Estructura de tabla para la tabla `auth_item_child`
 --
 
-DROP TABLE IF EXISTS `auth_item_child`;
 CREATE TABLE `auth_item_child` (
   `parent` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `child` varchar(64) COLLATE utf8_unicode_ci NOT NULL
@@ -547,7 +544,6 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 -- Estructura de tabla para la tabla `auth_rule`
 --
 
-DROP TABLE IF EXISTS `auth_rule`;
 CREATE TABLE `auth_rule` (
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `data` blob,
@@ -561,7 +557,6 @@ CREATE TABLE `auth_rule` (
 -- Estructura de tabla para la tabla `cliente`
 --
 
-DROP TABLE IF EXISTS `cliente`;
 CREATE TABLE `cliente` (
   `id_clte` int(11) NOT NULL COMMENT 'ID UNICO',
   `dni_clte` varchar(20) NOT NULL COMMENT 'DNI CLIENTE',
@@ -1345,7 +1340,6 @@ INSERT INTO `cliente` (`id_clte`, `dni_clte`, `ruc_clte`, `nombre_clte`, `direcc
 -- Estructura de tabla para la tabla `compra`
 --
 
-DROP TABLE IF EXISTS `compra`;
 CREATE TABLE `compra` (
   `id_compra` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_compra` varchar(10) NOT NULL COMMENT 'CODIGO COMPRA',
@@ -1368,7 +1362,6 @@ CREATE TABLE `compra` (
 -- Estructura de tabla para la tabla `compra_detalle`
 --
 
-DROP TABLE IF EXISTS `compra_detalle`;
 CREATE TABLE `compra_detalle` (
   `id_cdetalle` int(11) NOT NULL COMMENT 'ID UNICO',
   `prod_cdetalle` int(11) NOT NULL COMMENT 'PRODUCTO COMPRA DETALLE',
@@ -1389,7 +1382,6 @@ CREATE TABLE `compra_detalle` (
 -- Estructura de tabla para la tabla `cond_pago`
 --
 
-DROP TABLE IF EXISTS `cond_pago`;
 CREATE TABLE `cond_pago` (
   `id_condp` int(11) NOT NULL COMMENT 'ID UNICO',
   `desc_condp` varchar(100) NOT NULL COMMENT 'DESCRIP COND PAGO',
@@ -1412,7 +1404,6 @@ INSERT INTO `cond_pago` (`id_condp`, `desc_condp`, `status_condp`, `sucursal_con
 -- Estructura de tabla para la tabla `departamento`
 --
 
-DROP TABLE IF EXISTS `departamento`;
 CREATE TABLE `departamento` (
   `id_depto` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_depto` varchar(30) NOT NULL COMMENT 'DESCRIPCION DEPARTAMENTO',
@@ -1632,7 +1623,6 @@ INSERT INTO `departamento` (`id_depto`, `des_depto`, `prov_depto`, `pais_depto`,
 -- Estructura de tabla para la tabla `depts`
 --
 
-DROP TABLE IF EXISTS `depts`;
 CREATE TABLE `depts` (
   `provincia` varchar(100) DEFAULT NULL,
   `depart` varchar(100) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
@@ -1847,7 +1837,6 @@ INSERT INTO `depts` (`provincia`, `depart`, `dtto`) VALUES
 -- Estructura de tabla para la tabla `distrito`
 --
 
-DROP TABLE IF EXISTS `distrito`;
 CREATE TABLE `distrito` (
   `id_dtto` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_dtto` varchar(30) NOT NULL COMMENT 'DESCRIPCION DISTRITO',
@@ -2071,7 +2060,6 @@ INSERT INTO `distrito` (`id_dtto`, `des_dtto`, `pais_dtto`, `prov_dtto`, `depto_
 -- Estructura de tabla para la tabla `documento`
 --
 
-DROP TABLE IF EXISTS `documento`;
 CREATE TABLE `documento` (
   `id_doc` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_doc` varchar(10) DEFAULT '0000000000' COMMENT 'CODIGO DEL DOCUMENTO',
@@ -2109,7 +2097,6 @@ INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `ped
 -- Estructura de tabla para la tabla `documento_detalle`
 --
 
-DROP TABLE IF EXISTS `documento_detalle`;
 CREATE TABLE `documento_detalle` (
   `id_ddetalle` int(11) NOT NULL COMMENT 'ID UNICO',
   `prod_ddetalle` int(11) NOT NULL COMMENT 'PRODUCTO DOCUMENTO DETALLE',
@@ -2171,7 +2158,6 @@ INSERT INTO `documento_detalle` (`id_ddetalle`, `prod_ddetalle`, `cant_ddetalle`
 -- Estructura de tabla para la tabla `empresa`
 --
 
-DROP TABLE IF EXISTS `empresa`;
 CREATE TABLE `empresa` (
   `id_empresa` int(11) NOT NULL COMMENT 'ID UNICO',
   `nombre_empresa` varchar(150) NOT NULL COMMENT 'NOMBRE EMPRESA',
@@ -2198,7 +2184,6 @@ INSERT INTO `empresa` (`id_empresa`, `nombre_empresa`, `estatus_empresa`, `dni_e
 -- Estructura de tabla para la tabla `inventario`
 --
 
-DROP TABLE IF EXISTS `inventario`;
 CREATE TABLE `inventario` (
   `id_inv` int(11) NOT NULL COMMENT 'ID UNICO',
   `tipotrans_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO TRANSACCION INVENTARIO',
@@ -2216,7 +2201,6 @@ CREATE TABLE `inventario` (
 -- Estructura de tabla para la tabla `lista_precios`
 --
 
-DROP TABLE IF EXISTS `lista_precios`;
 CREATE TABLE `lista_precios` (
   `id_lista` int(11) NOT NULL COMMENT 'ID UNICO',
   `tipo_lista` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO DE LISTA DE PRECIO',
@@ -2670,7 +2654,6 @@ INSERT INTO `lista_precios` (`id_lista`, `tipo_lista`, `prod_lista`, `precio_lis
 -- Estructura de tabla para la tabla `menu`
 --
 
-DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu` (
   `id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
@@ -2686,7 +2669,6 @@ CREATE TABLE `menu` (
 -- Estructura de tabla para la tabla `migration`
 --
 
-DROP TABLE IF EXISTS `migration`;
 CREATE TABLE `migration` (
   `version` varchar(180) NOT NULL,
   `apply_time` int(11) DEFAULT NULL
@@ -2709,7 +2691,6 @@ INSERT INTO `migration` (`version`, `apply_time`) VALUES
 -- Estructura de tabla para la tabla `moneda`
 --
 
-DROP TABLE IF EXISTS `moneda`;
 CREATE TABLE `moneda` (
   `id_moneda` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_moneda` varchar(50) NOT NULL COMMENT 'DESCRIPCION MONEDA',
@@ -2733,7 +2714,6 @@ INSERT INTO `moneda` (`id_moneda`, `des_moneda`, `tipo_moneda`, `sunatm_moneda`,
 -- Estructura de tabla para la tabla `motivo_traslado`
 --
 
-DROP TABLE IF EXISTS `motivo_traslado`;
 CREATE TABLE `motivo_traslado` (
   `id_motivo` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_motivo` varchar(100) NOT NULL COMMENT 'DESCRIPCION MOTIVO',
@@ -2767,7 +2747,6 @@ INSERT INTO `motivo_traslado` (`id_motivo`, `des_motivo`, `status_motivo`, `sucu
 -- Estructura de tabla para la tabla `numeracion`
 --
 
-DROP TABLE IF EXISTS `numeracion`;
 CREATE TABLE `numeracion` (
   `id_num` int(11) NOT NULL COMMENT 'ID UNICO',
   `tipo_num` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO NUMERACION',
@@ -2798,7 +2777,6 @@ INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `s
 -- Estructura de tabla para la tabla `pais`
 --
 
-DROP TABLE IF EXISTS `pais`;
 CREATE TABLE `pais` (
   `id_pais` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_pais` varchar(3) NOT NULL COMMENT 'CODIGO PAIS',
@@ -3060,7 +3038,6 @@ INSERT INTO `pais` (`id_pais`, `cod_pais`, `des_pais`, `status_pais`, `sucursal_
 -- Estructura de tabla para la tabla `pedido`
 --
 
-DROP TABLE IF EXISTS `pedido`;
 CREATE TABLE `pedido` (
   `id_pedido` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_pedido` varchar(10) NOT NULL COMMENT 'CODIGO PEDIDO',
@@ -3092,7 +3069,6 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 -- Estructura de tabla para la tabla `pedido_detalle`
 --
 
-DROP TABLE IF EXISTS `pedido_detalle`;
 CREATE TABLE `pedido_detalle` (
   `id_pdetalle` int(11) NOT NULL COMMENT 'ID UNICO',
   `prod_pdetalle` int(11) NOT NULL COMMENT 'PRODUCTO PEDIDO DETALLE',
@@ -3154,7 +3130,6 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 -- Estructura de tabla para la tabla `precios`
 --
 
-DROP TABLE IF EXISTS `precios`;
 CREATE TABLE `precios` (
   `codigo` varchar(20) NOT NULL,
   `precio` decimal(18,2) DEFAULT NULL
@@ -3433,7 +3408,6 @@ INSERT INTO `precios` (`codigo`, `precio`) VALUES
 -- Estructura de tabla para la tabla `producto`
 --
 
-DROP TABLE IF EXISTS `producto`;
 CREATE TABLE `producto` (
   `id_prod` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_prod` varchar(25) NOT NULL COMMENT 'CODIGO PRODUCTO',
@@ -3722,8 +3696,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (520, 'LP-3236AFR', NULL, 'MANIJA EXT.PTA.DELANT HYUNDAI ACCENT 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (521, 'LP-3236ARL', NULL, 'MANIJA EXT.PTA POST.HYUNDAI ACCENT 2006/2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (522, 'LP-3236ARR', NULL, 'MANIJA EXT.PTA POST.HYUNDAI ACCENT 2006/2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(523, 'LP-3237PFLK', NULL, 'MANIJA EXT.PTA.DELANT.HY.ACCENT 2012-C ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(524, 'LP-3237PFRK', NULL, 'MANIJA PTA.DELANT HYUNDAI ACCENT 2012-C ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(523, 'LP-3237PFLK', '', 'MANIJA EXT.PTA.POST.HY.ACCENT 2012-C ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(524, 'LP-3237PFRK', '', 'MANIJA EXT. PTA. POST. HY. ACCENT 2012-C ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (525, 'LP-2004AFL', NULL, 'MANIJA INT.PTA DELANT.KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
 (526, 'LP-2004AFR', NULL, 'MANIJA INT.PTA DELANT.KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
 (527, 'LP-2004ARR', NULL, 'MANIJA INT.PTA POST KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
@@ -3870,9 +3844,9 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (668, 'LP-3215TG    ', NULL, 'REGLA DE COMPUERTA POSTERIOR TY HIACE COMMUTER 91-01                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (669, 'LP-3217ATL', NULL, 'MANIJA DE LA REGLA DE COMPUERTA POST.TY HIACE 2005...   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (670, 'LP-32171 L          ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005..                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(671, 'LP-3217MMR', NULL, 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005.(R=L) CROMO                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1);
+(671, 'LP-3217MMR', NULL, 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005.(R=L) CROMO                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(672, 'LP-7217FL', NULL, 'CERRADURA DE PTA DELANT.TY HIACE H200 05-C', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1);
 INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_prod`, `umed_prod`, `contenido_prod`, `exctoigv_prod`, `compra_prod`, `venta_prod`, `stockini_prod`, `stockmax_prod`, `stockmin_prod`, `stock_prod`, `status_prod`, `sucursal_prod`) VALUES
-(672, 'LP-7217FL', NULL, 'CERRADURA DE PTA DELANT.TY HIACE H200 05-C', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (673, 'LP-7217FR', NULL, 'CERRADURA DE PTA DELANT.TY HIACE H200 05-C', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (674, 'LP-3116TL           ', NULL, 'MANIJA DE LA REGLA DE COMPUERTA POSTERIOR TOYOTA HIACE 1984-1989      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (675, 'LP-B217A', NULL, 'SEGURO DE VENTANA TOY HIACE 2005', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -3896,7 +3870,6 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 -- Estructura de tabla para la tabla `profile`
 --
 
-DROP TABLE IF EXISTS `profile`;
 CREATE TABLE `profile` (
   `id` int(11) NOT NULL COMMENT 'ID UNICO',
   `user_id` int(11) NOT NULL DEFAULT '0' COMMENT 'ID USER',
@@ -3912,7 +3885,6 @@ CREATE TABLE `profile` (
 -- Estructura de tabla para la tabla `proveedor`
 --
 
-DROP TABLE IF EXISTS `proveedor`;
 CREATE TABLE `proveedor` (
   `id_prove` int(11) NOT NULL COMMENT 'ID UNICO',
   `dni_prove` varchar(20) NOT NULL COMMENT 'DNI PROVEEDOR',
@@ -3942,7 +3914,6 @@ INSERT INTO `proveedor` (`id_prove`, `dni_prove`, `ruc_prove`, `nombre_prove`, `
 -- Estructura de tabla para la tabla `provincia`
 --
 
-DROP TABLE IF EXISTS `provincia`;
 CREATE TABLE `provincia` (
   `id_prov` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_prov` varchar(30) NOT NULL COMMENT 'DESCRIPCION PROVINCIA',
@@ -3990,7 +3961,6 @@ INSERT INTO `provincia` (`id_prov`, `des_prov`, `status_prov`, `sucursal_prov`, 
 -- Estructura de tabla para la tabla `series`
 --
 
-DROP TABLE IF EXISTS `series`;
 CREATE TABLE `series` (
   `id_serie` int(11) NOT NULL COMMENT 'ID SERIE',
   `des_serie` varchar(3) DEFAULT '000' COMMENT 'DESCRIPCION SERIE',
@@ -4013,7 +3983,6 @@ INSERT INTO `series` (`id_serie`, `des_serie`, `status_serie`, `sucursal_serie`)
 -- Estructura de tabla para la tabla `sucursal`
 --
 
-DROP TABLE IF EXISTS `sucursal`;
 CREATE TABLE `sucursal` (
   `id_suc` int(11) NOT NULL COMMENT 'ID UNICO',
   `nombre_suc` varchar(50) NOT NULL COMMENT 'NOMBRE SUCURSAL',
@@ -4035,15 +4004,15 @@ INSERT INTO `sucursal` (`id_suc`, `nombre_suc`, `estatus_suc`, `empresa_suc`, `i
 -- Estructura de tabla para la tabla `tipo_cambio`
 --
 
-DROP TABLE IF EXISTS `tipo_cambio`;
 CREATE TABLE `tipo_cambio` (
   `id_tipoc` int(11) NOT NULL COMMENT 'ID UNICO',
   `fecha_tipoc` date NOT NULL COMMENT 'FECHA TIPO CAMBIO',
-  `monedac_tipoc` int(11) NOT NULL COMMENT 'MONEDA A CAMBIAR',
-  `moneda_tipoc` int(11) NOT NULL COMMENT 'MONEDA CAMBIADA',
-  `cambioc_tipoc` int(11) NOT NULL COMMENT 'VALOR COMPRA TIPO CAMBIO',
-  `venta_tipoc` int(11) NOT NULL COMMENT 'VALOR DE VENTA TIPO CAMBIO',
-  `valorf_tipoc` int(11) NOT NULL COMMENT 'VALOR A FACTURAR'
+  `monedac_tipoc` int(11) DEFAULT NULL COMMENT 'MONEDA A CAMBIAR',
+  `moneda_tipoc` int(11) DEFAULT NULL COMMENT 'MONEDA CAMBIADA',
+  `cambioc_tipoc` decimal(18,3) NOT NULL COMMENT 'VALOR COMPRA TIPO CAMBIO',
+  `venta_tipoc` decimal(18,3) NOT NULL COMMENT 'VALOR DE VENTA TIPO CAMBIO',
+  `valorf_tipoc` decimal(18,3) NOT NULL COMMENT 'VALOR A FACTURAR',
+  `sucursal_tipoc` int(11) NOT NULL COMMENT 'SUCURSAL TIPO DE CAMBIO'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
 
 -- --------------------------------------------------------
@@ -4052,7 +4021,6 @@ CREATE TABLE `tipo_cambio` (
 -- Estructura de tabla para la tabla `tipo_documento`
 --
 
-DROP TABLE IF EXISTS `tipo_documento`;
 CREATE TABLE `tipo_documento` (
   `id_tipod` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_tipod` varchar(100) DEFAULT NULL COMMENT 'DESCRIPCION TIPO DOCUMENTO',
@@ -4084,7 +4052,6 @@ INSERT INTO `tipo_documento` (`id_tipod`, `des_tipod`, `abrv_tipod`, `ope_tipod`
 -- Estructura de tabla para la tabla `tipo_identificacion`
 --
 
-DROP TABLE IF EXISTS `tipo_identificacion`;
 CREATE TABLE `tipo_identificacion` (
   `id_tipoi` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_tipoi` char(1) NOT NULL DEFAULT '0' COMMENT 'CODIGO DE TIPO DE IDENTIFICACION',
@@ -4110,7 +4077,6 @@ INSERT INTO `tipo_identificacion` (`id_tipoi`, `cod_tipoi`, `des_tipoi`, `status
 -- Estructura de tabla para la tabla `tipo_listap`
 --
 
-DROP TABLE IF EXISTS `tipo_listap`;
 CREATE TABLE `tipo_listap` (
   `id_lista` int(11) NOT NULL COMMENT 'ID UNICO',
   `desc_lista` varchar(30) NOT NULL DEFAULT '' COMMENT 'DESCRIPCION TIPO LISTA',
@@ -4132,7 +4098,6 @@ INSERT INTO `tipo_listap` (`id_lista`, `desc_lista`, `estatus_lista`, `sucursal_
 -- Estructura de tabla para la tabla `tipo_movimiento`
 --
 
-DROP TABLE IF EXISTS `tipo_movimiento`;
 CREATE TABLE `tipo_movimiento` (
   `id_tipom` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_tipom` varchar(60) NOT NULL COMMENT 'DESCRIPCION TIPO MOVIMIENTO',
@@ -4159,7 +4124,6 @@ INSERT INTO `tipo_movimiento` (`id_tipom`, `des_tipom`, `status_tipom`, `sucursa
 -- Estructura de tabla para la tabla `tipo_producto`
 --
 
-DROP TABLE IF EXISTS `tipo_producto`;
 CREATE TABLE `tipo_producto` (
   `id_tpdcto` int(11) NOT NULL COMMENT 'ID UNICO',
   `desc_tpdcto` varchar(255) NOT NULL COMMENT 'DESCRIP TIPO PRODUCTO',
@@ -4181,7 +4145,6 @@ INSERT INTO `tipo_producto` (`id_tpdcto`, `desc_tpdcto`, `status_tpdcto`, `sucur
 -- Estructura de tabla para la tabla `tipo_proveedor`
 --
 
-DROP TABLE IF EXISTS `tipo_proveedor`;
 CREATE TABLE `tipo_proveedor` (
   `id_tprov` int(11) NOT NULL,
   `des_tprov` varchar(45) DEFAULT NULL,
@@ -4205,7 +4168,6 @@ INSERT INTO `tipo_proveedor` (`id_tprov`, `des_tprov`, `status_tprov`, `sucursal
 -- Estructura de tabla para la tabla `transaccion`
 --
 
-DROP TABLE IF EXISTS `transaccion`;
 CREATE TABLE `transaccion` (
   `id_trans` int(11) NOT NULL COMMENT 'ID UNICO',
   `codigo_trans` varchar(10) NOT NULL COMMENT 'CODIGO TRANSACCION',
@@ -4236,7 +4198,6 @@ INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_tran
 -- Estructura de tabla para la tabla `transportista`
 --
 
-DROP TABLE IF EXISTS `transportista`;
 CREATE TABLE `transportista` (
   `id_transp` int(11) NOT NULL COMMENT 'ID UNICO',
   `ruc_transp` varchar(12) NOT NULL COMMENT 'RUC TRANSPORTISTA',
@@ -4258,7 +4219,6 @@ INSERT INTO `transportista` (`id_transp`, `ruc_transp`, `des_transp`, `status_tr
 -- Estructura de tabla para la tabla `trans_detalle`
 --
 
-DROP TABLE IF EXISTS `trans_detalle`;
 CREATE TABLE `trans_detalle` (
   `id_detalle` int(11) NOT NULL COMMENT 'ID UNICO',
   `trans_detalle` int(11) NOT NULL DEFAULT '0' COMMENT 'TRANSACCION DETALLE',
@@ -4314,7 +4274,6 @@ INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `can
 -- Estructura de tabla para la tabla `unidad_medida`
 --
 
-DROP TABLE IF EXISTS `unidad_medida`;
 CREATE TABLE `unidad_medida` (
   `id_und` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_und` varchar(50) NOT NULL COMMENT 'DESCRIPCION UNIDAD MEDIDA',
@@ -4337,7 +4296,6 @@ INSERT INTO `unidad_medida` (`id_und`, `des_und`, `status_und`, `sunatm_und`, `s
 -- Estructura de tabla para la tabla `unidad_transporte`
 --
 
-DROP TABLE IF EXISTS `unidad_transporte`;
 CREATE TABLE `unidad_transporte` (
   `id_utransp` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_utransp` varchar(150) DEFAULT NULL COMMENT 'DESCRIPCION UNIDAD TRANSPORTISTA',
@@ -4358,7 +4316,6 @@ INSERT INTO `unidad_transporte` (`id_utransp`, `des_utransp`, `status_utransp`, 
 -- Estructura de tabla para la tabla `user`
 --
 
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `username` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
@@ -4386,7 +4343,6 @@ INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `password_res
 -- Estructura de tabla para la tabla `vendedor`
 --
 
-DROP TABLE IF EXISTS `vendedor`;
 CREATE TABLE `vendedor` (
   `id_vendedor` int(11) NOT NULL COMMENT 'ID UNICO',
   `dni_vend` varchar(11) NOT NULL COMMENT 'DNI VENDEDOR',
@@ -4414,7 +4370,6 @@ INSERT INTO `vendedor` (`id_vendedor`, `dni_vend`, `nombre_vend`, `tlf_vend`, `e
 -- Estructura Stand-in para la vista `v_productos`
 -- (Véase abajo para la vista actual)
 --
-DROP VIEW IF EXISTS `v_productos`;
 CREATE TABLE `v_productos` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
@@ -4436,7 +4391,6 @@ CREATE TABLE `v_productos` (
 -- Estructura de tabla para la tabla `zona`
 --
 
-DROP TABLE IF EXISTS `zona`;
 CREATE TABLE `zona` (
   `id_zona` int(11) NOT NULL COMMENT 'ID UNICO',
   `nombre_zona` varchar(150) NOT NULL COMMENT 'NOMBRE ZONA',
@@ -4735,7 +4689,8 @@ ALTER TABLE `sucursal`
 -- Indices de la tabla `tipo_cambio`
 --
 ALTER TABLE `tipo_cambio`
-  ADD PRIMARY KEY (`id_tipoc`);
+  ADD PRIMARY KEY (`id_tipoc`),
+  ADD KEY `sucursal_tipoc` (`sucursal_tipoc`);
 
 --
 -- Indices de la tabla `tipo_documento`
@@ -5005,7 +4960,7 @@ ALTER TABLE `sucursal`
 -- AUTO_INCREMENT de la tabla `tipo_cambio`
 --
 ALTER TABLE `tipo_cambio`
-  MODIFY `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+  MODIFY `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_documento`

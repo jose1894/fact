@@ -8,6 +8,8 @@ use app\models\TipoCambioSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
+use kartik\widgets\ActiveForm;
 
 /**
  * TipoCambioController implements the CRUD actions for TipoCambio model.
@@ -138,7 +140,8 @@ class TipoCambioController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
 
-          $valid = $model->validate();
+            $model->fecha_tipoc = date('Y-m-d');
+            $valid = $model->validate();
 
           // ajax validation
           if (!$valid)
@@ -146,7 +149,6 @@ class TipoCambioController extends Controller
               if (Yii::$app->request->isAjax) {
                   Yii::$app->response->format = Response::FORMAT_JSON;
                   return ActiveForm::validate($model);
-
               }
           }
           else
@@ -283,12 +285,30 @@ class TipoCambioController extends Controller
 
     public function actionConsultaTipoc()
     {
-      $return = [ 'success' => false ];
+      $return = [ 'success' => false,
+          'last' => [
+                'cambioc_tipoc' => 0,
+                'venta_tipoc' => 0,
+                'valorf_tipoc' => 0
+            ]
+      ];
+
+
       $fecha = Yii::$app->request->post('fecha');
       $model = TipoCambio::find(['fecha_tipoc' => $fecha ])->one();
 
       if ( !is_null($model) ){
-        $return = ['success' => true];
+          $model = TipoCambio::find()
+              ->orderBy('fecha_tipoc')
+              ->one();
+
+          $return = ['success' => true,
+                     'last' => [
+                         'cambioc_tipoc' => $model->cambioc_tipoc,
+                         'venta_tipoc' => $model->venta_tipoc,
+                         'valorf_tipoc' => $model->valorf_tipoc
+                     ]
+          ];
       }
 
       echo json_encode( $return );
