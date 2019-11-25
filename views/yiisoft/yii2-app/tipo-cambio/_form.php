@@ -1,5 +1,6 @@
 <?php
 
+use app\models\TipoCambio;
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use kartik\date\DatePicker;
@@ -10,6 +11,20 @@ use app\models\Moneda;
 /* @var $model app\models\TipoCambio */
 /* @var $form yii\widgets\ActiveForm */
 $model->fecha_tipoc =  date('d/m/Y');
+$model->cambioc_tipoc = 0;
+$model->valorf_tipoc = 0;
+$model->venta_tipoc = 0;
+
+$modelAnt = TipoCambio::find()
+            ->orderBy( ['fecha_tipoc' => SORT_DESC])
+            ->one();
+
+if ( !is_null($modelAnt)){
+    $model->cambioc_tipoc = $modelAnt->cambioc_tipoc;
+    $model->valorf_tipoc = $modelAnt->valorf_tipoc;
+    $model->venta_tipoc = $modelAnt->venta_tipoc;
+}
+
 ?>
 
 <div class="tipo-cambio-form">

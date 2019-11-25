@@ -53,7 +53,7 @@ class Documento extends \yii\db\ActiveRecord
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc'], 'required', 'on' => self::SCENARIO_FACTURA],
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc','transp_doc','utransp_doc','motivo_doc',], 'required', 'on' => self::SCENARIO_GUIA],
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','numeracion_doc'], 'integer'],
-            [['fecha_doc'], 'safe'],
+            [['fecha_doc','cliente'], 'safe'],
             [['obsv_doc','valorr_doc','hash_doc'], 'string'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
             [['cod_doc'], 'string', 'max' => 10],

@@ -11,6 +11,7 @@ use app\models\NotaSalidaDetalle;
 use app\models\DocumentoDetalle;
 use app\models\Pedido;
 use app\models\Producto;
+use app\models\TipoCambio;
 use app\models\Numeracion;
 use app\models\TipoIdentificacion;
 use app\models\DocumentoSearch;
@@ -18,16 +19,10 @@ use app\models\PedidoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\base\Model;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\ActiveForm;
 use NumerosEnLetras;
-// use Greenter\Ws\Services\SoapClient;
-// use Greenter\Ws\Services\BillSender;
-// use DOMDocument;
-// use drmad\semeele\Document;
-// use drmad\semeele\Node;
 use DateTime;
 use Greenter\Model\Client\Client;
 use Greenter\Model\Company\Company;
@@ -261,7 +256,8 @@ class DocumentoController extends Controller
             $model->valorr_doc = SiteController::getEmpresa()->ruc_empresa ."|". $tipoDoc ."|".$model->tipoDoc->abrv_tipod . $model->numeracion->serie_num . "|";
             $model->valorr_doc .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ."|";
 
-            $model->hash_doc = base64_encode(hash( 'sha1', $model->valorr_doc, false ));
+//            $model->hash_doc = base64_encode(hash( 'sha1', $model->valorr_doc, false ));
+            $model->tipocambio_doc = TipoCambio::getTipoCambio()->valorf_tipoc;
 
             try {
               $modelNotaSalida->idrefdoc_trans = $model->id_doc;
@@ -448,7 +444,7 @@ class DocumentoController extends Controller
     {
         $searchModel = new DocumentoSearch();
         $searchModel->status_doc = Documento::DOCUMENTO_GENERADO;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchDocumentos(Yii::$app->request->queryParams);
 
 
         return $this->render('_facturaGenerada', [

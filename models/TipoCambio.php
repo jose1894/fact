@@ -53,4 +53,13 @@ class TipoCambio extends \yii\db\ActiveRecord
             'valorf_tipoc' => Yii::t('tipo_cambio', 'Sell'),
         ];
     }
+
+    public function getTipoCambio( $fecha = null )
+    {
+        if ( empty($fecha) ){
+            $fecha = date('Y-m-d' );
+        }
+
+        return TipoCambio::find()->where(['fecha_tipoc' => $fecha])->one();
+    }
 }

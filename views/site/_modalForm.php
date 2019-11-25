@@ -77,14 +77,6 @@ $js = <<<JS
       if ( !data.success ) {
         $( '#modal-tipoc' ).modal( 'show' );
         $( '#frame-tipoc' ).prop( 'src', frameTipoC);
-        
-        function cargarDatos() {
-            window.frames[ 2 ].$( 'form' ).find( '#cambioc_tipoc' ).val( data.last.cambioc_tipoc );
-            window.frames[ 2 ].$( 'form' ).find( '#venta_tipoc' ).val( data.last.venta_tipoc );
-            window.frames[ 2 ].$( 'form' ).find( '#valorf_tipoc' ).val( data.last.valorf_tipoc );
-        }
-        
-        setTimeout( cargarDatos(), 5000);
       }
 
     }
@@ -108,7 +100,6 @@ $js = <<<JS
         'success': function ( data ) {
           if ( data.success ) {
             swal(data.title, data.message, data.type);
-            window.parent.$.pjax.reload( { container: '#grid' } );
 
             if ( $( _form ).attr( 'action' ).indexOf( 'create' ) != -1) {
               $( _form ).trigger( 'reset' );              

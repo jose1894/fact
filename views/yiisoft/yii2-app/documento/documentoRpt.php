@@ -71,7 +71,7 @@ $impuesto = $IMPUESTO/ 100;
           //
           // $valorResumen = base64_encode(hash("sha256",$code,false));
           // $code .= $code . $valorResumen;
-          $code = $documento->valorr_doc . $documento->hash_doc;
+          $code = $documento->valorr_doc;
 
         ?>
 

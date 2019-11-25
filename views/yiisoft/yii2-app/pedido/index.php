@@ -9,10 +9,8 @@ use yii\web\JqueryAsset;
 use app\models\Cliente;
 use app\models\Pedido;
 use app\models\Vendedor;
-use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
-// use app\models\Provincia;
-// use kartik\select2\Select2;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\PedidoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */

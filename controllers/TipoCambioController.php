@@ -216,7 +216,7 @@ class TipoCambioController extends Controller
             }
             else
             {
-                $model->sucursal_tipod = SiteController::getSucursal();
+                $model->sucursal_tipoc = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
 
                 try {
@@ -285,30 +285,16 @@ class TipoCambioController extends Controller
 
     public function actionConsultaTipoc()
     {
-      $return = [ 'success' => false,
-          'last' => [
-                'cambioc_tipoc' => 0,
-                'venta_tipoc' => 0,
-                'valorf_tipoc' => 0
-            ]
-      ];
-
-
+      $return = [ 'success' => false];
+      $model = [];
       $fecha = Yii::$app->request->post('fecha');
-      $model = TipoCambio::find(['fecha_tipoc' => $fecha ])->one();
 
-      if ( !is_null($model) ){
-          $model = TipoCambio::find()
-              ->orderBy('fecha_tipoc')
-              ->one();
+      if ( date('Y-m-d') === $fecha) {
+          $model = TipoCambio::find()->where(['fecha_tipoc' => $fecha])->one();
+      }
 
-          $return = ['success' => true,
-                     'last' => [
-                         'cambioc_tipoc' => $model->cambioc_tipoc,
-                         'venta_tipoc' => $model->venta_tipoc,
-                         'valorf_tipoc' => $model->valorf_tipoc
-                     ]
-          ];
+      if ( !is_null($model) ) {
+          $return = ['success' => true];
       }
 
       echo json_encode( $return );

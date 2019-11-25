@@ -66,7 +66,7 @@ $config = [
             ],
         ],
         'db' => $db,
-
+        /* DEVELOPMENT
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
@@ -84,7 +84,7 @@ $config = [
                     //  '<id:\d+>' => 'compra',
             ],
         ],
-
+        */
         'view' => [
              'theme' => [
                  'pathMap' => [
