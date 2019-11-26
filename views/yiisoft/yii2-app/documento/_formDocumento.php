@@ -631,12 +631,13 @@ $( ".table-body" ).on( "change", "input[id$=\'cant_pdetalle\']", function( e ) {
     }
 });
 
-$( ".table-body" ).on( "change", "input[id$=\'descu_pdetalle\']", function( e ) {
+/*$( ".table-body" ).on( "change", "input[id$=\'descu_pdetalle\']", function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     let descu = $( this ).val();
     let precio = $( "#pedidodetalle-" + row + "-plista_pdetalle").val();
     let cant = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
+    let precioPdetalle = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
     let total = 0.00;
     let descuento = 0;
     let precioVenta = 0.00;
@@ -661,7 +662,7 @@ $( ".table-body" ).on( "change", "input[id$=\'descu_pdetalle\']", function( e ) 
 
       calculateTotals( IMPUESTO );
     }
-});
+});*/
 
 $( ".table-body" ).on( "change", "input[id$=\'precio_pdetalle\']", function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
@@ -793,17 +794,20 @@ $("select[id$=\'prod_pdetalle\']").each(function( i ){
 });
 
 function setPrices( value = null, row, tipo_lista ) {
+  //debugger;
   if ( value ) {
     $.ajax({
         url:"'.Url::to(['producto/product-price']).'",
         data:{
           id: value,
-          tipo_listap: tipo_lista
+          tipo_listap: tipo_lista,
+          id_pedido:' . $modelPedido->id_pedido . '
         },
         async:false,
         success: function( data ) {
           if ( data.results ) {
             let precioLista = data.results[ 0 ].precio;
+            let precioDetalle = data.results[ 0 ].precio_pdetalle;
             let impuestoDetalle = data.results[ 0 ].precio - data.results[ 0 ].precio / ( IMPUESTO + 1 );
 
             precioLista = parseFloat(  precioLista  ).toFixed( 2 );
@@ -816,7 +820,11 @@ function setPrices( value = null, row, tipo_lista ) {
             descuDetalle = descuDetalle ? descuDetalle : 0;
 
             $( "#pedidodetalle-" + row + "-descu_pdetalle" ).val( descuDetalle );
-            $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioLista );
+            $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioLista );            
+            
+            if ( precioDetalle ){
+                $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioDetalle );
+            } 
           }
         }
     });

@@ -225,11 +225,6 @@ class PedidoController extends Controller
             if ($valid) {
                 $transaction = \Yii::$app->db->beginTransaction();
 
-                $fecha = explode("/",$model->fecha_pedido);
-                $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
-                $model->fecha_pedido = $fecha;
-                $model->sucursal_pedido = SiteController::getSucursal();
-
                 try {
                     if ($flag = $model->save(false)) {
                         if (!empty($deletedIDs)) {

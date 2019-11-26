@@ -17,7 +17,7 @@ $impuesto = $IMPUESTO/ 100;
         <td width="9%" class="center mayus bold" style="padding:5px 0;border-top: 1px solid black;border-bottom: 1px solid black;"> <?= Yii::t('pedido','U.M.')?></td>
         <td width="15%" class="center mayus bold" style="padding:5px 0;border-top: 1px solid black;border-bottom: 1px solid black;"> <?= Yii::t('pedido','Code')?></td>
         <td class="left mayus bold" style="padding: 5px 20px;border-top: 1px solid black;border-bottom: 1px solid black;"> <?= Yii::t('pedido','Description')?></td>
-        <td class="center bold mayus" style="padding:5px 0;border-top: 1px solid black;border-bottom: 1px solid black;"> <?= Yii::t('pedido','N.Price')?></td>
+        <td class="center bold mayus" style="padding:5px 0;border-top: 1px solid black;border-bottom: 1px solid black;"> <?= Yii::t('pedido','U.Price')?></td>
         <td class="center bold mayus" style="padding:5px 0;border-right:1px solid black;border-top: 1px solid black;border-bottom: 1px solid black;"> <?= Yii::t('pedido','Total')?></td>
       </tr>
     </thead>

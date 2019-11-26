@@ -38,5 +38,6 @@ return [
     'Do you want to issue the document?' => '¿Quieres emitir el documento?',
     'N.Price' => 'P.Neto',
     'G.Price' => 'P.Bruto',
-    'Orders list' => 'Listado de pedidos'
+    'Orders list' => 'Listado de pedidos',
+    'U.Price' => 'P.Unitario'
 ];

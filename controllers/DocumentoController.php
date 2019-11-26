@@ -444,7 +444,8 @@ class DocumentoController extends Controller
     {
         $searchModel = new DocumentoSearch();
         $searchModel->status_doc = Documento::DOCUMENTO_GENERADO;
-        $dataProvider = $searchModel->searchDocumentos(Yii::$app->request->queryParams);
+        $searchModel->tipo_doc = Documento::TIPODOC_FACTURA;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
 
         return $this->render('_facturaGenerada', [

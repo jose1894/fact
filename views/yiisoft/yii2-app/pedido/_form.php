@@ -26,9 +26,6 @@ if ( $model->isNewRecord ) {
 } else {
   $disabled = true;
 }
-
-
-
 ?>
 
 <div class="pedido-form">
@@ -51,7 +48,8 @@ if ( $model->isNewRecord ) {
             ])->textInput([
                   'value' => date('d/m/Y'),
                   'readonly' => 'readonly',
-                  'style' => ['text-align' => 'right']
+                  'style' => ['text-align' => 'right'],
+                  'disabled' => $disabled,
               ]) ?>
         </div>
 
@@ -561,7 +559,7 @@ $( '.table-body' ).on('select2:select',"select[id$='prod_pdetalle']",function() 
 
 });
 
-$( '.table-body' ).on( 'change', 'input[id$="cant_pdetalle"]', function( e ) {
+$( '.table-body' ).on( 'blur', 'input[id$="cant_pdetalle"]', function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     let cant = $( this ).val();
@@ -584,12 +582,13 @@ $( '.table-body' ).on( 'change', 'input[id$="cant_pdetalle"]', function( e ) {
     }
 });
 
-$( '.table-body' ).on( 'change', 'input[id$="descu_pdetalle"]', function( e ) {
+$( '.table-body' ).on( 'blur', 'input[id$="descu_pdetalle"]', function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     let descu = $( this ).val();
     let precio = $( "#pedidodetalle-" + row + "-plista_pdetalle").val();
     let cant = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
+    let precioDetalle = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
     let total = 0.00;
     let descuento = 0;
     let precioVenta = 0.00;
@@ -760,7 +759,7 @@ JS
               descuDetalle = descuDetalle ? descuDetalle : 0;
 
               $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( descuDetalle );
-              $( '#pedidodetalle-' + row + '-precio_pdetalle' ).val( precioLista );
+              //$( '#pedidodetalle-' + row + '-precio_pdetalle' ).val( precioLista );
             }
           }
       });
