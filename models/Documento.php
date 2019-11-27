@@ -36,6 +36,8 @@ class Documento extends \yii\db\ActiveRecord
     const TIPODOC_FACTURA = 2;
     const TIPODOC_BOLETA = 9;
     const TIPODOC_GUIA = 3;
+
+    public $cliente;
     /**
      * {@inheritdoc}
      */
@@ -52,9 +54,9 @@ class Documento extends \yii\db\ActiveRecord
         return [
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc'], 'required', 'on' => self::SCENARIO_FACTURA],
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc','transp_doc','utransp_doc','motivo_doc',], 'required', 'on' => self::SCENARIO_GUIA],
-            [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','numeracion_doc'], 'integer'],
-            [['fecha_doc'], 'safe'],
-            [['obsv_doc','valorr_doc','hash_doc'], 'string'],
+            [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','numeracion_doc','statussunat_doc'], 'integer'],
+            [['fecha_doc','clte_nombre'], 'safe'],
+            [['obsv_doc','valorr_doc','hash_doc','cliente'], 'string'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
             [['cod_doc'], 'string', 'max' => 10],
             [['valorr_doc','hash_doc'], 'string', 'max' => 255],
@@ -101,7 +103,7 @@ class Documento extends \yii\db\ActiveRecord
      */
     public function getPedidoDoc()
     {
-        return $this->hasOne(Pedido::className(), ['id_pedido' => 'pedido_doc']);
+        return $this->hasOne(Pedido::className(), ['id_pedido' => 'pedido_doc'])->joinWith(['cltePedido']);
     }
     /**
      * @return \yii\db\ActiveQuery
@@ -133,8 +135,12 @@ class Documento extends \yii\db\ActiveRecord
 
     public function getGuiaRem()
     {
-       // return $this->hasOne(Documento::className(), [])->andOnCondition(['tipo_doc' => '3','pedido_doc'=>$this->pedido_doc]);;
-       return Documento::find()->where(['status_doc' => Documento::GUIA_GENERADA,'pedido_doc' => $this->pedido_doc, 'tipo_doc' => 3]);
+       return Documento::find()
+           ->where(['pedido_doc' => $this->pedido_doc, 'tipo_doc' => 3])
+           ->andWhere(['or',
+               ['status_doc' => Documento::GUIA_GENERADA],
+               ['status_doc' => Documento::DOCUMENTO_GENERADO]
+           ]);
     }
 
     public function getNumeracion()

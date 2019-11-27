@@ -69,70 +69,6 @@ class DocumentoController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Documento model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Documento model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Documento();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_doc]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing Documento model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_doc]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing Documento model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
 
     /**
      * Finds the Documento model based on its primary key value.
@@ -254,7 +190,7 @@ class DocumentoController extends Controller
             $flag = $modelPedido->save() && $flag;
 
             $model->valorr_doc = SiteController::getEmpresa()->ruc_empresa ."|". $tipoDoc ."|".$model->tipoDoc->abrv_tipod . $model->numeracion->serie_num . "|";
-            $model->valorr_doc .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ."|";
+            $model->valorr_doc .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ;
 
 //            $model->hash_doc = base64_encode(hash( 'sha1', $model->valorr_doc, false ));
             $model->tipocambio_doc = TipoCambio::getTipoCambio()->valorf_tipoc;
@@ -443,9 +379,7 @@ class DocumentoController extends Controller
     public function actionListadoFactura()
     {
         $searchModel = new DocumentoSearch();
-        $searchModel->status_doc = Documento::DOCUMENTO_GENERADO;
-        $searchModel->tipo_doc = Documento::TIPODOC_FACTURA;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchDocumento(Yii::$app->request->queryParams);
 
 
         return $this->render('_facturaGenerada', [
@@ -541,11 +475,11 @@ class DocumentoController extends Controller
                                    ->where('id_doc = :id',[':id' => $id])
                                    ->andWhere(['tipo_doc' => [Documento::TIPODOC_FACTURA,Documento::TIPODOC_BOLETA]])->one();
 
-
       if ( is_null($modelDocumento) ){
         throw new NotFoundHttpException(Yii::t('empresa', 'The requested page does not exist.'));
       }
       $this->layout = 'reports';
+
 
       $content = $this->render('documentoRpt', [
           'documento' => $modelDocumento,
@@ -621,17 +555,19 @@ class DocumentoController extends Controller
       $mpdf->AddPage('P','','','','',10,10,80,50,10,5);
       $mpdf->WriteHtml( $content ); // call mpdf write html
 
-      $titulo = $modelDocumento->cod_doc. '-'. $nroComprobante .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
+      $titulo =  $nroComprobante .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
 
       $mpdf->SetTitle($titulo);
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
     }
 
-    function actionGenXml( $id = 28 ){
+    function actionAjaxGenFactXml( $id = 28 ){
 
       $model = Documento::find()
-                                   ->where('id_doc = :id',[':id' => $id])
-                                   ->andWhere(['tipo_doc' => [Documento::TIPODOC_FACTURA,Documento::TIPODOC_BOLETA]])->one();
+                           ->where('id_doc = :id',[':id' => $id])
+                           ->andWhere(['tipo_doc' => [Documento::TIPODOC_FACTURA,Documento::TIPODOC_BOLETA]])
+                           ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
+                           ->one();
 
       $empresa = SiteController::getEmpresa();
       $IMPUESTO = SiteController::getImpuesto();
@@ -687,15 +623,12 @@ class DocumentoController extends Controller
 
       foreach ($model->pedidoDoc->detalles as $key => $value) {
         // code...
-        $totalSIGV = 0;
-        $totalIGV = 0;
-        $precioUnitarioSIGV = 0;
         $totalSIGV = number_format($value->total_pdetalle / (1 + ($value->impuesto_pdetalle / 100 )), 2 , '.',''); //Total sin IGV por item
         $totalIGV = number_format($totalSIGV * ($value->impuesto_pdetalle / 100), 2, '.','');// Total de igv por item por cantidad
         $precioUnitarioSIGV = $value->precio_pdetalle /(1 + ($value->impuesto_pdetalle / 100 )); //Precio unitario sin IGV por item
         $precioUnitarioSIGV = number_format($precioUnitarioSIGV / $value->cant_pdetalle, 2, '.', '');
         $cantidad = number_format($value->cant_pdetalle, 3, '.', '');
-        // echo $key."<br>";
+
         $item[] = (new SaleDetail())
             ->setCodProducto(trim($value->productoPdetalle->cod_prod))
             ->setUnidad($value->productoPdetalle->umedProd->sunatm_und)
@@ -727,12 +660,19 @@ class DocumentoController extends Controller
       // Guardar XML
       file_put_contents(Yii::getAlias('@app') . '/xml/sent/' . $invoice->getName().'.xml',
                         $see->getFactory()->getLastXml());
-      if (!$result->isSuccess()) {
-          var_dump($result->getError());
-          exit();
-      }
+      $model->statussunat_doc = $result->getCdrResponse()->getCode();
+      $model->save();
 
-      echo $result->getCdrResponse()->getDescription();
+      $return = [
+          'description' => $result->getCdrResponse()->getDescription(),
+          'code' => $result->getCdrResponse()->getCode(),
+          'id' => $result->getCdrResponse()->getId(),
+          ];
+
+      foreach ($result->getCdrResponse()->getNotes() as $key => $value){
+            $return['notes'][$key] = $value;
+      }
+      echo json_encode($return);
       // Guardar CDR
       file_put_contents(Yii::getAlias('@app') . '/xml/response/' . 'R-'.$invoice->getName().'.zip', $result->getCdrZip());
       /*
