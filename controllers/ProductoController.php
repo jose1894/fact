@@ -270,7 +270,6 @@ class ProductoController extends Controller
         $desc = is_null(Yii::$app->request->post( 'desc' )) ? null : Yii::$app->request->post( 'desc' );
         $tipo_listap = is_null(Yii::$app->request->post( 'tipo_listap' )) ? null : Yii::$app->request->post( 'tipo_listap' );
         $sucursal = SiteController::getSucursal();
-
         if ( !is_null( $desc ) && (is_null( $tipo_listap ) || trim($tipo_listap) === '' ) ) {
 
             $query = new Query;

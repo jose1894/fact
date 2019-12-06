@@ -439,4 +439,15 @@ class CompraController extends Controller
       $mpdf->SetTitle($titulo);
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
     }
+
+    public function actionAjaxCompras()
+    {
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            $out = Compra::getCompras();
+            return $out;
+        }
+
+    }
+
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-11-2019 a las 23:27:11
+-- Tiempo de generación: 06-12-2019 a las 23:13:22
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -21,7 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `fact`
 --
-DROP DATABASE IF EXISTS `fact`;
 CREATE DATABASE IF NOT EXISTS `fact` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `fact`;
 
@@ -568,7 +567,7 @@ CREATE TABLE `cliente` (
   `provi_cte` int(11) NOT NULL COMMENT 'PROVINCIA CLIENTE',
   `dtto_clte` int(11) NOT NULL COMMENT 'DISTRITO CLIENTE',
   `tlf_ctle` varchar(100) NOT NULL COMMENT 'TELEFONO CLIENTE',
-  `email_clte` varchar(200) NOT NULL COMMENT 'EMAIL CLIENTE',
+  `email_clte` varchar(200) DEFAULT NULL COMMENT 'EMAIL CLIENTE',
   `vendedor_clte` int(11) NOT NULL COMMENT 'VENDEDOR CLIENTE',
   `estatus_ctle` int(11) NOT NULL COMMENT 'ESTATUS CLIENTE',
   `condp_clte` int(11) NOT NULL COMMENT 'CONDICION DE PAGO',
@@ -1356,6 +1355,14 @@ CREATE TABLE `compra` (
   `sucursal_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL COMPRA'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA ORDEN DE COMPRAS';
 
+--
+-- Volcado de datos para la tabla `compra`
+--
+
+INSERT INTO `compra` (`id_compra`, `cod_compra`, `fecha_compra`, `provee_compra`, `moneda_compra`, `condp_compra`, `usuario_compra`, `estatus_compra`, `edicion_compra`, `excento_compra`, `afectaalm_compra`, `nrodoc_compra`, `sucursal_compra`) VALUES
+(1, '0000000001', '2019-11-29', 2, 1, 1, 2, 0, 'N', 0, 1, '', 1),
+(2, '0000000002', '2019-12-06', 2, 1, 2, 2, 0, 'N', 0, 0, '', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -1375,6 +1382,18 @@ CREATE TABLE `compra_detalle` (
   `total_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL COMPRA DETALLE',
   `impuestototal_cdetalle` decimal(18,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT 'IMPUESTO TOTAL COMPRA DETALLE'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE COMPRAS';
+
+--
+-- Volcado de datos para la tabla `compra_detalle`
+--
+
+INSERT INTO `compra_detalle` (`id_cdetalle`, `prod_cdetalle`, `cant_cdetalle`, `precio_cdetalle`, `descu_cdetalle`, `impuestouni_cdetalle`, `status_cdetalle`, `compra_cdetalle`, `plista_cdetalle`, `total_cdetalle`, `impuestototal_cdetalle`) VALUES
+(1, 7, '50.00', '1.18', '0.00', '0.00', 1, 1, '1.00', '59.00', '0.00'),
+(2, 44, '50.00', '30.54', '0.00', '0.00', 1, 1, '3.00', '177.00', '0.00'),
+(3, 45, '50.00', '50.90', '0.00', '0.00', 1, 1, '5.00', '295.00', '0.00'),
+(4, 629, '10.00', '5.00', '0.00', '0.00', 1, 2, '0.00', '50.00', '0.00'),
+(5, 630, '10.00', '5.00', '0.00', '0.00', 1, 2, '0.00', '50.00', '0.00'),
+(6, 632, '20.00', '3.00', '0.00', '0.00', 1, 2, '0.00', '60.00', '0.00');
 
 -- --------------------------------------------------------
 
@@ -2075,8 +2094,10 @@ CREATE TABLE `documento` (
   `utransp_doc` int(11) DEFAULT NULL COMMENT 'UNIDAD DE TRANSPORTE DOCUMENTO',
   `almacen_doc` int(11) NOT NULL COMMENT 'ALMACEN DOCUMENTO',
   `motivo_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'MOTIVO TRASLADO, PARA LAS GUIAS DE REMISION',
+  `tipocambio_doc` decimal(18,3) NOT NULL DEFAULT '0.000' COMMENT 'TIPO DE CAMBIO DE DOCUMENTO',
   `hash_doc` varchar(255) DEFAULT NULL COMMENT 'CODIGO HASH DEL DOCUMENTO',
   `valorr_doc` varchar(255) DEFAULT NULL COMMENT 'VALOR RESUMEN DEL DOCUMENTO ELECTRONICO',
+  `statussunat_doc` int(11) NOT NULL DEFAULT '-1' COMMENT 'ESTATUS SUNAT',
   `status_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTADO DEL DOCUMENTO: 0 = SIN GENERAR, 1 = GUIA GENERADA, 2 = DOCUMENTO GENERADO, 3 = DOCUMENTO ANULADO',
   `sucursal_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL DEL DOCUMENTO'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE LOS DOCUMENTOS: FACTURAS, GUIAS DE REMISION, NOTAS DE CREDITO, NOTAS DE DEBITO';
@@ -2085,11 +2106,15 @@ CREATE TABLE `documento` (
 -- Volcado de datos para la tabla `documento`
 --
 
-INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `pedido_doc`, `fecha_doc`, `obsv_doc`, `totalimp_doc`, `totaldsc_doc`, `total_doc`, `transp_doc`, `utransp_doc`, `almacen_doc`, `motivo_doc`, `hash_doc`, `valorr_doc`, `status_doc`, `sucursal_doc`) VALUES
-(25, '0000000001', 3, 9, 15, '2019-11-06', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, NULL, NULL, 1, 1),
-(26, '0000000001', 2, 7, 15, '2019-11-06', '', '145.21', '0.00', '951.90', NULL, NULL, 1, 0, NULL, NULL, 1, 1),
-(27, '0000000002', 3, 9, 16, '2019-11-14', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, NULL, NULL, 1, 1),
-(28, '0000000002', 2, 7, 16, '2019-11-14', '', '214.13', '0.00', '1403.72', NULL, NULL, 1, 0, '20604954241|3|FE01|00000002|214.13|1403.72|2019-11-14|6|20481609136|OTFhODA0MTgwMTNkOTRmMmI5MTY1YTA4NGIyYzEyOWNmNGRjNzgxOTUxMWQyNzNhNDJiODZjNDA2ODAwMTZiNQ==', '20604954241|3|FE01|00000002|214.13|1403.72|2019-11-14|6|20481609136|', 1, 1);
+INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `pedido_doc`, `fecha_doc`, `obsv_doc`, `totalimp_doc`, `totaldsc_doc`, `total_doc`, `transp_doc`, `utransp_doc`, `almacen_doc`, `motivo_doc`, `tipocambio_doc`, `hash_doc`, `valorr_doc`, `statussunat_doc`, `status_doc`, `sucursal_doc`) VALUES
+(25, '0000000001', 3, 9, 15, '2019-11-06', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, '0.000', NULL, NULL, -1, 2, 1),
+(26, '0000000001', 2, 7, 15, '2019-11-06', '', '145.21', '0.00', '951.90', NULL, NULL, 1, 0, '0.000', NULL, NULL, -1, 2, 1),
+(27, '0000000002', 3, 9, 16, '2019-11-14', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, '0.000', NULL, NULL, -1, 2, 1),
+(28, '0000000002', 2, 7, 16, '2019-11-14', '', '214.13', '0.00', '1403.72', NULL, NULL, 1, 0, '0.000', '20604954241|3|FE01|00000002|214.13|1403.72|2019-11-14|6|20481609136|OTFhODA0MTgwMTNkOTRmMmI5MTY1YTA4NGIyYzEyOWNmNGRjNzgxOTUxMWQyNzNhNDJiODZjNDA2ODAwMTZiNQ==', '20604954241|3|FE01|00000002|214.13|1403.72|2019-11-14|6|20481609136|', 0, 2, 1),
+(29, '0000000003', 3, 9, 17, '2019-11-22', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, '0.000', NULL, NULL, -1, 2, 1),
+(33, '0000000003', 2, 7, 17, '2019-11-22', '', '172.37', '0.00', '1130.00', NULL, NULL, 1, 0, '3.375', NULL, '20604954241|3|FE01|00000003|172.37|1130.00|2019-11-22|6|20600807391|', 0, 2, 1),
+(34, '0000000004', 3, 9, 18, '2019-11-26', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, '0.000', NULL, NULL, -1, 1, 1),
+(35, '0000000004', 2, 7, 18, '2019-11-26', '', '172.37', '0.00', '1130.00', NULL, NULL, 1, 0, '3.391', NULL, '20604954241|3|FE01|00000004|172.37|1130.00|2019-11-26|6|20600807391|', -1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2150,7 +2175,9 @@ INSERT INTO `documento_detalle` (`id_ddetalle`, `prod_ddetalle`, `cant_ddetalle`
 (189, 583, '30.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
 (190, 624, '30.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
 (191, 677, '2.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
-(192, 676, '2.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00');
+(192, 676, '2.00', '0.00', '0.00', '0', 1, 27, '0.00', '0.00'),
+(193, 150, '10.00', '0.00', '0.00', '0', 1, 29, '0.00', '0.00'),
+(194, 150, '10.00', '0.00', '0.00', '0', 1, 34, '0.00', '0.00');
 
 -- --------------------------------------------------------
 
@@ -2761,15 +2788,15 @@ CREATE TABLE `numeracion` (
 --
 
 INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `serie_num`, `status_num`) VALUES
-(1, 1, '0000000002', 1, '00', 1),
+(1, 1, '0000000004', 1, '00', 1),
 (2, 7, '0000000000', 1, '00', 1),
 (3, 8, '0000000000', 1, '00', 1),
-(4, 6, '0000000000', 1, '00', 1),
-(5, 4, '0000000000', 1, '00', 1),
-(6, 5, '0000000002', 1, '00', 1),
-(7, 2, '0000000002', 1, '01', 1),
+(4, 6, '0000000002', 1, '00', 1),
+(5, 4, '0000000001', 1, '00', 1),
+(6, 5, '0000000004', 1, '00', 1),
+(7, 2, '0000000004', 1, '01', 1),
 (8, 9, '0000000000', 1, '01', 1),
-(9, 3, '0000000002', 1, '01', 1);
+(9, 3, '0000000004', 1, '01', 1);
 
 -- --------------------------------------------------------
 
@@ -3061,7 +3088,9 @@ CREATE TABLE `pedido` (
 
 INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, `vend_pedido`, `moneda_pedido`, `almacen_pedido`, `usuario_pedido`, `estatus_pedido`, `sucursal_pedido`, `condp_pedido`, `tipo_pedido`, `edicion_pedido`, `nrodoc_pedido`) VALUES
 (15, '0000000001', '2019-11-06', 367, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
-(16, '0000000002', '2019-11-14', 71, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', '');
+(16, '0000000002', '2019-11-14', 71, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(17, '0000000003', '2019-11-22', 520, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(18, '0000000004', '2019-11-26', 520, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', '');
 
 -- --------------------------------------------------------
 
@@ -3122,7 +3151,10 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 (69, 583, '30.00', '2.00', '0.00', '18', 1, 16, '2.00', '60.00'),
 (70, 624, '30.00', '2.00', '0.00', '18', 1, 16, '2.00', '60.00'),
 (71, 677, '2.00', '20.50', '0.00', '18', 1, 16, '20.50', '41.00'),
-(72, 676, '2.00', '20.50', '0.00', '18', 1, 16, '20.50', '41.00');
+(72, 676, '2.00', '20.50', '0.00', '18', 1, 16, '20.50', '41.00'),
+(73, 150, '10.00', '110.00', '0.00', '18', 1, 17, '113.00', '1100.00'),
+(74, 150, '10.00', '113.00', '0.00', '18', 1, 18, '113.00', '1130.00'),
+(75, 631, '5.00', '15.04', '3.00', '18', 1, 17, '15.50', '75.17');
 
 -- --------------------------------------------------------
 
@@ -3578,7 +3610,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (147, 'LP-HX2D', 'CM-9222', 'FARO NEBLI.TY HILUX VIGO 2008-2010 (SETX2)      ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (148, 'LP-HX4C', 'CM15-HX4', 'FARO NEBLI.TY REVO 2015-AVANZA 2016-YARIS 2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (149, 'LP-HX4', 'CM-9430', 'FARO NEBLI.TY.REVO 2015 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(150, 'LP-HX4B', 'CM-9430C', 'FARO NEBLI.TY.REVO 2015 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(150, 'LP-HX4B', 'CM-9430C', 'FARO NEBLI.TY.REVO 2015 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (151, 'LP-TH2L', 'CM97-TH6L', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (152, 'LP-TH2R', 'CM97-TH6R', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (153, 'LP-TH2AL', 'CM04-TH9L', 'FARO NEBLI.TY HIACE 2004-2010', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -3906,7 +3938,8 @@ CREATE TABLE `proveedor` (
 --
 
 INSERT INTO `proveedor` (`id_prove`, `dni_prove`, `ruc_prove`, `nombre_prove`, `direcc_prove`, `pais_prove`, `depto_prove`, `provi_prove`, `dtto_prove`, `tlf_prove`, `tipo_prove`, `status_prove`, `sucursal_prove`) VALUES
-(1, '', '', 'pedro perez', 'asdasd', 231, 215, 28, 215, '', 2, 1, 1);
+(1, '', '', 'pedro perez', 'asdasd', 231, 215, 28, 215, '', 2, 1, 1),
+(2, '', '20517053270', 'MARVIG S.C.R.L.', '', 241, 135, 15, 135, '', 2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -4014,6 +4047,25 @@ CREATE TABLE `tipo_cambio` (
   `valorf_tipoc` decimal(18,3) NOT NULL COMMENT 'VALOR A FACTURAR',
   `sucursal_tipoc` int(11) NOT NULL COMMENT 'SUCURSAL TIPO DE CAMBIO'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
+
+--
+-- Volcado de datos para la tabla `tipo_cambio`
+--
+
+INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_tipoc`, `cambioc_tipoc`, `venta_tipoc`, `valorf_tipoc`, `sucursal_tipoc`) VALUES
+(1, '2019-11-21', NULL, NULL, '3.387', '3.384', '3.387', 1),
+(4, '2019-11-22', NULL, NULL, '3.380', '3.375', '3.375', 1),
+(5, '2019-11-25', NULL, NULL, '3.385', '3.382', '3.385', 1),
+(6, '2019-11-26', NULL, NULL, '3.391', '3.385', '3.391', 1),
+(7, '2019-11-27', NULL, NULL, '3.385', '3.381', '3.385', 1),
+(8, '2019-11-28', NULL, NULL, '3.385', '3.381', '3.385', 1),
+(9, '2019-11-29', NULL, NULL, '3.390', '3.385', '3.390', 1),
+(10, '2019-11-30', NULL, NULL, '3.390', '3.385', '3.390', 1),
+(11, '2019-12-02', NULL, NULL, '3.390', '3.385', '3.390', 1),
+(12, '2019-12-03', NULL, NULL, '3.390', '3.385', '3.390', 1),
+(13, '2019-12-04', NULL, NULL, '3.390', '3.385', '3.390', 1),
+(14, '2019-12-05', NULL, NULL, '3.386', '3.383', '3.386', 1),
+(15, '2019-12-06', NULL, NULL, '3.380', '3.374', '3.380', 1);
 
 -- --------------------------------------------------------
 
@@ -4190,7 +4242,10 @@ CREATE TABLE `transaccion` (
 
 INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_trans`, `tipo_trans`, `ope_trans`, `idrefdoc_trans`, `seriedocref_trans`, `docref_trans`, `almacen_trans`, `sucursal_trans`, `usuario_trans`, `status_trans`) VALUES
 (10, '0000000001', '2019-11-06', NULL, 4, 'S', 26, NULL, NULL, 1, 1, 2, 1),
-(11, '0000000002', '2019-11-14', NULL, 4, 'S', 28, NULL, NULL, 1, 1, 2, 1);
+(11, '0000000002', '2019-11-14', NULL, 4, 'S', 28, NULL, NULL, 1, 1, 2, 1),
+(12, '0000000003', '2019-11-22', NULL, 4, 'S', 33, NULL, NULL, 1, 1, 2, 1),
+(13, '0000000004', '2019-11-26', NULL, 4, 'S', 35, NULL, NULL, 1, 1, 2, 1),
+(14, '0000000001', '2019-12-06', '', 3, 'E', 2, NULL, '', 1, 1, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -4266,7 +4321,12 @@ INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `can
 (129, 11, 583, 30),
 (130, 11, 624, 30),
 (131, 11, 677, 2),
-(132, 11, 676, 2);
+(132, 11, 676, 2),
+(133, 12, 150, 10),
+(134, 13, 150, 10),
+(155, 14, 629, 10),
+(156, 14, 630, 10),
+(157, 14, 632, 20);
 
 -- --------------------------------------------------------
 
@@ -4822,13 +4882,13 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `compra_detalle`
 --
 ALTER TABLE `compra_detalle`
-  MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+  MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `cond_pago`
@@ -4852,13 +4912,13 @@ ALTER TABLE `distrito`
 -- AUTO_INCREMENT de la tabla `documento`
 --
 ALTER TABLE `documento`
-  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=29;
+  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `documento_detalle`
 --
 ALTER TABLE `documento_detalle`
-  MODIFY `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=193;
+  MODIFY `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=195;
 
 --
 -- AUTO_INCREMENT de la tabla `empresa`
@@ -4912,13 +4972,13 @@ ALTER TABLE `pais`
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=17;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `pedido_detalle`
 --
 ALTER TABLE `pedido_detalle`
-  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=73;
+  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -4936,7 +4996,7 @@ ALTER TABLE `profile`
 -- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
-  MODIFY `id_prove` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+  MODIFY `id_prove` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `provincia`
@@ -4960,7 +5020,7 @@ ALTER TABLE `sucursal`
 -- AUTO_INCREMENT de la tabla `tipo_cambio`
 --
 ALTER TABLE `tipo_cambio`
-  MODIFY `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=8;
+  MODIFY `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_documento`
@@ -5002,7 +5062,7 @@ ALTER TABLE `tipo_proveedor`
 -- AUTO_INCREMENT de la tabla `transaccion`
 --
 ALTER TABLE `transaccion`
-  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=12;
+  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `transportista`
@@ -5014,7 +5074,7 @@ ALTER TABLE `transportista`
 -- AUTO_INCREMENT de la tabla `trans_detalle`
 --
 ALTER TABLE `trans_detalle`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=133;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=158;
 
 --
 -- AUTO_INCREMENT de la tabla `unidad_medida`

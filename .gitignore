@@ -12,8 +12,14 @@ nbproject
 # windows thumbnail cache
 #Thumbs.db
 
+# Config dir
+/config
+
 # composer vendor dir
 /vendor
+
+#XML sunat
+/xml
 
 # web assets
 /web/assets

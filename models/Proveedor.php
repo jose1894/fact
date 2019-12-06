@@ -43,7 +43,7 @@ class Proveedor extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'nombre_prove', 'direcc_prove',  'tipo_prove', 'status_prove'], 'required'],
+            [[ 'nombre_prove',  'tipo_prove', 'status_prove'], 'required'],
             [['direcc_prove'], 'string'],
             [['pais_prove', 'depto_prove', 'provi_prove', 'dtto_prove', 'tipo_prove', 'status_prove', 'sucursal_prove'], 'integer'],
             [['dni_prove', 'ruc_prove'], 'string', 'max' => 20],

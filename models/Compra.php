@@ -27,6 +27,9 @@ use yii\helpers\ArrayHelper;
 class Compra extends \yii\db\ActiveRecord
 {
     const ORDEN_COMPRA = 'OC';
+    const TIPO_MOVIMIENTO = 3;
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
     /**
      * {@inheritdoc}
      */
@@ -107,5 +110,30 @@ class Compra extends \yii\db\ActiveRecord
     public function getDetalles()
     {
         return $this->hasMany(CompraDetalle::className(), ['compra_cdetalle' => 'id_compra']);
+    }
+
+    public static function getCompras()
+    {
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+
+        $compras = self::find()
+            ->select(['id_compra',"concat(fecha_compra,' | ',cod_compra) cod_compra"])
+            ->where('estatus_compra = :status and sucursal_compra = :sucursal',[':status' => self::STATUS_INACTIVE, ':sucursal' => $sucursal])
+            ->orderBy('cod_compra')
+            ->all();
+
+        foreach ($compras as $key => $value) {
+            $return[$key]['id_compra'] = $value->id_compra;
+            $return[$key]['cod_compra'] = $value->cod_compra;
+
+            foreach ( $value->detalles as $key1 => $value1) {
+                $return[$key]['details'][$key1]['id_prod'] = $value1->prod_cdetalle;
+                $return[$key]['details'][$key1]['des_prod'] = $value1->prodCdetalle->cod_prod.' '.$value1->prodCdetalle->des_prod.' - '.
+                                                              $value1->prodCdetalle->umedProd->des_und;
+                $return[$key]['details'][$key1]['cant_detalle'] = $value1->cant_cdetalle;
+            }
+        }
+        return $return;
     }
 }

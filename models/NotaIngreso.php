@@ -38,7 +38,7 @@ class NotaIngreso extends \yii\db\ActiveRecord
         return [
             [['fecha_trans'], 'safe'],
             [['obsv_trans'], 'string'],
-            [['tipo_trans', 'almacen_trans', 'sucursal_trans', 'usuario_trans', 'status_trans'], 'integer'],
+            [['tipo_trans', 'almacen_trans', 'sucursal_trans', 'usuario_trans', 'status_trans', 'idrefdoc_trans'], 'integer'],
             [['almacen_trans','tipo_trans','sucursal_trans', 'usuario_trans'], 'required'],
             [['codigo_trans', 'docref_trans'], 'string', 'max' => 10],
             [['tipo_trans'], 'exist', 'skipOnError' => true, 'targetClass' => TipoMovimiento::className(), 'targetAttribute' => ['tipo_trans' => 'id_tipom']],
@@ -60,8 +60,10 @@ class NotaIngreso extends \yii\db\ActiveRecord
             'docref_trans' => Yii::t('ingreso', 'Document'),
             'almacen_trans' => Yii::t('almacen', 'Warehouse'),
             'sucursal_trans' => Yii::t('ingreso', 'sucursal'),
+            'iddocref_trans' => Yii::t( 'compra', 'Purchase order'),
             'usuario_trans' => Yii::t('ingreso', 'usuario'),
             'status_trans' => Yii::t('ingreso', 'Status'),
+            'idrefdoc_trans' => Yii::t('compra','Purchase order')
         ];
     }
 

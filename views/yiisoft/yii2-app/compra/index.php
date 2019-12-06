@@ -21,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin([ 'id' => 'grid']); ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('compra', 'Create purchase order'), ['create'], ['class' => 'btn btn-flat btn-success']) ?>
@@ -57,6 +58,13 @@ $this->params['breadcrumbs'][] = $this->title;
               ],
               'width' => '70%'
             ],
+            //'condp_compra',
+            //'usuario_compra',
+            //'estatus_compra',
+            //'edicion_compra',
+            //'nrodoc_compra',
+            //'sucursal_compra',
+
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
@@ -111,19 +119,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                   if ($action === 'print') {
-                      $url =Url::to(['compra/compra-rpt','id' => $model->id_compra]);
+                      $url ='index.php?r=compra/compra-rpt&id='.$model->id_compra;
                       return $url;
                   }
                   if ($action === 'view') {
-                      $url =Url::to(['compra/view','id' => $model->id_compra]);
+                      $url ='index.php?r=compra/view&id='.$model->id_compra.'&asDialog=1';
                       return $url;
                   }
                   if ($action === 'update') {
-                      $url =Url::to(['compra/update','id' => $model->id_compra]);
+                      $url ='index.php?r=compra/update&id='.$model->id_compra;
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url =Url::to(['compra/delete','id' => $model->id_compra]);
+                      $url ='index.php?r=compra/delete&id='.$model->id_compra;
                       return $url;
                   }
 

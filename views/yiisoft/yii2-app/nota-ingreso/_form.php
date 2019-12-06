@@ -1,14 +1,15 @@
 <?php
 
+use kartik\form\ActiveField;
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use app\models\TipoMovimiento;
+use app\models\Compra;
 use app\models\Almacen;
 use app\models\Producto;
 use yii\web\View ;
 use wbraganca\dynamicform\DynamicFormWidget;
 use kartik\select2\Select2;
-use app\base\Model;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 
@@ -24,6 +25,35 @@ $disabled = true;
 if ( !$model->status_trans ) {
   $disabled = false;
 }
+
+$this->registerCss('
+.disabled-select {
+  background-color: #d5d5d5;
+  opacity: 0.5;
+  border-radius: 3px;
+  cursor: not-allowed;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+select[readonly].select2-hidden-accessible + .select2-container {
+  pointer-events: none;
+  touch-action: none;
+}
+
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection {
+  background: #eee;
+  box-shadow: none;
+}
+
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection__arrow,
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection__clear {
+  display: none;
+}
+');
 ?>
 
 <div class="nota-ingreso-form">
@@ -50,10 +80,8 @@ if ( !$model->status_trans ) {
                 'readonly' => 'readonly',
                 'style' => ['text-align' => 'right']
                 ]) ?>
-              </div>
-
-
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
             <?= $form->field($model, 'docref_trans',[
               'addClass' => 'form-control'
               ])->textInput([
@@ -61,26 +89,58 @@ if ( !$model->status_trans ) {
                 'maxlength' => true
                 ]) ?>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <?php
+            $display = "none";
+            $class = "col-lg-6 col-md-6 col-sm-6 col-xs-12";
+            $nroCompra = [];
+            $arrCompras = [];
+            $arrOptions = [];
+            if ( !empty($model->idrefdoc_trans)) {
+                $display = "block";
+                $class = "ol-lg-3 col-md-3 col-sm-3 col-xs-12";
+                $compras = Compra::getCompras();
+
+
+                foreach ($compras as $key => $value) {
+                    $arrCompras[$value['id_compra']] = $value['cod_compra'];
+                    $arrOptions[$value['id_compra']]['data-details'] = json_encode($value['details']);
+                }
+
+                $compras = [];
+            }
+          ?>
+          <div id="tipo_trans" class="<?=$class?>>">
             <?php
-              $mov = TipoMovimiento::getTipoMovList( 'E' );
+            $mov = TipoMovimiento::getTipoMovList( 'E' );
             ?>
             <?= $form->field($model, 'tipo_trans',[
                 'addClass' => 'form-control'
-              ])->widget(Select2::classname(), [
-                        'data' => $mov,
-                        'language' => Yii::$app->language,
-                        'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-exchange"></i>']],
-                        'options' => ['placeholder' => Yii::t('tipo_movimiento','Select a type').'...'],
-                        'theme' => Select2::THEME_DEFAULT,
-                        'disabled' => $disabled,
-                        // 'pluginOptions' => [
-                        //     'allowClear' => true
-                        // ],
-                ]) ?>
+            ])->dropDownList(
+                    $mov,
+                    [
+                        'custom' => true,
+                        'prompt' => Yii::t('app','Select...'),
+                        'id'=>'notaingreso-tipo_trans'
+                    ]
+            ) ?>
           </div>
+
+          <div id="nro_compra" class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="display: <?=$display?>">
+            <?php
+            $url = Url::to(['compra/ajax-compras']);
+            $compra = empty($model->idrefdoc_trans) ? '' : Compra::findOne($model->idrefdoc_trans)->cod_compra;
+            echo $form->field($model, 'idrefdoc_trans',[
+                'addClass' => 'form-control ',
+                'hintType' => ActiveField::HINT_SPECIAL
+            ])->dropDownList( $arrCompras,[
+                    'id' => 'idrefdoc_trans',
+                    'prompt' => Yii::t('app','Select...'),
+                    'options' => $arrOptions
+            ]);
+            ?>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
             <?php $almacenes = Almacen::getAlmacenList();?>
@@ -272,9 +332,18 @@ $this->registerJsVar( "modalRpt", "#modal-rpt" );
 echo   $this->render('//site/_modalRpt',[]);
 
 $jsTrigger = "";
-if ( !$model->isNewRecord ){
-  $jsTrigger = '
+
+if ( !$model->isNewRecord ) {
+    $jsTrigger = '
+    let compra = ' . (!empty($model->idrefdoc_trans) ? $model->idrefdoc_trans : NULL) . ';
     $( ".table-body input[id$=\'cant_detalle\']" ).trigger( "change" );
+
+    if ( compra ) {
+        $( ".table-body select[id$=\'prod_detalle\']").attr("readonly", true);
+        $( ".table-body input[id$=\'cant_detalle\']").prop(\'readonly\',true);
+        $( ".table-body .remove-item").prop(\'disabled\',true);
+        $( ".add-item").css(\'display\',"none");
+    }
   ';
 }
 
@@ -285,6 +354,11 @@ $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
 });
 $(".dynamicform_wrapper").on("afterInsert", function(e, item) {
     //console.log("afterInsert");
+    $(item).find("input,textarea,select").each(function(index,element){
+       $(element).val("");
+    });
+    let row = $(".table-body select").length - 1;
+    $( "#notaingresodetalle-" + row + "-prod_detalle" ).val(null).trigger("change");
 });
 $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
   if ( confirm("'.Yii::t('producto','Are you sure to delete this product?').'") ) {
@@ -426,5 +500,80 @@ $( "body" ).on( "click", buttonCancel, function(){
   $( frameRpt ).attr( "src", "about:blank" );
   $( modalRpt ).modal("hide");
 });
+
 ';
-$this->registerJs($js.$jsTrigger,View::POS_LOAD);
+
+$js2 = "
+$( \"#notaingreso-tipo_trans\" ).on(\"change\", function(){
+    let val = $( \"#notaingreso-tipo_trans option:selected\" ).val();
+    
+    if( val == " . Compra::TIPO_MOVIMIENTO . "){            
+        $( this ).parent().parent().switchClass( \"col-lg-6\", \"col-lg-3\", 1000, \"easeInOutQuad\" );
+        $( this ).parent().parent().switchClass( \"col-md-6\", \"col-md-3\", 1000, \"easeInOutQuad\" );
+        $( this ).parent().parent().switchClass( \"col-sm-6\", \"col-sm-3\", 1000, \"easeInOutQuad\" );
+        setTimeout( function(){        
+            $( \"#nro_compra\" ).css( \"display\", \"block\");
+        }, 1050);
+        
+        $.post('" . Url::to(['compra/ajax-compras']) . "', function( data ) {
+            $(\"#idrefdoc_trans\").empty();
+            let s = new Option('" . Yii::t('app','Select') . "', '');                
+            $(s).html('" . Yii::t('app','Select') . "');
+            $('#idrefdoc_trans').append(s);
+            $.each(data, function(key, value) {  
+                option = '<option value=\"' + value.id_compra + '\" data-details=\'' + JSON.stringify(value.details) + '\'>' + value.cod_compra + '</option>';                
+                $('#idrefdoc_trans').append(option);
+             });              
+        } );
+        
+        $(\".add-item\").hide( \"drop\", { direction: \"down\" }, 1000 );
+
+        
+        
+    } else {
+        $( \"#nro_compra\" ).css( \"display\", \"none\");
+        $( this ).parent().parent().switchClass( \"col-lg-3\", \"col-lg-6\", 1000, \"easeInOutQuad\" );
+        $( this ).parent().parent().switchClass( \"col-md-3\", \"col-md-6\", 1000, \"easeInOutQuad\" );
+        $( this ).parent().parent().switchClass( \"col-sm-3\", \"col-sm-6\", 1000, \"easeInOutQuad\" );
+        $(\".add-item\").show( \"drop\", { direction: \"up\" }, 1000 );
+
+        $( \" .table-body select[id$='prod_detalle']\").prop('readonly',false);
+        $( \" .table-body select[id$='cant_detalle']\").prop('readonly',false);
+        $( \" .table-body .delete-item\").prop('disabled',false);
+        $( \".table-body select[id$='prod_detalle']\").val(null).change();         
+    }
+    $( \".table-body\" ).empty(); 
+});
+";
+
+$js2 .= '
+$("#idrefdoc_trans").on("change", function( e ){
+    let option = $( "#" + this.id + " option:selected" );
+    let details =  $(option).data("details");
+    let options = [];    
+    
+    $( ".table-body" ).empty();
+    
+    $.each(details, function(i,value){
+        $( ".add-item" ).trigger("click");
+        let s = new Option(value.des_prod, value.id_prod);                
+        $(s).html(value.des_prod);
+        options.push( $(s) );
+    });
+    
+    $( ".table-body select[id$=\'prod_detalle\']").append(options);
+        
+    $.each(options, function( i,value){
+        $( "select#notaingresodetalle-" + i + "-prod_detalle" ).val(value.val()).trigger("change");        
+        $( "input#notaingresodetalle-" + i + "-cant_detalle" ).val(details[i].cant_detalle);        
+    });
+    
+    $( ".table-body select[id$=\'prod_detalle\']").attr("readonly", true);
+    $( ".table-body input[id$=\'cant_detalle\']").prop(\'readonly\',true);
+    $( ".table-body .remove-item").prop(\'disabled\',true);
+});
+';
+$this->registerJs($js.$jsTrigger.$js2,View::POS_LOAD);
+$this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
+    ['depends'=>[\yii\web\JqueryAsset::className()],
+        'position'=>View::POS_END]);

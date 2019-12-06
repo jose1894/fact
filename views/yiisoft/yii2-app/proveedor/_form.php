@@ -1,5 +1,6 @@
 <?php
 
+use app\models\TipoProveedor;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use app\models\Pais;
@@ -174,24 +175,16 @@ use yii\helpers\Url;
             ])->textInput(['maxlength' => true]) ?>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-          <?php /*
-            $vendedores = Vendedor::find()->where(['estatus_vend' => 1])
-            ->orderBy('nombre_vend')
-            ->all();
-            $vendedores=ArrayHelper::map($vendedores,'id_vendedor','nombre_vend');
-           $form->field($model, 'vendedor_clte',[
-            'addClass' => 'form-control'
-            ])->widget(Select2::classname(), [
-                      'data' => $vendedores,
-                      'language' => Yii::$app->language,
-                      'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
-                      'options' => ['placeholder' => Yii::t('vendedor','Select a seller').'...'],
-                      'theme' => Select2::THEME_DEFAULT,
-                      'pluginOptions' => [
-                          'allowClear' => true
-                      ],
-              ]) */?>
-              <?= $form->field($model, 'tipo_prove')->textInput() ?>
+          <?php
+            $tipoProve = TipoProveedor::getTipoProveedor();
+            echo $form->field($model, 'tipo_prove',[
+                'addClass' => 'form-control'
+            ])->dropDownList(
+                    $tipoProve,
+                    [
+                            'custom' => true,
+                            'prompt' => Yii::t('app','Select...'),
+                    ])?>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
             <?= $form->field($model, 'status_prove',[

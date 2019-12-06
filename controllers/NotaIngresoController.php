@@ -200,14 +200,17 @@ class NotaIngresoController extends Controller
                 $model->fecha_trans = $fecha;
                 $model->sucursal_trans = SiteController::getSucursal();
 
+
                 try {
                     if ($flag = $model->save(false)) {
                         if (!empty($deletedIDs)) {
                             NotaIngresoDetalle::deleteAll(['id_detalle' => $deletedIDs]);
                         }
+
                         foreach ($modelsDetalles as $modelDetalle) {
                             $modelDetalle->trans_detalle = $model->id_trans;
-                            if (! ($flag = $modelDetalle->save(false))) {
+                            //echo $modelDetalle->prod_detalle;
+                            if ( !($flag = $modelDetalle->save(false))) {
                                 $transaction->rollBack();
                                 break;
                             }

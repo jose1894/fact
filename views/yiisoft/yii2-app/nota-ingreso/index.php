@@ -31,9 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            //['class' => 'yii\grid\SerialColumn'],
-
-            //'id_trans',
             [
               'attribute'=>'codigo_trans',
               'width' => '7%'
@@ -65,6 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
                   'pluginEvents' =>[],
                   'options' => ['prompt' => ''],
               ],
+                'width' => '50%'
 
             ],
             [
