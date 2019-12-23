@@ -495,13 +495,6 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
                 0 => __DIR__ . '/..' . '/cebe/yii2-gravatar',
             ),
         ),
-        'T' => 
-        array (
-            'Twig_' => 
-            array (
-                0 => __DIR__ . '/..' . '/twig/twig/lib',
-            ),
-        ),
         'N' => 
         array (
             'NumerosEnLetras' => 
