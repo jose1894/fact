@@ -122,7 +122,7 @@ class Numeracion extends \yii\db\ActiveRecord
                 ->all();
       $numeracion = [];
       foreach ($numeraciones as $value) {        // code...
-        $numeracion = [
+        $numeracion[] = [
             'id_num' => $value->id_num,
             'tipo_num' => $value->tipo_num,
             'serie_num' => $value->serie_num,

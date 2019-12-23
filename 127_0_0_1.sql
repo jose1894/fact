@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-12-2019 a las 23:13:22
+-- Tiempo de generación: 23-12-2019 a las 17:01:21
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -21,6 +21,7 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `fact`
 --
+DROP DATABASE IF EXISTS `fact`;
 CREATE DATABASE IF NOT EXISTS `fact` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `fact`;
 
@@ -2085,6 +2086,7 @@ CREATE TABLE `documento` (
   `tipo_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO DE DOCUMENTO: FACTURA, NOTA DE CREDITO, NOTA DE DEBITO, GUIA DE REMISION',
   `numeracion_doc` int(10) NOT NULL COMMENT 'SERIE DOCUMENTO',
   `pedido_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'PEDIDO DEL DOCUMENTO',
+  `docref_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'DOCUMENTO REFERENCIA, APLICABLE A LAS NOTAS DE CREDITO',
   `fecha_doc` date DEFAULT NULL COMMENT 'FECHA DEL DOCUMENTO',
   `obsv_doc` text COMMENT 'OBSERVACIONES DEL DOCUMENTO',
   `totalimp_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL IMPUESTO DEL DOCUMENTO',
@@ -2106,15 +2108,15 @@ CREATE TABLE `documento` (
 -- Volcado de datos para la tabla `documento`
 --
 
-INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `pedido_doc`, `fecha_doc`, `obsv_doc`, `totalimp_doc`, `totaldsc_doc`, `total_doc`, `transp_doc`, `utransp_doc`, `almacen_doc`, `motivo_doc`, `tipocambio_doc`, `hash_doc`, `valorr_doc`, `statussunat_doc`, `status_doc`, `sucursal_doc`) VALUES
-(25, '0000000001', 3, 9, 15, '2019-11-06', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, '0.000', NULL, NULL, -1, 2, 1),
-(26, '0000000001', 2, 7, 15, '2019-11-06', '', '145.21', '0.00', '951.90', NULL, NULL, 1, 0, '0.000', NULL, NULL, -1, 2, 1),
-(27, '0000000002', 3, 9, 16, '2019-11-14', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, '0.000', NULL, NULL, -1, 2, 1),
-(28, '0000000002', 2, 7, 16, '2019-11-14', '', '214.13', '0.00', '1403.72', NULL, NULL, 1, 0, '0.000', '20604954241|3|FE01|00000002|214.13|1403.72|2019-11-14|6|20481609136|OTFhODA0MTgwMTNkOTRmMmI5MTY1YTA4NGIyYzEyOWNmNGRjNzgxOTUxMWQyNzNhNDJiODZjNDA2ODAwMTZiNQ==', '20604954241|3|FE01|00000002|214.13|1403.72|2019-11-14|6|20481609136|', 0, 2, 1),
-(29, '0000000003', 3, 9, 17, '2019-11-22', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, '0.000', NULL, NULL, -1, 2, 1),
-(33, '0000000003', 2, 7, 17, '2019-11-22', '', '172.37', '0.00', '1130.00', NULL, NULL, 1, 0, '3.375', NULL, '20604954241|3|FE01|00000003|172.37|1130.00|2019-11-22|6|20600807391|', 0, 2, 1),
-(34, '0000000004', 3, 9, 18, '2019-11-26', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, '0.000', NULL, NULL, -1, 1, 1),
-(35, '0000000004', 2, 7, 18, '2019-11-26', '', '172.37', '0.00', '1130.00', NULL, NULL, 1, 0, '3.391', NULL, '20604954241|3|FE01|00000004|172.37|1130.00|2019-11-26|6|20600807391|', -1, 1, 1);
+INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `pedido_doc`, `docref_doc`, `fecha_doc`, `obsv_doc`, `totalimp_doc`, `totaldsc_doc`, `total_doc`, `transp_doc`, `utransp_doc`, `almacen_doc`, `motivo_doc`, `tipocambio_doc`, `hash_doc`, `valorr_doc`, `statussunat_doc`, `status_doc`, `sucursal_doc`) VALUES
+(25, '0000000001', 3, 9, 15, 0, '2019-11-06', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, '0.000', NULL, NULL, -1, 2, 1),
+(26, '0000000001', 2, 7, 15, 0, '2019-11-06', '', '145.21', '0.00', '951.90', NULL, NULL, 1, 0, '0.000', NULL, NULL, -1, 2, 1),
+(27, '0000000002', 3, 9, 16, 0, '2019-11-14', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, '0.000', NULL, NULL, -1, 2, 1),
+(28, '0000000002', 2, 7, 16, 0, '2019-11-14', '', '214.13', '0.00', '1403.72', NULL, NULL, 1, 0, '0.000', '20604954241|3|FE01|00000002|214.13|1403.72|2019-11-14|6|20481609136|OTFhODA0MTgwMTNkOTRmMmI5MTY1YTA4NGIyYzEyOWNmNGRjNzgxOTUxMWQyNzNhNDJiODZjNDA2ODAwMTZiNQ==', '20604954241|3|FE01|00000002|214.13|1403.72|2019-11-14|6|20481609136|', 0, 2, 1),
+(29, '0000000003', 3, 9, 17, 0, '2019-11-22', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, '0.000', NULL, NULL, -1, 2, 1),
+(33, '0000000003', 2, 7, 17, 0, '2019-11-22', '', '172.37', '0.00', '1130.00', NULL, NULL, 1, 0, '3.375', NULL, '20604954241|3|FE01|00000003|172.37|1130.00|2019-11-22|6|20600807391|', 0, 2, 1),
+(34, '0000000004', 3, 9, 18, 0, '2019-11-26', '', '0.00', '0.00', '0.00', 1, 1, 1, 1, '0.000', NULL, NULL, -1, 1, 1),
+(35, '0000000004', 2, 7, 18, 0, '2019-11-26', '', '172.37', '0.00', '1130.00', NULL, NULL, 1, 0, '3.391', NULL, '20604954241|3|FE01|00000004|172.37|1130.00|2019-11-26|6|20600807391|', -1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2796,7 +2798,9 @@ INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `s
 (6, 5, '0000000004', 1, '00', 1),
 (7, 2, '0000000004', 1, '01', 1),
 (8, 9, '0000000000', 1, '01', 1),
-(9, 3, '0000000004', 1, '01', 1);
+(9, 3, '0000000004', 1, '01', 1),
+(10, 10, '0000000000', 1, '01', 1),
+(11, 2, '0000000000', 1, '02', 1);
 
 -- --------------------------------------------------------
 
@@ -4065,7 +4069,14 @@ INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_t
 (12, '2019-12-03', NULL, NULL, '3.390', '3.385', '3.390', 1),
 (13, '2019-12-04', NULL, NULL, '3.390', '3.385', '3.390', 1),
 (14, '2019-12-05', NULL, NULL, '3.386', '3.383', '3.386', 1),
-(15, '2019-12-06', NULL, NULL, '3.380', '3.374', '3.380', 1);
+(15, '2019-12-06', NULL, NULL, '3.380', '3.374', '3.380', 1),
+(16, '2019-12-09', NULL, NULL, '3.381', '3.375', '3.381', 1),
+(17, '2019-12-11', NULL, NULL, '3.391', '3.387', '3.391', 1),
+(18, '2019-12-16', NULL, NULL, '3.391', '3.387', '3.391', 1),
+(19, '2019-12-17', NULL, NULL, '3.360', '3.355', '3.360', 1),
+(20, '2019-12-18', NULL, NULL, '3.360', '3.355', '3.360', 1),
+(21, '2019-12-20', NULL, NULL, '3.360', '3.355', '3.360', 1),
+(22, '2019-12-21', NULL, NULL, '3.360', '3.355', '3.360', 1);
 
 -- --------------------------------------------------------
 
@@ -4090,13 +4101,14 @@ CREATE TABLE `tipo_documento` (
 INSERT INTO `tipo_documento` (`id_tipod`, `des_tipod`, `abrv_tipod`, `ope_tipod`, `tipo_tipod`, `sucursal_tipod`, `status_tipod`) VALUES
 (1, 'PEDIDO', 'NP', 'N', 0, 1, 1),
 (2, 'FACTURA ELECTRONICA', 'FE', 'S', 1, 1, 1),
-(3, 'GUIA DE REMISION', 'GR', 'N', 1, 1, 1),
+(3, 'GUIA DE REMISION', 'GR', 'N', 2, 1, 1),
 (4, 'NOTA DE INGRESO', 'NI', 'E', 0, 1, 1),
 (5, 'NOTA DE SALIDA', 'NS', 'S', 0, 1, 1),
 (6, 'ORDEN DE COMPRA', 'OC', 'N', 0, 1, 1),
 (7, 'PROFORMA', 'PR', 'S', 0, 1, 1),
 (8, 'COTIZACION', 'CT', 'N', 0, 1, 1),
-(9, 'BOLETA', 'BE', 'S', 1, 1, 1);
+(9, 'BOLETA', 'BE', 'S', 1, 1, 1),
+(10, 'NOTA DE CREDITO', 'NC', 'E', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -4168,7 +4180,8 @@ INSERT INTO `tipo_movimiento` (`id_tipom`, `des_tipom`, `status_tipom`, `sucursa
 (3, 'COMPRA', 1, 1, 'E'),
 (4, 'VENTA', 1, 1, 'S'),
 (5, 'AJUSTE DE ENTRADA', 1, 1, 'E'),
-(6, 'AJUSTE DE SALIDA', 1, 1, 'S');
+(6, 'AJUSTE DE SALIDA', 1, 1, 'S'),
+(7, 'NOTA DE CREDITO', 1, 1, 'E');
 
 -- --------------------------------------------------------
 
@@ -4960,7 +4973,7 @@ ALTER TABLE `motivo_traslado`
 -- AUTO_INCREMENT de la tabla `numeracion`
 --
 ALTER TABLE `numeracion`
-  MODIFY `id_num` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=10;
+  MODIFY `id_num` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `pais`
@@ -5020,13 +5033,13 @@ ALTER TABLE `sucursal`
 -- AUTO_INCREMENT de la tabla `tipo_cambio`
 --
 ALTER TABLE `tipo_cambio`
-  MODIFY `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=16;
+  MODIFY `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_documento`
 --
 ALTER TABLE `tipo_documento`
-  MODIFY `id_tipod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=10;
+  MODIFY `id_tipod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_identificacion`
@@ -5044,7 +5057,7 @@ ALTER TABLE `tipo_listap`
 -- AUTO_INCREMENT de la tabla `tipo_movimiento`
 --
 ALTER TABLE `tipo_movimiento`
-  MODIFY `id_tipom` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=7;
+  MODIFY `id_tipom` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_producto`

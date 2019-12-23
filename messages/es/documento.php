@@ -9,10 +9,6 @@ return [
     'Department / County / Municipality' => 'Departamento / Condado / Municipalidad',
     'Input a name' => 'Ingrese un nombre',
     'Input a code' => 'Ingrese un código',
-    'Create department / county / municipality' => 'Crear departamento / condado / municipalidad',
-    'Department / County / Municipality: <span class="label label-primary">{number}</span> {name}' => 'Departamento / Condado / Municipalidad: <span class="label label-primary">{number}</span> {name}',
-    'Department / County / Municipality' => 'Departamento / Condado / Municipalidad',
-    'Update department / county / municipality: {<span class="label label-primary">{number}</span> {name}' => 'Actualizar departamento / condado / municipalidad: <span class="label label-primary">{number}</span> {name}',
     'Orders to bill' => 'Pedidos a facturar',
     'Generate document' => 'Generar documento',
     'Generate guide' => 'Generar guía',
@@ -24,4 +20,6 @@ return [
     'Arrival point' => 'Punto de llegada',
     'Emission date' => 'Fecha de emisión',
     'Do you want to issue the document?' => '¿Deseas emitir el documento?',
+    'Document list' => 'Listado de documentos',
+    'Credit note' => 'Nota de crédito',
 ];

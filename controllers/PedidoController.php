@@ -160,11 +160,6 @@ class PedidoController extends Controller
             }
           }
 
-          //$searchModel = new PedidoDetalleSearch();
-          //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        //  $dataProvider->query->andWhere('pedido_pdetalle=:pedido', [':pedido' => $model->id_pedido]);
-
           $model->moneda_pedido = Moneda::findOne(['status_moneda' => 1, 'tipo_moneda' => 'N']);
           $model->almacen_pedido = Almacen::findOne(['status_almacen' => 1]);
           $model->tipo_pedido = 0;
@@ -173,18 +168,7 @@ class PedidoController extends Controller
               'model' => $model,
               'modelsDetalles' => (empty($modelsDetalles)) ? [new PedidoDetalle] : $modelsDetalles,
               'IMPUESTO' => SiteController::getImpuesto(),
-              //'dataProvider' => $dataProvider,
           ]);
-        /*}
-        else {
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id_tpdcto]);
-            }
-
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }*/
     }
 
     /**

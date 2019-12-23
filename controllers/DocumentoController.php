@@ -89,9 +89,9 @@ class DocumentoController extends Controller
     public function actionPedidosPendientes()
     {
       //$this->layout = "justStuff";
-      $searchModel = new PedidoSearch();
+      $searchModel = new DocumentoSearch();
 
-      $dataProvider = $searchModel->searchPendientes(Yii::$app->request->queryParams);
+      $dataProvider = $searchModel->searchDocumento(Yii::$app->request->queryParams);
 
       return $this->render('listado-generar', [
           'searchModel' => $searchModel,

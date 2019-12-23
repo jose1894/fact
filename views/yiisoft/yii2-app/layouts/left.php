@@ -73,7 +73,8 @@
                       'items' => [
                         ['label' => Yii::t('pedido','Order').'s', 'url' => ['/pedido'], 'icon' => 'inbox'],
                         [ 'label' => Yii::t('documento','Orders to bill'), 'url' => ['/documento/pedidos-pendientes'],'icon' => 'play-circle',],
-                        [ 'label' => Yii::t('documento','Invoice list'), 'url' => ['/documento/listado-factura']],
+                        [ 'label' => Yii::t('documento','Credit note'), 'url' => ['/nota-credito/index'], 'icon' => 'edit'],
+                        [ 'label' => Yii::t('documento','Document list'), 'url' => ['/documento/listado-factura'], 'icon' => 'bar-chart-o'],
                       ]
                     ],
                     ['label' => Yii::t('app', 'Shopping'), 'icon' => 'shopping-cart',

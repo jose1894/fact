@@ -93,6 +93,33 @@ $this->params['breadcrumbs'][] = $this->title;
               'width' => '20%'
             ],
             [
+                'attribute'=>'estatus_pedido',
+                'value' => function($data){
+                    $arr = [
+                        Pedido::STATUS_INACTIVO => 'PEDIDO PENDIENTE',
+                        Pedido::GUIA_GENERADA => 'GUIA GENERADA',
+                        Pedido::DOCUMENTO_GENERADO => 'DOCUMENTO GENERADO',
+                        Pedido::PEDIDO_ANULADO => 'PEDIDO ANULADO'
+                    ];
+                    return $arr[ $data->estatus_pedido];
+                },
+                'filter'=>[
+                        Pedido::STATUS_INACTIVO => 'PEDIDO PENDIENTE',
+                        Pedido::GUIA_GENERADA => 'GUIA GENERADA',
+                        Pedido::DOCUMENTO_GENERADO => 'DOCUMENTO GENERADO',
+                        Pedido::PEDIDO_ANULADO => 'PEDIDO ANULADO'
+                ],
+                'filterType' => GridView::FILTER_SELECT2,
+                'filterWidgetOptions' => [
+                    'language' => Yii::$app->language,
+                    'theme' => Select2::THEME_DEFAULT,
+                    'pluginOptions' => ['allowClear' => true],
+                    'pluginEvents' =>[],
+                    'options' => ['prompt' => ''],
+                ],
+                'width' => '12%'
+            ],
+            [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
                 'template' => ' {print} &nbsp; {view} &nbsp; {update} &nbsp; {delete}',

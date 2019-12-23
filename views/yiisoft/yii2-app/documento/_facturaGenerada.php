@@ -83,7 +83,7 @@ $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
                                 ]) ;
                     },
                     'sunat' =>  function ($url, $model) {
-                        return ($model->statussunat_doc < 0) ? Html::a('<button class="btn btn-flat btn-success"><i class="fa fa-play-circle-o"></i></button>',
+                        return ($model->statussunat_doc < 0 && $model->status_doc == $model::DOCUMENTO_GENERADO) ? Html::a('<button class="btn btn-flat btn-success"><i class="fa fa-play-circle-o"></i></button>',
                             $url,
                             [
                                 'title' => Yii::t('app', 'Send'). ' SUNAT',

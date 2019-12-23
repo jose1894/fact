@@ -13,10 +13,10 @@ nbproject
 #Thumbs.db
 
 # Config dir
-/config
+#/config
 
 # composer vendor dir
-/vendor
+#/vendor
 
 #XML sunat
 /xml
