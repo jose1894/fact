@@ -63,7 +63,7 @@ class CompraDetalleSearch extends CompraDetalle
             'cant_cdetalle' => $this->cant_cdetalle,
             'precio_cdetalle' => $this->precio_cdetalle,
             'descu_cdetalle' => $this->descu_cdetalle,
-            'impuesto_cdetalle' => $this->impuesto_cdetalle,
+            'impuestouni_cdetalle' => $this->impuestouni_cdetalle,
             'status_cdetalle' => $this->status_cdetalle,
             'compra_cdetalle' => $this->compra_cdetalle,
             'plista_cdetalle' => $this->plista_cdetalle,

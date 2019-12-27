@@ -58,21 +58,26 @@ class TipoDocumento extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function getTipoDocumento( $tipo = null, $esDoc = null )
+    public static function getTipoDocumento( $tipo = null, $esDoc = null, $esGuia = null)
     {
       $user = User::findOne(Yii::$app->user->id);
       $sucursal = $user->sucursal0->id_suc;
 
       $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal', [':status' => self::STATUS_ACTIVO, ':sucursal' => $sucursal]];
 
-      if ( !is_null($esDoc) ) {
+      if ( !is_null($esDoc) || $esDoc ) {
         $condicion[ 0 ] .= ' and tipo_tipod = :documento ';
         $condicion[ 1 ][ ':documento' ] = self::ES_DOCUMENTO;
       }
 
-      if ( !is_null($tipo) ){
+      if ( !is_null($tipo) || $tipo ){
         $condicion[ 0 ] .= ' and ope_tipod like :tipo ';
         $condicion[ 1 ][ ':tipo' ] = $tipo;
+      }
+
+      if ( !is_null($esGuia) || $esGuia ){
+        $condicion[ 0 ] .= ' and ope_tipod like :tipo ';
+        $condicion[ 1 ][ ':tipo' ] = self::ES_GUIA;
       }
 
 

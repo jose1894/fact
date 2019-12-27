@@ -139,7 +139,8 @@ class Documento extends \yii\db\ActiveRecord
            ->where(['pedido_doc' => $this->pedido_doc, 'tipo_doc' => 3])
            ->andWhere(['or',
                ['status_doc' => Documento::GUIA_GENERADA],
-               ['status_doc' => Documento::DOCUMENTO_GENERADO]
+               ['status_doc' => Documento::DOCUMENTO_GENERADO],
+               ['status_doc' => Documento::DOCUMENTO_ANULADO]
            ]);
     }
 

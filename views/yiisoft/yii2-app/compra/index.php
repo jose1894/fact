@@ -118,22 +118,23 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
-                  if ($action === 'print') {
-                      $url ='index.php?r=compra/compra-rpt&id='.$model->id_compra;
-                      return $url;
-                  }
-                  if ($action === 'view') {
-                      $url ='index.php?r=compra/view&id='.$model->id_compra.'&asDialog=1';
-                      return $url;
-                  }
-                  if ($action === 'update') {
-                      $url ='index.php?r=compra/update&id='.$model->id_compra;
-                      return $url;
-                  }
-                  if ($action === 'delete') {
-                      $url ='index.php?r=compra/delete&id='.$model->id_compra;
-                      return $url;
-                  }
+                    if ($action === 'print') {
+                        $url = Url::to(['compra/compra-rpt','id' => $model->id_compra]);
+
+                        return $url;
+                    }
+                    if ($action === 'view') {
+                        $url = Url::to(['compra/view','id' => $model->id_compra, 'asDialog' => true]);
+                        return $url;
+                    }
+                    if ($action === 'update') {
+                        $url = Url::to(['compra/update','id' => $model->id_compra]);
+                        return $url;
+                    }
+                    if ($action === 'delete') {
+                        $url = Url::to(['compra/delete','id' => $model->id_compra]);
+                        return $url;
+                    }
 
                 }
               ],

@@ -84,7 +84,7 @@ class CompraController extends Controller
         Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
 
         $num = Numeracion::getNumeracion( Compra::ORDEN_COMPRA );
-        $codigo = intval( $num['numero_num'] ) + 1;
+        $codigo = intval( $num[0]['numero_num'] ) + 1;
         $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
         $model->cod_compra = $codigo;
 
@@ -125,7 +125,7 @@ class CompraController extends Controller
                     }
                     //return $this->redirect(['view', 'id' => $model->id_empresa]);
                     if ($flag) {
-                      $numeracion = Numeracion::findOne($num['id_num']);
+                      $numeracion = Numeracion::findOne($num[0]['id_num']);
                       $numeracion->numero_num = $codigo;
                       $numeracion->save();
                       $transaction->commit();
@@ -271,7 +271,10 @@ class CompraController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return 1;
+        }
         return $this->redirect(['index']);
     }
 
@@ -310,13 +313,15 @@ class CompraController extends Controller
       $f = Yii::$app->formatter;
       $date = $f->asDate($modelCompra->fecha_compra, 'php:j/m/Y');
 
+      $empresa = SiteController::getEmpresa();
+
       $header = '
       <table>
           <tr>
-              <td width="33%" class="center">MARVIG<!-- *-empresa-* --></td>
+              <td width="33%" class="center"><b>'.$empresa->nombre_empresa.'</b><br><b> RUC: '.$empresa->ruc_empresa.'</td>
               <td width="33%" class="center"></td>
               <td width="33%" style="font-size:0.75rem" class="right">
-                ' . Yii::t('app','Date') . ': {DATE j/m/Y}
+                ' . Yii::t('app','Date') . ': {DATE d/m/Y}
                 <br>
                 ' . Yii::t('app','Hour') . ': {DATE H:i:s}
                 <br>
@@ -363,9 +368,9 @@ class CompraController extends Controller
         }
 
         if ( $modelCompra->excento_compra ){
-          $subt = ( $value->plista_cdetalle * $value->cant_cdetalle  ) / ( ( $value->impuestouni_cdetalle / 100 ) + 1) ;
+            $subt = ( $value->precio_cdetalle * $value->cant_cdetalle  ) ;
         } else {
-          $subt = ( $value->plista_cdetalle * $value->cant_cdetalle  ) ;
+            $subt = ( $value->precio_cdetalle * $value->cant_cdetalle  ) / ( ( $value->impuestouni_cdetalle / 100 ) + 1) ;
         }
 
         $subtotal += $subt;

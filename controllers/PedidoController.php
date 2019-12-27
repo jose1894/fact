@@ -106,7 +106,8 @@ class PedidoController extends Controller
                 }
             } else {
                 $num = Numeracion::getNumeracion( $model->tipo_pedido );
-                $codigo = intval( $num['numero_num'] ) + 1;
+
+                $codigo = intval( $num[0]['numero_num'] ) + 1;
                 $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
                 $model->cod_pedido = $codigo;
 
@@ -130,7 +131,7 @@ class PedidoController extends Controller
                         }
                         //return $this->redirect(['view', 'id' => $model->id_empresa]);
                         if ($flag) {
-                          $numeracion = Numeracion::findOne($num['id_num']);
+                          $numeracion = Numeracion::findOne($num[0]['id_num']);
                           $numeracion->numero_num = $codigo;
                           $numeracion->save();
                           $transaction->commit();
@@ -184,6 +185,11 @@ class PedidoController extends Controller
         $modelsDetalles = $model->detalles;
 
         $tipoPedido = $model->tipo_pedido;
+
+        if ($model->estatus_pedido != $model::STATUS_INACTIVO){
+            throw new NotFoundHttpException(Yii::t('pedido', 'The requested page does not exist.'));
+            return;
+        }
 
         if ($model->load(Yii::$app->request->post())) {
 

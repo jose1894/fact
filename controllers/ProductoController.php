@@ -277,7 +277,7 @@ class ProductoController extends Controller
                 ->from(['v_productos as p'])
                 ->where('p.status_prod = 1')
                 ->andWhere(['like', 'p.texto', $desc])
-                ->andWhere(['>', 'p.stock_prod', 0])
+                //->andWhere(['>', 'p.stock_prod', 0])
                 ->andWhere(['=', 'p.compra_prod', 1])
                 ->andWhere(['=', 'p.status_prod', 1])
                 ->andWhere('p.sucursal_prod = :sucursal',[':sucursal' => $sucursal])

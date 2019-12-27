@@ -144,13 +144,13 @@ $this->params['breadcrumbs'][] = $this->title;
                   },
 
                   'update' => function ($url, $model) {
-                      return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+                      return ($model->estatus_pedido === $model::STATUS_INACTIVO) ? Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
                                   'title' => Yii::t('app', 'Update'),
                                   // 'class' => 'pjax-update',
                                   'data' => [
                                     'id' => $model->id_pedido,
                                   ]
-                      ]);
+                      ]) : '' ;
                   },
                   'delete' => function ($url, $model) {
                       return !$model->estatus_pedido ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [

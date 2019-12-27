@@ -168,7 +168,7 @@ if ( $model->isNewRecord ) {
                           $tipoDocText = $tipoDoc->des_tipod;
                         }
 
-                        $tipoDocs = TipoDocumento::getTipoDocumento( 'N', TipoDocumento::ES_DOCUMENTO );
+                        $tipoDocs = TipoDocumento::getTipoDocumento( 'N', 1 );
                         ?>
                         <?= $form->field($model, 'tipo_doc',[
                           'addClass' => 'form-control input-sm',

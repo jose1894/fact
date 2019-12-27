@@ -89,9 +89,9 @@ class DocumentoController extends Controller
     public function actionPedidosPendientes()
     {
       //$this->layout = "justStuff";
-      $searchModel = new DocumentoSearch();
+      $searchModel = new PedidoSearch();
 
-      $dataProvider = $searchModel->searchDocumento(Yii::$app->request->queryParams);
+      $dataProvider = $searchModel->searchPendientes(Yii::$app->request->queryParams);
 
       return $this->render('listado-generar', [
           'searchModel' => $searchModel,
@@ -146,7 +146,12 @@ class DocumentoController extends Controller
           $model->status_doc = 1;
           $modelNotaSalida->usuario_trans = Yii::$app->user->id;
           $modelNotaSalida->ope_trans = $modelNotaSalida::OPE_TRANS;
-          $num = Numeracion::getNumeracion( $modelNotaSalida::NOTA_SALIDA );
+          $numeracion = Numeracion::getNumeracion( $modelNotaSalida::NOTA_SALIDA );
+
+          foreach( $numeracion as $key => $value) {
+               // if ($value['serie_num'] === )
+          }
+
           $codigo = intval( $num['numero_num'] ) + 1;
           $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
           $modelNotaSalida->codigo_trans = $codigo;
@@ -574,7 +579,7 @@ class DocumentoController extends Controller
       $see = new See();
       $see->setService(SunatEndpoints::FE_BETA);
       $see->setCertificate(file_get_contents('../C19110619915.pem'));
-      $see->setCredentials('20604954241MODDATOS', 'moddatos');
+      $see->setCredentials('20604954241LEOPHARD', 'Leophard0');
 
 
       // Cliente
