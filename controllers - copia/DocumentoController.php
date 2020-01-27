@@ -146,12 +146,7 @@ class DocumentoController extends Controller
           $model->status_doc = 1;
           $modelNotaSalida->usuario_trans = Yii::$app->user->id;
           $modelNotaSalida->ope_trans = $modelNotaSalida::OPE_TRANS;
-          $numeracion = Numeracion::getNumeracion( $modelNotaSalida::NOTA_SALIDA );
-
-          foreach( $numeracion as $key => $value) {
-               // if ($value['serie_num'] === )
-          }
-
+          $num = Numeracion::getNumeracion( $modelNotaSalida::NOTA_SALIDA );
           $codigo = intval( $num['numero_num'] ) + 1;
           $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
           $modelNotaSalida->codigo_trans = $codigo;
@@ -577,9 +572,9 @@ class DocumentoController extends Controller
       $IMPUESTO = SiteController::getImpuesto();
 
       $see = new See();
-      $see->setService(SunatEndpoints::FE_PRODUCCION);
+      $see->setService(SunatEndpoints::FE_PRODUCCION); // https://e-factura.sunat.gob.pe/ol-ti-itcpfegem/billService
       $see->setCertificate(file_get_contents('../C19110619915.pem'));
-      $see->setCredentials('20604954241LEOPHARD', 'Leophard0');
+      $see->setCredentials('20604954241LEOPHARD', 'Leophard0'); // RUC + USUARIO  ; CONTRASEÑA
 
 
       // Cliente
@@ -643,7 +638,7 @@ class DocumentoController extends Controller
             ->setIgv($totalIGV) //Total de IGV por item
             ->setTipAfeIgv('10')
             ->setTotalImpuestos($totalIGV)
-            ->setMtoValorVenta($totalIGV)
+            ->setMtoValorVenta($totalSIGV)
             ->setMtoValorUnitario($precioUnitarioSIGV)
             ->setMtoPrecioUnitario($value->precio_pdetalle);
             // break;
@@ -664,7 +659,8 @@ class DocumentoController extends Controller
       // Guardar XML
       file_put_contents(Yii::getAlias('@app') . '/xml/sent/' . $invoice->getName().'.xml',
                         $see->getFactory()->getLastXml());
-      $model->statussunat_doc = $result->getCdrResponse()->getCode();
+      //var_dump($result);exit();
+      $model->statussunat_doc = 0;
       $model->save();
 
       $return = [
@@ -679,6 +675,254 @@ class DocumentoController extends Controller
       echo json_encode($return);
       // Guardar CDR
       file_put_contents(Yii::getAlias('@app') . '/xml/response/' . 'R-'.$invoice->getName().'.zip', $result->getCdrZip());
+      /*
+
+      if ( is_null($model) ){
+        throw new NotFoundHttpException(Yii::t('empresa', 'The requested page does not exist.'));
+      }
+      $xml = new DOMDocument( "1.0", "ISO-8859-1"); // Crea el documento
+
+      $Invoice = $xml->createElement( 'Invoice' ); // Crea el Invoice
+      $Invoice->setAttribute( 'xmlns', "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2");
+      $Invoice->setAttribute( 'xmlns:cac', "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2");
+      $Invoice->setAttribute( 'xmlns:cbc', "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2");
+      $Invoice->setAttribute( 'xmlns:ccts',"urn:un:unece:uncefact:documentation:2");
+      $Invoice->setAttribute( 'xmlns:ds', "http://www.w3.org/2000/09/xmldsig#");
+      $Invoice->setAttribute( 'xmlns:ext',"urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2");
+      $Invoice->setAttribute( 'xmlns:qdt',"urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2");
+      $Invoice->setAttribute( 'xmlns:sac',"urn:sunat:names:specification:ubl:peru:schema:xsd:SunatAggregateComponents-1");
+      $Invoice->setAttribute( 'xmlns:udt',"urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2");
+      $Invoice->setAttribute( 'xmlns:xsi',"http://www.w3.org/2001/XMLSchema-instance");
+        // *************************************************************************************************
+        $ublVersion = $xml->createElement( 'cbc:UBLVersionID', '2.0' );// Crea la version del xml
+        // *************************************************************************************************
+        $ublCustomizationID = $xml->createElement( 'cbc:CustomizationID', '1.0' );// Id de customizacion
+        // *************************************************************************************************
+        $issueDate = $xml->createElement( 'cbc:IssueDate', $model->fecha_doc);//Fecha
+        // *************************************************************************************************
+        $accountingSupplierParty = $xml->createElement('cac:AccountingSupplierParty'); //Crea AccountingSupplierParty (DATOS DEL EMISOR)
+          // *************************************************************************************************
+          $customerAssignedAccountID = $xml->createElement('cbc:CustomerAssignedAccountID', $empresa->ruc_empresa); //Ruc emisor
+          // *************************************************************************************************
+          $additionalAccountID = $xml->createElement('cbc:AdditionalAccountID',6);//Tipo de documento emisor
+          // *************************************************************************************************
+          $party = $xml->createElement( "cac:Party" ); //Datos de razon social y direccion del emisor
+            $partyName = $xml->createElement( "cac:PartyName" ); //Elemento padre de razon social
+              $partyName_name = $xml->createElement( 'cbc:Name' );      //  Elemento padre de CDATA
+                $cDataName = $xml->createCDATASection( $empresa->nombre_empresa ); // CDATA razonSocial
+            // Añadiendo datos de razon social
+              $partyName_name->appendChild( $cDataName);
+            $partyName->appendChild( $partyName_name );
+            // *************************************************************************************************
+            $postalAddress = $xml->createElement('cac:PostalAddress');// Datos de direccion del emisor
+              $postalAddress_id = $xml->createElement( 'cbc:ID',150132 ); // Ubigeo emisor
+              $postalAddress_streetname = $xml->createElement( 'cbc:StreetName','JR. LAS ALCAPARRAS NRO. 467 URB. LAS FLORES - LIMA LIMA SAN JUAN DE LURIGANCHO'); //Direccion del emisor
+              $postalAddress_CitySubdivisionName = $xml->createElement( 'cbc:CitySubdivisionName' );
+              $postalAddress_CityName = $xml->createElement( 'cbc:CityName', 'Llima'); //Departamento del emisor
+              $postalAddress_CountrySubentity = $xml->createElement( 'cbc:CountrySubentity', 'Llima'); //Provincia del emisor
+              $postalAddress_District = $xml->createElement( 'cbc:District', 'San Juan de Lurigancho'); //Distrito del emisor
+              $postalAddress_Country = $xml->createElement( 'cbc:Country', 'PE'); //Pais del emisor
+            // *************************************************************************************************
+            //Añadiendo datos de PostalAddress
+            $postalAddress->appendChild( $postalAddress_id );
+            $postalAddress->appendChild( $postalAddress_streetname );
+            $postalAddress->appendChild( $postalAddress_CitySubdivisionName );
+            $postalAddress->appendChild( $postalAddress_CityName );
+            $postalAddress->appendChild( $postalAddress_CountrySubentity );
+            $postalAddress->appendChild( $postalAddress_District );
+            $postalAddress->appendChild( $postalAddress_Country );
+          // *************************************************************************************************
+          $partyLegalEntity = $xml->createElement( 'cac:PartyLegalEntity'); //Datos de nombre comercial del emisor
+            $partyLegalEntity_RegistrationName = $xml->createElement( 'cbc:RegistrationName');
+              $cDataRegistrationName = $xml->createCDATASection( $empresa->nombre_empresa ); // CDATA razonSocial
+          //Añadiendo datos
+            $partyLegalEntity_RegistrationName->appendChild( $cDataRegistrationName );
+          $partyLegalEntity->appendChild( $partyLegalEntity_RegistrationName );
+          // *************************************************************************************************
+          //Añadiendo datos a Party
+          $party->appendChild( $partyName );
+          $party->appendChild( $postalAddress );
+          $party->appendChild( $partyLegalEntity );
+        // Añadiendo datos del emisor
+        $accountingSupplierParty->appendChild( $customerAssignedAccountID );
+        $accountingSupplierParty->appendChild( $additionalAccountID );
+        $accountingSupplierParty->appendChild( $party );
+        $accountingSupplierParty->appendChild($postalAddress);
+      // *************************************************************************************************
+      $invoiceTypeCode = $xml->createElement('cbc:InvoiceTypeCode',($model->tipo_doc == 3) ? 1 : 3); //Tipo de documento
+      // *************************************************************************************************
+      $cbcId = $xml->createElement( 'cbc:ID', $model->tipoDoc->abrv_tipod . $model->numeracion->serie_num .'-'.substr($model->cod_doc,-8)); // Numero de documento Serie-Numeracion
+      // *************************************************************************************************
+      $accountingCustomerParty = $xml->createElement( 'cac:AccountingCustomerParty' ); //Datos de cliente
+        $customerAssignedAcountId = $xml->createElement( 'cbc:CustomerAssignedAccountID', $model->pedidoDoc->cltePedido->ruc_clte); // Ruc de Cliente
+        $customer_additionalAccountID = $xml->createElement( 'cbc:AdditionalAccountID', $model->pedidoDoc->cltePedido->tipoid_clte); // Tipo de documento usuario
+        $customer_party = $xml->createElement( 'cac:Party' );
+          $customer_partyLegalEntity = $xml->createElement( 'cac:PartyLegalEntity' );
+            $customer_RegistrationName = $xml->createElement( 'cbc:RegistrationName' );
+              $customer_cData = $xml->createCDATASection( trim($model->pedidoDoc->cltePedido->nombre_clte) ); //Razon social Cliente
+            //Añadir datos
+            $customer_RegistrationName->appendChild( $customer_cData );
+          $customer_partyLegalEntity->appendChild( $customer_RegistrationName );
+        $customer_party->appendChild( $customer_partyLegalEntity );
+      $accountingCustomerParty->appendChild( $customer_party );
+      // *************************************************************************************************
+      $Invoice->appendChild( $ublVersion ); //Añade al Invoice
+      $Invoice->appendChild( $ublCustomizationID ); //Añade al Invoice
+      $Invoice->appendChild( $issueDate ); //Añade al Invoice
+      $Invoice->appendChild( $accountingSupplierParty ); //Añade al Invoice
+      $Invoice->appendChild( $invoiceTypeCode ); // Añade al invoice
+      $Invoice->appendChild( $cbcId ); // Añade al invoice
+      $Invoice->appendChild( $accountingCustomerParty ); // Añade al invoice
+      // *************************************************************************************************
+      $total = 0;
+      foreach ($model->pedidoDoc->detalles as $key => $value) {
+
+        // *************************************************************************************************
+        $invoiceLine = $xml->createElement('cac:InvoiceLine');
+
+          $invoiceLine_ID = $xml->createElement('cac:ID', $key + 1);//Id de orden en la factura
+          $invoiceLine_InvoicedQuantity = $xml->createElement('cbc:InvoicedQuantity',$value->cant_pdetalle);//Cantidad por item con unidad de medida
+          $invoiceLine_InvoicedQuantity->setAttribute('unitCode',$value->productoPdetalle->umedProd->sunatm_und); // Atributo de unidad de medida
+          $invoiceLine_price = $xml->createElement('cac:Price');// Precio unitario sin IGV y sin Descuento
+            $igv = $value->impuesto_pdetalle / 100;
+            $igv = number_format($igv, 2, '.', '');
+            $precioUnitario = ($value->precio_pdetalle /( 1 + $igv));
+            $precioUnitario = number_format($precioUnitario, 2, '.', '');
+            $priceAmount = $xml->createElement('cbc:PriceAmount',$precioUnitario);
+            $priceAmount->setAttribute('currencyID',$model->pedidoDoc->monedaPedido->sunatm_moneda);
+            //Añadir a $invoiceLine_price
+            $invoiceLine_price->appendChild($priceAmount);
+
+          $invoiceLine_item = $xml->createElement('cac:Item');
+            $sellersItemIdentification = $xml->createElement( 'cac:SellersItemIdentification');
+              $item_cbcId = $xml->createElement( 'cbc:ID', $value->productoPdetalle->cod_prod); //Codigo de Item
+              //Añadir DAtos
+              $sellersItemIdentification->appendChild($item_cbcId);
+            $invoiceLine_item->appendChild($sellersItemIdentification);
+
+            $invoiceLine_description = $xml->createElement( 'cbc:Description' );
+              $description_cData = $xml->createCDATASection( trim($value->productoPdetalle->des_prod) ); //Descripcion del item
+              //Añadir datos
+              $invoiceLine_description->appendChild($description_cData);
+            $invoiceLine_item->appendChild($invoiceLine_description);
+
+          $invoiceLine_pricingReference = $xml->createElement( 'cac:PricingReference' );
+            $pricingRef_alternativeCP = $xml->createElement( 'cac:AlternativeConditionPrice' );
+              $priceAmount = $xml->createElement( 'cbc:PriceAmount', $value->precio_pdetalle ); //Precio unitario con igv por item
+              $priceAmount->setAttribute( 'currencyID', $model->pedidoDoc->monedaPedido->sunatm_moneda);
+              $priceTypeCode = $xml->createElement( 'cbc:PriceTypeCode', 01 ); //Tipo de IGV por item
+              //Añadir datos
+              $pricingRef_alternativeCP->appendChild( $priceAmount );
+              $pricingRef_alternativeCP->appendChild( $priceTypeCode );
+
+          $invoiceLine_taxTotal = $xml->createElement( 'cac:TaxTotal' );
+            $ivTTotal_taxAmount = $xml->createElement( 'cbc:TaxAmount', number_format($precioUnitario * $igv,2,'.','')); //Total de IGV por item
+            $ivTTotal_taxAmount->setAttribute('currencyID', $model->pedidoDoc->monedaPedido->sunatm_moneda);
+            //Añadir datos
+            $invoiceLine_taxTotal->appendChild( $ivTTotal_taxAmount );
+
+            $ivTTotal_taxSubtotal = $xml->createElement( 'cac:TaxSubtotal' );
+              $ivTTotal_taxSubtotal_taxAmount = $xml->createElement( 'cbc:TaxAmount',  number_format($precioUnitario * $igv,2,'.','')); //Total de IGV por item
+              $ivTTotal_taxSubtotal_taxAmount->setAttribute('currencyID', $model->pedidoDoc->monedaPedido->sunatm_moneda);
+              //Añadir datos
+              $ivTTotal_taxSubtotal->appendChild( $ivTTotal_taxSubtotal_taxAmount );
+
+              $ivTTotal_taxCategory = $xml->createElement( 'cac:TaxCategory' );
+                $ivTTotal_taxCategory_TERC = $xml->createElement( 'cbc:TaxExemptionReasonCode', 10);
+                $ivTTotal_taxCategory_taxScheme = $xml->createElement( 'cac:TaxScheme' );
+                  $ivTTotal_taxCategory_taxScheme_id = $xml->createElement( 'cbc:ID',1000);
+                  $ivTTotal_taxCategory_taxScheme_name = $xml->createElement( 'cbc:Name','IGV');
+                  $ivTTotal_taxCategory_taxScheme_typeCode = $xml->createElement( 'cbc:TaxTypeCode','VAT');
+                  //Añadir datos
+                  $ivTTotal_taxCategory_taxScheme->appendChild($ivTTotal_taxCategory_taxScheme_id);
+                  $ivTTotal_taxCategory_taxScheme->appendChild($ivTTotal_taxCategory_taxScheme_name);
+                  $ivTTotal_taxCategory_taxScheme->appendChild($ivTTotal_taxCategory_taxScheme_typeCode);
+                $ivTTotal_taxCategory->appendChild(  $ivTTotal_taxCategory_TERC);
+                $ivTTotal_taxCategory->appendChild(  $ivTTotal_taxCategory_taxScheme);
+              $ivTTotal_taxSubtotal->appendChild($ivTTotal_taxCategory);
+            $invoiceLine_taxTotal->appendChild($ivTTotal_taxSubtotal);
+          $invoiceLine_LineExtAmo = $xml->createElement( 'cbc:LineExtensionAmount', number_format($precioUnitario * $value->cant_pdetalle,2,'.',''));// Total de Precio unitario por item menos el descuento sin IGV por item
+          //Añadir DAtos
+          $invoiceLine->appendChild( $invoiceLine_ID );
+          $invoiceLine->appendChild( $invoiceLine_InvoicedQuantity );
+          $invoiceLine->appendChild( $invoiceLine_price );
+          $invoiceLine->appendChild( $invoiceLine_item );
+          $invoiceLine->appendChild( $invoiceLine_pricingReference );
+          $invoiceLine->appendChild( $invoiceLine_taxTotal );
+          $invoiceLine->appendChild( $invoiceLine_LineExtAmo );
+
+        $Invoice->appendChild( $invoiceLine );
+
+      }
+      $subtotal = $model->total_doc / ( 1 + ($IMPUESTO / 100));
+      $subtotal = number_format($subtotal,2,'.','');
+
+      $ublExtension = $xml->createElement( 'ext:UBLExtension' );
+        $ublExt_extensionContent = $xml->createElement( 'ext:ExtensionContent' );
+          $ublExt_extensionContent_AddInfo = $xml->createElement( 'sac:AdditionalInformation' );
+            $additionalMonetaryTotal = $xml->createElement( 'sac:AdditionalMonetaryTotal' );
+              $additionalMonetaryTotal_id = $xml->createElement( 'cbc:ID',1001);
+              $additionalMonetaryTotal_payableAmount = $xml->createElement( 'cbc:PayableAmount',$subtotal);// Total de valor de ventas sin IGV
+              $additionalMonetaryTotal_payableAmount->setAttribute('currencyID',$model->pedidoDoc->monedaPedido->sunatm_moneda);
+              //Añadir datos
+              $additionalMonetaryTotal->appendChild( $additionalMonetaryTotal_id);
+              $additionalMonetaryTotal->appendChild( $additionalMonetaryTotal_payableAmount);
+
+            $additionalProperty = $xml->createElement( 'sac:AdditionalProperty' );
+              $additionalProperty_id = $xml->createElement( 'cbc:ID',1001 );
+              $additionalProperty_value = $xml->createElement('cbc:Value', NumerosEnLetras::convertir($total)); //Total en letras
+              //Añadir datos
+              $additionalProperty->appendChild( $additionalProperty_id);
+              $additionalProperty->appendChild( $additionalProperty_value);
+            $ublExt_extensionContent_AddInfo->appendChild( $additionalMonetaryTotal);
+            $ublExt_extensionContent_AddInfo->appendChild( $additionalProperty);
+          $ublExt_extensionContent->appendChild( $ublExt_extensionContent_AddInfo);
+        $ublExtension->appendChild( $ublExt_extensionContent);
+
+        $taxtotal = $xml->createElement( 'cac:TaxTotal');
+          $taxtotal_taxAmount = $xml->createElement( 'cbc:TaxAmount', $model->totalimp_doc);//Total de impuesto del documento
+          $taxtotal_taxAmount->setAttribute('currencyID',$model->pedidoDoc->monedaPedido->sunatm_moneda);
+          $taxtotal_TaxSubtotal = $xml->createElement( 'cac:TaxSubtotal' );
+            $taxtotal_TaxSubtotal_taxAmount = $xml->createElement( 'cbc:TaxAmount', $model->totalimp_doc);//Total de impuesto del documento
+            $taxtotal_TaxSubtotal_taxAmount->setAttribute('currencyID',$model->pedidoDoc->monedaPedido->sunatm_moneda);
+            $taxtotal_TaxSubtotal_taxCategory = $xml->createElement( 'cbc:TaxCategory');//Total de impuesto del documento
+              $taxScheme = $xml->createElement( 'cac:TaxScheme' );
+                $taxScheme_id = $xml->createElement( 'cbc:ID', 1001 );
+                $taxScheme_name = $xml->createElement( 'cbc:Name', 'IGV' );
+                $taxScheme_taxTypeCode = $xml->createElement( 'cbc:TaxTypeCode', 'VAT' );
+                //Añadir datos
+                $taxScheme->appendChild($taxScheme_id);
+                $taxScheme->appendChild($taxScheme_name);
+                $taxScheme->appendChild($taxScheme_taxTypeCode);
+              $taxtotal_TaxSubtotal_taxCategory->appendChild($taxScheme);
+            $taxtotal_TaxSubtotal->appendChild($taxtotal_TaxSubtotal_taxAmount);
+            $taxtotal_TaxSubtotal->appendChild($taxtotal_TaxSubtotal_taxCategory);
+          $taxtotal->appendChild($taxtotal_taxAmount);
+          $taxtotal->appendChild($taxtotal_TaxSubtotal);
+
+        $legalMonetaryTotal = $xml->createElement( 'cac:LegalMonetaryTotal' );
+          $lMonTotal = $xml->createElement( 'cac:LegalMonetaryTotal' );
+          //exit('Total:'.$total);
+            $lMonTotal_payableAount = $xml->createElement( 'cbc:PayableAmount', $model->total_doc );//Total del monto del documento
+            $lMonTotal_payableAount->setAttribute('currencyID',$model->pedidoDoc->monedaPedido->sunatm_moneda);
+            //Añadir datos
+            $lMonTotal->appendChild($lMonTotal_payableAount);
+          $legalMonetaryTotal->appendChild($lMonTotal);
+
+      //Añadir datos al Invoice
+      $Invoice->appendChild( $ublExtension );
+      $Invoice->appendChild( $taxtotal );
+      $Invoice->appendChild( $legalMonetaryTotal );
+
+      $xml->appendChild( $Invoice );//Agrega Invoice al documento
+      Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+      Yii::$app->response->headers->add('Content-Type', 'text/xml');
+      file_put_contents(Url::to('@app/xml/'.$empresa->ruc_empresa.'-01-'.$model->numeracion->tipoDocumento->abrv_tipod . $model->numeracion->serie_num."-".substr($model->cod_doc,-8).".xml"), $xml->saveXML());
+      $a = $xml->saveXML( );
+      print $a;*/
+
+
+
     }
 
 }

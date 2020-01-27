@@ -2,9 +2,9 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=fact',
-    'username' => 'root',
-    'password' => '',
+    'dsn' => 'mysql:host=localhost;dbname=leophard_fact',
+    'username' => 'leophard',
+    'password' => 'bJigtxXxFYN2S6lw',
     'charset' => 'utf8',
   //  'tablePrefix' => 'pre_'
 
