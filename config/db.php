@@ -26,6 +26,6 @@ $development = [
     'enableSchemaCache' => true,
     'schemaCacheDuration' => 60,
     'schemaCache' => 'cache',
-]
+];
 
-return $production;
+return $development;

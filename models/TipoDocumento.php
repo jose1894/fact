@@ -21,6 +21,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
     const STATUS_ACTIVO = 1;
     const STATUS_INACTIVO = 0;
     const ES_DOCUMENTO = 1;
+    const ES_GUIA = 2;
     /**
      * {@inheritdoc}
      */
@@ -58,16 +59,21 @@ class TipoDocumento extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function getTipoDocumento( $tipo = null, $esDoc = null, $esGuia = null)
+    public static function getTipoDocumento( $tipo = null, $esDoc = null)
     {
       $user = User::findOne(Yii::$app->user->id);
       $sucursal = $user->sucursal0->id_suc;
 
       $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal', [':status' => self::STATUS_ACTIVO, ':sucursal' => $sucursal]];
 
-      if ( !is_null($esDoc) || $esDoc ) {
+      if ( !is_null($esDoc) && $esDoc ==  self::ES_DOCUMENTO) {
         $condicion[ 0 ] .= ' and tipo_tipod = :documento ';
         $condicion[ 1 ][ ':documento' ] = self::ES_DOCUMENTO;
+      }
+
+      if ( !is_null($esDoc) && $esDoc == self::ES_GUIA){
+          $condicion[ 0 ] .= ' and tipo_tipod = :guia ';
+          $condicion[ 1 ][ ':guia' ] = self::ES_GUIA;
       }
 
       if ( !is_null($tipo) || $tipo ){
@@ -75,13 +81,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
         $condicion[ 1 ][ ':tipo' ] = $tipo;
       }
 
-      if ( !is_null($esGuia) || $esGuia ){
-        $condicion[ 0 ] .= ' and ope_tipod like :tipo ';
-        $condicion[ 1 ][ ':tipo' ] = self::ES_GUIA;
-      }
-
-
-      if ( !is_null($esDoc) ){
+      if ( !is_null($esDoc) || $esDoc != 0 ){
         $tipom = TipoDocumento::find()
         ->joinWith('numeracions as n')
         ->select(['id_tipod','CONCAT(abrv_tipod,"/",n.serie_num," - ", des_tipod) AS des_tipod'])

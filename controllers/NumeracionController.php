@@ -213,14 +213,14 @@ class NumeracionController extends Controller
         throw new NotFoundHttpException(Yii::t('numeracion', 'The requested page does not exist.'));
     }
 
-    public function actionAjaxGetNumeracion( $tipo = null )
+    public function actionAjaxGetNumeracion( $id )
     {
         if(Yii::$app->request->isAjax)
         {
-            $keywords = Yii::$app->request->queryParams;
+            //$keywords = Yii::$app->request->queryParams;
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-            $numeracion = Numeracion::getNumeracion( $keywords['tipo'], false);
+            $numeracion = Numeracion::getNumeracion( $id, false);
             return $numeracion;
         }
         else throw new \yii\web\HttpException(404, 'Page not found.');

@@ -168,7 +168,7 @@ if ( $model->isNewRecord ) {
                           $tipoDocText = $tipoDoc->des_tipod;
                         }
 
-                        $tipoDocs = TipoDocumento::getTipoDocumento( 'N', 1 );
+                        $tipoDocs = TipoDocumento::getTipoDocumento( 'N', 2 );
                         ?>
                         <?= $form->field($model, 'tipo_doc',[
                           'addClass' => 'form-control input-sm',
@@ -558,8 +558,8 @@ $( buttonPrint ).on( "click", function(){
 });
 
 
-$( "#pedido-clte_pedido" ).on( "select2:select",function () {
-
+$( "#documento-tipo_doc" ).on( "select2:select",function () {
+  console.log("ak");return;
   $.ajax({
     url: "'. Url::to(['cliente/cliente-list']).'",
     method: "GET",

@@ -132,4 +132,22 @@ class Numeracion extends \yii\db\ActiveRecord
       }
       return  $numeracion;
     }
+
+    public static function getNumerationById( $id ){
+        $numeracion = [];
+        $user = User::findOne(Yii::$app->user->id);
+        $sucursal = $user->sucursal0->id_suc;
+
+        $numeracion = Numeracion::find()
+            ->joinWith('tipoDocumento')
+            ->where( [
+                'status_num = :status and sucursal_num = :sucursal and id_num = :id',
+                [':status' => self::STATUS_ACTIVE, ':sucursal' => $sucursal, ':id' => $id]
+            ] )
+            ->orderBy('serie_num')
+            ->all();
+
+        return  $numeracion;
+
+    }
 }
