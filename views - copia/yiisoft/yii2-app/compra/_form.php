@@ -1,0 +1,735 @@
+<?php
+
+use yii\helpers\Html;
+use kartik\form\ActiveForm;
+use yii\helpers\ArrayHelper;
+use app\models\Cliente;
+use app\models\Proveedor;
+use app\models\Moneda;
+use app\models\Almacen;
+use app\models\CondPago;
+use app\models\Producto;
+use yii\helpers\Url;
+use yii\web\JsExpression;
+use kartik\date\DatePicker;
+use kartik\form\ActiveField;
+use yii\web\View ;
+use wbraganca\dynamicform\DynamicFormWidget;
+use kartik\select2\Select2;
+use app\base\Model;
+
+/* @var $this yii\web\View */
+/* @var $model app\models\Compra */
+/* @var $form yii\widgets\ActiveForm */
+
+if ( $model->isNewRecord ) {
+  $model->cod_compra = "0000000000";
+}
+?>
+
+<div class="compra-form">
+
+  <div class="container-fluid">
+
+
+      <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true]); ?>
+      <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+          <?= $form
+          ->field($model, 'cod_compra',['addClass' => 'form-control '])
+          ->textInput(['maxlength' => true,'readonly' => true, 'style' => ['text-align' => 'right']]) ?>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+          <?php
+            $model->fecha_compra = date('d/m/Y');
+            echo $form->field($model, 'fecha_compra',[
+              'addClass' => 'form-control ',
+            ])->textInput([
+                  'value' => date('d/m/Y'),
+                  'readonly' => 'readonly',
+                  'style' => ['text-align' => 'right']
+              ]) ?>
+        </div>
+
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+          <?php
+          echo Html::activeHiddenInput($model, "usuario_compra");
+          $url = Url::to(['proveedor/proveedor-list']);
+          $proveedor = empty($model->provee_compra) ? '' : Proveedor::findOne($model->provee_compra)->nombre_prove;
+          echo $form->field($model, 'provee_compra',[
+            'addClass' => 'form-control ',
+            'hintType' => ActiveField::HINT_SPECIAL
+            ])->widget(Select2::classname(), [
+              'language' => Yii::$app->language,
+              'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-users"></i>']],
+              'initValueText' => $proveedor, // set the initial display text
+              'options' => ['placeholder' => Yii::t('proveedor','Select a supplier').'...'],
+              'theme' => Select2::THEME_DEFAULT,
+              'pluginOptions' => [
+                  //'allowClear' => true,
+                  'minimumInputLength' => 3,
+                  'language' => [
+                      'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+                      'inputTooShort' => new JsExpression("function() {  return '".Yii::t('app','Please input {number} or more characters', [ 'number'=> 3 ])."';}"),
+                  ],
+              'ajax' => [
+                  'url' => $url,
+                  'dataType' => 'json',
+                  'data' => new JsExpression('function(params) { return {q:params.term}; }')
+              ],
+              'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+              'templateResult' => new JsExpression('function(proveedor) { return proveedor.text; }'),
+              'templateSelection' => new JsExpression('function (proveedor) {
+                  return proveedor.text;
+                }'),
+              ],
+          ])
+          ?>
+
+          <?=  Html::hiddenInput("compra-tipo_listap", " ",['id'=>'proveedor-tipo_listap']); ?>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+          <?php
+            $monedas = Moneda::getMonedasList();
+          ?>
+          <?= $form->field($model, 'moneda_compra',[
+          'addClass' => 'form-control ',
+            ])->widget(Select2::classname(), [
+                      'data' => $monedas,
+                      'language' => Yii::$app->language,
+                      'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-money"></i>']],
+                      'options' => ['placeholder' => Yii::t('moneda','Select a currency').'...'],
+                      'theme' => Select2::THEME_DEFAULT,
+                      // 'pluginOptions' => [
+                      //     'allowClear' => true
+                      // ],
+              ])?>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+          <?php
+            $condiciones = CondPago::getCondPagoList();
+          ?>
+          <?= $form->field($model, 'condp_compra',[
+              'addClass' => 'form-control',
+            ])->widget(Select2::classname(), [
+                      'data' => $condiciones,
+                      'language' => Yii::$app->language,
+                      'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-tag"></i>']],
+                      'options' => ['placeholder' => Yii::t('condicionp','Select a payment condition').'...'],
+                      'theme' => Select2::THEME_DEFAULT,
+                      // 'pluginOptions' => [
+                      //     'allowClear' => true,
+                      // ],
+              ])?>
+
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+          <?= $form->field($model, 'nrodoc_compra',[
+              'addClass' => 'form-control'
+            ])->textInput(['maxlength' => true]) ?>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
+          <label><?= Yii::t('app', 'Tax exemption')?></label>
+          <?php
+            echo $form->field($model, 'excento_compra',[
+               'addClass' => 'form-control'
+             ])->checkbox()->label(false);
+            ?>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
+          <label><?= Yii::t('app', 'Affect warehouse')?></label>
+          <?php
+            echo $form->field($model, 'afectaalm_compra',[
+               'addClass' => 'form-control'
+             ])->checkbox()->label(false);
+            ?>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
+          <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <!-- Articulos -->
+    <div class="row">
+      <div class="container-fluid">
+        <?php  DynamicFormWidget::begin([
+          'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
+          'widgetBody' => '.table-body', // required: css class selector
+          'widgetItem' => '.detalle-item', // required: css class
+          //'limit' => 10, // the maximum times, an element can be cloned (default 999)
+          'min' => 0, // 0 or 1 (default 1)
+          'insertButton' => '.add-item', // css class
+          'deleteButton' => '.remove-item', // css class
+          'model' => $modelsDetalles[0],
+          'formId' => $model->formName(),
+          'formFields' => [
+            'id_cdetalle',
+            'prod_cdetalle',
+            'cant_cdetalle',
+            'precio_cdetalle',
+            'descu_cdetalle',
+            'plista_cdetalle',
+            'impuesto_cdetalle',
+            'status_cdetalle'
+          ],
+        ]); ?>
+        <div class="row">
+          <div class="col-sm-5 col-xs-12">
+            <h5><?= Yii::t('producto', 'Product')?></H5>
+          </div>
+          <div class="col-sm-1 col-xs-12">
+            <h5><?= Yii::t('compra','Qtty')?></h5>
+          </div>
+          <div class="col-sm-1 col-xs-12">
+            <h5><?= Yii::t('compra','List price')?></h5>
+          </div>
+          <div class="col-sm-1 col-xs-12">
+            <h5><?= Yii::t('compra', 'Discount')?></h5>
+          </div>
+          <div class="col-sm-1 col-xs-12">
+            <h5><?= Yii::t('compra','Price')?></h5>
+          </div>
+          <div class="col-sm-2 col-xs-12">
+            <h5><?= Yii::t('compra', 'Total')?></h5>
+          </div>
+          <div class="col-sm-1 col-xs-12">
+            <button type="button" class="pull-right add-item btn-flat btn btn-success btn-md" style="width:100%"><i class="fa fa-plus"></i></button>
+          </div>
+        </div>
+        <hr>
+        <div class="table-body">
+          <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
+            <div class="row detalle-item">
+              <div class="col-sm-5 col-xs-12">
+                <?php
+                  // necessary for update action.
+                  if (!$modelDetalle->isNewRecord) {
+                      echo Html::activeHiddenInput($modelDetalle, "[{$index}]id_cdetalle");
+                      //$modelSucursal->empresa_suc[$index] = $model->id_empresa;
+                      echo Html::activeHiddenInput($modelDetalle, "[{$index}]compra_cdetalle");
+                      echo Html::activeHiddenInput($modelDetalle, "[{$index}]impuestouni_cdetalle",['class' => 'impuesto_cdetalle']);
+                      echo Html::activeHiddenInput($modelDetalle, "[{$index}]impuestototal_cdetalle",['class' => 'impuesto_cdetalle']);
+                  }
+                  $url = Url::to(['producto/producto-list']);
+                  $productos = empty($modelDetalle->prod_cdetalle) ? '' : Producto::findOne($modelDetalle->prod_cdetalle)->cod_prod.' '.Producto::findOne($modelDetalle->prod_cdetalle)->des_prod;
+                  echo $form->field($modelDetalle, "[{$index}]prod_cdetalle",[
+                    'addClass' => 'form-control input-sm',
+                    ])->widget(Select2::classname(), [
+                      'language' => Yii::$app->language,
+                      'initValueText' => $productos, // set the initial display text
+                      'options' => ['placeholder' => Yii::t('producto','Select a product').'...'],
+                      'theme' => Select2::THEME_DEFAULT,
+                      'pluginOptions' => [
+                          //'allowClear' => true,
+                          'minimumInputLength' => 3,
+                          'language' => [
+                              'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+                              'inputTooShort' => new JsExpression("function() {  return '".Yii::t('app','Please input {number} or more characters', [ 'number'=> 3 ])."';}"),
+                          ],
+                      'ajax' => [
+                          'url' => $url,
+                          'dataType' => 'json',
+                          'method' => 'POST',
+                          'data' => new JsExpression('function(params) { return {desc:params.term,tipo_listap: $("#pedido-tipo_listap").val()}; }')
+                      ],
+                      'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                      'templateResult' => new JsExpression('function(producto) { return producto.text; }'),
+                      'templateSelection' => new JsExpression('function (producto) {
+                          return producto.text;
+                        }'),
+                      ],
+                  ])->label(false);
+                  ?>
+              </div>
+              <div class="col-sm-1 col-xs-12">
+                <?= $form
+                ->field($modelDetalle,"[{$index}]cant_cdetalle",[ 'addClass' => 'form-control number-integer'])
+                ->textInput(['type' => 'text', 'placeholder' => Yii::t('compra' , 'Quantity')])
+                ->label(false)?>
+              </div>
+              <div class="col-sm-1 col-xs-12">
+                <?= $form
+                ->field($modelDetalle,"[{$index}]plista_cdetalle",[ 'addClass' => 'form-control number-decimals'])
+                ->textInput(['type' => 'text','placeholder' => Yii::t('compra' , 'Price')])
+                ->label(false)?>
+              </div>
+              <div class="col-sm-1 col-xs-12">
+                <?= $form
+                ->field($modelDetalle,"[{$index}]descu_cdetalle",[ 'addClass' => 'form-control number-decimals'])
+                ->textInput(['type' => 'text', 'placeholder' => Yii::t('compra' ,  'Discount')])
+                ->label(false)?>
+              </div>
+              <div class="col-sm-1 col-xs-12">
+                <?= $form
+                ->field($modelDetalle,"[{$index}]precio_cdetalle",[ 'addClass' => 'form-control number-decimals'])
+                ->textInput(['type' => 'text', 'readonly' => true, 'placeholder' => Yii::t('compra' , 'List price')])
+                ->label(false)?>
+              </div>
+              <div class="col-sm-2 col-xs-12">
+                <?= $form
+                ->field($modelDetalle,"[{$index}]total_cdetalle",[ 'addClass' => 'form-control number-decimals'])
+                ->textInput(['type' => 'text', 'readonly'=> true,'placeholder' => Yii::t('compra', 'Total')])
+                ->label(false)?>
+              </div>
+              <div class="col-sm-1 col-xs-12">
+                <button type="button" class="remove-item btn btn-danger btn-flat btn-sm" style="width:100%"><i class="fa fa-trash"></i></button>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+        <?php DynamicFormWidget::end(); ?>
+        <hr>
+        <table class="table table-fixed table-stripped">
+          <tr>
+            <td class="col-xs-6" style="text-align:right;">
+              <?= Yii::t('app', 'Subtotal') ?>
+            </td>
+            <td class="col-xs-2">
+              <input type="text" id="subtotal1" name="subtotal" readonly class="form-control totales" value="">
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-6" style="text-align:right;">
+              <?= Yii::t('app', 'Discount') ?>
+            </td>
+            <td class="col-xs-2">
+              <input type="text" id="descuento" name="descuento" readonly class="form-control totales" value="">
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-6" style="text-align:right;">
+              <?= Yii::t('app', 'Subtotal') ?>
+            </td>
+            <td class="col-xs-2">
+              <input type="text" id="subtotal2" name="subtotal" readonly class="form-control totales" value="">
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-7" style="text-align:right;">
+              <?= Yii::t('app', 'Tax')?> <?= $IMPUESTO ?>%
+            </td>
+            <td class="col-xs-2">
+              <input type="text" name="impuesto" id="impuesto" readonly class="form-control totales" value="">
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-6" style="text-align:right;">
+              <?= Yii::t('app', 'Total')?>
+            </td>
+            <td class="col-xs-2">
+              <input type="text" name="total" id="total" readonly  class="form-control totales" value="">
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <!-- Articulos -->
+
+    <div class="row">
+      <div class="form-group" style="float:right">
+       <?php if ( !$model->isNewRecord ) { ?>
+          <button type="button" name="button" id="imprimir" data-toggle="modal" class="btn btn-flat btn-primary "><span class="fa fa-print"></span> <?= Yii::t('app', 'Print')?></button>
+       <?php } ?>
+          <button id="submit" type="button" class="btn btn-flat btn-success"><span class="fa fa-save"></span> <?= Yii::t('app','Save') ?></button>
+      </div>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+  </div>
+</div>
+<?php
+$this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
+['depends'=>[\yii\web\JqueryAsset::className()],
+'position'=>View::POS_END]);
+
+$this->registerJsVar( "buttonPrint", "#imprimir" );
+$this->registerJsVar( "frameRpt", "#frame-rpt" );
+$this->registerJsVar( "buttonCancel", ".close-btn" );
+$this->registerJsVar( "modalRpt", "#modal-rpt" );
+echo   $this->render('//site/_modalRpt',[]);
+
+Yii::$app->view->registerJs('const IMPUESTO = '. $IMPUESTO .' / 100;',  \yii\web\View::POS_HEAD);
+
+$jsTrigger = "";
+if ( !$model->isNewRecord ){
+  $jsTrigger = '
+    $( ".table-body input[id$=\'cant_cdetalle\']" ).trigger( "change" );
+    calculateTotals( IMPUESTO );
+  ';
+}
+
+$js = '
+
+//Flat red color scheme for iCheck
+$("#compra-excento_compra").iCheck({
+  checkboxClass: "icheckbox_flat-green",
+  radioClass   : "iradio_flat-green"
+});
+
+$("#compra-afectaalm_compra").iCheck({
+  checkboxClass: "icheckbox_flat-green",
+  radioClass   : "iradio_flat-green"
+});
+
+$(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
+    //console.log("beforeInsert");
+});
+$(".dynamicform_wrapper").on("afterInsert", function(e, item) {
+    console.log("afterInsert");
+    $(item).find("input,textarea,select").each(function(index,element){
+          $(element).val("");
+    });
+    let row = $(".table-body select").length - 1;
+    $( "#compradetalle-" + row + "-prod_cdetalle" ).val(null).trigger("change");
+});
+$(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
+  if ( confirm("'.Yii::t('producto','Are you sure to delete this product?').'") ) {
+    return true;
+  }
+  return false;
+});
+
+$("#compra-excento_compra").on("ifChanged",function(event) {
+  calculateTaxes();
+  calculateTotals( IMPUESTO );
+  console.log("Excento");
+});
+
+$(".dynamicform_wrapper").on("afterDelete", function(e) {
+    console.log("Deleted item!");
+    calculateTotals( IMPUESTO );
+});
+$(".dynamicform_wrapper").on("limitReached", function(e, item) {
+    alert("Limit reached");
+});
+
+$( buttonPrint ).on( "click", function(){
+  $( frameRpt ).attr( "src", "'.Url::to(['compra/compra-rpt', 'id' => $model->id_compra]).'");
+  $( modalRpt ).modal({
+    backdrop: "static",
+    keyboard: false,
+  });
+  $( modalRpt ).modal("show");
+});
+
+$( "#compra-provee_compra" ).on( "select2:select",function (e) {
+  if (e.keyCode == 13) {
+      $("#compra-moneda_compra").focus();
+      $("#compra-moneda_compra").select2("open");
+      e.preventDefault();
+  }
+});
+
+// $( ".number-decimal" ).on("keypress",function( e ){
+//   return isDecimal( e, this);
+// });
+//
+// $( ".number-integer" ).on("keypress",function( e ){
+//   return isInteger( e, this);
+// });
+
+
+$( ".table-body" ).on("select2:select","select[id$=\'prod_cdetalle\']",function() {
+	let _currSelect = $( this );
+  let row = $( this ).attr( "id" ).split( "-" );
+  row = row[ 1 ];
+
+  let selects = $("select[id$=\'prod_cdetalle\']");
+
+  if ( checkDuplicate( _currSelect, row, selects) ) {
+    _currSelect.val( null ).trigger( "change" );
+    swal( "Oops!!!","'. Yii::t('app','Code can´t be repeated, it is already in the list') .'","error" );
+    _currSelect.focus();
+  }
+
+  $( "#compradetalle-" + row + "-cant_cdetalle" ).focus();
+
+});
+
+$( ".table-body" ).on( "keyup","input[id$=\'cant_cdetalle\']",function( e ) {
+  if ( e.keyCode === 13 && $( this ).val() ) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+
+    $( "#compradetalle-" + row + "-plista_cdetalle" ).focus();
+
+  }
+});
+
+$( ".table-body" ).on( "change", "input[id$=\'cant_cdetalle\']", function( e ) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+    let cant = $( this ).val();
+    let precioUni = $( "#compradetalle-" + row + "-plista_cdetalle").val();
+    let descu = $( "#compradetalle-" + row + "-descu_cdetalle").val();
+
+    calculoFila( row, descu, precioUni, cant );
+});
+
+$( ".table-body" ).on( "keyup","input[id$=\'plista_cdetalle\']",function( e ) {
+  if ( e.keyCode === 13 && $( this ).val() ) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+    $( "#compradetalle-" + row + "-descu_cdetalle" ).focus();
+
+  }
+});
+
+
+$( ".table-body" ).on( "change", "input[id$=\'plista_cdetalle\']", function( e ) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+    let cant = $( "#compradetalle-" + row + "-cant_cdetalle").val();
+    let descu = $( "#compradetalle-" + row + "-descu_cdetalle").val();
+    let precioUni = $( this ).val().replace(",",".");
+
+    calculoFila( row, descu, precioUni, cant );
+
+});
+
+$( ".table-body" ).on( "keyup", "input[id$=\'descu_cdetalle\']", function( e ) {
+  let row = $( this ).attr( "id" ).split( "-" );
+  row = row[ 1 ];
+
+  if ( e.keyCode === 13 &&
+      $( "#compradetalle-" + row + "-prod_cdetalle").val()  )  {
+
+      swal({
+        title: "' . Yii::t( 'app','Do you want to add a new item?') . '",
+        icon: "info",
+        buttons: true,
+      }).then( ( willDelete ) => {
+        if ( willDelete ) {
+          let row = $( ".detalle-item" ).length;
+
+          $( ".add-item" ).trigger( "click" );
+          $( "#compradetalle-" + row + "-prod_cdetalle").focus();
+          $( "#compradetalle-" + row + "-prod_cdetalle").select2("open");
+        }
+      });
+  }
+});
+
+
+$( ".table-body" ).on( "change", "input[id$=\'descu_cdetalle\']", function( e ) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+    let descu = $( this ).val().replace(",",".");
+    let precioUni = $( "#compradetalle-" + row + "-plista_cdetalle").val();
+    let cant = $( "#compradetalle-" + row + "-cant_cdetalle").val();
+
+    calculoFila( row, descu, precioUni, cant );
+});
+
+
+function calculoFila( row, descu, precioUni, cant )
+{
+  let total = 0.00;
+  let descuento = 0;
+  let impuestoUni = 0;
+  let impuestoTotal = 0;
+
+  if ( cant ) {
+
+    if ( descu ) {
+      descuento = ( precioUni * ( descu / 100 ) );
+      precioUni = precioUni - descuento;
+      total = cant * precioUni;
+    } else {
+      total = cant * precioUni;
+    }
+
+    //SI APLICA IMPUESTO
+    if ( !$("#compra-excento_compra").prop("checked") ) {
+      //CALCULO DEL IMPUESTO UNITARIO
+      impuestoUni = precioUni * IMPUESTO;
+      impuestoUni = parseFloat( impuestoUni );
+      //CALCULO DEL IMPUESTO TOTAL
+      impuestoTotal +=  impuestoUni * cant;
+      //SUMA DEL PRECIO UNITARIO Y TOTAL
+      precioUni += impuestoUni;
+      total += impuestoTotal;
+      impuestoUni = round( impuestoUni );
+      impuestoTotal = round( impuestoTotal );
+    }
+
+    precioUni = round( precioUni );
+    total = round( total );
+
+    //ASIGNACION DE VALORES A LA VISTA
+    $( "#compradetalle-" + row + "-impuestouni_cdetalle").val( impuestoUni );
+    $( "#compradetalle-" + row + "-impuestototal_cdetalle").val( impuestoTotal );
+    $( "#compradetalle-" + row + "-total_cdetalle" ).val( total );
+    $( "#compradetalle-" + row + "-descu_cdetalle").data( "descuento", descuento);
+    $( "#compradetalle-" + row + "-precio_cdetalle").val( precioUni );
+
+    calculateTotals( IMPUESTO );
+  }
+}
+
+function calculateTotals( IMPUESTO )
+{
+  let total = 0,
+      totalImp = 0,
+      precioNeto = 0,
+      subTotal1 = 0,
+      subTotal2 = 0,
+      descuento = 0,
+      desc = 0;
+      subT = 0,
+      totals = {
+        subtotal1: 0,
+        subtotal2: 0,
+        descuento: 0,
+        impuesto: 0,
+        total: 0
+      };
+
+  $( "input[id$=\'-total_cdetalle\']" ).each(function (i, element) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    let descUni = 0;
+    let precioUni = 0;
+    let impuestoUni = 0;
+    let cant = 0;
+
+    row = row[ 1 ];
+    total += parseFloat(element.value);
+    precioUni = parseFloat( $( "#compradetalle-" + row + "-precio_cdetalle" ).val() );
+    impuestoUni =  parseFloat( $( "#compradetalle-" + row + "-impuestouni_cdetalle" ).val());
+    descUni = parseFloat( $( "#compradetalle-" + row + "-descu_cdetalle" ).data( "descuento" ) );
+    cant =parseFloat( $( "#compradetalle-" + row + "-cant_cdetalle" ).val() );
+
+    subT =  ( precioUni - impuestoUni + descUni) * cant;
+    desc = parseFloat( descUni * cant );
+
+    totalImp += parseFloat( $( "#compradetalle-" + row + "-impuestototal_cdetalle" ).val() );
+    subTotal1 += subT;
+    descuento += desc;
+  });
+
+  descuento = descuento ? descuento : 0;
+  subTotal2 = subTotal1 - descuento
+
+
+  if ( $("#compra-excento_compra").prop( "checked" ) ) {
+    subTotal2 = subTotal1 - descuento;
+    total = subTotal2;
+    totalImp = 0;
+  }
+
+  totals.total = round(  total );
+  totals.impuesto = round( totalImp  );
+  totals.subtotal1 = round( subTotal1  );
+  totals.subtotal2 = round( subTotal2  );
+  totals.descuento = round( descuento  );
+
+  $( "#subtotal1" ).val( totals.subtotal1 );
+  $( "#subtotal2" ).val( totals.subtotal2 );
+  $( "#impuesto" ).val( totals.impuesto );
+  $( "#total" ).val( totals.total );
+  $( "#descuento" ).val( totals.descuento );
+
+  //return totals;
+}
+
+function calculateTaxes()
+{
+    $( "input[id$=\'-plista_cdetalle\']" ).each(function( i,value ){
+      let cant = parseFloat( $( "#compradetalle-" + i + "-cant_cdetalle" ).val() );
+      let precioUni = parseFloat( $( "#compradetalle-" + i + "-plista_cdetalle" ).val() );
+      let descu = parseFloat( $( "#compradetalle-" + i + "-descu_cdetalle" ).val() );
+
+      calculoFila( i, descu, precioUni, cant );
+
+    });
+}
+
+
+$( "#submit" ).on( "click", function() {
+  let form = $( "form#Compra" );
+
+  let rows = $(".table-body > .detalle-item").length;
+
+  if ( !rows ) {
+    swal("'.Yii::t('compra','Purchase order').'", "'.Yii::t('compra','The order must have at least one item to be saved').'", "info");
+    return false;
+  }
+
+  $.ajax( {
+    "url"    : $( form ).attr( "action" ),
+    "method" : $( form ).attr( "method" ),
+    "data"   : $( form ).serialize(),
+    "async"  : false,
+    "success": function ( data ) {
+      if ( data.success ) {
+
+
+        if ( $( form ).attr("action").indexOf("create") != -1) {
+          $( form ).trigger( "reset" );
+          selects = $(form).find("select");
+
+          if ( selects.length ){
+            selects.trigger( "change" );
+          }
+
+          swal({
+            title: "'.Yii::t("compra","Do you want to issue the document?").'",
+            icon: "info",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willIssue) => {
+            if (willIssue) {
+              window.open("'.Url::to(['compra/compra-rpt']).'?id=" + data.id,"_blank");
+            }
+            swal(data.title, data.message, data.type);
+          });
+
+          $( ".table-body" ).empty();
+        }
+
+
+        return;
+      } else {
+        $( form ).yiiActiveForm( "updateMessages", data);
+      }
+
+    },
+    error: function(data) {
+        let message;
+
+        if ( data.responseJSON ) {
+          let error = data.responseJSON;
+          message =   "Se ha encontrado un error: " +
+          "\\n\\nCode " + error.code +
+          "\\n\\nFile: " + error.file +
+          "\\n\\nLine: " + error.line +
+          "\\n\\nName: " + error.name +
+          "\\n Message: " + error.message;
+        } else {
+            message = data.responseText;
+        }
+
+        swal("Oops!!!",message,"error" );
+    }
+  });
+
+
+});
+
+$( "body" ).on( "click", buttonCancel, function(){
+  $( frameRpt ).attr( "src", "about:blank" );
+  $( modalRpt ).modal("hide");
+});
+';
+$this->registerJs($js.$jsTrigger,View::POS_LOAD);
+
+$this->registerJsVar( "buttonPrint", "#imprimir" );
+$this->registerJsVar( "frameRpt", "#frame-rpt" );
+$this->registerJsVar( "buttonCancel", ".close-btn" );
+$this->registerJsVar( "modalRpt", "#modal-rpt" );
+echo   $this->render('//site/_modalRpt',[]);
