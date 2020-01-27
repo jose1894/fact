@@ -16,8 +16,8 @@
       foreach ($pedido->detalles as $key => $value) {
         // code...
         echo "<tr>";
-        echo "<td style='width:8%;'>{$value->productoPdetalle->cod_prod }</td>";
-        echo "<td style='width:50%;word-wrap: break-word;'>{$value->productoPdetalle->des_prod }</td>";
+        echo "<td style='width:12%;'>{$value->productoPdetalle->cod_prod }</td>";
+        echo "<td style='width:46%;word-wrap: break-word;'>{$value->productoPdetalle->des_prod }</td>";
         echo "<td style='width:7%;' class='right'>{$value->productoPdetalle->umedProd->des_und }</td>";
         echo "<td style='width:6%;' class='right'>{$value->cant_pdetalle }</td>";
         echo "<td style='width:6%; text-align:right'>{$value->plista_pdetalle }</td>";

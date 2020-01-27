@@ -47,6 +47,8 @@ class Producto extends \yii\db\ActiveRecord
             [['codfab_prod'], 'string', 'max' => 45],
             [['des_prod'], 'string', 'max' => 70],
             [['cod_prod'], 'unique'],
+            [['compra_prod','venta_prod'], 'default', 'value' => 1],
+            [['stockmin_prod','stockmax_prod'], 'default', 'value' => 0],
             [['tipo_prod'], 'exist', 'skipOnError' => true, 'targetClass' => TipoProducto::className(), 'targetAttribute' => ['tipo_prod' => 'id_tpdcto']],
             [['umed_prod'], 'exist', 'skipOnError' => true, 'targetClass' => UnidadMedida::className(), 'targetAttribute' => ['umed_prod' => 'id_und']],
         ];

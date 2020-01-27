@@ -317,6 +317,11 @@ class DocumentoController extends Controller
           } else {
 
             $numDoc = Numeracion::getNumeracion( $model::GUIA_DOC,$model->tipo_doc );
+
+            foreach ( $numDoc as $key => $value){
+                if ( $value['serie_num'] == )
+            }
+
             $codigoDoc = intval( $numDoc['numero_num'] ) + 1;
             $codigoDoc = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
             $model->numeracion_doc = $numDoc[ 'id_num' ];

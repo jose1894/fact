@@ -109,6 +109,9 @@ use kartik\number\NumberControl;
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
             <label></label>
+
+            <?php if ($model->isNewRecord) $model->compra_prod = 1; ?>
+
             <?= $form->field($model, 'compra_prod',[
                               'addClass' => 'form-control'
                               ])->widget(CheckboxX::classname(), [
@@ -124,6 +127,9 @@ use kartik\number\NumberControl;
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
             <label></label>
+
+            <?php if ($model->isNewRecord) $model->venta_prod = 1; ?>
+
             <?= $form->field($model, 'venta_prod',[
                               'addClass' => 'form-control'
                               ])->widget(CheckboxX::classname(), [

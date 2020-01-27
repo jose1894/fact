@@ -141,7 +141,7 @@ class PedidoController extends Controller
                             'success' => true,
                             'title' => Yii::t('pedido', 'Order'),
                             'id' => $model->id_pedido,
-                            'message' => Yii::t('app','Record saved successfully!'),
+                            'message' => Yii::t('app','Record has been saved successfully!'),
                             'type' => 'success'
                           ];
                           return $return;
@@ -163,7 +163,7 @@ class PedidoController extends Controller
 
           $model->moneda_pedido = Moneda::findOne(['status_moneda' => 1, 'tipo_moneda' => 'N']);
           $model->almacen_pedido = Almacen::findOne(['status_almacen' => 1]);
-          $model->tipo_pedido = 0;
+          //$model->tipo_pedido = 0;
           $model->usuario_pedido = Yii::$app->user->id;
           return $this->render('create', [
               'model' => $model,
@@ -320,7 +320,7 @@ class PedidoController extends Controller
       $cotizacion = Yii::t('pedido','QUOTATION');
       $pedido = Yii::t('pedido','ORDER');
 
-      $tipoPedido  = $modelPedido->tipo_pedido > 0 ?  $modelPedido->tipo_pedido == 1 ? $proforma : $cotizacion : $pedido;
+       $tipoPedido  = $modelPedido->tipo_pedido != 'NP' ?  ($modelPedido->tipo_pedido == 'PR' ? $proforma : $cotizacion ): $pedido;
 
       $f = Yii::$app->formatter;
       $date = $f->asDate($modelPedido->fecha_pedido, 'php:d/m/Y');
@@ -328,53 +328,8 @@ class PedidoController extends Controller
       $empresa = SiteController::getEmpresa();
 
 
-      $header = '
-      <table>
-          <tr>
-              <td width="33%" class="center"><b>'.$empresa->nombre_empresa.'</b><br><b> RUC: '.$empresa->ruc_empresa.'</td>
-              <td width="33%" class="center"></td>
-              <td width="33%" style="font-size:0.75rem" class="right">
-                ' . Yii::t('app','Date') . ': {DATE d/m/Y}
-                <br>
-                ' . Yii::t('app','Hour') . ': {DATE H:i:s}
-                <br>
-                ' . Yii::t('app','Page') . ': {PAGENO}/{nbpg}
-              </td>
-          </tr>
-      </table>
-      <br>
-      <table >
-        <tr>
-          <td class="center bold" > ' . $tipoPedido . ': ' . $modelPedido->cod_pedido . ' </td>
-        </tr>
-      </table>
-      <br>
-      <table class="datos-cliente" style="font-size:0.75rem">
-        <tr>
-          <td class="left celdas"><span class="bold">' . Yii::t( 'cliente', 'Customer') . ' :</span> ' . $modelPedido->cltePedido->nombre_clte . '</td>
-          <td>&nbsp;</td>
-          <td class="right celdas"><span class="bold">' . Yii::t('app','Date') . ' :</span> ' . $date . ' </td>
-        </tr>
-        <tr>
-          <td class="left celdas"><span class="bold">' . Yii::t( 'cliente', 'Address') . ' :</span> ' . $modelPedido->cltePedido->direcc_clte . '
-          ' . $modelPedido->cltePedido->provClte->des_prov. ' - ' . $modelPedido->cltePedido->deptoClte->des_depto . '
-          - ' . $modelPedido->cltePedido->dttoClte->des_dtto . '
-          </td>
-          <td>&nbsp;</td>
-          <td class="right celdas"><span class="bold">' . Yii::t('condicionp','Payment condition') . ':</span> ' . $modelPedido->condpPedido->desc_condp . ' </td>
-        </tr>
-        <tr>
-          <td class="left celdas"><span class="bold">' . Yii::t( 'cliente', 'RUC') . ' :</span> ' . $modelPedido->cltePedido->ruc_clte . '</td>
-          <td>&nbsp;</td>
-          <td class="right celdas"><span class="bold">' . Yii::t('moneda','Currency') . ' :</span> ' . $modelPedido->monedaPedido->des_moneda  . '</td>
-        </tr>
-        <tr>
-          <td class="left celdas"><span class="bold">' . Yii::t( 'vendedor', 'Seller') . ' :</span> ' . $modelPedido->vendPedido->nombre_vend . '</td>
-          <td>&nbsp;</td>
-          <td class="right celdas">&nbsp;</td>
-        </tr>
-      </table>
-      ';
+      $header = $this->rptHeader( $modelPedido, $empresa, $tipoPedido, $date );
+
       $total = 0;
       $subt = 0;
       $subtotal = 0;
@@ -397,34 +352,7 @@ class PedidoController extends Controller
       $subtotal2 = $precioNeto;
 
 
-      $footer = '
-      <table style="font-size:0.78rem" class="table table-stripped">
-        <tr>
-          <td style="width:80%" class="right">
-          Subtotal
-          </td>
-          <td style="width:20%" class="right">
-          ' . Yii::$app->formatter->asDecimal($subtotal2) . '
-          </td>
-        </tr>
-        <tr>
-          <td class="right">
-          ' . Yii::t('pedido','Tax'). ' ' . SiteController::getImpuesto() .'%
-          </td>
-          <td class="right">
-          '.Yii::$app->formatter->asDecimal($totalImp).'
-          </td>
-        </tr>
-        <tr>
-          <td class="right">
-          Total
-          </td>
-          <td class="right">
-          '.Yii::$app->formatter->asDecimal($total).'
-          </td>
-        </tr>
-      </table>
-      ';
+      $footer = $this->rptFooter( $modelPedido, $subtotal2, $totalImp, $total);
 
       $sheet = file_get_contents( Yii::getAlias( '@rptcss' ).'/rptCss.css' );
       $mpdf->WriteHTML( $sheet, 1 );
@@ -437,6 +365,157 @@ class PedidoController extends Controller
 
       $mpdf->SetTitle($titulo);
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
+    }
+
+    private function rptHeader( $model, $empresa, $tipoPedido, $date) {
+
+        if ( $model->tipo_pedido != 'PR') {
+            $header = '
+              <table>
+                  <tr>
+                      <td width="33%" class="center"><b>' . $empresa->nombre_empresa . '</b><br><b> RUC: ' . $empresa->ruc_empresa . '</td>
+                      <td width="33%" class="center"></td>
+                      <td width="33%" style="font-size:0.75rem" class="right">
+                        ' . Yii::t('app', 'Date') . ': {DATE d/m/Y}
+                        <br>
+                        ' . Yii::t('app', 'Hour') . ': {DATE H:i:s}
+                        <br>
+                        ' . Yii::t('app', 'Page') . ': {PAGENO}/{nbpg}
+                      </td>
+                  </tr>
+              </table>
+              <br>
+              <table >
+                <tr>
+                  <td class="center bold" > ' . $tipoPedido . ': ' . $model->cod_pedido . ' </td>
+                </tr>
+              </table>
+              <br>
+              <table class="datos-cliente" style="font-size:0.75rem">
+                <tr>
+                  <td class="left celdas"><span class="bold">' . Yii::t('cliente', 'Customer') . ' :</span> ' . $model->cltePedido->nombre_clte . '</td>
+                  <td>&nbsp;</td>
+                  <td class="right celdas"><span class="bold">' . Yii::t('app', 'Date') . ' :</span> ' . $date . ' </td>
+                </tr>
+                <tr>
+                  <td class="left celdas"><span class="bold">' . Yii::t('cliente', 'Address') . ' :</span> ' . $model->cltePedido->direcc_clte . '
+                  </td>
+                  <td>&nbsp;</td>
+                  <td class="right celdas"><span class="bold">' . Yii::t('condicionp', 'Payment condition') . ':</span> ' . $model->condpPedido->desc_condp . ' </td>
+                </tr>
+                <tr>
+                  <td class="left celdas"><span class="bold">' . Yii::t('cliente', 'RUC') . ' :</span> ' . $model->cltePedido->ruc_clte . '</td>
+                  <td>&nbsp;</td>
+                  <td class="right celdas"><span class="bold">' . Yii::t('moneda', 'Currency') . ' :</span> ' . $model->monedaPedido->des_moneda . '</td>
+                </tr>
+                <tr>
+                  <td class="left celdas"><span class="bold">' . Yii::t('vendedor', 'Seller') . ' :</span> ' . $model->vendPedido->nombre_vend . '</td>
+                  <td>&nbsp;</td>
+                  <td class="right celdas">&nbsp;</td>
+                </tr>
+              </table>
+              ';
+        } else {
+            $header = '
+              <table>
+                  <tr>
+                      <td width="33%" class="center"> &nbsp; </td>
+                      <td width="33%" class="center"> &nbsp;</td>
+                      <td width="33%" style="font-size:0.75rem" class="right">
+                        ' . Yii::t('app', 'Date') . ': {DATE d/m/Y}
+                        <br>
+                        ' . Yii::t('app', 'Hour') . ': {DATE H:i:s}
+                        <br>
+                        ' . Yii::t('app', 'Page') . ': {PAGENO}/{nbpg}
+                      </td>
+                  </tr>
+              </table>
+              <br>
+              <table >
+                <tr>
+                  <td class="center bold" > ' . $tipoPedido . ': ' . $model->cod_pedido . ' </td>
+                </tr>
+              </table>
+              <br>
+              <table class="datos-cliente" style="font-size:0.75rem">
+                <tr>
+                  <td class="left celdas"><span class="bold">' . Yii::t('cliente', 'Customer') . ' :</span> ' . $model->cltePedido->nombre_clte . '</td>
+                  <td>&nbsp;</td>
+                  <td class="right celdas"><span class="bold">' . Yii::t('app', 'Date') . ' :</span> ' . $date . ' </td>
+                </tr>
+                <tr>
+                  <td class="left celdas"><span class="bold">' . Yii::t('cliente', 'Address') . ' :</span> ' . $model->cltePedido->direcc_clte . '
+                  </td>
+                  <td>&nbsp;</td>
+                  <td class="right celdas"><span class="bold">' . Yii::t('condicionp', 'Payment condition') . ':</span> ' . $model->condpPedido->desc_condp . ' </td>
+                </tr>
+                <tr>
+                  <td class="left celdas"><span class="bold"> &nbsp; </td>
+                  <td>&nbsp;</td>
+                  <td class="right celdas"><span class="bold">' . Yii::t('moneda', 'Currency') . ' :</span> ' . $model->monedaPedido->des_moneda . '</td>
+                </tr>
+                <tr>
+                  <td class="left celdas"><span class="bold">' . Yii::t('vendedor', 'Seller') . ' :</span> ' . $model->vendPedido->nombre_vend . '</td>
+                  <td>&nbsp;</td>
+                  <td class="right celdas">&nbsp;</td>
+                </tr>
+              </table>
+              ';
+        }
+
+        return $header;
+    }
+
+    private function rptFooter($model, $subtotal2, $totalImp, $total)
+    {
+
+        if ($model->tipo_pedido != 'PR') {
+            $footer = '
+          <table style="font-size:0.78rem" class="table table-stripped">
+            <tr>
+              <td style="width:80%" class="right">
+              Subtotal
+              </td>
+              <td style="width:20%" class="right">
+              ' . Yii::$app->formatter->asDecimal($subtotal2) . '
+              </td>
+            </tr>
+            <tr>
+              <td class="right">
+              ' . Yii::t('pedido', 'Tax') . ' ' . SiteController::getImpuesto() . '%
+              </td>
+              <td class="right">
+              ' . Yii::$app->formatter->asDecimal($totalImp) . '
+              </td>
+            </tr>
+            <tr>
+              <td class="right">
+              Total
+              </td>
+              <td class="right">
+              ' . Yii::$app->formatter->asDecimal($total) . '
+              </td>
+            </tr>
+          </table>
+          ';
+        } else {
+            $footer = '
+                  <table style="border-top:1px  solid black;font-size:0.85rem; font-weight: bold" class="table table-stripped">            
+                    <tr>
+                        <td style="width:80%" class="right">
+                            &nbsp;
+                        </td>
+                        <td style="width:10%" class="right">
+                            Total
+                        </td>
+                        <td style="width:10%" class="right">
+                            ' . Yii::$app->formatter->asDecimal($total) . '
+                        </td>
+                    </tr>
+                  </table>';
+        }
+
+        return $footer;
     }
 
 

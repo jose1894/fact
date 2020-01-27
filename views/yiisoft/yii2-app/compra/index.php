@@ -43,6 +43,10 @@ $this->params['breadcrumbs'][] = $this->title;
               'width' => '8%'
             ],
             [
+                'attribute' => 'nrodoc_compra',
+                'width' => '8%',
+            ],
+            [
               'attribute'=>'provee_compra',
               'value' => function($data){
                    return $data->proveeCompra->nombre_prove;

@@ -128,6 +128,8 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
           <div id="nro_compra" class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="display: <?=$display?>">
             <?php
             $url = Url::to(['compra/ajax-compras']);
+            print_r(Compra::findOne($model->idrefdoc_trans));
+            exit();
             $compra = empty($model->idrefdoc_trans) ? '' : Compra::findOne($model->idrefdoc_trans)->cod_compra;
             echo $form->field($model, 'idrefdoc_trans',[
                 'addClass' => 'form-control ',
@@ -335,7 +337,7 @@ $jsTrigger = "";
 
 if ( !$model->isNewRecord ) {
     $jsTrigger = '
-    let compra = ' . (!empty($model->idrefdoc_trans) ? $model->idrefdoc_trans : NULL) . ';
+    let compra = ' . (!empty($model->idrefdoc_trans) ? $model->idrefdoc_trans : 0) . ';
     $( ".table-body input[id$=\'cant_detalle\']" ).trigger( "change" );
 
     if ( compra ) {
