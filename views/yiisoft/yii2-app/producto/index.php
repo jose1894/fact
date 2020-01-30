@@ -51,6 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
               ],
               'width' => '10%'
             ],
+            'stock_prod',
             [
                 'class' => 'kartik\grid\BooleanColumn',
                 'attribute' => 'status_prod',

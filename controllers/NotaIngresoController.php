@@ -90,7 +90,7 @@ class NotaIngresoController extends Controller
           $model->usuario_trans = Yii::$app->user->id;
           $model->ope_trans = $model::OPE_TRANS;
           $num = Numeracion::getNumeracion( $model::NOTA_INGRESO );
-          $codigo = intval( $num[0]['numero_num'] ) + 1;
+          $codigo = intval( $num['numero_num'] ) + 1;
           $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
           $model->codigo_trans = $codigo;
 
@@ -131,7 +131,7 @@ class NotaIngresoController extends Controller
                       }
 
                       if ($flag) {
-                        $numeracion = Numeracion::findOne($num[0]['id_num']);
+                        $numeracion = Numeracion::findOne($num['id_num']);
                         $numeracion->numero_num = $codigo;
                         $numeracion->save();
                         $transaction->commit();
