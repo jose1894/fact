@@ -33,18 +33,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             [
               'attribute'=>'cod_compra',
-              'width' => '7%'
+              'width' => '10%'
             ],
             [
               'attribute'=>'fecha_compra',
               'value' => function($data){
                    return Yii::$app->formatter->asDate($data->fecha_compra, 'dd/MM/yyyy');
               },
-              'width' => '8%'
+              'width' => '10%'
             ],
             [
                 'attribute' => 'nrodoc_compra',
-                'width' => '8%',
+                'width' => '10%',
             ],
             [
               'attribute'=>'provee_compra',
@@ -60,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                   'pluginEvents' =>[],
                   'options' => ['prompt' => ''],
               ],
-              'width' => '70%'
+              'width' => '60%'
             ],
             //'condp_compra',
             //'usuario_compra',
@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
-                'template' => '{print}   {view}  {update}  {delete}',
+                'template' => '{print}&nbsp;&nbsp;&nbsp;{view}&nbsp;&nbsp;{update}&nbsp;&nbsp;{delete}',
                 'buttons' => [
                   'print' => function ($url, $model) {
                       return Html::a('<span class="glyphicon glyphicon-print"></span>', $url, [
@@ -94,16 +94,16 @@ $this->params['breadcrumbs'][] = $this->title;
                   },
 
                   'update' => function ($url, $model) {
-                      return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+                      return ($model->estatus_compra == 0 ) ? Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
                                   'title' => Yii::t('app', 'Update'),
                                   // 'class' => 'pjax-update',
                                   'data' => [
                                     'id' => $model->id_compra,
                                   ]
-                      ]);
+                      ]) : '' ;
                   },
                   'delete' => function ($url, $model) {
-                      return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+                      return ($model->estatus_compra == 0 ) ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
                                   'title' => Yii::t('app', 'Delete'),
                                   'class' => 'pjax-delete',
                                   'data' => [
@@ -117,7 +117,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                       'cancel' => Yii::t('app', 'Cancel'),
                                       'id' => $model->id_compra
                                   ],
-                      ]);
+                      ]) : '';
                   }
 
                 ],

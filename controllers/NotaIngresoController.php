@@ -6,6 +6,7 @@ use Yii;
 use app\models\Almacen;
 use app\models\NotaIngreso;
 use app\models\Producto;
+use app\models\Compra;
 use app\models\User;
 use app\models\NotaIngresoDetalle;
 use app\models\NotaIngresoSearch;
@@ -322,6 +323,8 @@ class NotaIngresoController extends Controller
 
               $transaction = \Yii::$app->db->beginTransaction();
               $model->status_trans = NotaIngreso::STATUS_APPROVED;
+              $compra = Compra::findOne($model->idrefdoc_trans);
+              $compra->estatus_compra = Compra::STATUS_APPROVED;
               try {
                   if ($flag = $model->save(false)) {
 
@@ -339,6 +342,7 @@ class NotaIngresoController extends Controller
                   if ($flag) {
                       $model->status_trans = NotaIngreso::STATUS_APPROVED;
                       $model->save();
+                      $compra->save();
                       $transaction->commit();
                       //return $this->redirect(['view', 'id' => $model->id_empresa]);
                       Yii::$app->response->format = Response::FORMAT_JSON;

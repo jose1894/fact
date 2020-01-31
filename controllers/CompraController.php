@@ -193,6 +193,10 @@ class CompraController extends Controller
       $model = $this->findModel($id);
       $modelsDetalles = $model->detalles;
 
+      if ( $model->estatus_compra == 2) {
+          throw new NotFoundHttpException(Yii::t('compra', 'The requested page does not exist.'));
+      }
+
       if ($model->load(Yii::$app->request->post())) {
 
           $oldIDs = ArrayHelper::map($modelsDetalles, 'id_cdetalle', 'id_cdetalle');
@@ -270,9 +274,14 @@ class CompraController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
         if (Yii::$app->request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
+            if ( $model->estatus_compra == 2) {
+                return 0;
+            }
+            $model->delete();
             return 1;
         }
         return $this->redirect(['index']);

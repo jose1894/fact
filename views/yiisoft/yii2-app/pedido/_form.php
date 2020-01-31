@@ -334,7 +334,6 @@ if ( $model->isNewRecord ) {
                         ->field($modelDetalle,"[{$index}]plista_pdetalle", [ 'addClass' => 'form-control number-decimals'])
                         ->textInput([ 'type' => 'text','readonly' => true])
                         ->label(false)?>
-                        <?php echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle"); ?>
                       </div>
                       <!--div class="col-xs-1 col-xs-12">
                         <?= $form->field($modelDetalle,"[{$index}]impuesto_pdetalle")

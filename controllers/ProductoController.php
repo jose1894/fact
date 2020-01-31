@@ -277,7 +277,7 @@ class ProductoController extends Controller
                 ->from(['v_productos as p'])
                 ->where('p.status_prod = 1')
                 ->andWhere(['like', 'p.texto', $desc])
-                //->andWhere(['>', 'p.stock_prod', 0])
+                ->andWhere(['>', 'p.stock_prod', 0])
                 ->andWhere(['=', 'p.compra_prod', 1])
                 ->andWhere(['=', 'p.status_prod', 1])
                 ->andWhere('p.sucursal_prod = :sucursal',[':sucursal' => $sucursal])
@@ -299,7 +299,7 @@ class ProductoController extends Controller
                        'lista_precios lp',
                        'lp.prod_lista =p.id_prod')
                 ->where('p.status_prod = 1')
-                ->andWhere(['>', 'p.stock_prod', 0])
+                //->andWhere(['>', 'p.stock_prod', 0])
                 ->andWhere(['like', 'p.texto', $desc])
                 ->andWhere(['=', 'p.venta_prod', 1])
                 ->andWhere(['=', 'p.status_prod', 1])
@@ -310,7 +310,47 @@ class ProductoController extends Controller
 
             $command = $query->createCommand();
             $data = $command->queryAll();
-            $out['results'] = array_values( $data );
+            $ret = [];
+
+            foreach ( $data as $key => $value){
+                $ret[$key] = [
+                    'id' => $value['id'],
+                    'cod_prod' => $value['cod_prod'],
+                    'des_prod' => $value['des_prod'],
+                    'text' => $value['text'],
+                    'precio' => $value['precio'],
+                    'des_und' => $value['des_und'],
+                    'stock_prod' => $value['stock_prod'],
+                ];
+
+                if($value['stock_prod'] <= 0){
+                    $ret[$key]['disabled'] = 1;
+                }
+            }
+            $out['results'] =  $ret ;
+
+//            $query = [];
+//            $query = new Query;
+//
+//            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod',
+//                'p.texto AS text','lp.precio_lista as precio', 'des_und','stock_prod'])
+//                ->from(['v_productos as p'])
+//                ->join('LEFT JOIN',
+//                    'lista_precios lp',
+//                    'lp.prod_lista =p.id_prod')
+//                ->where('p.status_prod = 1')
+//                ->andWhere(['<=', 'p.stock_prod', 0])
+//                ->andWhere(['like', 'p.texto', $desc])
+//                ->andWhere(['=', 'p.venta_prod', 1])
+//                ->andWhere(['=', 'p.status_prod', 1])
+//                ->andWhere('lp.tipo_lista = :tipo_listap and p.sucursal_prod = :sucursal',
+//                    [':tipo_listap' =>  $tipo_listap, ':sucursal' => $sucursal])
+//                ->groupBy(['p.id_prod','p.cod_prod', 'p.des_prod','p.texto','lp.precio_lista', 'des_und','stock_prod'])
+//                ->orderBy('p.cod_prod ASC');
+//
+//            $command = $query->createCommand();
+//            $data = $command->queryAll();
+//            $out['disabled'] = array_values( $data );
 
         } elseif ( $id > 0 ) {
 

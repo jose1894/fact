@@ -41,11 +41,19 @@ if ( $model->isNewRecord ) {
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
           <?php
-            $model->fecha_compra = date('d/m/Y');
+
+            if ($model->isNewRecord) {
+                $model->fecha_compra = date('Y-m-d');
+            }
+
+            $fecha = explode("-",$model->fecha_compra);
+            $fecha = $fecha[2]."/".$fecha[1]."/".$fecha[0];
+            $model->fecha_compra = $fecha;
+
             echo $form->field($model, 'fecha_compra',[
               'addClass' => 'form-control ',
             ])->textInput([
-                  'value' => date('d/m/Y'),
+                  'value' => $model->fecha_compra,
                   'readonly' => 'readonly',
                   'style' => ['text-align' => 'right']
               ]) ?>

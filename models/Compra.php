@@ -29,6 +29,7 @@ class Compra extends \yii\db\ActiveRecord
     const ORDEN_COMPRA = 'OC';
     const TIPO_MOVIMIENTO = 3;
     const STATUS_ACTIVE = 1;
+    const STATUS_APPROVED = 2;
     const STATUS_INACTIVE = 0;
     /**
      * {@inheritdoc}
