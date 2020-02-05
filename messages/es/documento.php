@@ -22,4 +22,5 @@ return [
     'Do you want to issue the document?' => '¿Deseas emitir el documento?',
     'Document list' => 'Listado de documentos',
     'Credit note' => 'Nota de crédito',
+    'Send proforma' => 'Despachar proforma',
 ];

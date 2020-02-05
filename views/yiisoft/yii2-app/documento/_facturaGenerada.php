@@ -127,7 +127,7 @@ $js = <<<JS
     $( 'body' ).on( 'click', '.pjax-send-sunat', function( e ){
         e.preventDefault();
         let url = $( this ).prop( 'href' );
-        debugger;
+        //debugger;
         $.ajax({
             url: url,
             success: function(data){
