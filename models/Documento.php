@@ -29,6 +29,7 @@ class Documento extends \yii\db\ActiveRecord
     const FACTURA_DOC = 'FE'; //TIPO DE DOCUMENTO PARA FACTURA
     const GUIA_DOC = 'GR'; //TIPO DE DOCUMENTO PARA GUIAS
     const TIPO_FACTURA = 4; //Tipo de operacion para la tabla transaccion cuando tenga que aumentar o descontar almacen
+    const TIPO_PROFORMA = 8; //Tipo de operacion para la tabla transaccion cuando tenga que aumentar o descontar almacen
     const GUIA_GENERADA = 1; // ESTATUS DEL DOCUMENTO
     const DOCUMENTO_GENERADO = 2; //ESTATUS DEL DOCUMENTO
     const DOCUMENTO_ANULADO = 3;

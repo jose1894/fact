@@ -243,7 +243,61 @@ $( document ).ready( function( e ){
     $(this).find(".modal-body").css("max-height", height);
   });
 
+    $( 'body' ).on( 'click', buttonSubmit, function( e ){
+        e.preventDefault();
+        e.stopPropagation();
+        let $form = $( frame ).contents().find('form');
+        //let $form = window.frames[ 0 ].$( 'form' );
 
+        $.ajax( {
+            'url'    : $( $form ).attr( 'action' ),
+            'method' : $( $form ).attr( 'method' ),
+            'data'   : $( $form ).serialize(),
+            'async'  : false,
+            'success': function ( data ){
+                if ( data.success )
+                {
+                    swal(data.title, data.message, data.type);
+                    window.parent.$.pjax.reload( { container: '#grid' } );
+
+                    if ( $( $form ).attr( 'action' ).indexOf( 'create' ) != -1) {
+                        $( $form ).trigger( 'reset' );
+                        $selects = window.frames[ 0 ].$( $form ).find( 'select' );
+
+                        if ( $selects.length ) {
+                            $selects.trigger( 'change' );
+                        }
+                    }
+
+                    return;
+                }
+
+                window.frames[ 0 ].$( $form ).yiiActiveForm( 'updateMessages', data);
+                //window.$( frame ).contents( ).find($form).yiiActiveForm( 'updateMessages', data);
+
+            },
+            error: function(data) {
+                let message;
+
+                if ( data.responseJSON )
+                {
+                    let error = data.responseJSON;
+                    message =   "Se ha encontrado un error: " +
+                        "\n\nCode " + error.code +
+                        "\n\nFile: " + error.file +
+                        "\n\nLine: " + error.line +
+                        "\n\nName: " + error.name +
+                        "\n Message: " + error.message;
+                }
+                else
+                {
+                    message = data.responseText;
+                }
+
+                swal('Oops!!!',message,"error" );
+            }
+        });
+    });
 });
 
 function errorsCode( error ){
