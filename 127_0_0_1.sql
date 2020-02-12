@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-02-2020 a las 23:27:34
+-- Tiempo de generación: 12-02-2020 a las 23:09:54
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -4097,7 +4097,11 @@ INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_t
 (28, '2020-01-27', NULL, NULL, '3.325', '3.320', '3.325', 1),
 (29, '2020-01-31', NULL, NULL, '3.325', '3.320', '3.325', 1),
 (30, '2020-02-04', NULL, NULL, '3.325', '3.320', '3.325', 1),
-(31, '2020-02-05', NULL, NULL, '3.325', '3.320', '3.325', 1);
+(31, '2020-02-05', NULL, NULL, '3.325', '3.320', '3.325', 1),
+(32, '2020-02-06', NULL, NULL, '3.325', '3.320', '3.325', 1),
+(33, '2020-02-10', NULL, NULL, '3.325', '3.320', '3.325', 1),
+(34, '2020-02-11', NULL, NULL, '3.325', '3.320', '3.325', 1),
+(35, '2020-02-12', NULL, NULL, '3.325', '3.320', '3.325', 1);
 
 -- --------------------------------------------------------
 
@@ -5061,7 +5065,7 @@ ALTER TABLE `sucursal`
 -- AUTO_INCREMENT de la tabla `tipo_cambio`
 --
 ALTER TABLE `tipo_cambio`
-  MODIFY `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=32;
+  MODIFY `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_documento`

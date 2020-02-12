@@ -47,8 +47,8 @@ class PedidoController extends Controller
     public function actionIndex()
     {
         $searchModel = new PedidoSearch();
-        $request = Yii::$app->request->queryParams;
-        $dataProvider = $searchModel->search($request);
+        $searchModel->estatus_pedido = Pedido::STATUS_INACTIVO;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
 
 

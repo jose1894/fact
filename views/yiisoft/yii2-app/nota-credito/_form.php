@@ -46,6 +46,29 @@ use app\base\Model;
                         ]
                     ) ?>
             </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                <label for="serie_doc"><?= Yii::t('documento','Serie')?></label>
+                <?= Html::dropDownList(
+                    'serie_doc',
+                    null,
+                    [],
+                    [
+                        'prompt' => Yii::t('app','Select'),
+                        'class' => 'form-control',
+                        'id' => 'serie_doc'
+                    ]
+                ) ?>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <label for="num_doc"><?= Yii::t('documento','Code')?></label>
+                <?= Html::input('text', 'cod_doc', '', ['class' => 'form-control', 'style' => ['text-align' => 'right']])  ?>
+            </div>
+
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                <label></label>
+                <button class="btn btn-flat btn-success" style="width:100%"><?= Yii::t('app','Search');?>&nbsp; &nbsp;<i class="fa fa-search"></i></button>
+            </div>
+
         </div>
     </div>
 </div>
@@ -55,12 +78,22 @@ $js = '
    $( "#tipo_doc" ).on("change", function(){
         $.ajax({
             url:"' . Url::to(['numeracion/ajax-get-numeracion']) . '",
-            data:{ tipo: $( this ).val()},
+            data:{ id: $( this ).val()},
             method: "GET",
             success: function(data){
-                console.log(data);
+              $("#serie_doc").empty();
+              let $option = $("<option />", {
+                text: "Seleccione",
+                value: null,
+              });
+              $("#serie_doc").prepend($option);
+              $.each(data,function(i,value){
+                $("#serie_doc").append($("<option></option>")
+                    .attr("value",value.id_num)
+                    .text(value.serie_num));
+              });
             }
-        })
+        });
    })
 ';
 

@@ -23,6 +23,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Search' => 'Buscar',
     'Send' => 'Enviar',
     'Sended' => 'Enviado',
     'Shopping' => 'Compras',

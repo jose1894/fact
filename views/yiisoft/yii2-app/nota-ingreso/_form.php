@@ -336,7 +336,7 @@ $jsTrigger = "";
 
 if ( !$model->isNewRecord ) {
     $jsTrigger = '
-    let compra = ' . (!empty($model->idrefdoc_trans) ? $model->idrefdoc_trans : NULL) . ';
+    let compra = ' . (!empty($model->idrefdoc_trans) ? $model->idrefdoc_trans : 0) . ';
     $( ".table-body input[id$=\'cant_detalle\']" ).trigger( "change" );
 
     if ( compra ) {

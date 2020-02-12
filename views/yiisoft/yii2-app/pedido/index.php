@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'value' => function($data){
                    return $data->tipo_pedido !== Pedido::PEDIDO  ? $data->tipo_pedido === Pedido::PROFORMA ? 'PROFORMA' : 'COTIZACION' : 'PEDIDO' ;
               },
-              //'filter'=>[ Pedido::PEDIDO => 'PEDIDO', Pedido::PROFORMA => 'PROFORMA', Pedido::COTIZACION=> 'COTIZACION' ],
+              'filter'=>[ Pedido::PEDIDO => 'PEDIDO', Pedido::PROFORMA => 'PROFORMA', Pedido::COTIZACION=> 'COTIZACION' ],
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,
@@ -74,7 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
                   'pluginEvents' =>[],
                   'options' => ['prompt' => ''],
               ],
-              'width' => '40%'
+              'width' => '30%'
             ],
             [
               'attribute'=>'vend_pedido',
@@ -90,7 +90,7 @@ $this->params['breadcrumbs'][] = $this->title;
                   'pluginEvents' =>[],
                   'options' => ['prompt' => ''],
               ],
-              'width' => '20%'
+              'width' => '15%'
             ],
             [
                 'attribute'=>'estatus_pedido',
@@ -99,15 +99,17 @@ $this->params['breadcrumbs'][] = $this->title;
                         Pedido::STATUS_INACTIVO => 'PEDIDO PENDIENTE',
                         Pedido::GUIA_GENERADA => 'GUIA GENERADA',
                         Pedido::DOCUMENTO_GENERADO => 'DOCUMENTO GENERADO',
-                        Pedido::PEDIDO_ANULADO => 'PEDIDO ANULADO'
+                        Pedido::PEDIDO_ANULADO => 'PEDIDO ANULADO',
+                        Pedido::PEDIDO_FINALIZADO => 'PEDIDO FINALIZADO',
                     ];
-                    return $arr[ $data->estatus_pedido];
+                    return $arr[$data->estatus_pedido];
                 },
                 'filter'=>[
                         Pedido::STATUS_INACTIVO => 'PEDIDO PENDIENTE',
                         Pedido::GUIA_GENERADA => 'GUIA GENERADA',
                         Pedido::DOCUMENTO_GENERADO => 'DOCUMENTO GENERADO',
-                        Pedido::PEDIDO_ANULADO => 'PEDIDO ANULADO'
+                        Pedido::PEDIDO_ANULADO => 'PEDIDO ANULADO',
+                        Pedido::PEDIDO_FINALIZADO => 'PEDIDO FINALIZADO',
                 ],
                 'filterType' => GridView::FILTER_SELECT2,
                 'filterWidgetOptions' => [
@@ -117,7 +119,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'pluginEvents' =>[],
                     'options' => ['prompt' => ''],
                 ],
-                'width' => '12%'
+                'width' => '10%'
             ],
             [
                 'class' => '\kartik\grid\ActionColumn',

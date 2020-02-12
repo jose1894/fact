@@ -76,6 +76,8 @@
                         [ 'label' => Yii::t('documento','Send proforma'), 'url' => ['/documento/proforma-pendientes'], 'icon' => 'check'],
                         [ 'label' => Yii::t('documento','Credit note'), 'url' => ['/nota-credito/index'], 'icon' => 'edit'],
                         [ 'label' => Yii::t('documento','Document list'), 'url' => ['/documento/listado-factura'], 'icon' => 'bar-chart-o'],
+                        [ 'label' => Yii::t('documento','Cancel documents'), 'url' => ['/documento/anular-documento'], 'icon' => 'minus-circle'],
+
                       ]
                     ],
                     ['label' => Yii::t('app', 'Shopping'), 'icon' => 'shopping-cart',

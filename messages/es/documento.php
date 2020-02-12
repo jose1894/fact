@@ -23,4 +23,5 @@ return [
     'Document list' => 'Listado de documentos',
     'Credit note' => 'Nota de crédito',
     'Send proforma' => 'Despachar proforma',
+    'Cancel document' => 'Anular documento'
 ];
