@@ -133,7 +133,7 @@ class Numeracion extends \yii\db\ActiveRecord
       return  $numeracion;
     }
 
-    public static function getNumerationById( $id ){
+    public static function getNumeracionById( $id ){
         $numeracion = [];
         $user = User::findOne(Yii::$app->user->id);
         $sucursal = $user->sucursal0->id_suc;
@@ -141,8 +141,9 @@ class Numeracion extends \yii\db\ActiveRecord
         $numeracion = Numeracion::find()
             ->joinWith('tipoDocumento')
             ->where( [
-                'status_num = :status and sucursal_num = :sucursal and id_num = :id',
-                [':status' => self::STATUS_ACTIVE, ':sucursal' => $sucursal, ':id' => $id]
+                'status_num' => self::STATUS_ACTIVE,
+                'sucursal_num' => $sucursal,
+                'id_num' =>$id
             ] )
             ->orderBy('serie_num')
             ->all();

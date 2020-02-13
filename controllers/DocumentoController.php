@@ -796,4 +796,14 @@ class DocumentoController extends Controller
       // Guardar CDR
       file_put_contents(Yii::getAlias('@app') . '/xml/response/' . 'R-'.$invoice->getName().'.zip', $result->getCdrZip());
     }
+
+    public function actionGetDocumento()
+    {
+
+        var_dump(Yii::$app->request->queryParams);
+        if (Yii::$app->request->isAjax) {
+          $model = Documento::find()
+                              ->where(['cod_doc = :cod_doc and serie'])
+        }
+    }
 }

@@ -220,7 +220,7 @@ class NumeracionController extends Controller
             //$keywords = Yii::$app->request->queryParams;
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-            $numeracion = Numeracion::getNumeracion( $id, false);
+            $numeracion = Numeracion::getNumeracionById( $id );
             return $numeracion;
         }
         else throw new \yii\web\HttpException(404, 'Page not found.');
