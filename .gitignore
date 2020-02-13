@@ -16,7 +16,7 @@ nbproject
 #/config
 
 # composer vendor dir
-#/vendor
+/vendor
 
 #XML sunat
 /xml
