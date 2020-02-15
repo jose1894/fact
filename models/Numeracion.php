@@ -62,7 +62,7 @@ class Numeracion extends \yii\db\ActiveRecord
      */
     public function getTipoDocumento()
     {
-        return $this->hasOne(TipoDocumento::className(), ['id_tipod' => 'tipo_num']);
+        return $this->hasOne(TipoDocumento::className(), ['id_tipod' => 'tipo_num','sucursal_tipod' => 'sucursal_num']);
     }
 
     public static function getSerieNum( $tipo )

@@ -800,10 +800,50 @@ class DocumentoController extends Controller
     public function actionGetDocumento()
     {
 
-        var_dump(Yii::$app->request->queryParams);
+        $request = Yii::$app->request->queryParams;
         if (Yii::$app->request->isAjax) {
+          Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+          $sucursal = SiteController::getSucursal();
           $model = Documento::find()
-                              ->where(['cod_doc = :cod_doc and serie'])
+                              ->joinWith(['pedidoDoc p'])
+                              ->joinWith(['numeracion'])
+                              ->where([
+                                'cod_doc' => $request['numero'],
+                                'numeracion_doc' => $request['tipo'],
+                                'sucursal_doc' => $sucursal,
+                              ])->one();
+
+          $documento = [
+            'id_clte'        => $model->pedidoDoc->cltePedido->id_clte,
+            'nombre_cliente' => $model->pedidoDoc->cltePedido->nombre_clte,
+            'ruc_cliente'    => $model->pedidoDoc->cltePedido->ruc_clte,
+            'dni_cliente'    => $model->pedidoDoc->cltePedido->dni_clte,
+            'direcc_cliente' => $model->pedidoDoc->cltePedido->direcc_clte,
+            'id_pedido'      => $model->pedidoDoc->id_pedido,
+            'cod_doc'        => $model->cod_doc,
+            'serie_doc'      => $model->numeracion->serie_num,
+            'tipo_doc'       => $model->numeracion->tipoDocumento->abrv_tipod,
+            'fecha_doc'      => $model->fecha_doc,
+            'id_moneda'      => $model->pedidoDoc->moneda_pedido,
+            'moneda_pedido'  => $model->pedidoDoc->monedaPedido->des_moneda,
+          ];
+
+          foreach ($model->pedidoDoc->detalles as $key => $value) {
+            // code...
+            $documento['detalle_pedido'][$key] = [
+              'id_pdetalle'       => $value->id_pdetalle,
+              'prod_pdetalle'     => $value->prod_pdetalle,
+              'desc_pdetalle'     => $value->productoPdetalle->des_prod,
+              'cant_pdetalle'     => $value->cant_pdetalle,
+              'precio_pdetalle'   => $value->precio_pdetalle,
+              'descu_pdetalle'    => $value->descu_pdetalle,
+              'impuesto_pdetalle' => $value->impuesto_pdetalle,
+              'plista_pdetalle'   => $value->plista_pdetalle,
+              'total_pdetalle'    => $value->total_pdetalle,
+            ];
+          }
+
+          return $documento;
         }
     }
 }
