@@ -196,8 +196,6 @@ use app\base\Model;
                                                             ]
                                                             ) ?>
                 </div>
-
-
               </div>
 
 
