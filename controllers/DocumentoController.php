@@ -833,7 +833,9 @@ class DocumentoController extends Controller
             $documento['detalle_pedido'][$key] = [
               'id_pdetalle'       => $value->id_pdetalle,
               'prod_pdetalle'     => $value->prod_pdetalle,
+              'codprod_pdetalle'  => $value->productoPdetalle->cod_prod,
               'desc_pdetalle'     => $value->productoPdetalle->des_prod,
+              'umed_pdetalle'     => $value->productoPdetalle->umedProd->des_und,
               'cant_pdetalle'     => $value->cant_pdetalle,
               'precio_pdetalle'   => $value->precio_pdetalle,
               'descu_pdetalle'    => $value->descu_pdetalle,
