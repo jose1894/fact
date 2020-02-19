@@ -390,6 +390,22 @@ $js = '
      });
    });
 
+   $( ".table-body" ).on( "change", "input[id$=\'cant_ddetalle\']", function() {
+     let row = this.id.split( "-" );
+
+     let valor     = parseInt( $( this ).val() );
+     let valorFact = parseInt( $( this ).data( "cant" ) );
+
+     if ( valor > valorFact ) {
+       swal( "Oops!", "El valor no debe ser mayor a la cantidad facturada", "warning");
+       $( this ).val( valorFact );
+       $( this ).focus();
+       return;
+     }
+
+     $( "#notacredito-" + row[1] + "-check_ddetalle" ).attr(\'checked\',true).iCheck(\'update\');
+   });
+
    function buildForm( data ) {
       $( "#documento" ).css("display","block");
       for(opc in data) {
@@ -399,8 +415,8 @@ $js = '
         if (opc == "detalle_pedido") {
           for(deta in data[opc]) {
             let linea  = "<div class=\\"row detalle-item\\"><!- widgetBody -->" +
-                           "<div class=\\"col-sm-1 col-xs-12\\">"+
-                                "<input id=\\"NotaCredito-" + deta + "-check_ddetalle\\" name=\\"NotaCredito[" + deta + "]check_ddetalle\\" "+
+                           "<div class=\\"col-sm-1 col-xs-12\\" style=\\"text-align:center\\">"+
+                                "<input id=\\"notacredito-" + deta + "-check_ddetalle\\" name=\\"NotaCredito[" + deta + "]check_ddetalle\\" "+
                                 " class=\\"minimal\\" type=\\"checkbox\\">" +
                            "</div>"+
                            "<div class=\\"col-sm-6 col-xs-12\\">"+
@@ -410,7 +426,7 @@ $js = '
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
                                 "<input id=\\"NotaCredito-" + deta + "-cant_ddetalle\\" name=\\"NotaCredito[" + deta + "]cant_ddetalle\\" "+
-                                " class=\\"form-control number-integer\\" value=\\"" + data[opc][deta]["cant_pdetalle"] + "\\">" +
+                                " class=\\"form-control number-integer\\" value=\\"" + data[opc][deta]["cant_pdetalle"] + "\\" data-cant=\\"" + data[opc][deta]["cant_pdetalle"] + "\\">" +
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
                                 "<input id=\\"NotaCredito-" + deta + "-plista_ddetalle\\" name=\\"NotaCredito[" + deta + "]plista_ddetalle\\" "+
