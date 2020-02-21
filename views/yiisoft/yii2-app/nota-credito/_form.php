@@ -31,9 +31,9 @@ use app\base\Model;
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                 <div class="form-group">
-                  <label for="tipo_doc"><?= Yii::t('documento','Document type')?></label>
+                  <label for="tipo_doc-search"><?= Yii::t('documento','Document type')?></label>
                   <?= Html::dropDownList(
-                          'tipo_doc',
+                          'tipo_doc-search',
                           null,
                           ArrayHelper::map(
                                   Numeracion::find()
@@ -46,7 +46,7 @@ use app\base\Model;
                           [
                                   'prompt' => Yii::t('app','Select'),
                                   'class' => 'form-control',
-                                  'id' => 'tipo_doc'
+                                  'id' => 'tipo_doc-search'
                           ]
                       ) ?>
                 </div>
@@ -54,7 +54,7 @@ use app\base\Model;
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-group">
                 <label for="num_doc"><?= Yii::t('documento','Code')?></label>
-                <?= Html::input('text', 'cod_doc', '', ['id' => 'cod_doc','class' => 'form-control', 'style' => ['text-align' => 'right'], 'maxlength' => 10])  ?>
+                <?= Html::input('text', '', '', ['id' => 'cod_doc-search','class' => 'form-control', 'style' => ['text-align' => 'right'], 'maxlength' => 10])  ?>
               </div>
             </div>
 
@@ -83,9 +83,9 @@ use app\base\Model;
               <div class="row">
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
                   <div class="form-group">
-                    <label class="control-label" for="nota_credito-tipo_doc"><?= Yii::t('documento','Type')?></label>
+                    <label class="control-label" for="tipo_doc"><?= Yii::t('documento','Type')?></label>
                     <?= Html::input('text', 'NotaCredito[tipo_doc]', '', [
-                                                                          'id'       => 'nota_credito-tipo_doc',
+                                                                          'id'       => 'tipo_doc',
                                                                           'class'    => 'form-control',
                                                                           'maxlength' => 2,
                                                                           'readonly'  => true,
@@ -94,9 +94,9 @@ use app\base\Model;
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
                   <div class="form-group">
-                    <label class="control-label" for="nota_credito-serie_doc"><?= Yii::t('documento','Serie')?></label>
+                    <label class="control-label" for="serie_doc"><?= Yii::t('documento','Serie')?></label>
                     <?= Html::input('text', 'NotaCredito[serie_doc]', '', [
-                                                                          'id'       => 'nota_credito-serie_doc',
+                                                                          'id'       => 'serie_doc',
                                                                           'class'    => 'form-control',
                                                                           'style'    => [
                                                                                         'text-align' => 'right'
@@ -108,9 +108,9 @@ use app\base\Model;
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                   <div class="form-group">
-                    <label class="control-label" for="nota_credito-cod_doc"><?= Yii::t('documento','Code')?></label>
+                    <label class="control-label" for="cod_doc"><?= Yii::t('documento','Code')?></label>
                     <?= Html::input('text', 'NotaCredito[cod_doc]', '', [
-                                                                          'id'        => 'nota_credito-cod_doc',
+                                                                          'id'        => 'cod_doc',
                                                                           'class'     => 'form-control',
                                                                           'style'     => [
                                                                                         'text-align' => 'right'
@@ -124,9 +124,9 @@ use app\base\Model;
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                   <!-- Fecha documento -->
                   <div class="form-group">
-                    <label class="control-label" for="nota_credito-fecha_doc"><?= Yii::t('documento','Date')?></label>
+                    <label class="control-label" for="fecha_doc"><?= Yii::t('documento','Date')?></label>
                     <?= Html::input('text', 'NotaCredito[fecha_doc]', '', [
-                                                                          'id'        => 'nota_credito-fecha_doc',
+                                                                          'id'        => 'fecha_doc',
                                                                           'class'     => 'form-control',
                                                                           'style'     => [
                                                                                         'text-align' => 'right'
@@ -141,7 +141,7 @@ use app\base\Model;
                   <!-- Cliente -->
                   <label class="control-label" for="nota_credito-nombre_cliente"><?= Yii::t('cliente','Name')?></label>
                   <?= Html::input('text', 'NotaCredito[nombre_cliente]', '', [
-                                                                        'id'        => 'nota_credito-nombre_cliente',
+                                                                        'id'        => 'nombre_cliente',
                                                                         'class'     => 'form-control',
                                                                         'maxlength' => 10,
                                                                         'readonly'  => true,
@@ -151,86 +151,124 @@ use app\base\Model;
               </div>
               <div class="row">
                 <div class="col-lg-12">
-                  <label for=""><?= Yii::t('cliente','Address') ?></label>
-                  <!-- Direccion -->
-                  <?= Html::textarea('NotaCredito[direcc_cliente]', '', [
-                                                                        'id'        => 'nota_credito-direcc_cliente',
-                                                                        'class'     => 'form-control',
-                                                                        'maxlength' => 10,
-                                                                        'readonly'  => true,
-                                                                      ])  ?>
+                  <div class="form-group">
+                    <label for="notacredito-direcc_clte"><?= Yii::t('cliente','Address') ?></label>
+                    <!-- Direccion -->
+                    <?= Html::textarea('NotaCredito[direcc_cliente]', '', [
+                                                                          'id'        => 'direcc_cliente',
+                                                                          'class'     => 'form-control',
+                                                                          'maxlength' => 10,
+                                                                          'readonly'  => true,
+                                                                        ])  ?>
+                  </div>
                 </div>
               </div>
 
               <div class="row">
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                  <!-- Moneda -->
-                  <label class="control-label" for="nota_credito-nombre_cliente"><?= Yii::t('moneda','Currency')?></label>
-                  <?= Html::input('text', 'NotaCredito[moneda_pedido]', '', [
-                    'id'        => 'nota_credito-moneda_pedido',
-                    'class'     => 'form-control',
-                    'maxlength' => 10,
-                    'readonly'  => true,
-                    ])  ?>
+                  <div class="form-group">
+                      <!-- Moneda -->
+                      <label class="control-label" for="nombre_cliente"><?= Yii::t('moneda','Currency')?></label>
+                      <?= Html::input('text', 'NotaCredito[moneda_pedido]', '', [
+                        'id'        => 'moneda_pedido',
+                        'class'     => 'form-control',
+                        'maxlength' => 10,
+                        'readonly'  => true,
+                        ])  ?>
                   </div>
+                </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                  <label class="control-label" for="nota_credito-motivo_doc"><?= Yii::t('cliente','Motivo')?></label>
-                  <?= Html::dropDownList('NotaCredito[motivo_doc]', null,[
-                                                              '00' => 'Seleccione',
-                                                              '01' =>	'Anulación de la operación',
-                                                              '02' =>	'Anulación por error en el RUC',
-                                                              '03' =>	'Corrección por error en la descripción',
-                                                              '04' =>	'Descuento global',
-                                                              '05' =>	'Descuento por ítem',
-                                                              '06' =>	'Devolución total',
-                                                              '07' =>	'Devolución por ítem',
-                                                              '08' =>	'Bonificación',
-                                                              '09' =>	'Disminución en el valor',
-                                                              '10' =>	'Otros Conceptos ',
-                                                              '11' =>	'Ajustes de operaciones de exportación',
-                                                              '12' =>	'Ajustes afectos al IVAP'
-                                                            ],
-                                                            [
-                                                              'class' => 'form-control',
-                                                              'id'    => 'nota_credito-motivo_doc'
-                                                            ]
-                                                            ) ?>
+                  <div class="form-group">
+                    <label class="control-label" for="motivo_doc"><?= Yii::t('cliente','Motivo')?></label>
+                    <?= Html::dropDownList('NotaCredito[motivo_doc]', null,[
+                                                                '00' => 'Seleccione',
+                                                                '01' =>	'Anulación de la operación',
+                                                                '02' =>	'Anulación por error en el RUC',
+                                                                '03' =>	'Corrección por error en la descripción',
+                                                                '04' =>	'Descuento global',
+                                                                '05' =>	'Descuento por ítem',
+                                                                '06' =>	'Devolución total',
+                                                                '07' =>	'Devolución por ítem',
+                                                                '08' =>	'Bonificación',
+                                                                '09' =>	'Disminución en el valor',
+                                                                '10' =>	'Otros Conceptos ',
+                                                                '11' =>	'Ajustes de operaciones de exportación',
+                                                                '12' =>	'Ajustes afectos al IVAP'
+                                                              ],
+                                                              [
+                                                                'class' => 'form-control',
+                                                                'id'    => 'motivo_doc'
+                                                              ]
+                                                              ) ?>
+                  </div>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                  <label class="control-label" for="nota_credito-stock_prod"><?= Yii::t('tipo_movimiento',"Movement type")?></label>
-                  <?= Html::dropDownList('NotaCredito[almacen_doc]', null, [
-                                                                              null  => 'No mover stock',
-                                                                              1     => 'Reponer stock'
-                                                                           ],
-                                                                           [
-                                                                               [ 'prompt' => Yii::t('app','Select'),],
-                                                                               'class' => 'form-control',
-                                                                               'id'    => 'nota_credito-stock_prod',
-                                                                           ]) ?>
+                  <div class="form-group">
+                      <label class="control-label" for="stock_prod"><?= Yii::t('tipo_movimiento',"Movement type")?></label>
+                      <?= Html::dropDownList('NotaCredito[almacen_doc]', null, [
+                                                                                  null  => 'No mover stock',
+                                                                                  1     => 'Reponer stock'
+                                                                               ],
+                                                                               [
+                                                                                   [ 'prompt' => Yii::t('app','Select'),],
+                                                                                   'class' => 'form-control',
+                                                                                   'id'    => 'stock_prod',
+                                                                               ]) ?>
+                  </div>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                  <!-- Almacen -->
-                  <?php
-                    $almacenes = Almacen::getAlmacenList();
-                  ?>
-                      <label class="control-label"><?= Yii::t('almacen',"Warehouse")?></label>
-                      <?= Html::dropDownList('NotaCredito[almacen_doc]', null, $almacenes, [
+                  <div class="form-group">
+                      <!-- Almacen -->
+                      <?php
+                        $almacenes = Almacen::getAlmacenList();
+                      ?>
+                          <label class="control-label" for="almacen_doc"><?= Yii::t('almacen',"Warehouse")?></label>
+                          <?= Html::dropDownList('NotaCredito[almacen_doc]', null, $almacenes, [
+                            'class'  => 'form-control',
+                            'id'     => 'almacen_doc',
+                            'prompt' => Yii::t('app','Select'),
+                          ]) ?>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                  <div class="form-group">
+                      <!-- Condicion de pago -->
+                      <?php
+                        $condp = CondPago::getCondPagoList();
+                      ?>
+                      <label class="control-label" for="condpago_doc"><?= Yii::t('condicionp',"Payment condition")?></label>
+                      <?= Html::dropDownList('NotaCredito[condpago_doc]', null, $condp, [
                         'class'  => 'form-control',
-                        'id'     => 'nota_credito-almacen_doc',
+                        'id'     => 'condpago_doc',
                         'prompt' => Yii::t('app','Select'),
                       ]) ?>
+                    </div>
+                </div>
               </div>
-              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                <!-- Condicion de pago -->
-                <?php
-                  $condp = CondPago::getCondPagoList();
-                ?>
-                    <label class="control-label"><?= Yii::t('condicionp',"Payment condition")?></label>
-                    <?= Html::dropDownList('NotaCredito[condpago_doc]', null, $condp, [
+              <div class="row">
+                <div class="col-lg-6 col-lg-offset-6">
+                  <div class="form-group">
+                    <label for="tipod_doc-notacredito"><?= Yii::t('tipo_documento','Document type')?></label>
+                    <?php $tiposDocumentos = TipoDocumento::getTipoDocumento( 'E', TipoDocumento::ES_DOCUMENTO) ?>
+                    <?= Html::dropDownList('NotaCredito[tipod_doc]', null, $tiposDocumentos, [
                       'class'  => 'form-control',
-                      'id'     => 'nota_credito-condpago_doc',
+                      'id'     => 'tipod_doc-notacredito',
                       'prompt' => Yii::t('app','Select'),
                     ]) ?>
+                  </div>
+                  <div class="form-group">
+                    <label for="cod_doc-notacredito"><?= Yii::t('documento','Code')?></label>
+                    <?= Html::input('text', 'Nota-Credito[cod_doc]', '', [
+                                                                          'id'        => 'cod_doc-notacredito',
+                                                                          'class'     => 'form-control',
+                                                                          'style'     => [
+                                                                                        'text-align' => 'right'
+                                                                                      ],
+                                                                          'maxlength' => 10,
+                                                                          'readonly'  => true,
+                                                                        ])  ?>
+                  </div>
+                </div>
               </div>
             </div>
             <br>
@@ -332,7 +370,7 @@ use app\base\Model;
 
 $js = '
 
-   $( "#cod_doc" ).on( "blur", function() {
+   $( "#cod_doc-search" ).on( "blur", function() {
      let value = $(this).val();
 
      if ( value && !isNaN( value ) ) {
@@ -343,29 +381,29 @@ $js = '
    });
 
    $( "#search" ).on( "click", function() {
-     $("#tipo_doc").parent().removeClass("has-error");
-     $("#cod_doc").parent().removeClass("has-error");
+     $( "#tipo_doc-search" ).parent().removeClass("has-error");
+     $( "#cod_doc-search" ).parent().removeClass("has-error");
 
 
-     if ( !$("#tipo_doc").val() ) {
+     if ( !$( "#tipo_doc-search" ).val() ) {
         swal("Error","Oops, debe seleccionar un tipo de documento","error");
-        $("#tipo_doc").parent().addClass("has-error");
-        $("#tipo_doc").focus();
+        $( "#tipo_doc-search" ).parent().addClass("has-error");
+        $( "#tipo_doc-search" ).focus();
         return;
      }
 
-     if ( !$("#cod_doc").val() ) {
+     if ( !$("#cod_doc-search").val() ) {
         swal("Error","Oops, debe indicar el numero de documento","error");
-        $("#cod_doc").parent().addClass("has-error");
-        $("#cod_doc").focus();
+        $("#cod_doc-search").parent().addClass("has-error");
+        $("#cod_doc-search").focus();
         return;
      }
 
      $.ajax({
        url  : "'. Url::to(['documento/get-documento']).'",
        data : {
-                tipo   : $("#tipo_doc").val(),
-                numero : $("#cod_doc").val(),
+                tipo   : $( "#tipo_doc-search" ).val(),
+                numero : $( "#cod_doc-search" ).val(),
               },
         success : function( data ) {
             buildForm( data );
@@ -393,12 +431,12 @@ $js = '
    $( ".table-body" ).on( "change", "input[id$=\'cant_ddetalle\']", function() {
      let row = this.id.split( "-" );
 
-     let valor     = parseInt( $( this ).val() );
-     let valorFact = parseInt( $( this ).data( "cant" ) );
+     let valor     = parseFloat( $( this ).val() );
+     let valorFact = parseFloat( $( this ).data( "cant" ) );
 
      if ( valor > valorFact ) {
        swal( "Oops!", "El valor no debe ser mayor a la cantidad facturada", "warning");
-       $( this ).val( valorFact );
+       $( this ).val( valorFact.toFixed(2) );
        $( this ).focus();
        return;
      }
@@ -426,7 +464,7 @@ $js = '
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
                                 "<input id=\\"NotaCredito-" + deta + "-cant_ddetalle\\" name=\\"NotaCredito[" + deta + "]cant_ddetalle\\" "+
-                                " class=\\"form-control number-integer\\" value=\\"" + data[opc][deta]["cant_pdetalle"] + "\\" data-cant=\\"" + data[opc][deta]["cant_pdetalle"] + "\\">" +
+                                " class=\\"form-control number-decimals\\" value=\\"" + data[opc][deta]["cant_pdetalle"] + "\\" data-cant=\\"" + data[opc][deta]["cant_pdetalle"] + "\\">" +
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
                                 "<input id=\\"NotaCredito-" + deta + "-plista_ddetalle\\" name=\\"NotaCredito[" + deta + "]plista_ddetalle\\" "+

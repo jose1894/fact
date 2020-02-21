@@ -323,8 +323,11 @@ class NotaIngresoController extends Controller
 
               $transaction = \Yii::$app->db->beginTransaction();
               $model->status_trans = NotaIngreso::STATUS_APPROVED;
-              $compra = Compra::findOne($model->idrefdoc_trans);
-              $compra->estatus_compra = Compra::STATUS_APPROVED;
+
+              if ( !empty($compra = Compra::findOne($model->idrefdoc_trans)) ) {
+                $compra->estatus_compra = Compra::STATUS_APPROVED;
+              }
+
               try {
                   if ($flag = $model->save(false)) {
 
@@ -342,7 +345,11 @@ class NotaIngresoController extends Controller
                   if ($flag) {
                       $model->status_trans = NotaIngreso::STATUS_APPROVED;
                       $model->save();
-                      $compra->save();
+
+                      if ( !empty( $compra ) ) {
+                        $compra->save();
+                      }
+                      
                       $transaction->commit();
                       //return $this->redirect(['view', 'id' => $model->id_empresa]);
                       Yii::$app->response->format = Response::FORMAT_JSON;
