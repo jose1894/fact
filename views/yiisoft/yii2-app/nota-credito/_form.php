@@ -494,6 +494,12 @@ $js = '
       }
 
    }
+
+   $( "#tipod_doc-notacredito" ).on( "change", function(){
+     $.ajax({
+       url : "'..'",
+     })
+   });
 ';
 
 $this->registerJs($js,View::POS_END);
