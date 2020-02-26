@@ -319,7 +319,7 @@ use app\base\Model;
                     </tr>
                     <tr>
                       <td class="col-xs-7" style="text-align:right;">
-                        <?= Yii::t('app', 'Tax')?> <?php // $IMPUESTO ?>%
+                        <?= Yii::t('app', 'Tax')?> <?=  $IMPUESTO ?>%
                       </td>
                       <td class="col-xs-2">
                         <input type="text" name="impuesto" id="impuesto" readonly class="form-control totales" value="">
@@ -400,15 +400,18 @@ $js = '
      }
 
      $.ajax({
-       url  : "'. Url::to(['documento/get-documento']).'",
-       data : {
+        url       : "'. Url::to(['documento/get-documento']).'",
+        data      : {
                 tipo   : $( "#tipo_doc-search" ).val(),
                 numero : $( "#cod_doc-search" ).val(),
               },
-        success : function( data ) {
+        async     : true,
+
+        success  : function( data ) {
             buildForm( data );
+            console.log(2);
         },
-        error   : function( data ) {
+        error    : function( data ) {
           let message;
 
           if ( data.responseJSON ) {
@@ -424,28 +427,92 @@ $js = '
           }
 
           swal("Oops!!!",message,"error" );
+          $( "#documento" ).css("display","none");
         }
      });
+   });
+
+   $( ".table-body" ).on( "ifChanged", function (event) {
+     calculateTotals( IMPUESTO );
    });
 
    $( ".table-body" ).on( "change", "input[id$=\'cant_ddetalle\']", function() {
      let row = this.id.split( "-" );
 
-     let valor     = parseFloat( $( this ).val() );
-     let valorFact = parseFloat( $( this ).data( "cant" ) );
+     let valor     = +$( this ).val();
+     let valorFact = +$( this ).data( "cant" );
+     let precio    = +$( "#NotaCredito-" + row[1] + "-precio_ddetalle" ).val();
+     let total = 0;
 
      if ( valor > valorFact ) {
        swal( "Oops!", "El valor no debe ser mayor a la cantidad facturada", "warning");
        $( this ).val( valorFact.toFixed(2) );
+       total = valorFact * precio;
+       $( "#NotaCredito-" + row[1] + "-total_ddetalle" ).val( total.toFixed(2) );
        $( this ).focus();
        return;
      }
 
-     $( "#notacredito-" + row[1] + "-check_ddetalle" ).attr(\'checked\',true).iCheck(\'update\');
+     $( "#notacredito-" + row[1] + "-check_ddetalle" ).prop(\'checked\',true).iCheck(\'update\');
+
+     total = valor * precio;
+     $( "#NotaCredito-" + row[1] + "-total_ddetalle" ).val( round( total ) );
+
+     calculateTotals(IMPUESTO);
    });
+
+   function calculateTotals(IMPUESTO) {
+     let total = 0,
+         totalImp = 0,
+         precioNeto = 0,
+         subTotal1 = 0,
+         subTotal2 = 0,
+         descuento = 0,
+         desc = 0;
+         subT = 0,
+         totals = {
+           subtotal1: 0,
+           subtotal2: 0,
+           descuento: 0,
+           impuesto: 0,
+           total: 0
+         };
+
+     $( "input[id$=\\"-total_ddetalle\\"]" ).each(function (i, element) {
+        if ( $( "#notacredito-" + i + "-check_ddetalle" ).prop(\'checked\') ) {
+           let row = $( this ).attr( "id" ).split( "-" );
+           row = row[ 1 ];
+           total += +element.value;
+           let valDesc = $( "#NotaCredito-" + row + "-plista_ddetalle" ).val() - $( "#NotaCredito-" + row + "-precio_ddetalle" ).val();
+           subT = $( "#NotaCredito-" + row + "-precio_ddetalle" ).val()  *  $( "#NotaCredito-" + row + "-cant_ddetalle" ).val() / ( IMPUESTO + 1 ) ;
+           desc = valDesc * $( "#NotaCredito-" + row + "-cant_ddetalle" ).val()   / ( IMPUESTO + 1 ) ;
+           subTotal1 += subT - desc;
+           descuento += desc;
+        }
+     });
+
+     descuento = descuento ? descuento : 0;
+
+     precioNeto = ( total / ( IMPUESTO + 1 ) );
+     totalImp = total - precioNeto;
+     subTotal2 = precioNeto;
+
+     totals.total = parseFloat(  total  ).toFixed( 2 );
+     totals.impuesto = parseFloat( totalImp  ).toFixed( 2 );
+     totals.subtotal1 = parseFloat( subTotal1  ).toFixed( 2 );
+     totals.subtotal2 = parseFloat( subTotal2  ).toFixed( 2 );
+     totals.descuento = parseFloat( descuento  ).toFixed( 2 );
+
+     $( "#subtotal1" ).val( totals.subtotal1 );
+     $( "#subtotal2" ).val( totals.subtotal2 );
+     $( "#impuesto" ).val( totals.impuesto );
+     $( "#total" ).val( totals.total );
+     $( "#descuento" ).val( totals.descuento );
+   }
 
    function buildForm( data ) {
       $( "#documento" ).css("display","block");
+      $( ".table-body" ).empty();
       for(opc in data) {
         $( "input[id$=\'" + opc + "\']" ).val( data[opc] );
         $( "textarea[id$=\'" + opc + "\']" ).val( data[opc] );
@@ -464,7 +531,7 @@ $js = '
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
                                 "<input id=\\"NotaCredito-" + deta + "-cant_ddetalle\\" name=\\"NotaCredito[" + deta + "]cant_ddetalle\\" "+
-                                " class=\\"form-control number-decimals\\" value=\\"" + data[opc][deta]["cant_pdetalle"] + "\\" data-cant=\\"" + data[opc][deta]["cant_pdetalle"] + "\\">" +
+                                " class=\\"form-control number-integer\\" value=\\"" + data[opc][deta]["cant_pdetalle"] + "\\" data-cant=\\"" + data[opc][deta]["cant_pdetalle"] + "\\">" +
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
                                 "<input id=\\"NotaCredito-" + deta + "-plista_ddetalle\\" name=\\"NotaCredito[" + deta + "]plista_ddetalle\\" "+
@@ -497,10 +564,15 @@ $js = '
 
    $( "#tipod_doc-notacredito" ).on( "change", function(){
      $.ajax({
-       url : "'..'",
+       url     : "'.Url::to(['tipo-documento/ajax-tipo-documento']).'",
+       data    : { id: this.value },
+       success : function ( data ) {
+         $( "#cod_doc-notacredito" ).val( data );
+       }
      })
    });
 ';
 
 $this->registerJs($js,View::POS_END);
+Yii::$app->view->registerJs('const IMPUESTO = '. $IMPUESTO .' / 100;',  \yii\web\View::POS_HEAD);
 $this->registerCss(".detalle-item { padding: 5px 5px; }");

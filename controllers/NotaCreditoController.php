@@ -97,7 +97,8 @@ class NotaCreditoController extends Controller
     {
         $model = new NotaCredito();
         return $this->render('create', [
-            'model' => $model
+            'model' => $model,
+            'IMPUESTO' =>  SiteController::getImpuesto(),
         ]);
     }
 }

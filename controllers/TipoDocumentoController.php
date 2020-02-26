@@ -219,4 +219,15 @@ class TipoDocumentoController extends Controller
 
         throw new NotFoundHttpException(Yii::t('tipo_documento', 'The requested page does not exist.'));
     }
+
+    public function actionAjaxTipoDocumento()
+    {
+      if ( Yii::$app->request->isAjax ) {
+        $get = Yii::$app->request->get();
+
+        $id = ( empty($get['id']) ) ? NULL : (int) $get['id'];
+        $serie = TipoDocumento::getTipoDocumentoById( $id );
+        return $serie;
+      }
+    }
 }

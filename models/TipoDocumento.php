@@ -98,6 +98,24 @@ class TipoDocumento extends \yii\db\ActiveRecord
       return  ArrayHelper::map( $tipom, 'id_tipod', 'des_tipod');
     }
 
+    public function getTipoDocumentoById( $id = null)
+    {
+      if( is_null($id) ) {
+        return NULL;
+      }
+
+      $user = User::findOne(Yii::$app->user->id);
+      $sucursal = $user->sucursal0->id_suc;
+
+      $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal and  id_tipod = :id', [':status' => self::STATUS_ACTIVO, ':sucursal' => $sucursal, ':id' => $id]];
+
+      $tipom = TipoDocumento::find()
+      ->where($condicion[0],$condicion[1])
+      ->one();
+
+      return str_pad(  $tipom->numeracions[0]->numero_num + 1, 10, '0', STR_PAD_LEFT);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
