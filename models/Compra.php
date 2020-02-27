@@ -120,7 +120,7 @@ class Compra extends \yii\db\ActiveRecord
 
         $compras = self::find()
             ->select(['id_compra',"concat(fecha_compra,' | ',cod_compra) cod_compra"])
-            ->where('estatus_compra = :status and sucursal_compra = :sucursal',[':status' => self::STATUS_INACTIVE, ':sucursal' => $sucursal])
+            ->where('estatus_compra = :status and sucursal_compra = :sucursal AND afectaalm_compra = 1',[':status' => self::STATUS_INACTIVE, ':sucursal' => $sucursal])
             ->orderBy('cod_compra')
             ->all();
 

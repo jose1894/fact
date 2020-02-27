@@ -813,6 +813,10 @@ class DocumentoController extends Controller
                                 'sucursal_doc' => $sucursal,
                               ])->one();
 
+          if ( empty($model) ) {
+            return false;
+          }
+
           $documento = [
             'id_clte'        => $model->pedidoDoc->cltePedido->id_clte,
             'nombre_cliente' => $model->pedidoDoc->cltePedido->nombre_clte,

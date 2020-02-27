@@ -67,7 +67,26 @@ use app\base\Model;
     </div>
 </div>
 
-<div id="documento" style="display:block;">
+
+<div id="await" style="display:none;">
+  <div class="nota-credito">
+    <div class="box box-success">
+      <div class="box-header with-border">
+        <h3 class="box-title">
+          <?= Yii::t('documento','Credit note') ?>
+        </h3>
+      </div>
+      <div class="box-body">
+        <div class="overlay">
+          <i class="fa fa-refresh fa-spin"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="documento" style="display:none;">
   <div class="nota-credito">
     <div class="box box-success">
       <div class="box-header with-border">
@@ -246,7 +265,10 @@ use app\base\Model;
                 </div>
               </div>
               <div class="row">
-                <div class="col-lg-6 col-lg-offset-6">
+                <div class="col-lg-6">
+
+                </div>
+                <div class="col-lg-6">
                   <div class="form-group">
                     <label for="tipod_doc-notacredito"><?= Yii::t('tipo_documento','Document type')?></label>
                     <?php $tiposDocumentos = TipoDocumento::getTipoDocumento( 'E', TipoDocumento::ES_DOCUMENTO) ?>
@@ -406,10 +428,19 @@ $js = '
                 numero : $( "#cod_doc-search" ).val(),
               },
         async     : true,
-
-        success  : function( data ) {
-            buildForm( data );
-            console.log(2);
+        beforeSend: function () {
+          $( "#await" ).css( "display", "block" );
+          setTimeout(() => { console.log( "Loading..."); }, 8000);
+        },
+        success   : function( data ) {
+          $( "#await" ).css( "display", "none" );
+          if ( !data ) {
+            swal("Oops!!!","' . Yii::t( 'app', 'Record not found!')  . '","warning" );
+            $( "#documento" ).css( "display", "none" );
+            return;
+          }
+          buildForm( data );
+          calculateTotals( IMPUESTO );
         },
         error    : function( data ) {
           let message;

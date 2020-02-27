@@ -23,6 +23,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Record not found!' => '¡Registro a consultar no existe!',
     'Search' => 'Buscar',
     'Send' => 'Enviar',
     'Sended' => 'Enviado',
