@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-02-2020 a las 17:30:50
+-- Tiempo de generación: 04-03-2020 a las 23:21:13
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.10
 
@@ -2820,7 +2820,7 @@ INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `s
 (3, 8, '0000000000', 1, '00', 1),
 (4, 6, '0000000004', 1, '00', 1),
 (5, 4, '0000000001', 1, '00', 1),
-(6, 5, '0000000007', 1, '00', 1),
+(6, 5, '0000000008', 1, '00', 1),
 (7, 2, '0000000004', 1, '01', 1),
 (8, 9, '0000000000', 1, '01', 1),
 (9, 3, '0000000004', 1, '01', 1),
@@ -3123,7 +3123,7 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (17, '0000000003', '2019-11-22', 520, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
 (18, '0000000004', '2019-11-26', 520, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
 (21, '0000000005', '2019-12-26', 59, 2, 1, 1, 2, 0, 1, 1, 'NP', 'N', '11111'),
-(22, '0000000001', '2020-01-21', 420, 4, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(22, '0000000001', '2020-01-21', 420, 4, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
 (23, '0000000002', '2020-02-05', 420, 4, 1, 1, 2, 3, 1, 2, 'PR', 'N', '');
 
 -- --------------------------------------------------------
@@ -3193,7 +3193,7 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 (82, 630, '5.00', '15.50', '0.00', '18', 1, 21, '15.50', '77.50'),
 (83, 629, '5.00', '15.50', '0.00', '18', 1, 21, '15.50', '77.50'),
 (84, 7, '5.00', '58.00', '0.00', '18', 1, 21, '58.00', '290.00'),
-(85, 42, '1.00', '27.55', '5.00', '18', 1, 22, '29.00', '27.55'),
+(85, 42, '5.00', '27.55', '5.00', '18', 1, 22, '29.00', '137.75'),
 (86, 153, '19.00', '30.00', '0.00', '18', 1, 23, '30.00', '570.00'),
 (87, 154, '19.00', '30.00', '0.00', '18', 1, 23, '30.00', '570.00');
 
@@ -3548,7 +3548,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (39, 'LP-FJ2', 'CM5-WIN2', 'FARO NEBLI.GREATWALL FENG JUN 5(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (40, 'LP-GH2', 'CM5-GH02', 'FARO NEBLI.GREATWALL HOVER(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (41, 'LP-ST4', 'CM05-SX2', 'FARO NEBLI.PARACH. HY.STAREX 2005(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
+(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
 (43, 'LP-AC2B', 'CM98-AC4', 'FARO NEBLI.PARACH. HY ACCENT BLANCO 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (44, 'LP-AC4', 'CM-9172', 'FARO NEBLI.PARACH. HY ACCENT 2006...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (45, 'LP-AC4B', 'CM10-AC04', 'FARO NEBLI.PARACH. HY ACCENT 2011-2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -4144,7 +4144,11 @@ INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_t
 (41, '2020-02-19', NULL, NULL, '3.325', '3.320', '3.325', 1),
 (42, '2020-02-20', NULL, NULL, '3.325', '3.320', '3.325', 1),
 (43, '2020-02-21', NULL, NULL, '3.325', '3.320', '3.325', 1),
-(44, '2020-02-22', NULL, NULL, '3.325', '3.320', '3.325', 1);
+(44, '2020-02-22', NULL, NULL, '3.325', '3.320', '3.325', 1),
+(45, '2020-02-25', NULL, NULL, '3.325', '3.320', '3.325', 1),
+(46, '2020-02-27', NULL, NULL, '3.325', '3.320', '3.325', 1),
+(47, '2020-02-28', NULL, NULL, '3.325', '3.320', '3.325', 1),
+(48, '2020-03-03', NULL, NULL, '3.325', '3.320', '3.325', 1);
 
 -- --------------------------------------------------------
 
@@ -4336,7 +4340,8 @@ INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_tran
 (13, '0000000004', '2019-11-26', NULL, 4, 'S', 35, NULL, NULL, 1, 1, 2, 1),
 (14, '0000000001', '2019-12-06', '', 3, 'E', 1, NULL, '', 1, 1, 2, 1),
 (16, '0000000005', NULL, NULL, 8, 'S', 22, NULL, NULL, 1, 1, 2, 1),
-(20, '0000000007', '2020-02-05', NULL, 8, 'S', 23, NULL, NULL, 1, 1, 2, 1);
+(20, '0000000007', '2020-02-05', NULL, 8, 'S', 23, NULL, NULL, 1, 1, 2, 1),
+(21, '0000000008', '2020-02-28', NULL, 8, 'S', 22, NULL, NULL, 1, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -4422,7 +4427,8 @@ INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `can
 (157, 14, 632, 20),
 (158, 16, 42, 1),
 (165, 20, 153, 19),
-(166, 20, 154, 19);
+(166, 20, 154, 19),
+(167, 21, 42, 5);
 
 -- --------------------------------------------------------
 
@@ -5123,7 +5129,7 @@ ALTER TABLE `sucursal`
 -- AUTO_INCREMENT de la tabla `tipo_cambio`
 --
 ALTER TABLE `tipo_cambio`
-  MODIFY `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=45;
+  MODIFY `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_documento`
@@ -5165,7 +5171,7 @@ ALTER TABLE `tipo_proveedor`
 -- AUTO_INCREMENT de la tabla `transaccion`
 --
 ALTER TABLE `transaccion`
-  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=21;
+  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `transportista`
@@ -5177,7 +5183,7 @@ ALTER TABLE `transportista`
 -- AUTO_INCREMENT de la tabla `trans_detalle`
 --
 ALTER TABLE `trans_detalle`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=167;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=168;
 
 --
 -- AUTO_INCREMENT de la tabla `unidad_medida`

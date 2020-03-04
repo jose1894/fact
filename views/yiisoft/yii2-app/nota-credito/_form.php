@@ -200,7 +200,6 @@ use app\base\Model;
                   <div class="form-group">
                     <label class="control-label" for="motivo_doc"><?= Yii::t('cliente','Motivo')?></label>
                     <?= Html::dropDownList('NotaCredito[motivo_doc]', null,[
-                                                                '00' => 'Seleccione',
                                                                 '01' =>	'Anulación de la operación',
                                                                 '02' =>	'Anulación por error en el RUC',
                                                                 '03' =>	'Corrección por error en la descripción',
@@ -215,6 +214,7 @@ use app\base\Model;
                                                                 '12' =>	'Ajustes afectos al IVAP'
                                                               ],
                                                               [
+                                                                'prompt' => Yii::t('app','Select'),
                                                                 'class' => 'form-control',
                                                                 'id'    => 'motivo_doc'
                                                               ]
@@ -225,11 +225,11 @@ use app\base\Model;
                   <div class="form-group">
                       <label class="control-label" for="stock_prod"><?= Yii::t('tipo_movimiento',"Movement type")?></label>
                       <?= Html::dropDownList('NotaCredito[almacen_doc]', null, [
-                                                                                  null  => 'No mover stock',
+                                                                                  0  => 'No mover stock',
                                                                                   1     => 'Reponer stock'
                                                                                ],
                                                                                [
-                                                                                   [ 'prompt' => Yii::t('app','Select'),],
+                                                                                    'prompt' => Yii::t('app','Select'),
                                                                                    'class' => 'form-control',
                                                                                    'id'    => 'stock_prod',
                                                                                ]) ?>
@@ -264,10 +264,7 @@ use app\base\Model;
                     </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-lg-6">
-
-                </div>
+              <div class="row" >
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label for="tipod_doc-notacredito"><?= Yii::t('tipo_documento','Document type')?></label>
@@ -291,6 +288,13 @@ use app\base\Model;
                                                                         ])  ?>
                   </div>
                 </div>
+                <div class="col-lg-6" >
+                    <div class="form-group" style="padding-top:5%">
+                      <a class="btn btn-lg btn-flat btn-success" style="width:100%;">
+                        <i class="fa fa-save"></i> <?= Yii::t('app', 'Save')?>
+                      </a>
+                    </div>
+                </div>
               </div>
             </div>
             <br>
@@ -299,7 +303,7 @@ use app\base\Model;
               <div class="row">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-sm-1 col-xs-12"><?= Yii::t( 'app', 'Select')?></div>
+                        <div class="col-sm-1 col-xs-12" style="text-align:center"><?= Yii::t( 'app', 'Select')?> <input id="checkallddetalle" name="checkallddetalle" class="minimal" type="checkbox"></div>
                         <div class="col-sm-6 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
                         <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
                         <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'L. price')?></div>
@@ -395,7 +399,7 @@ $js = '
    $( "#cod_doc-search" ).on( "blur", function() {
      let value = $(this).val();
 
-     if ( value && !isNaN( value ) ) {
+     if ( value && isFinite( value ) ) {
         return $( this ).val( value.padStart( 10, "0") );
      }
 
@@ -430,9 +434,10 @@ $js = '
         async     : true,
         beforeSend: function () {
           $( "#await" ).css( "display", "block" );
-          setTimeout(() => { console.log( "Loading..."); }, 8000);
+          setTimeout(() => { console.log( "Loading..."); }, 80);
         },
         success   : function( data ) {
+          console.log("success");
           $( "#await" ).css( "display", "none" );
           if ( !data ) {
             swal("Oops!!!","' . Yii::t( 'app', 'Record not found!')  . '","warning" );
@@ -463,7 +468,11 @@ $js = '
      });
    });
 
-   $( ".table-body" ).on( "ifChanged", function (event) {
+   $( "#documento" ).on( "ifChanged", "input#checkallddetalle", function (event) {
+     console.log("fff");
+   });
+
+   $( ".table-body" ).on( "ifChanged", "input[id$=\'check_ddetalle\']", function (event) {
      calculateTotals( IMPUESTO );
    });
 
