@@ -231,7 +231,7 @@ use app\base\Model;
                                                                                [
                                                                                     'prompt' => Yii::t('app','Select'),
                                                                                    'class' => 'form-control',
-                                                                                   'id'    => 'stock_prod',
+                                                                                   'id'    => 'tipo_movimiento',
                                                                                ]) ?>
                   </div>
                 </div>
@@ -290,7 +290,7 @@ use app\base\Model;
                 </div>
                 <div class="col-lg-6" >
                     <div class="form-group" style="padding-top:5%">
-                      <a class="btn btn-lg btn-flat btn-success" style="width:100%;">
+                      <a id="save-doc" class="btn btn-lg btn-flat btn-success" style="width:100%;">
                         <i class="fa fa-save"></i> <?= Yii::t('app', 'Save')?>
                       </a>
                     </div>
@@ -412,14 +412,14 @@ $js = '
 
 
      if ( !$( "#tipo_doc-search" ).val() ) {
-        swal("Error","Oops, debe seleccionar un tipo de documento","error");
+        swal("Opps","' . Yii::t('documento', 'You must select a document type') . '","error");
         $( "#tipo_doc-search" ).parent().addClass("has-error");
         $( "#tipo_doc-search" ).focus();
         return;
      }
 
      if ( !$("#cod_doc-search").val() ) {
-        swal("Error","Oops, debe indicar el numero de documento","error");
+        swal("Oops","' . Yii::t('documento', 'You must input a document number'). '","error");
         $("#cod_doc-search").parent().addClass("has-error");
         $("#cod_doc-search").focus();
         return;
@@ -469,12 +469,23 @@ $js = '
    });
 
    $( "#documento" ).on( "ifChanged", "input#checkallddetalle", function (event) {
-     console.log("fff");
+     $("input[id$=\'check_ddetalle\']").prop(\'checked\',$(this).is(":checked")).iCheck(\'update\');
+     calculateTotals( IMPUESTO );
    });
 
    $( ".table-body" ).on( "ifChanged", "input[id$=\'check_ddetalle\']", function (event) {
+     if ( !$( this ).prop("checked") ) {
+       $( "input#checkallddetalle" ).prop(\'checked\',false).iCheck(\'update\');
+     }
+
+     if ( $("input[id$=\'check_ddetalle\']:checked").length === $("input[id$=\'check_ddetalle\']").length ) {
+       $( "input#checkallddetalle" ).prop(\'checked\',true).iCheck(\'update\');
+     }
      calculateTotals( IMPUESTO );
+
    });
+
+
 
    $( ".table-body" ).on( "change", "input[id$=\'cant_ddetalle\']", function() {
      let row = this.id.split( "-" );
@@ -485,7 +496,7 @@ $js = '
      let total = 0;
 
      if ( valor > valorFact ) {
-       swal( "Oops!", "El valor no debe ser mayor a la cantidad facturada", "warning");
+       swal( "Oops!", "'. Yii::t('documento','Input quantity can´t be greather than billed quantity') .'", "warning");
        $( this ).val( valorFact.toFixed(2) );
        total = valorFact * precio;
        $( "#NotaCredito-" + row[1] + "-total_ddetalle" ).val( total.toFixed(2) );
@@ -562,12 +573,13 @@ $js = '
             let linea  = "<div class=\\"row detalle-item\\"><!- widgetBody -->" +
                            "<div class=\\"col-sm-1 col-xs-12\\" style=\\"text-align:center\\">"+
                                 "<input id=\\"notacredito-" + deta + "-check_ddetalle\\" name=\\"NotaCredito[" + deta + "]check_ddetalle\\" "+
-                                " class=\\"minimal\\" type=\\"checkbox\\">" +
+                                " class=\\"minimal\\" type=\\"checkbox\\" >" +
                            "</div>"+
                            "<div class=\\"col-sm-6 col-xs-12\\">"+
                                 "<input id=\\"NotaCredito-" + deta + "-prod_ddetalle\\" name=\\"NotaCredito[" + deta + "]prod_ddetalle\\" "+
                                 " class=\\"form-control\\" value=\\"" + data[opc][deta]["codprod_pdetalle"].trim() + " - " +
-                                data[opc][deta]["desc_pdetalle"].trim() + " - " + data[opc][deta]["umed_pdetalle"].trim()  + "\\" readonly>" +
+                                  data[opc][deta]["desc_pdetalle"].trim() + " - " + data[opc][deta]["umed_pdetalle"].trim()  + "\\" readonly>" +
+                                "<input type=\\"hidden\\" name=\\"NotaCredito-" + deta + "-prod_ddetalle\\" value=\\"" + +data[opc][deta]["prod_pdetalle"] + "\\"> "+
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
                                 "<input id=\\"NotaCredito-" + deta + "-cant_ddetalle\\" name=\\"NotaCredito[" + deta + "]cant_ddetalle\\" "+
@@ -610,6 +622,50 @@ $js = '
          $( "#cod_doc-notacredito" ).val( data );
        }
      })
+   });
+
+   $( "a#save-doc" ).on("click", function() {
+     $( "#motivo_doc" ).parent().removeClass("has-error");
+     $( "#tipo_movimiento" ).parent().removeClass("has-error");
+     $( "#almacen_doc" ).parent().removeClass("has-error");
+     $( "#condpago_doc" ).parent().removeClass("has-error");
+
+     if ( !$( "#motivo_doc" ).val() ) {
+        swal("Oops","' .Yii::t('documento', 'You must select a reason').'","error");
+        $( "#motivo_doc" ).parent().addClass("has-error");
+        $( "#motivo_doc" ).focus();
+        return;
+     }
+
+     if ( !$( "#tipo_movimiento" ).val() ) {
+        swal("Oops","' .Yii::t('documento', 'You must select a movement type').'","error");
+        $( "#tipo_movimiento" ).parent().addClass("has-error");
+        $( "#tipo_movimiento" ).focus();
+        return;
+     }
+
+     if ( !$( "#almacen_doc" ).val() ) {
+        swal("Oops","' .Yii::t('documento', 'You must select a warehouse').'","error");
+        $( "#almacen_doc" ).parent().addClass("has-error");
+        $( "#almacen_doc" ).focus();
+        return;
+     }
+
+     if ( !$( "#condpago_doc" ).val() ) {
+        swal("Oops","' .Yii::t('documento', 'You must select a payment condition').'","error");
+        $( "#condpago_doc" ).parent().addClass("has-error");
+        $( "#condpago_doc" ).focus();
+        return;
+     }
+
+     if ( !$( "#tipod_doc-notacredito" ).val() ) {
+        swal("Oops","' .Yii::t('documento', 'You must select a document type').'","error");
+        $( "#tipod_doc-notacredito" ).parent().addClass("has-error");
+        $( "#tipod_doc-notacredito" ).focus();
+        return;
+     }
+
+
    });
 ';
 

@@ -23,5 +23,12 @@ return [
     'Document list' => 'Listado de documentos',
     'Credit note' => 'Nota de crédito',
     'Send proforma' => 'Despachar proforma',
-    'Cancel document' => 'Anular documento'
+    'Cancel document' => 'Anular documento',
+    'Input quantity can´t be greather than billed quantity' => 'La cantidad ingresada no debe ser mayor a la cantidad facturada',
+    'You must select a document type' => 'Debe seleccionar un tipo de documento',
+    'You must input a document number' => 'Debe indicar el numero de documento',
+    'You must select a reason' => 'Debe seleccionar un motivo',
+    'You must select a movement type' => 'Debe seleccionar un tipo de movimiento',
+    'You must select a warehouse' => 'Debe seleccionar un almacen',
+    'You must select a payment condition' => 'Debe seleccionar una condicion de pago',
 ];
