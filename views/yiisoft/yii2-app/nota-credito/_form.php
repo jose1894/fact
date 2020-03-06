@@ -137,6 +137,7 @@ use app\base\Model;
                                                                           'maxlength' => 10,
                                                                           'readonly'  => true,
                                                                         ])  ?>
+                    <?= Html::hiddenInput('NotaCredito[id_doc]', '',[ 'id' => 'NotaCredito-id_doc']);?>                                                                        
                   </div>
                 </div>
 
@@ -277,7 +278,7 @@ use app\base\Model;
                   </div>
                   <div class="form-group">
                     <label for="cod_doc-notacredito"><?= Yii::t('documento','Code')?></label>
-                    <?= Html::input('text', 'Nota-Credito[cod_doc]', '', [
+                    <?= Html::input('text', 'NotaCredito[cod_doc]', '', [
                                                                           'id'        => 'cod_doc-notacredito',
                                                                           'class'     => 'form-control',
                                                                           'style'     => [
@@ -296,27 +297,28 @@ use app\base\Model;
                     </div>
                 </div>
               </div>
-            </div>
-            <br>
-
+              <br>
               <!-- Articulos -->
               <div class="row">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-1 col-xs-12" style="text-align:center"><?= Yii::t( 'app', 'Select')?> <input id="checkallddetalle" name="checkallddetalle" class="minimal" type="checkbox"></div>
-                        <div class="col-sm-6 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
-                        <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
-                        <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'L. price')?></div>
-                        <!--th class="col-xs-1"><?= Yii::t( 'pedido', 'Tax')?></th-->
-                        <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Disc.')?></div>
-                        <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Price')?></div>
-                        <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Total')?></div>
-                    </div>
-                    <hr>
-                    <div class="table-body"><!-- widgetContainer -->
+                  <div class="row">
+                    <div class="col-sm-1 col-xs-12" style="text-align:center"><?= Yii::t( 'app', 'Select')?> <input id="checkallddetalle" name="checkallddetalle" class="minimal" type="checkbox"></div>
+                    <div class="col-sm-6 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
+                    <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
+                    <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'L. price')?></div>
+                    <!--th class="col-xs-1"><?= Yii::t( 'pedido', 'Tax')?></th-->
+                    <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Disc.')?></div>
+                    <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Price')?></div>
+                    <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Total')?></div>
+                  </div>
+                  <hr>
+                  <div class="table-body"><!-- widgetContainer -->
 
-                    </div>
-
+                  </div>
+                  <!-- Articulos -->
+                </div>
+              </div>
+              <div class="row">
                   <hr>
                   <table class="table table-fixed table-stripped">
                     <tr>
@@ -362,7 +364,8 @@ use app\base\Model;
                   </table>
                 </div>
               </div>
-              <!-- Articulos -->
+          </div>
+        </div>
 
 
               <?php
@@ -382,14 +385,11 @@ use app\base\Model;
                 <?php } ?>
                    <button id="submit" type="button" class="btn btn-flat btn-success"><span class="fa fa-save"></span> <?= Yii::t('app','Save') ?></button>
                </div> */ ?>
-              <?php ActiveForm::end(); ?>
-            </div>
-
-        </div>
+      <?php ActiveForm::end(); ?>
       </div>
     </div>
   </div>
-</div>
+
 
 
 <?php
@@ -426,7 +426,7 @@ $js = '
      }
 
      $.ajax({
-        url       : "'. Url::to(['documento/get-documento']).'",
+        url       : "'. Url::to(['nota-credito/get-documento']).'",
         data      : {
                 tipo   : $( "#tipo_doc-search" ).val(),
                 numero : $( "#cod_doc-search" ).val(),
@@ -530,13 +530,13 @@ $js = '
          };
 
      $( "input[id$=\\"-total_ddetalle\\"]" ).each(function (i, element) {
-        if ( $( "#notacredito-" + i + "-check_ddetalle" ).prop(\'checked\') ) {
+        if ( $( "#NotaCredito_Detalle-" + i + "-check_ddetalle" ).prop(\'checked\') ) {
            let row = $( this ).attr( "id" ).split( "-" );
            row = row[ 1 ];
            total += +element.value;
-           let valDesc = $( "#NotaCredito-" + row + "-plista_ddetalle" ).val() - $( "#NotaCredito-" + row + "-precio_ddetalle" ).val();
-           subT = $( "#NotaCredito-" + row + "-precio_ddetalle" ).val()  *  $( "#NotaCredito-" + row + "-cant_ddetalle" ).val() / ( IMPUESTO + 1 ) ;
-           desc = valDesc * $( "#NotaCredito-" + row + "-cant_ddetalle" ).val()   / ( IMPUESTO + 1 ) ;
+           let valDesc = $( "#NotaCredito_Detalle-" + row + "-plista_ddetalle" ).val() - $( "#NotaCredito_Detalle-" + row + "-precio_ddetalle" ).val();
+           subT = $( "#NotaCredito_Detalle-" + row + "-precio_ddetalle" ).val()  *  $( "#NotaCredito_Detalle-" + row + "-cant_ddetalle" ).val() / ( IMPUESTO + 1 ) ;
+           desc = valDesc * $( "#NotaCredito_Detalle-" + row + "-cant_ddetalle" ).val()   / ( IMPUESTO + 1 ) ;
            subTotal1 += subT - desc;
            descuento += desc;
         }
@@ -572,37 +572,39 @@ $js = '
           for(deta in data[opc]) {
             let linea  = "<div class=\\"row detalle-item\\"><!- widgetBody -->" +
                            "<div class=\\"col-sm-1 col-xs-12\\" style=\\"text-align:center\\">"+
-                                "<input id=\\"notacredito-" + deta + "-check_ddetalle\\" name=\\"NotaCredito[" + deta + "]check_ddetalle\\" "+
+                                "<input id=\\"NotaCredito_Detalle-" + deta + "-check_ddetalle\\" name=\\"NotaCredito-Detalle[" + deta + "][check_ddetalle]\\" "+
                                 " class=\\"minimal\\" type=\\"checkbox\\" >" +
                            "</div>"+
                            "<div class=\\"col-sm-6 col-xs-12\\">"+
-                                "<input id=\\"NotaCredito-" + deta + "-prod_ddetalle\\" name=\\"NotaCredito[" + deta + "]prod_ddetalle\\" "+
+                                "<input id=\\"NotaCredito_Detalle-" + deta + "-prod_ddetalle\\" name=\\"NotaCredito-Detalle[" + deta + "][prod_ddetalle]\\" "+
                                 " class=\\"form-control\\" value=\\"" + data[opc][deta]["codprod_pdetalle"].trim() + " - " +
                                   data[opc][deta]["desc_pdetalle"].trim() + " - " + data[opc][deta]["umed_pdetalle"].trim()  + "\\" readonly>" +
-                                "<input type=\\"hidden\\" name=\\"NotaCredito-" + deta + "-prod_ddetalle\\" value=\\"" + +data[opc][deta]["prod_pdetalle"] + "\\"> "+
+                                "<input type=\\"hidden\\" name=\\"NotaCredito-Detalle[" + deta + "][prod_ddetalle]\\" value=\\"" + +data[opc][deta]["prod_pdetalle"] + "\\"> "+
+                                "<input type=\\"hidden\\" name=\\"NotaCredito-Detalle[" + deta + "][id_pdetalle]\\" value=\\"" + +data[opc][deta]["id_pdetalle"] + "\\"> "+
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
-                                "<input id=\\"NotaCredito-" + deta + "-cant_ddetalle\\" name=\\"NotaCredito[" + deta + "]cant_ddetalle\\" "+
+                                "<input id=\\"NotaCredito_Detalle-" + deta + "-cant_ddetalle\\" name=\\"NotaCredito-Detalle[" + deta + "][cant_ddetalle]\\" "+
                                 " class=\\"form-control number-integer\\" value=\\"" + data[opc][deta]["cant_pdetalle"] + "\\" data-cant=\\"" + data[opc][deta]["cant_pdetalle"] + "\\">" +
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
-                                "<input id=\\"NotaCredito-" + deta + "-plista_ddetalle\\" name=\\"NotaCredito[" + deta + "]plista_ddetalle\\" "+
+                                "<input id=\\"NotaCredito_Detalle-" + deta + "-plista_ddetalle\\" name=\\"NotaCredito-Detalle[" + deta + "][plista_ddetalle]\\" "+
                                 " class=\\"form-control number-decimals\\" value=\\"" + data[opc][deta]["plista_pdetalle"] + "\\" readonly>" +
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
-                                "<input id=\\"NotaCredito-" + deta + "-descu_ddetalle\\" name=\\"NotaCredito[" + deta + "]descu_ddetalle\\" "+
+                                "<input id=\\"NotaCredito_Detalle-" + deta + "-descu_ddetalle\\" name=\\"NotaCredito-Detalle[" + deta + "][descu_ddetalle]\\" "+
                                 " class=\\"form-control number-decimals\\" value=\\"" + data[opc][deta]["descu_pdetalle"] + "\\" readonly>" +
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
-                                "<input id=\\"NotaCredito-" + deta + "-precio_ddetalle\\" name=\\"NotaCredito[" + deta + "]precio_ddetalle\\" "+
+                                "<input id=\\"NotaCredito_Detalle-" + deta + "-precio_ddetalle\\" name=\\"NotaCredito-Detalle[" + deta + "][precio_ddetalle]\\" "+
                                 " class=\\"form-control number-decimals\\" value=\\"" + data[opc][deta]["precio_pdetalle"] + "\\" readonly>" +
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
-                                "<input id=\\"NotaCredito-" + deta + "-total_ddetalle\\" name=\\"NotaCredito[" + deta + "]total_ddetalle\\" "+
+                                "<input id=\\"NotaCredito_Detalle-" + deta + "-total_ddetalle\\" name=\\"NotaCredito-Detalle[" + deta + "][total_ddetalle]\\" "+
                                 " class=\\"form-control number-decimals\\" value=\\"" + data[opc][deta]["total_pdetalle"] + "\\" readonly>" +
                             "</div>"+
                          "</div>";
             $( ".table-body" ).append( linea );
+            $()
           }
         }
 
@@ -665,6 +667,17 @@ $js = '
         return;
      }
 
+     let $form = $( "#documento" ).contents().find("form");
+     //console.log( $($form).serialize());
+     $.ajax({
+       url     : "' . Url::to(['nota-credito/create']) . '",
+       data    : $( $form ).serialize(),
+       async   : false,
+       method  : "POST",
+       success : function (data) {
+         console.log(data);
+       }
+     })
 
    });
 ';

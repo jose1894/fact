@@ -10,7 +10,7 @@ use app\models\NotaCredito;
 use app\models\NotaCreditoSearch;
 use app\models\NotaSalida;
 use app\models\NotaSalidaDetalle;
-use app\models\NotaCreditoDetalle;
+use app\models\DocumentoDetalle;
 use app\models\Pedido;
 use app\models\Producto;
 use app\models\TipoCambio;
@@ -33,6 +33,7 @@ use Greenter\Model\Sale\SaleDetail;
 use Greenter\Model\Sale\Legend;
 use Greenter\Ws\Services\SunatEndpoints;
 use Greenter\See;
+use app\base\Model;
 
 
 /**
@@ -96,9 +97,141 @@ class NotaCreditoController extends Controller
     public function actionCreate()
     {
         $model = new NotaCredito();
+        // $modelsDetalles = [new DocumentoDetalle];
+        $post = Yii::$app->request->post();
+        //
+        print_r($post['NotaCredito-Detalle'][0]['check_ddetalle'] === "on" ); exit();
+        //
+        if ( !empty($post) ) {
+
+          $documentoAnt = NotaCredito::find([
+                                              'id_doc = :doc',
+                                              [':doc' => $post['NotaCredito']['id_doc']]
+                                            ]);
+
+          if ( empty($documentoAnt) ) {
+                throw new NotFoundHttpException(Yii::t('documento', 'The requested page does not exist.'));
+          }
+
+          try{
+                $transaction = \Yii::$app->db->beginTransaction();
+
+                $model->pedido_doc     = $documentoAnt->pedidoDoc->id_pedido;
+                $model->docref_doc     = $documentoAnt->id_doc;
+                $model->fecha_doc      = date("Y") . "-" . date("m") . "-" . date("d");
+                $model->totalimp_doc   = $post['impuesto'];
+                $model->totaldsc_doc   = $post['descuento'];
+                $model->total_doc      = $post['total'];
+                $model->motivo_doc     = $post['motivo_doc'];
+                $model->tipo_doc       = $post['tipod_doc'];
+                $model->tipocambio_doc = TipoCambio::getTipoCambio()->valorf_tipoc;
+                $model->sucursal_doc   = $documentoAnt->sucursal_doc;
+                $numDoc                = Numeracion::getNumeracion( $model::NOTA_CREDITO,$model->tipo_doc );
+                $codigoDoc             = intval( $numDoc['numero_num'] ) + 1;
+                $codigoDoc             = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
+
+                if ( $documentoAnt->pedidoDoc->cltePedido->tipoIdentificacion->cod_tipoi == TipoIdentificacion::TIPO_RUC ){
+                  $tipoDocClte = TipoIdentificacion::TIPO_RUC;
+                  $docClte = $documentoAnt->pedidoDoc->cltePedido->ruc_clte;
+                } else {
+                  $tipoDocClte = TipoIdentificacion::TIPO_DNI;
+                  $docClte = $documentoAnt->pedidoDoc->cltePedido->dni_clte;
+                }
+
+                $model->cod_doc = $codigoDoc;
+                $model->numeracion_doc = $numDoc[ 'id_num' ];
+                $flag = $model->save();
+
+                $model->valorr_doc     = SiteController::getEmpresa()->ruc_empresa ."|". $tipoDoc ."|".$model->tipoDoc->abrv_tipod . $model->numeracion->serie_num . "|";
+                $model->valorr_doc     .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ;
+
+                if ( $flag ) {
+                  foreach ($post['NotaCredito-Detalle'] as $key => $value) {
+                    // code...
+                    $modelsDetalles   = new DocumentoDetalle();
+                    $modelsDetalles->prod_ddetalle = $value->cant_ddetalle;
+                  }
+                }
+
+
+          } catch ( Exception $e) {
+                $transaction->rollBack();
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $return = [
+                  'success' => false,
+                  'title' => Yii::t('documento', 'Document'),
+                  'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                  'type' => 'error'
+                ];
+                return $return;
+          }
+        //
+        //
+        //
+          return;
+        }
+
         return $this->render('create', [
             'model' => $model,
             'IMPUESTO' =>  SiteController::getImpuesto(),
         ]);
+    }
+
+    public function actionGetDocumento()
+    {
+
+        $request = Yii::$app->request->queryParams;
+        if (Yii::$app->request->isAjax) {
+          Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+          $sucursal = SiteController::getSucursal();
+          $model = NotaCredito::find()
+                              ->joinWith(['pedidoDoc p'])
+                              ->joinWith(['numeracion'])
+                              ->where([
+                                'cod_doc' => $request['numero'],
+                                'numeracion_doc' => $request['tipo'],
+                                'sucursal_doc' => $sucursal,
+                              ])->one();
+
+          if ( empty($model) ) {
+            return false;
+          }
+
+          $documento = [
+            'id_doc'         => $model->id_doc,
+            'id_clte'        => $model->pedidoDoc->cltePedido->id_clte,
+            'nombre_cliente' => $model->pedidoDoc->cltePedido->nombre_clte,
+            'ruc_cliente'    => $model->pedidoDoc->cltePedido->ruc_clte,
+            'dni_cliente'    => $model->pedidoDoc->cltePedido->dni_clte,
+            'direcc_cliente' => $model->pedidoDoc->cltePedido->direcc_clte,
+            'id_pedido'      => $model->pedidoDoc->id_pedido,
+            'cod_doc'        => $model->cod_doc,
+            'serie_doc'      => $model->numeracion->serie_num,
+            'tipo_doc'       => $model->numeracion->tipoDocumento->abrv_tipod,
+            'fecha_doc'      => $model->fecha_doc,
+            'id_moneda'      => $model->pedidoDoc->moneda_pedido,
+            'moneda_pedido'  => $model->pedidoDoc->monedaPedido->des_moneda,
+          ];
+
+          foreach ($model->pedidoDoc->detalles as $key => $value) {
+            // code...
+            $documento['detalle_pedido'][$key] = [
+              'id_pdetalle'       => $value->id_pdetalle,
+              'pedido_pdetalle'   => $value->pedido_pdetalle,
+              'prod_pdetalle'     => $value->prod_pdetalle,
+              'codprod_pdetalle'  => $value->productoPdetalle->cod_prod,
+              'desc_pdetalle'     => $value->productoPdetalle->des_prod,
+              'umed_pdetalle'     => $value->productoPdetalle->umedProd->des_und,
+              'cant_pdetalle'     => $value->cant_pdetalle,
+              'precio_pdetalle'   => $value->precio_pdetalle,
+              'descu_pdetalle'    => $value->descu_pdetalle,
+              'impuesto_pdetalle' => $value->impuesto_pdetalle,
+              'plista_pdetalle'   => $value->plista_pdetalle,
+              'total_pdetalle'    => $value->total_pdetalle,
+            ];
+          }
+
+          return $documento;
+        }
     }
 }
