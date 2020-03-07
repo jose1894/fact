@@ -100,16 +100,16 @@ class NotaCreditoController extends Controller
         // $modelsDetalles = [new DocumentoDetalle];
         $post = Yii::$app->request->post();
         //
-        print_r($post['NotaCredito-Detalle'][0]['check_ddetalle'] === "on" ); exit();
         //
         if ( !empty($post) ) {
+          //print_r($post['NotaCredito-Detalle'][0]['check_ddetalle'] === "on" ); exit();
 
           $documentoAnt = NotaCredito::find([
                                               'id_doc = :doc',
                                               [':doc' => $post['NotaCredito']['id_doc']]
-                                            ]);
+                                            ])->one();
 
-          if ( empty($documentoAnt) ) {
+          if ( $documentoAnt === null ) {
                 throw new NotFoundHttpException(Yii::t('documento', 'The requested page does not exist.'));
           }
 
@@ -122,24 +122,32 @@ class NotaCreditoController extends Controller
                 $model->totalimp_doc   = $post['impuesto'];
                 $model->totaldsc_doc   = $post['descuento'];
                 $model->total_doc      = $post['total'];
-                $model->motivo_doc     = $post['motivo_doc'];
-                $model->tipo_doc       = $post['tipod_doc'];
+                $model->motivo_doc     = $post['NotaCredito']['motivo_doc'];
+                $model->tipo_doc       = $post['NotaCredito']['tipod_doc'];
+                $model->almacen_doc    = $post['NotaCredito']['almacen_doc'];
                 $model->tipocambio_doc = TipoCambio::getTipoCambio()->valorf_tipoc;
                 $model->sucursal_doc   = $documentoAnt->sucursal_doc;
-                $numDoc                = Numeracion::getNumeracion( $model::NOTA_CREDITO,$model->tipo_doc );
-                $codigoDoc             = intval( $numDoc['numero_num'] ) + 1;
+                $numDoc                = Numeracion::getNumeracion( $model::NOTA_CREDITO_DOC,$model->tipo_doc );
+
+                foreach( $numDoc as $key => $value) {
+                  if ( $value['id_num'] === intval( $model->tipo_doc ) ) {
+                    $codigoDoc =  $value['numero_num'] + 1;
+                    $id_num    =  $value['id_num'];
+                  }
+                }
+
                 $codigoDoc             = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
 
                 if ( $documentoAnt->pedidoDoc->cltePedido->tipoIdentificacion->cod_tipoi == TipoIdentificacion::TIPO_RUC ){
-                  $tipoDocClte = TipoIdentificacion::TIPO_RUC;
-                  $docClte = $documentoAnt->pedidoDoc->cltePedido->ruc_clte;
+                  $tipoDocClte         = TipoIdentificacion::TIPO_RUC;
+                  $docClte             = $documentoAnt->pedidoDoc->cltePedido->ruc_clte;
                 } else {
-                  $tipoDocClte = TipoIdentificacion::TIPO_DNI;
-                  $docClte = $documentoAnt->pedidoDoc->cltePedido->dni_clte;
+                  $tipoDocClte         = TipoIdentificacion::TIPO_DNI;
+                  $docClte             = $documentoAnt->pedidoDoc->cltePedido->dni_clte;
                 }
 
-                $model->cod_doc = $codigoDoc;
-                $model->numeracion_doc = $numDoc[ 'id_num' ];
+                $model->cod_doc        = $codigoDoc;
+                $model->numeracion_doc = $id_num;
                 $flag = $model->save();
 
                 $model->valorr_doc     = SiteController::getEmpresa()->ruc_empresa ."|". $tipoDoc ."|".$model->tipoDoc->abrv_tipod . $model->numeracion->serie_num . "|";
@@ -149,7 +157,17 @@ class NotaCreditoController extends Controller
                   foreach ($post['NotaCredito-Detalle'] as $key => $value) {
                     // code...
                     $modelsDetalles   = new DocumentoDetalle();
-                    $modelsDetalles->prod_ddetalle = $value->cant_ddetalle;
+                    if ( $value['check_ddetalle'] === "on" ) {
+                      $modelsDetalles->prod_ddetalle      = $value->prod_ddetalle;
+                      $modelsDetalles->cant_ddetalle      = $value->cant_ddetalle;
+                      $modelsDetalles->precio_ddetalle    = $value->precio_ddetalle;
+                      $modelsDetalles->descu_ddetalle     = $value->descu_ddetalle;
+                      $modelsDetalles->impuesto_ddetalle  = $value->impuesto_ddetalle;
+                      $modelsDetalles->status_ddetalle    = $value->status_ddetalle;
+                      $modelsDetalles->documento_ddetalle = $model->id_doc;
+                      $modelsDetalles->plista_ddetalle    = $value->plista_ddetalle;
+                      $modelsDetalles->total_ddetalle     = $value->total_ddetalle;
+                    }
                   }
                 }
 

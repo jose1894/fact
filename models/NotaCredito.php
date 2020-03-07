@@ -30,6 +30,7 @@ class NotaCredito extends \yii\db\ActiveRecord
     const DOCUMENTO_ANULADO = 3;
     const MOTIVO_GUIAFACTURA = 1; //MOTIVO DE LA GUIA
     const TIPODOC_NCREDITO = 10;
+    const NOTA_CREDITO_DOC = 'NC';
 
 
     public $cliente;
