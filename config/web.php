@@ -11,6 +11,7 @@ $config = [
     'bootstrap' => ['log'],
     'language' => 'es-ES',
     'sourceLanguage' => 'en-US',
+	'name' => 'Nombre Empresa',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',

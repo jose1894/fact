@@ -40,7 +40,9 @@
         "robrichards/xmlseclibs": "^3.0",
         "drmad/semeele": "^1.0",
         "greenter/greenter": "^3.0",
-        "yiisoft/yii2-jui": "^2.0"
+        "yiisoft/yii2-jui": "^2.0",
+        "rmrevin/yii2-ionicon": "~1.2",
+        "antishov/yii2-morrisjs": "^1.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

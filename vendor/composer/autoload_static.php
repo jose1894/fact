@@ -40,6 +40,7 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         ),
         'r' => 
         array (
+            'rmrevin\\yii\\ionicon\\' => 20,
             'rmrevin\\yii\\fontawesome\\' => 24,
             'response\\' => 9,
         ),
@@ -95,6 +96,10 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         array (
             'cebe\\markdown\\' => 14,
             'cURL\\' => 5,
+        ),
+        'a' => 
+        array (
+            'antishov\\Morris\\' => 16,
         ),
         'W' => 
         array (
@@ -198,6 +203,10 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         'setasign\\Fpdi\\' => 
         array (
             0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
+        'rmrevin\\yii\\ionicon\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rmrevin/yii2-ionicon',
         ),
         'rmrevin\\yii\\fontawesome\\' => 
         array (
@@ -360,6 +369,10 @@ class ComposerStaticInitce130dfd90ccf705171448ec3f012bea
         'cURL\\' => 
         array (
             0 => __DIR__ . '/..' . '/jossmp/sunatphp/src',
+        ),
+        'antishov\\Morris\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/antishov/yii2-morrisjs',
         ),
         'Webmozart\\Assert\\' => 
         array (
