@@ -168,8 +168,17 @@ if ( $model->isNewRecord ) {
                           $tipoDocText = $tipoDoc->des_tipod;
                         }
 
-                        $tipoDocs = TipoDocumento::getTipoDocumento( 'N', 2 );
+                        $tiposDoc = TipoDocumento::getTipoDocumento( 'N', TipoDocumento::ES_GUIA );
+
+                        $tipoDocs = [];
+                        $dataTipoDocs = [];
+                        for ($i = 0; $i < count($tiposDoc); $i++ ){
+                          // code...
+                          $tipoDocs[$tiposDoc[$i]['id_num']]    = $tiposDoc[$i]['des_tipod'];
+                          $dataTipoDocs[$tiposDoc[$i]['id_num']]['id_tipod'] = $tiposDoc[$i]['id_tipod'];
+                        }
                         ?>
+
                         <?= $form->field($model, 'tipo_doc',[
                           'addClass' => 'form-control input-sm',
                           ])->widget(Select2::classname(), [
@@ -180,6 +189,7 @@ if ( $model->isNewRecord ) {
                                     'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
                                     'options' => [
                                       'placeholder' => Yii::t('tipo_documento','Select a document type').'...',
+                                      'data-tipos'  => $dataTipoDocs,
                                     ],
                             ])?>
                       </div>
@@ -559,32 +569,15 @@ $( buttonPrint ).on( "click", function(){
 
 
 $( "#documento-tipo_doc" ).on( "select2:select",function () {
-  console.log("ak");return;
   $.ajax({
-    url: "'. Url::to(['cliente/cliente-list']).'",
-    method: "GET",
-    data:{ id : $(this).val()},
-    async: false,
-    success: function( cliente ) {
-
-      cliente = cliente[ 0 ];
-      let direccion = cliente.direcc_clte ? cliente.direcc_clte : " ",
-          geo = cliente.geo ? cliente.geo : " ",
-          //textDirecc = direccion + " " + geo,
-          textDirecc = direccion,
-          condp = cliente.condp,
-          vendedor = cliente.vendedor,
-          tpl = cliente.tpl;
-
-      $( "#pedido-direccion_pedido" ).val( textDirecc );
-      //$( "#pedido-condp_pedido" ).val( condp );
-      $( "#pedido-vend_pedido" ).val( vendedor );
-      $( "#pedido-tipo_listap" ).val( tpl );
-      //$( "#pedido-condp_pedido" ).trigger( "change" );
-      $( "#pedido-vend_pedido" ).trigger( "change" );
-
+    url     : "'.Url::to(['numeracion/ajax-get-numeracion']).'",
+    data    : { id: this.value },
+    success : function ( data ) {
+      num = +data["numero_num"] + 1;
+      num = "0"+num;
+      $( "#documento-cod_doc" ).val( num.padStart(10,"0")  );
     }
-  });
+  })
 
 });
 

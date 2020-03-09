@@ -126,7 +126,15 @@ if ( $model->isNewRecord ) {
                           $tipoDocText = $tipoDoc->des_tipod;
                         }
 
-                        $tipoDocs = TipoDocumento::getTipoDocumento( 'S', TipoDocumento::ES_DOCUMENTO );
+                        $tiposDoc = TipoDocumento::getTipoDocumento( 'S', TipoDocumento::ES_DOCUMENTO );
+
+                        $tipoDocs = [];
+                        $dataTipoDocs = [];
+                        for ($i = 0; $i < count($tiposDoc); $i++ ){
+                          // code...
+                          $tipoDocs[$tiposDoc[$i]['id_num']]    = $tiposDoc[$i]['des_tipod'];
+                          //$dataTipoDocs[$tiposDoc[$i]['id_num']]['id_tipod'] = $tiposDoc[$i]['id_tipod'];
+                        }
                         ?>
                         <?= $form->field($model, 'tipo_doc',[
                           'addClass' => 'form-control input-sm',
@@ -540,6 +548,8 @@ $(".dynamicform_wrapper").on("limitReached", function(e, item) {
     alert("Limit reached");
 });
 
+
+
 $( buttonPrint ).on( "click", function(){
   $( frameRpt ).attr( "src", "'.Url::to(['documento/pedido-rpt', 'id' => $model->id_doc]).'");
   $( modalRpt ).modal({
@@ -820,11 +830,11 @@ function setPrices( value = null, row, tipo_lista ) {
             descuDetalle = descuDetalle ? descuDetalle : 0;
 
             $( "#pedidodetalle-" + row + "-descu_pdetalle" ).val( descuDetalle );
-            $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioLista );            
-            
+            $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioLista );
+
             if ( precioDetalle ){
                 $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioDetalle );
-            } 
+            }
           }
         }
     });
@@ -914,6 +924,19 @@ $( "#submit" ).on( "click", function() {
     }
   });
 
+
+});
+
+$( "#documento-tipo_doc" ).on( "select2:select",function () {
+  $.ajax({
+    url     : "'.Url::to(['numeracion/ajax-get-numeracion']).'",
+    data    : { id: this.value },
+    success : function ( data ) {
+      num = +data["numero_num"] + 1;
+      num = "0"+num;
+      $( "#documento-cod_doc" ).val( num.padStart(10,"0")  );
+    }
+  })
 
 });
 ';

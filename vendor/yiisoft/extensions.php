@@ -327,15 +327,6 @@ return array (
       '@kartik/number' => $vendorDir . '/kartik-v/yii2-number/src',
     ),
   ),
-  'kartik-v/yii2-mpdf' => 
-  array (
-    'name' => 'kartik-v/yii2-mpdf',
-    'version' => '9999999-dev',
-    'alias' => 
-    array (
-      '@kartik/mpdf' => $vendorDir . '/kartik-v/yii2-mpdf/src',
-    ),
-  ),
   'kartik-v/yii2-checkbox-x' => 
   array (
     'name' => 'kartik-v/yii2-checkbox-x',
@@ -379,6 +370,15 @@ return array (
     'alias' => 
     array (
       '@antishov/Morris' => $vendorDir . '/antishov/yii2-morrisjs',
+    ),
+  ),
+  'kartik-v/yii2-mpdf' => 
+  array (
+    'name' => 'kartik-v/yii2-mpdf',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@kartik/mpdf' => $vendorDir . '/kartik-v/yii2-mpdf/src',
     ),
   ),
 );

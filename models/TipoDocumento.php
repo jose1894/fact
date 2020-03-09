@@ -81,21 +81,43 @@ class TipoDocumento extends \yii\db\ActiveRecord
         $condicion[ 1 ][ ':tipo' ] = $tipo;
       }
 
-      if ( !is_null($esDoc) || $esDoc != 0 ){
+      // if ( !is_null($esDoc) || $esDoc != 0 ){
         $tipom = TipoDocumento::find()
-        ->joinWith('numeracions as n')
-        ->select(['id_tipod','CONCAT(abrv_tipod,"/",n.serie_num," - ", des_tipod) AS des_tipod'])
+        //->joinWith('numeracions')
         ->where($condicion[0], $condicion[1])
         ->orderBy('des_tipod')
         ->all();
-     } else {
-        $tipom = TipoDocumento::find()
-                  ->select(['id_tipod','CONCAT(abrv_tipod," - ", des_tipod) AS des_tipod'])
-                  ->where($condicion[0], $condicion[1])
-                  ->orderBy('des_tipod')
-                  ->all();
-      }
-      return  ArrayHelper::map( $tipom, 'id_tipod', 'des_tipod');
+
+        $tipoDoc = [];
+        foreach ($tipom as $value) {
+           // code...
+
+           foreach ($value->numeracions as $value2) {
+             // code...
+             $tipoDoc[] = [
+               'id_num'       => $value2->id_num,
+               'id_tipod'     => $value->id_tipod,
+               'des_tipod'    => $value->abrv_tipod ."/". $value2->serie_num . " - ". $value->des_tipod,
+             ];
+           }
+        }
+     // } else {
+     //    $tipom = TipoDocumento::find()
+     //              ->select(['id_tipod','CONCAT(abrv_tipod," - ", des_tipod) AS des_tipod'])
+     //              ->where($condicion[0], $condicion[1])
+     //              ->orderBy('des_tipod')
+     //              ->all();
+     //    $tipoDoc = [];
+     //    foreach ($tipom as $value) {
+     //      // code...
+     //      $tipoDoc = [
+     //        'id_num'       => $value->id_num,
+     //        'id_tipod'     => $value->id_tipod,
+     //        'des_tipod'    => $value->des_tipod,
+     //      ];
+     //    }
+      //}
+      return  $tipoDoc;
     }
 
     public function getTipoDocumentoById( $id = null)

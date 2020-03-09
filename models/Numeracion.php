@@ -146,7 +146,7 @@ class Numeracion extends \yii\db\ActiveRecord
                 'id_num' =>$id
             ] )
             ->orderBy('serie_num')
-            ->all();
+            ->one();
 
         return  $numeracion;
 

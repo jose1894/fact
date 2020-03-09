@@ -251,39 +251,36 @@ class DocumentoController extends Controller
             $docClte = $model->pedidoDoc->cltePedido->dni_clte;
           }
 
-          $sucursal = SiteController::getSucursal();
+          $sucursal                        = SiteController::getSucursal();
           $modelNotaSalida->sucursal_trans = $sucursal;
-          $model->sucursal_doc = $sucursal;
-          $model->status_doc = 1;
-          $modelNotaSalida->usuario_trans = Yii::$app->user->id;
-          $modelNotaSalida->ope_trans = $modelNotaSalida::OPE_TRANS;
-          $numeracion = Numeracion::getNumeracion( $modelNotaSalida::NOTA_SALIDA );
-
-          foreach( $numeracion as $key => $value) {
-               // if ($value['serie_num'] === )
-          }
-
-          $codigo = intval( $num['numero_num'] ) + 1;
-          $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
-          $modelNotaSalida->codigo_trans = $codigo;
-          $modelNotaSalida->tipo_trans = $model::TIPO_FACTURA;
-          $modelNotaSalida->almacen_trans = $modelPedido->almacen_pedido;
-          $fecha = explode("/",$model->fecha_doc);
-          $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
-          $model->fecha_doc = $fecha;
-          $modelNotaSalida->fecha_trans =  $fecha;
-          $modelPedido->estatus_pedido = $modelPedido::DOCUMENTO_GENERADO;
-          $model->almacen_doc = $modelPedido->almacen_pedido;
-
-          $model->totalimp_doc = $post['impuesto'];
-          $model->total_doc = $post['total'];
-          $model->status_doc = $model::DOCUMENTO_GENERADO;
-
-
+          $model->sucursal_doc             = $sucursal;
+          $model->status_doc               = 1;
+          $modelNotaSalida->usuario_trans  = Yii::$app->user->id;
+          $modelNotaSalida->ope_trans      = $modelNotaSalida::OPE_TRANS;
+          $num                             = Numeracion::getNumeracion( $modelNotaSalida::NOTA_SALIDA );
+          $codigo                          = intval( $num[0]['numero_num'] ) + 1;
+          $codigo                          = str_pad($codigo,10,'0',STR_PAD_LEFT);
+          $modelNotaSalida->codigo_trans   = $codigo;
+          $modelNotaSalida->tipo_trans     = $model::TIPO_FACTURA;
+          $modelNotaSalida->almacen_trans  = $modelPedido->almacen_pedido;
+          $fecha                           = explode("/",$model->fecha_doc);
+          $fecha                           = $fecha[2]."-".$fecha[1]."-".$fecha[0];
+          $model->fecha_doc                = $fecha;
+          $modelNotaSalida->fecha_trans    = $fecha;
+          $modelPedido->estatus_pedido     = $modelPedido::DOCUMENTO_GENERADO;
+          $model->almacen_doc              = $modelPedido->almacen_pedido;
+          $model->totalimp_doc             = $post['impuesto'];
+          $model->total_doc                = $post['total'];
+          $model->status_doc               = $model::DOCUMENTO_GENERADO;
+          $numDoc                          = Numeracion::getNumeracionById( $model->tipo_doc );
+          $codigoDoc                       = (int) $numDoc->numero_num + 1;
+          $id_num                          = $numDoc->id_num;
+          $model->tipo_doc                 = $numDoc->tipo_num;
+          $codigoDoc                       = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
+          $model->numeracion_doc           = $id_num;
           // validate all models
-          $valid = $model->validate();
-          $valid = $modelNotaSalida->validate() && $valid;
-
+          $valid                           = $model->validate();
+          $valid                           = $modelNotaSalida->validate() && $valid;
 
           if (!$valid) {
             if (Yii::$app->request->isAjax) {
@@ -294,20 +291,12 @@ class DocumentoController extends Controller
                 );
             }
           } else {
-            $numDoc = Numeracion::getNumeracion( $model::FACTURA_DOC,$model->tipo_doc );
-            $codigoDoc = intval( $numDoc['numero_num'] ) + 1;
-            $codigoDoc = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
-
             $transaction = \Yii::$app->db->beginTransaction();
-            $model->cod_doc = $codigoDoc;
-            $model->numeracion_doc = $numDoc[ 'id_num' ];
-            $flag = $model->save();
-            $flag = $modelPedido->save() && $flag;
+            $flag            = $model->save();
+            $flag            = $modelPedido->save() && $flag;
 
             $model->valorr_doc = SiteController::getEmpresa()->ruc_empresa ."|". $tipoDoc ."|".$model->tipoDoc->abrv_tipod . $model->numeracion->serie_num . "|";
             $model->valorr_doc .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ;
-
-//            $model->hash_doc = base64_encode(hash( 'sha1', $model->valorr_doc, false ));
             $model->tipocambio_doc = TipoCambio::getTipoCambio()->valorf_tipoc;
 
             try {
@@ -340,11 +329,11 @@ class DocumentoController extends Controller
                   $flag = $model->save() && $flag;
               }
 
-              $numeracion = Numeracion::findOne($num['id_num']);
+              $numeracion = Numeracion::findOne($num[0]['id_num']);
               $numeracion->numero_num = $codigo;
               $flag = $numeracion->save() && $flag;
 
-              $numeracion = Numeracion::findOne($numDoc['id_num']);
+              $numeracion = Numeracion::findOne($id_num);
               $numeracion->numero_num = $codigoDoc;
               $flag = $numeracion->save() && $flag;
 
@@ -408,12 +397,12 @@ class DocumentoController extends Controller
             $documentoDetalle[$key] = ['prod_detalle' => $value['prod_pdetalle'],'cant_detalle' => $value['cant_pdetalle']];
           }
 
-          $fecha = explode("/",$model->fecha_doc);
-          $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
-          $model->fecha_doc = $fecha;
+          $fecha               = explode("/",$model->fecha_doc);
+          $fecha               = $fecha[2]."-".$fecha[1]."-".$fecha[0];
+          $model->fecha_doc    = $fecha;
           $modelPedido->estatus_pedido = $modelPedido::GUIA_GENERADA;
-          $model->status_doc = $model::GUIA_GENERADA;
-          $model->almacen_doc = $modelPedido->almacen_pedido;
+          $model->status_doc   = $model::GUIA_GENERADA;
+          $model->almacen_doc  = $modelPedido->almacen_pedido;
           $model->sucursal_doc = SiteController::getSucursal();
 
           // validate all models
@@ -426,29 +415,27 @@ class DocumentoController extends Controller
                     ActiveForm::validate($model);
             }
           } else {
+            $numDoc          = Numeracion::getNumeracionById( $model->tipo_doc );
+            $codigoDoc       = (int) $numDoc->numero_num + 1;
+            $id_num          = $numDoc->id_num;
+            $model->tipo_doc = $numDoc->tipo_num;
 
-            $numDoc = Numeracion::getNumeracion( $model::GUIA_DOC,$model->tipo_doc );
-
-//            foreach ( $numDoc as $key => $value){
-//                if ( $value['serie_num'] == )
-//            }
-
-            $codigoDoc = intval( $numDoc['numero_num'] ) + 1;
-            $codigoDoc = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
-            $model->numeracion_doc = $numDoc[ 'id_num' ];
-
+            $codigoDoc       = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
+            $model->numeracion_doc = $id_num;
             $transaction = \Yii::$app->db->beginTransaction();
+
             try {
               $model->cod_doc = $codigoDoc;
-              $flag = $model->save();
-              $flag = $modelPedido->save() && $flag;
+              $flag           = $model->save();
+              $flag           = $modelPedido->save() && $flag;
 
               if ( $flag ) {
+
                 for($i = 0; $i < count($documentoDetalle); $i++) {
-                      $modelDocumentoDetalle = new DocumentoDetalle();
+                      $modelDocumentoDetalle                     = new DocumentoDetalle();
                       $modelDocumentoDetalle->documento_ddetalle = $model->id_doc;
-                      $modelDocumentoDetalle->prod_ddetalle = $documentoDetalle[$i]['prod_detalle'];
-                      $modelDocumentoDetalle->cant_ddetalle = $documentoDetalle[$i]['cant_detalle'];
+                      $modelDocumentoDetalle->prod_ddetalle      = $documentoDetalle[$i]['prod_detalle'];
+                      $modelDocumentoDetalle->cant_ddetalle      = $documentoDetalle[$i]['cant_detalle'];
 
                       if ( !($flag = $modelDocumentoDetalle->save()) ) {
                           $transaction->rollBack();
@@ -458,7 +445,7 @@ class DocumentoController extends Controller
                   }
               }
 
-              $numeracion = Numeracion::findOne($numDoc['id_num']);
+              $numeracion = Numeracion::findOne($id_num);
               $numeracion->numero_num = $codigoDoc;
               $flag = $numeracion->save() && $flag;
 
