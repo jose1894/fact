@@ -1,0 +1,34 @@
+{
+    "name": "antishov/yii2-morrisjs",
+    "type": "yii2-extension",
+    "keywords": ["yii2", "morris", "chart"],
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/antishov/yii2-morrisjs/issues",
+        "source": "https://github.com/antishov/yii2-morrisjs"
+    },
+    "authors": [
+        {
+            "name": "Antishov Viktor",
+            "email": "antishov.viktor@gmail.com"
+        }
+    ],
+    "require": {
+        "bower-asset/raphael": "2.2.7",
+        "bower-asset/morrisjs": "0.5.1",
+        "yiisoft/yii2-bootstrap": "^2.0",
+        "php": ">=5.5",
+        "yiisoft/yii2": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "antishov\\Morris\\": ""
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
+}
