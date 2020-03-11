@@ -137,7 +137,7 @@ use app\base\Model;
                                                                           'maxlength' => 10,
                                                                           'readonly'  => true,
                                                                         ])  ?>
-                    <?= Html::hiddenInput('NotaCredito[id_doc]', '',[ 'id' => 'NotaCredito-id_doc']);?>                                                                        
+                    <?= Html::hiddenInput('NotaCredito[id_doc]', '',[ 'id' => 'NotaCredito-id_doc']);?>
                   </div>
                 </div>
 
@@ -226,8 +226,8 @@ use app\base\Model;
                   <div class="form-group">
                       <label class="control-label" for="stock_prod"><?= Yii::t('tipo_movimiento',"Movement type")?></label>
                       <?= Html::dropDownList('NotaCredito[almacen_doc]', null, [
-                                                                                  0  => 'No mover stock',
-                                                                                  1     => 'Reponer stock'
+                                                                                  //0  => 'No mover stock',
+                                                                                  1  => 'Reponer stock'
                                                                                ],
                                                                                [
                                                                                     'prompt' => Yii::t('app','Select'),
@@ -269,8 +269,16 @@ use app\base\Model;
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label for="tipod_doc-notacredito"><?= Yii::t('tipo_documento','Document type')?></label>
-                    <?php $tiposDocumentos = TipoDocumento::getTipoDocumento( 'E', TipoDocumento::ES_DOCUMENTO) ?>
-                    <?= Html::dropDownList('NotaCredito[tipod_doc]', null, $tiposDocumentos, [
+                    <?php
+                    $tiposDoc = TipoDocumento::getTipoDocumento( 'E', TipoDocumento::ES_DOCUMENTO );
+
+                    $tipoDocs = [];
+                    $dataTipoDocs = [];
+                    for ($i = 0; $i < count($tiposDoc); $i++ ){
+                      // code...
+                      $tipoDocs[$tiposDoc[$i]['id_num']]    = $tiposDoc[$i]['des_tipod'];
+                    }?>
+                    <?= Html::dropDownList('NotaCredito[tipod_doc]', null, $tipoDocs, [
                       'class'  => 'form-control',
                       'id'     => 'tipod_doc-notacredito',
                       'prompt' => Yii::t('app','Select'),
@@ -492,22 +500,22 @@ $js = '
 
      let valor     = +$( this ).val();
      let valorFact = +$( this ).data( "cant" );
-     let precio    = +$( "#NotaCredito-" + row[1] + "-precio_ddetalle" ).val();
+     let precio    = +$( "#NotaCredito_Detalle-" + row[1] + "-precio_ddetalle" ).val();
      let total = 0;
 
      if ( valor > valorFact ) {
        swal( "Oops!", "'. Yii::t('documento','Input quantity can´t be greather than billed quantity') .'", "warning");
        $( this ).val( valorFact.toFixed(2) );
        total = valorFact * precio;
-       $( "#NotaCredito-" + row[1] + "-total_ddetalle" ).val( total.toFixed(2) );
+       $( "#NotaCredito_Detalle-" + row[1] + "-total_ddetalle" ).val( total.toFixed(2) );
        $( this ).focus();
        return;
      }
 
-     $( "#notacredito-" + row[1] + "-check_ddetalle" ).prop(\'checked\',true).iCheck(\'update\');
+     $( "#NotaCredito_Detalle-" + row[1] + "-check_ddetalle" ).prop(\'checked\',true).iCheck(\'update\');
 
      total = valor * precio;
-     $( "#NotaCredito-" + row[1] + "-total_ddetalle" ).val( round( total ) );
+     $( "#NotaCredito_Detalle-" + row[1] + "-total_ddetalle" ).val( round( total ) );
 
      calculateTotals(IMPUESTO);
    });

@@ -133,7 +133,6 @@ if ( $model->isNewRecord ) {
                         for ($i = 0; $i < count($tiposDoc); $i++ ){
                           // code...
                           $tipoDocs[$tiposDoc[$i]['id_num']]    = $tiposDoc[$i]['des_tipod'];
-                          //$dataTipoDocs[$tiposDoc[$i]['id_num']]['id_tipod'] = $tiposDoc[$i]['id_tipod'];
                         }
                         ?>
                         <?= $form->field($model, 'tipo_doc',[
