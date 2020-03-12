@@ -225,7 +225,7 @@ use app\base\Model;
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                   <div class="form-group">
                       <label class="control-label" for="stock_prod"><?= Yii::t('tipo_movimiento',"Movement type")?></label>
-                      <?= Html::dropDownList('NotaCredito[almacen_doc]', null, [
+                      <?= Html::dropDownList('NotaCredito[tipom_doc]', null, [
                                                                                   //0  => 'No mover stock',
                                                                                   1  => 'Reponer stock'
                                                                                ],
@@ -675,6 +675,17 @@ $js = '
         return;
      }
 
+    let band = false;
+    $.each($("input[id$=\'check_ddetalle\']"), function(i, elem) {
+      band = $( elem ).prop("checked");
+      if ( band ) return false;
+    });
+
+    if (!band){
+      console.log("No checked");
+      return;
+    }
+
      let $form = $( "#documento" ).contents().find("form");
      //console.log( $($form).serialize());
      $.ajax({
@@ -683,6 +694,9 @@ $js = '
        async   : false,
        method  : "POST",
        success : function (data) {
+         console.log(data);
+       },
+       error   : function (data) {
          console.log(data);
        }
      })

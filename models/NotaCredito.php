@@ -24,13 +24,14 @@ use Yii;
  */
 class NotaCredito extends \yii\db\ActiveRecord
 {
-    const SCENARIO_FACTURA = 'factura';
-    const TIPO_NCREDITO = 7; //Tipo de operacion para la tabla transaccion cuando tenga que aumentar o descontar almacen
+    const SCENARIO_FACTURA   = 'factura';
+    const TIPO_NCREDITO      = 7; //Tipo de operacion para la tabla transaccion cuando tenga que aumentar o descontar almacen
     const DOCUMENTO_GENERADO = 2; //ESTATUS DEL DOCUMENTO
-    const DOCUMENTO_ANULADO = 3;
+    const DOCUMENTO_ANULADO  = 3;
     const MOTIVO_GUIAFACTURA = 1; //MOTIVO DE LA GUIA
-    const TIPODOC_NCREDITO = 10;
-    const NOTA_CREDITO_DOC = 'NC';
+    const TIPODOC_NCREDITO   = 10;
+    const NOTA_CREDITO_DOC   = 'NC';
+    const REPONER_STOCK      = 1;
 
 
     public $cliente;

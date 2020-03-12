@@ -39,6 +39,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
             [['sucursal_tipod', 'status_tipod', 'tipo_tipod'], 'integer'],
             [['des_tipod'], 'string', 'max' => 100],
             [['abrv_tipod'], 'string', 'max' => 4],
+            [['tipodsunat_tipod'], 'string', 'max' => 2],
             [['ope_tipod'], 'string', 'max' => 1],
         ];
     }
@@ -56,6 +57,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
             'abrv_tipod' => Yii::t('tipo_documento', 'Abbreviation'),
             'tipo_tipod' => Yii::t('tipo_documento', 'Type'),
             'ope_tipod' => Yii::t('tipo_documento', 'Operation'),
+            'tipodsunat_tipod' => Yii::t('tipo_documento', 'SUNAT doc type'),
         ];
     }
 

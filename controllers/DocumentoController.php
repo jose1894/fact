@@ -241,8 +241,6 @@ class DocumentoController extends Controller
             $notaSalidaDetalle[$key] = ['prod_detalle' => $value['prod_pdetalle'],'cant_detalle' => $value['cant_pdetalle']];
           }
 
-          $tipoDoc = ($model->tipo_doc == 3) ? 1 : 3;
-
           if ( $model->pedidoDoc->cltePedido->tipoIdentificacion->cod_tipoi == TipoIdentificacion::TIPO_RUC ){
             $tipoDocClte = TipoIdentificacion::TIPO_RUC;
             $docClte = $model->pedidoDoc->cltePedido->ruc_clte;
@@ -294,7 +292,7 @@ class DocumentoController extends Controller
             $transaction = \Yii::$app->db->beginTransaction();
             $flag            = $model->save();
             $flag            = $modelPedido->save() && $flag;
-
+            $tipoDoc         = $model->numeracion->tipoDocumento->tipodsunat_tipod;
             $model->valorr_doc = SiteController::getEmpresa()->ruc_empresa ."|". $tipoDoc ."|".$model->tipoDoc->abrv_tipod . $model->numeracion->serie_num . "|";
             $model->valorr_doc .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ;
             $model->tipocambio_doc = TipoCambio::getTipoCambio()->valorf_tipoc;

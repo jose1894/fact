@@ -13,15 +13,20 @@ use kartik\form\ActiveForm;
     <?php $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientScript' => true]); ?>
 
     <div class="row">
-      <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
         <?= $form->field($model, 'des_tipod',[
           'addClass' => 'form-control ',
           'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-edit"></i>']]])->textInput(['maxlength' => true])  ?>
       </div>
-      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
         <?= $form->field($model, 'abrv_tipod',[
           'addClass' => 'form-control ',
           'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-edit"></i>']]])->textInput(['maxlength' => true])  ?>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+        <?= $form->field($model, 'tipodsunat_tipod',[
+          'addClass' => 'form-control ',
+          'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-barcode"></i>']]])->textInput(['maxlength' => true])  ?>
       </div>
     </div>
     <div class="row">

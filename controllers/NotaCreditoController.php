@@ -8,8 +8,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use app\models\NotaCredito;
 use app\models\NotaCreditoSearch;
-use app\models\NotaSalida;
-use app\models\NotaSalidaDetalle;
+use app\models\NotaEntrada;
+use app\models\NotaEntradaDetalle;
 use app\models\DocumentoDetalle;
 use app\models\Pedido;
 use app\models\Producto;
@@ -115,7 +115,7 @@ class NotaCreditoController extends Controller
 
           try{
                 $transaction = \Yii::$app->db->beginTransaction();
-
+                $sucursal              = SiteController::getSucursal();
                 $model->pedido_doc     = $documentoAnt->pedidoDoc->id_pedido;
                 $model->docref_doc     = $documentoAnt->id_doc;
                 $model->fecha_doc      = date("Y") . "-" . date("m") . "-" . date("d");
@@ -148,10 +148,36 @@ class NotaCreditoController extends Controller
 
                 $model->cod_doc        = $codigoDoc;
                 $model->numeracion_doc = $id_num;
-                $flag = $model->save();
+                $model->sucursal_doc   = $sucursal;
+                $model->status_doc     = 1;
+
+                if ( !($flag = $model->save()) ) {
+                    $transaction->rollBack();
+                    throw new \Exception("Error Processing Request", 1);
+                    break;
+                }
+
+                $tipoDoc               = $model->numeracion->tipoDocumento->tipodsunat_tipod;
 
                 $model->valorr_doc     = SiteController::getEmpresa()->ruc_empresa ."|". $tipoDoc ."|".$model->tipoDoc->abrv_tipod . $model->numeracion->serie_num . "|";
                 $model->valorr_doc     .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ;
+
+                if ( $post['NotaCredito']['tipom_doc'] == $model::REPONER_STOCK ){
+                  $modelNotaEntrada                 = new NotaEntrada();
+                  $modelNotaEntrada->sucursal_trans = $sucursal;
+                  $modelNotaEntrada->usuario_trans  = Yii::$app->user->id;
+                  $modelNotaEntrada->ope_trans      = $modelNotaSalida::OPE_TRANS;
+                  $num                              = Numeracion::getNumeracion( $modelNotaEntrada::NOTA_ENTRADA );
+                  $codigo                           = intval( $num[0]['numero_num'] ) + 1;
+                  $codigo                           = str_pad($codigo,10,'0',STR_PAD_LEFT);
+                  $modelNotaEntrada->codigo_trans   = $codigo;
+                  $modelNotaEntrada->tipo_trans     = $model::TIPO_NCREDITO;
+                  $modelNotaEntrada->almacen_trans  = $post['NotaCredito']['almacen_doc'];
+                  $modelNotaEntrada->fecha_trans    = $model->fecha_doc;
+                  $modelNotaEntrada->idrefdoc_trans = $model->id_doc;
+                  $modelNotaEntrada->status_trans = $modelNotaEntrada::STATUS_APPROVED;
+                  $flag = $modelNotaEntrada->save() && $flag;
+                }
 
                 if ( $flag ) {
                   foreach ($post['NotaCredito-Detalle'] as $key => $value) {
@@ -167,8 +193,57 @@ class NotaCreditoController extends Controller
                       $modelsDetalles->documento_ddetalle = $model->id_doc;
                       $modelsDetalles->plista_ddetalle    = $value->plista_ddetalle;
                       $modelsDetalles->total_ddetalle     = $value->total_ddetalle;
+
+                      if ( !($flag = $modelsDetalles->save()) ) {
+                          $transaction->rollBack();
+                          throw new \Exception("Error Processing Request", 1);
+                          break;
+                      }
+
+                      if ( $post['NotaCredito']['tipom_doc'] == $model::REPONER_STOCK ) {
+                        $modelNotaEntradaDetalle = new NotaEntradaDetalle();
+                        $modelNotaEntradaDetalle->trans_detalle = $modelNotaEntrada->id_trans;
+                        $modelNotaEntradaDetalle->prod_detalle = $value->prod_detalle;
+                        $modelNotaEntradaDetalle->cant_detalle = $value->cant_detalle;
+
+                        if ( !($flag = $modelNotaEntradaDetalle->save()) ) {
+                            $transaction->rollBack();
+                            throw new \Exception("Error Processing Request", 1);
+                            break;
+                        }
+
+                        $producto = Producto::findOne(['id_prod' => $value->prod_detalle]);
+                        $producto->stock_prod += $value->cant_detalle;
+
+                        if (! ($flag = $producto->save(false))) {
+                            $transaction->rollBack();
+                            throw new \Exception("Error Processing Request", 1);
+                            break;
+                        }
+                      }
                     }
                   }
+                }
+
+                $numeracion = Numeracion::findOne($num[0]['id_num']);
+                $numeracion->numero_num = $codigo;
+                $flag = $numeracion->save() && $flag;
+
+                $numeracion = Numeracion::findOne($id_num);
+                $numeracion->numero_num = $codigoDoc;
+                $flag = $numeracion->save() && $flag;
+
+                if ( $flag ) {
+                  $transaction->commit();
+                  Yii::$app->response->format = Response::FORMAT_JSON;
+                  $return = [
+                    'success' => true,
+                    'title' => Yii::t('documento', 'Document'),
+                    'id' => $model->id_doc,
+                    'message' => Yii::t('app','Record has been saved successfully!'),
+                    'type' => 'success'
+                  ];
+                  return $return;
                 }
 
 

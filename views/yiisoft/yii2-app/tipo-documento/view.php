@@ -28,12 +28,13 @@ $this->params['breadcrumbs'][] = $this->title;
               'model' => $model,
               'attributes' => [
                   'id_tipod',
-                  'des_tipod',                  
+                  'des_tipod',
                   [
                     'attribute' => 'status_tipod',
                     'format' => 'raw',
                     'value' => $model->status_tipod ? '<span class="label label-success">On</span>' : '<span class="label label-danger">Off</span>'
                   ],
+                  'tipodsunat_tipod',
               ],
           ]) ?>
         </div>
