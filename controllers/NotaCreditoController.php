@@ -153,8 +153,7 @@ class NotaCreditoController extends Controller
 
                 if ( !($flag = $model->save()) ) {
                     $transaction->rollBack();
-                    throw new \Exception("Error Processing Request", 1);
-                    break;
+                    throw new \Exception("Error Processing Request", 1);                    
                 }
 
                 $tipoDoc               = $model->numeracion->tipoDocumento->tipodsunat_tipod;
@@ -175,7 +174,7 @@ class NotaCreditoController extends Controller
                   $modelNotaEntrada->almacen_trans  = $post['NotaCredito']['almacen_doc'];
                   $modelNotaEntrada->fecha_trans    = $model->fecha_doc;
                   $modelNotaEntrada->idrefdoc_trans = $model->id_doc;
-                  $modelNotaEntrada->status_trans = $modelNotaEntrada::STATUS_APPROVED;
+                  $modelNotaEntrada->status_trans   = $modelNotaEntrada::STATUS_APPROVED;
                   $flag = $modelNotaEntrada->save() && $flag;
                 }
 
