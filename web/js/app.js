@@ -27,8 +27,7 @@ $( document ).ready( function( e ){
         'data'   : $( $form ).serialize(),
         'async'  : false,
         'success': function ( data ){
-          if ( data.success )
-          {
+          if ( data.success ) {
             swal(data.title, data.message, data.type);
             window.parent.$.pjax.reload( { container: '#grid' } );
 

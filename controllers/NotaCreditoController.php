@@ -8,8 +8,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use app\models\NotaCredito;
 use app\models\NotaCreditoSearch;
-use app\models\NotaEntrada;
-use app\models\NotaEntradaDetalle;
+use app\models\NotaIngreso;
+use app\models\NotaIngresoDetalle;
 use app\models\DocumentoDetalle;
 use app\models\Pedido;
 use app\models\Producto;
@@ -115,19 +115,19 @@ class NotaCreditoController extends Controller
 
           try{
                 $transaction = \Yii::$app->db->beginTransaction();
-                $sucursal              = SiteController::getSucursal();
-                $model->pedido_doc     = $documentoAnt->pedidoDoc->id_pedido;
-                $model->docref_doc     = $documentoAnt->id_doc;
-                $model->fecha_doc      = date("Y") . "-" . date("m") . "-" . date("d");
-                $model->totalimp_doc   = $post['impuesto'];
-                $model->totaldsc_doc   = $post['descuento'];
-                $model->total_doc      = $post['total'];
-                $model->motivo_doc     = $post['NotaCredito']['motivo_doc'];
-                $model->tipo_doc       = $post['NotaCredito']['tipod_doc'];
-                $model->almacen_doc    = $post['NotaCredito']['almacen_doc'];
-                $model->tipocambio_doc = TipoCambio::getTipoCambio()->valorf_tipoc;
-                $model->sucursal_doc   = $documentoAnt->sucursal_doc;
-                $numDoc                = Numeracion::getNumeracion( $model::NOTA_CREDITO_DOC,$model->tipo_doc );
+                $sucursal               = SiteController::getSucursal();
+                $model->pedido_doc      = $documentoAnt->pedidoDoc->id_pedido;
+                $model->docref_doc      = $documentoAnt->id_doc;
+                $model->fecha_doc       = date("Y") . "-" . date("m") . "-" . date("d");
+                $model->totalimp_doc    = $post['impuesto'];
+                $model->totaldsc_doc    = $post['descuento'];
+                $model->total_doc       = $post['total'];
+                $model->motivosunat_doc = $post['NotaCredito']['motivo_doc'];
+                $model->tipo_doc        = $post['NotaCredito']['tipod_doc'];
+                $model->almacen_doc     = $post['NotaCredito']['almacen_doc'];				
+                $model->tipocambio_doc  = TipoCambio::getTipoCambio()->valorf_tipoc;
+                $model->sucursal_doc    = $documentoAnt->sucursal_doc;
+                $numDoc                 = Numeracion::getNumeracion( $model::NOTA_CREDITO_DOC,$model->tipo_doc );
 
                 foreach( $numDoc as $key => $value) {
                   if ( $value['id_num'] === intval( $model->tipo_doc ) ) {
@@ -162,36 +162,36 @@ class NotaCreditoController extends Controller
                 $model->valorr_doc     .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ;
 
                 if ( $post['NotaCredito']['tipom_doc'] == $model::REPONER_STOCK ){
-                  $modelNotaEntrada                 = new NotaEntrada();
-                  $modelNotaEntrada->sucursal_trans = $sucursal;
-                  $modelNotaEntrada->usuario_trans  = Yii::$app->user->id;
-                  $modelNotaEntrada->ope_trans      = $modelNotaSalida::OPE_TRANS;
-                  $num                              = Numeracion::getNumeracion( $modelNotaEntrada::NOTA_ENTRADA );
+                  $modelNotaIngreso                 = new NotaIngreso();
+                  $modelNotaIngreso->sucursal_trans = $sucursal;
+                  $modelNotaIngreso->usuario_trans  = Yii::$app->user->id;
+                  $modelNotaIngreso->ope_trans      = $modelNotaIngreso::OPE_TRANS;
+                  $num                              = Numeracion::getNumeracion( $modelNotaIngreso::NOTA_INGRESO );
                   $codigo                           = intval( $num[0]['numero_num'] ) + 1;
                   $codigo                           = str_pad($codigo,10,'0',STR_PAD_LEFT);
-                  $modelNotaEntrada->codigo_trans   = $codigo;
-                  $modelNotaEntrada->tipo_trans     = $model::TIPO_NCREDITO;
-                  $modelNotaEntrada->almacen_trans  = $post['NotaCredito']['almacen_doc'];
-                  $modelNotaEntrada->fecha_trans    = $model->fecha_doc;
-                  $modelNotaEntrada->idrefdoc_trans = $model->id_doc;
-                  $modelNotaEntrada->status_trans   = $modelNotaEntrada::STATUS_APPROVED;
-                  $flag = $modelNotaEntrada->save() && $flag;
+                  $modelNotaIngreso->codigo_trans   = $codigo;
+                  $modelNotaIngreso->tipo_trans     = $model::TIPO_NCREDITO;
+                  $modelNotaIngreso->almacen_trans  = $post['NotaCredito']['almacen_doc'];
+                  $modelNotaIngreso->fecha_trans    = $model->fecha_doc;
+                  $modelNotaIngreso->idrefdoc_trans = $model->id_doc;
+                  $modelNotaIngreso->status_trans   = $modelNotaIngreso::STATUS_APPROVED;
+                  $flag = $modelNotaIngreso->save() && $flag;
                 }
 
                 if ( $flag ) {
                   foreach ($post['NotaCredito-Detalle'] as $key => $value) {
-                    // code...
-                    $modelsDetalles   = new DocumentoDetalle();
-                    if ( $value['check_ddetalle'] === "on" ) {
-                      $modelsDetalles->prod_ddetalle      = $value->prod_ddetalle;
-                      $modelsDetalles->cant_ddetalle      = $value->cant_ddetalle;
-                      $modelsDetalles->precio_ddetalle    = $value->precio_ddetalle;
-                      $modelsDetalles->descu_ddetalle     = $value->descu_ddetalle;
-                      $modelsDetalles->impuesto_ddetalle  = $value->impuesto_ddetalle;
-                      $modelsDetalles->status_ddetalle    = $value->status_ddetalle;
-                      $modelsDetalles->documento_ddetalle = $model->id_doc;
-                      $modelsDetalles->plista_ddetalle    = $value->plista_ddetalle;
-                      $modelsDetalles->total_ddetalle     = $value->total_ddetalle;
+                    // code...                    
+                    if ( isset($value['check_ddetalle']) && $value['check_ddetalle'] === "on" ) {
+					  $modelsDetalles   				  = new DocumentoDetalle();
+                      $modelsDetalles->prod_ddetalle      = $value['prod_ddetalle'];
+                      $modelsDetalles->cant_ddetalle      = $value['cant_ddetalle'];
+                      $modelsDetalles->precio_ddetalle    = $value['precio_ddetalle'];
+                      $modelsDetalles->descu_ddetalle     = $value['descu_ddetalle'];
+                      $modelsDetalles->impuesto_ddetalle  = $value['impuesto_ddetalle'];
+                      //$modelsDetalles->status_ddetalle    = $value['status_ddetalle'];
+                      $modelsDetalles->documento_ddetalle = $model['id_doc'];
+                      $modelsDetalles->plista_ddetalle    = $value['plista_ddetalle'];
+                      $modelsDetalles->total_ddetalle     = $value['total_ddetalle'];
 
                       if ( !($flag = $modelsDetalles->save()) ) {
                           $transaction->rollBack();
@@ -200,19 +200,19 @@ class NotaCreditoController extends Controller
                       }
 
                       if ( $post['NotaCredito']['tipom_doc'] == $model::REPONER_STOCK ) {
-                        $modelNotaEntradaDetalle = new NotaEntradaDetalle();
-                        $modelNotaEntradaDetalle->trans_detalle = $modelNotaEntrada->id_trans;
-                        $modelNotaEntradaDetalle->prod_detalle = $value->prod_detalle;
-                        $modelNotaEntradaDetalle->cant_detalle = $value->cant_detalle;
+                        $modelNotaIngresoDetalle = new NotaIngresoDetalle();
+                        $modelNotaIngresoDetalle->trans_detalle = $modelNotaIngreso->id_trans;
+                        $modelNotaIngresoDetalle->prod_detalle = $value['prod_ddetalle'];
+                        $modelNotaIngresoDetalle->cant_detalle = $value['cant_ddetalle'];
 
-                        if ( !($flag = $modelNotaEntradaDetalle->save()) ) {
+                        if ( !($flag = $modelNotaIngresoDetalle->save()) ) {
                             $transaction->rollBack();
                             throw new \Exception("Error Processing Request", 1);
                             break;
                         }
 
-                        $producto = Producto::findOne(['id_prod' => $value->prod_detalle]);
-                        $producto->stock_prod += $value->cant_detalle;
+                        $producto = Producto::findOne(['id_prod' => $value['prod_ddetalle']]);
+                        $producto->stock_prod += $value['cant_ddetalle'];
 
                         if (! ($flag = $producto->save(false))) {
                             $transaction->rollBack();
@@ -233,6 +233,7 @@ class NotaCreditoController extends Controller
                 $flag = $numeracion->save() && $flag;
 
                 if ( $flag ) {
+				  $model->save();
                   $transaction->commit();
                   Yii::$app->response->format = Response::FORMAT_JSON;
                   $return = [
@@ -325,5 +326,97 @@ class NotaCreditoController extends Controller
 
           return $documento;
         }
+    }
+	
+	public function actionNotaRpt( $id ) {
+      Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+      $modelNotaCredito = NotaCredito::find()
+                                   ->where('id_doc = :id',[':id' => $id])
+                                   ->andWhere(['tipo_doc' => [NotaCredito::TIPODOC_NCREDITO]])->one();
+	  //var_dump($modelNotaCredito);exit();
+      if ( is_null($modelNotaCredito) ){
+        throw new NotFoundHttpException(Yii::t('empresa', 'The requested page does not exist.'));
+      }
+      $this->layout = 'reports';
+
+
+      $content = $this->render('notaRpt', [
+          'documento' => $modelNotaCredito,
+          'IMPUESTO' => SiteController::getImpuesto(),
+          'rucEmpresa' => SiteController::getEmpresa()->ruc_empresa,
+      ]);
+
+
+      $pdf = Yii::$app->pdf; // or new Pdf();
+      // $pdf->cssFile = "@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css";
+      $mpdf = $pdf->api; // fetches mpdf api
+
+      $f = Yii::$app->formatter;
+      $date = $f->asDate($modelNotaCredito->fecha_doc, 'php:d/m/Y');
+
+      $nroComprobante = $modelNotaCredito->tipoDoc->abrv_tipod . $modelNotaCredito->numeracion->serie_num . "-" . substr($modelNotaCredito->cod_doc,-8);
+
+      $header = '
+      <table class="documento_enc" style="border-collapse: collapse;">
+          <tr>
+              <td width="25%">
+                <div class="rounded"> <img src="'.Url::base().'/img/logo.jpg'.'" width="180px"/> </div>
+              </td>
+              <td width="50%" align="center" >
+                <div class="titulo-emp" style="font-size:20px;font-weight:bold;">' . SiteController::getEmpresa()->nombre_empresa . '</div><br>
+                <div class="datos-emp">' . SiteController::getEmpresa()->direcc_empresa . '</div>
+                <div class="datos-emp">' . SiteController::getEmpresa()->tlf_empresa . '</div>
+                <div class="datos-emp">' . SiteController::getEmpresa()->movil_empresa . '</div>
+                <div class="datos-emp">' . SiteController::getEmpresa()->correo_empresa . '</div>
+              </td>
+              <td width="25%" style="border:1px solid black;text-align:center;font-weight:bold;">
+                <div style="margin: 70px auto;"> R.U.C. ' . SiteController::getEmpresa()->ruc_empresa . '</div><br>
+                <div style="font-size:18px"> ' . $modelNotaCredito->tipoDoc->des_tipod. ' </div><br>
+                <div style="margin: 70px auto;"> N° ' . $nroComprobante . '</div>
+              </td>
+          </tr>
+      </table>
+      <br>
+      <table class="datos_documento" border="1">
+        <tr>
+          <td width="20%" align="right" style="font-weight:bold;">'.Yii::t('cliente','Customer').'</td>
+          <td> &nbsp;' . $modelNotaCredito->pedidoDoc->cltePedido->nombre_clte . '</td>
+        </tr>
+        <tr>
+          <td align="right" style="font-weight:bold;">'.Yii::t('cliente','R.U.C.').'</td>
+          <td> &nbsp;' . $modelNotaCredito->pedidoDoc->cltePedido->ruc_clte . '</td>
+        </tr>
+        <tr>
+          <td align="right" style="font-weight:bold;border:1px solid black">'.Yii::t('cliente','Address').'</td>
+          <td> &nbsp;' . $modelNotaCredito->pedidoDoc->cltePedido->direcc_clte . '</td>
+        </tr>
+      </table>
+      <table class="datos_documento" border="1">
+        <tr>
+          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('documento','Emission date').'</td>
+          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('pedido','Order').'</td>
+          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('condicionp','Payment condition').'</td>
+          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('documento','Referral guide').'</td>
+        </tr>
+        <tr>
+          <td align="center">'.$date.'</td>
+          <td align="center">'.$modelNotaCredito->pedidoDoc->nrodoc_pedido.'</td>
+          <td align="center">'.$modelNotaCredito->pedidoDoc->condpPedido->desc_condp.'</td>
+          <td align="center"></td>
+        </tr>
+      </table>';
+
+      $sheet = file_get_contents( Yii::getAlias( '@rptcss' ).'/rptCss.css' );
+      $mpdf->WriteHTML( $sheet, 1 );
+      $mpdf->charset_in = 'UTF-8';
+
+      $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
+      $mpdf->AddPage('P','','','','',10,10,80,10,10,5);
+      $mpdf->WriteHtml( $content ); // call mpdf write html
+
+      $titulo =  $nroComprobante .'-'.$modelNotaCredito->pedidoDoc->cltePedido->nombre_clte.'.pdf';
+
+      $mpdf->SetTitle($titulo);
+      $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
     }
 }

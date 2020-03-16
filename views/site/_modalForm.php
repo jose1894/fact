@@ -63,23 +63,25 @@ use yii\helpers\Url;
 </div>
 <!-- Modal tipo cambio -->
 <?php
-$this->registerJsVar('consultaTipoC',Url::to(['/tipo-cambio/consulta-tipoc']));
-$this->registerJsVar('frameTipoC',Url::to(['/tipo-cambio/diario']));
-$this->registerJsVar('fechaTipoC',date('Y-m-d'));
+$this->registerJsVar('consultaTipoC',Url::to(['tipo-cambio/consulta-tipo','fecha' => date('Y-m-d')]));
+$this->registerJsVar('frameTipoC',Url::to(['tipo-cambio/diario']));
+//$this->registerJsVar('fechaTipoC',date('Y-m-d'));
 $js = <<<JS
   // Consulta si el tipo de cambio ha sido seteado al dia
+  
   $.ajax({
-    method:'POST',
-    url: consultaTipoC,
-    data: {fecha: fechaTipoC},
-    success: function( data ){
+    method	: 'GET',
+    url		: consultaTipoC,
+    success : function( data ){
       data = JSON.parse(data);
       if ( !data.success ) {
         $( '#modal-tipoc' ).modal( 'show' );
         $( '#frame-tipoc' ).prop( 'src', frameTipoC);
       }
-
-    }
+    },
+	error 	: function( data ) {
+		console.log( data );
+	}
   });
   // Cerrar modal tipo de cambio 
   $( '.close-btn' ).click( function(){

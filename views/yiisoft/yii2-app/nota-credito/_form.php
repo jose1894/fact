@@ -31,7 +31,7 @@ use app\base\Model;
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                 <div class="form-group">
-                  <label for="tipo_doc-search"><?= Yii::t('documento','Document type')?></label>
+                  <label for="tipo_doc-search"><?= Yii::t('tipo_documento','Document type')?></label>
                   <?= Html::dropDownList(
                           'tipo_doc-search',
                           null,
@@ -98,7 +98,7 @@ use app\base\Model;
         <div class="nota-credito-form">
           <div class="container-fluid">
 
-              <?php $form = ActiveForm::begin([ 'enableClientScript' => true]); ?>
+              <?php $form = ActiveForm::begin([ 'id' => $model->formName(),'enableClientScript' => true]); ?>
               <div class="row">
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
                   <div class="form-group">
@@ -597,6 +597,8 @@ $js = '
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
                                 "<input id=\\"NotaCredito_Detalle-" + deta + "-plista_ddetalle\\" name=\\"NotaCredito-Detalle[" + deta + "][plista_ddetalle]\\" "+
                                 " class=\\"form-control number-decimals\\" value=\\"" + data[opc][deta]["plista_pdetalle"] + "\\" readonly>" +
+								"<input id=\\"NotaCredito-Detalle-" + deta + "-impuesto_ddetalle\\" name=\\"NotaCredito-Detalle[" + deta + "][impuesto_ddetalle]\\" value=\\"" +
+								data[opc][deta]["impuesto_pdetalle"] + "\\" type=\\"hidden\\">" + 
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
                                 "<input id=\\"NotaCredito_Detalle-" + deta + "-descu_ddetalle\\" name=\\"NotaCredito-Detalle[" + deta + "][descu_ddetalle]\\" "+
@@ -682,7 +684,7 @@ $js = '
     });
 
     if (!band){
-      console.log("No checked");
+	  swal("Oops","' .Yii::t('documento', 'You must select at least one item!').'","error");
       return;
     }
 
@@ -694,10 +696,55 @@ $js = '
        async   : false,
        method  : "POST",
        success : function (data) {
-         console.log(data);
+          if ( data.success ) {
+            //swal(data.title, data.message, data.type);          
+			
+            $( "form#'.$model->formName().'" ).trigger( "reset" );
+            selects = $("form#'.$model->formName().'").find("select");
+
+            if ( selects.length ){
+              selects.trigger( "change" );
+            }
+			
+			window.open(
+			  "'.Url::to(['nota-credito/nota-rpt']).'?id=" + data.id,
+			  "'. Yii::t('documento','Credit note').'",
+			  "toolbar=no," +
+			  "location=no," +
+			  "statusbar=no," +
+			  "menubar=no," +
+			  "resizable=0," +
+			  "width=800," +
+			  "height=600," +
+			  "left = 490," +
+			  "top=300");
+			swal(data.title, data.message, data.type);
+            
+
+            $( ".table-body" ).empty();
+			$( "#documento" ).css( "display", "none" );
+
+            return;
+          }
+		  
+		  return swal("Oops!", data, "error");
        },
        error   : function (data) {
-         console.log(data);
+         let message;
+
+          if ( data.responseJSON ) {
+            let error = data.responseJSON;
+            message =   "Se ha encontrado un error: " +
+            "\\n\\nCode " + error.code +
+            "\\n\\nFile: " + error.file +
+            "\\n\\nLine: " + error.line +
+            "\\n\\nName: " + error.name +
+            "\\n Message: " + error.message;
+          } else {
+              message = data.responseText;
+          }
+
+          swal("Oops!!!",message,"error" );
        }
      })
 

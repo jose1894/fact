@@ -49,8 +49,6 @@ class NotaCredito extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            // [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc'], 'required', 'on' => self::SCENARIO_FACTURA],
-            // [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc','transp_doc','utransp_doc','motivo_doc',], 'required', 'on' => self::SCENARIO_GUIA],
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','numeracion_doc','statussunat_doc'], 'integer'],
             [['fecha_doc','clte_nombre'], 'safe'],
             [['obsv_doc','valorr_doc','hash_doc','cliente'], 'string'],
@@ -129,16 +127,6 @@ class NotaCredito extends \yii\db\ActiveRecord
     public function getDetalles()
     {
        return $this->hasMany(DocumentoDetalle::className(), ['documento_ddetalle' => 'id_doc']);
-    }
-
-    public function getGuiaRem()
-    {
-       return Documento::find()
-           ->where(['pedido_doc' => $this->pedido_doc, 'tipo_doc' => 3])
-           ->andWhere(['or',
-               ['status_doc' => Documento::GUIA_GENERADA],
-               ['status_doc' => Documento::DOCUMENTO_GENERADO]
-           ]);
     }
 
     public function getNumeracion()

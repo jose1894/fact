@@ -283,20 +283,24 @@ class TipoCambioController extends Controller
         throw new NotFoundHttpException(Yii::t('tipo_cambio', 'The requested page does not exist.'));
     }
 
-    public function actionConsultaTipoc()
+    public function actionConsultaTipo()
     {
       $return = [ 'success' => false];
       $model = [];
       $fecha = Yii::$app->request->post('fecha');
+	  
+	  if (!Yii::$app->request->isAjax) {
+		  throw new NotFoundHttpException(Yii::t('documento', 'The requested page does not exist.'));		  
+	  }	  
 
       if ( date('Y-m-d') === $fecha) {
           $model = TipoCambio::find()->where(['fecha_tipoc' => $fecha])->one();
       }
-
-      if ( !is_null($model) ) {
+	  
+      if ( !empty($model) ) {
           $return = ['success' => true];
       }
-
+	  
       echo json_encode( $return );
     }
 }

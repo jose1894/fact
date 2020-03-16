@@ -17,11 +17,11 @@ use Yii;
  */
 class NotaIngreso extends \yii\db\ActiveRecord
 {
-    public const STATUS_UNAPPROVED = 0;
-    public const STATUS_APPROVED = 1;
-    public const STATUS_CANCELED = 2;
-    public const OPE_TRANS = 'E';
-    public const NOTA_INGRESO = 'NI';
+    const STATUS_UNAPPROVED = 0;
+    const STATUS_APPROVED = 1;
+    const STATUS_CANCELED = 2;
+    const OPE_TRANS = 'E';
+    const NOTA_INGRESO = 'NI';
     /**
      * {@inheritdoc}
      */

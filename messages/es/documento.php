@@ -32,4 +32,5 @@ return [
     'You must select a warehouse' => 'Debe seleccionar un almacen',
     'You must select a payment condition' => 'Debe seleccionar una condicion de pago',
 	'Invoices' => 'Facturas',
+	'You must select at least one item!' => '¡Debe seleccionar al menos un ítem!',
 ];
