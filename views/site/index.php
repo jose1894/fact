@@ -6,7 +6,7 @@ use yii\web\View;
 use antishov\Morris;
 use yii\web\JsExpression;
 
-$this->title = 'Resumen';
+$this->title = 'Resumennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn';
 ?>
 <div class="site-index">
 

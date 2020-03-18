@@ -200,7 +200,7 @@
         "version_normalized": "3.3.11.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/RobinHerbots/Inputmask.git",
+            "url": "git@github.com:RobinHerbots/Inputmask.git",
             "reference": "5e670ad62f50c738388d4dcec78d2888505ad77b"
         },
         "dist": {
@@ -5212,17 +5212,17 @@
     },
     {
         "name": "setasign/fpdi",
-        "version": "v2.3.0",
-        "version_normalized": "2.3.0.0",
+        "version": "v2.3.1",
+        "version_normalized": "2.3.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/Setasign/FPDI.git",
-            "reference": "ff7e43e07abb97feb4a1cceaf72d75ce0e175ca0"
+            "reference": "f58e64e51f61922d4c3ba4c6c91366ac520cb442"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Setasign/FPDI/zipball/ff7e43e07abb97feb4a1cceaf72d75ce0e175ca0",
-            "reference": "ff7e43e07abb97feb4a1cceaf72d75ce0e175ca0",
+            "url": "https://api.github.com/repos/Setasign/FPDI/zipball/f58e64e51f61922d4c3ba4c6c91366ac520cb442",
+            "reference": "f58e64e51f61922d4c3ba4c6c91366ac520cb442",
             "shasum": ""
         },
         "require": {
@@ -5244,7 +5244,7 @@
             "setasign/fpdi-tcpdf": "Use this package to automatically evaluate dependencies to TCPDF.",
             "setasign/fpdi-tfpdf": "Use this package to automatically evaluate dependencies to tFPDF."
         },
-        "time": "2020-02-19T11:30:55+00:00",
+        "time": "2020-03-10T15:28:15+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
