@@ -81,8 +81,7 @@ class Distrito extends \yii\db\ActiveRecord
 
     public static function getDttoList( $pais, $provincia, $departamento )
     {
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condiciones = Distrito::find()
                      ->where(

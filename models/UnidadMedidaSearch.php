@@ -42,8 +42,7 @@ class UnidadMedidaSearch extends UnidadMedida
     public function search($params)
     {
 
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = UnidadMedida::find()
                  ->where('sucursal_und = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);

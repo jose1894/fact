@@ -287,20 +287,20 @@ class TipoCambioController extends Controller
     {
       $return = [ 'success' => false];
       $model = [];
-      $fecha = Yii::$app->request->post('fecha');
-	  
-	  if (!Yii::$app->request->isAjax) {
-		  throw new NotFoundHttpException(Yii::t('documento', 'The requested page does not exist.'));		  
-	  }	  
+      $fecha = Yii::$app->request->get('fecha');
+
+  	  if (!Yii::$app->request->isAjax) {
+  		  throw new NotFoundHttpException(Yii::t('documento', 'The requested page does not exist.'));
+  	  }
 
       if ( date('Y-m-d') === $fecha) {
-          $model = TipoCambio::find()->where(['fecha_tipoc' => $fecha])->one();
+          $model = TipoCambio::find()->where('fecha_tipoc = :fecha',[ ':fecha' => $fecha])->one();
       }
-	  
+
       if ( !empty($model) ) {
           $return = ['success' => true];
       }
-	  
+
       echo json_encode( $return );
     }
 }

@@ -16,7 +16,7 @@ $production = [
 
 $development = [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=fact',
+    'dsn' => 'mysql:host=localhost;dbname=leophard_dev',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8',
@@ -28,4 +28,4 @@ $development = [
     'schemaCache' => 'cache',
 ];
 
-return $development;
+return YII_ENV_DEV ? $development : $development;

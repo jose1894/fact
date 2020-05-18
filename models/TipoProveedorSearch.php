@@ -42,8 +42,7 @@ class TipoProveedorSearch extends TipoProveedor
     public function search($params)
     {
 
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = TipoProveedor::find()
                  ->where('sucursal_tprov = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);        

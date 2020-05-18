@@ -50,8 +50,7 @@ class CondPago extends \yii\db\ActiveRecord
 
     public static function getCondPagoList()
     {
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condiciones = CondPago::find()
                      ->where('status_condp = :status and sucursal_condp = :sucursal',[':status' => 1, ':sucursal' => $sucursal])

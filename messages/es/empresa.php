@@ -16,4 +16,5 @@ return [
     'Company: {number} {name}' => 'Empresa: {number} {name}',
     'Company' => 'Empresa',
     'Loading branches' => 'Cargando sucursales',
+    'Select a company' => 'Seleccione una empresa',
 ];

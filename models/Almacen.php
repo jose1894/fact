@@ -50,8 +50,7 @@ class Almacen extends \yii\db\ActiveRecord
 
     public static function getAlmacenList()
     {
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $almacenes = Almacen::find()
                    ->where('status_almacen = :status and sucursal_almacen = :sucursal', [':status' => 1, ':sucursal' => $sucursal])

@@ -43,8 +43,7 @@ class PedidoSearch extends Pedido
      */
     public function search($params)
     {
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Pedido::find()
                  ->where('sucursal_pedido = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);
@@ -102,8 +101,7 @@ class PedidoSearch extends Pedido
      */
     public function searchPendientes($params)
     {
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Pedido::find()
                  ->where('sucursal_pedido = :sucursal',[':sucursal' => $sucursal])
                  ->andWhere(['estatus_pedido' => [Pedido::STATUS_INACTIVO,Pedido::GUIA_GENERADA]])
@@ -162,8 +160,7 @@ class PedidoSearch extends Pedido
      */
     public function searchProformaPendientes($params)
     {
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Pedido::find()
             ->where('sucursal_pedido = :sucursal',[':sucursal' => $sucursal])
             ->andWhere(['estatus_pedido' => [Pedido::STATUS_INACTIVO]])
@@ -212,4 +209,21 @@ class PedidoSearch extends Pedido
 
         return $dataProvider;
     }
+
+    /* Selecciona el conteo total de pedidos pendientes */
+    public static function showCountPedidos()
+    {
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
+        $query = Pedido::find()
+                // ->select( ["COUNT(*) as total"] )
+                ->where('sucursal_pedido = :sucursal',[':sucursal' => $sucursal])
+                ->andWhere(['estatus_pedido' => [Pedido::STATUS_INACTIVO,Pedido::GUIA_GENERADA]])
+                ->andWhere('tipo_pedido = :tipo',[':tipo' => Pedido::PEDIDO])
+                ->andWhere('fecha_pedido = "' . date('Y-m-d') . '"')
+                ->all();
+
+      return $dataProvider = new ActiveDataProvider([
+           'query' => $query,
+       ]);
+    } /* fin de funcion showPendientes*/
 }

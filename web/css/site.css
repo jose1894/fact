@@ -135,3 +135,7 @@ input-group.select2-bootstrap-prepend .select2-container--krajee .select2-select
     border-top-right-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
 }
+
+.site-signup{
+  margin: 0 auto;
+}

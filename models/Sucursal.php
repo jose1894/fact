@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "sucursal".
@@ -85,5 +86,18 @@ class Sucursal extends \yii\db\ActiveRecord
     public function getZonas()
     {
         return $this->hasMany(Zona::className(), ['sucursal_zona' => 'id_suc']);
+    }
+
+    /*
+    Obtiene las sucursales de una empresa
+    */
+    public static function getSucursalesList( $empresa ) 
+    {
+      $empresa = (int) $empresa;
+      $sucursales = self::find()->where('estatus_suc = 1 and empresa_suc = :empresa',[ ":empresa" => $empresa])
+      ->orderBy('nombre_suc')
+      ->all();
+
+      return ArrayHelper::map($sucursales,'id_suc','nombre_suc');
     }
 }

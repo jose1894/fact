@@ -54,7 +54,7 @@ $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
                         'pluginEvents' =>[],
                         'options' => ['prompt' => ''],
                     ],
-                    'width' => '50%'
+                    'width' => '40%'
                 ],
                 [
                     'attribute' => 'status_doc',
@@ -123,7 +123,7 @@ $js = <<<JS
         let url = $( this ).prop( 'href' );
         window.open( url,'_blank');
     });
-    
+
     $( 'body' ).on( 'click', '.pjax-send-sunat', function( e ){
         e.preventDefault();
         let url = $( this ).prop( 'href' );
@@ -138,13 +138,13 @@ $js = <<<JS
                     swal('Warning',data.code + ' - ' + data.description,'warning');
                 }
                 $.pjax.reload( { container: '#grid' } )
-                
+
             },
             error: function(data){
                 console.log(data);
             }
         });
     });
-    
+
 JS;
 $this->registerJs( $js, View::POS_LOAD);

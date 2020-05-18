@@ -6,12 +6,12 @@ $i18n = require __DIR__ . '/i18n.php';
 use kartik\mpdf\Pdf;
 
 $config = [
-    'id' => 'basic',
+    'id' => 'basicOmniPlus',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'language' => 'es-ES',
     'sourceLanguage' => 'en-US',
-	'name' => 'Nombre Empresa',
+	  'name' => Yii::t( 'app', 'Administrative system'),
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -19,6 +19,10 @@ $config = [
     'timeZone' => 'America/Lima',
 
     'components' => [
+        'response' => [
+              'format' => yii\web\Response::FORMAT_HTML,
+              'charset' => 'UTF-8',
+        ],
         'formatter' => [
              'thousandSeparator' => ',',
              'currencyCode' => 'S',
@@ -44,6 +48,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             //'identityClass' => 'mdm\admin\models\User',
+            //'loginUrl' => ['admin/user/login'],
             //'enableAutoLogin' => true,
             'enableAutoLogin' => 'admin/user/login'
         ],
@@ -67,7 +72,7 @@ $config = [
             ],
         ],
         'db' => $db,
-        /* DEVELOPMENT
+         // DEVELOPMENT
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
@@ -85,7 +90,6 @@ $config = [
                     //  '<id:\d+>' => 'compra',
             ],
         ],
-        */
         'view' => [
              'theme' => [
                  'pathMap' => [
@@ -110,6 +114,10 @@ $config = [
           'i18n' => $i18n,
           'authManager' => [
               'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\PhpManager'
+              'defaultRoles' => [
+                // 'Invitado'
+              //   'Usuarios','Administradores', 'SuperSU'
+              ],
           ]
     ],
     'modules' =>[
@@ -131,38 +139,38 @@ $config = [
                     'userClassName' => 'app\models\User',
                     'idField' => 'user_id',
                     'usernameField' => 'username',
-                    /*'extraColumns' => [
+                    'extraColumns' => [
                         [
-                            'attribute' => 'Nombre',
-                            'label' => 'Nombre',
+                            'attribute' => 'nombre',
+                            // 'label' => 'Nombre',
                             'value' => function($model, $key, $index, $column) {
-                                //print_r($model); exit;
-                                return $model->profile->nombre;
+                                return $model->profiles['nombre'];
                             },
                         ],
                         [
-                            'attribute' => 'Apellido',
-                            'label' => 'Apellido',
+                            'attribute' => 'apellido',
+                            // 'label' => 'Apellido',
                             'value' => function($model, $key, $index, $column) {
-                                return $model->profile->apellido;
+                                return $model->profiles['apellido'];
+                            },
+                        ],
+
+                        [
+                            'attribute' => 'empresa',
+                            // 'label' => 'Company',
+                            'value' => function($model, $key, $index, $column) {
+                                return $model->profiles['empresa'];
                             },
                         ],
                         [
-                            'attribute' => 'dept_name',
-                            'label' => 'Department',
+                            'attribute' => 'sucursal',
+                            // 'label' => 'Sucursal',
                             'value' => function($model, $key, $index, $column) {
-                                return $model->profile->dept->name;
-                            },
-                        ],
-                        [
-                            'attribute' => 'post_name',
-                            'label' => 'Post',
-                            'value' => function($model, $key, $index, $column) {
-                                return $model->profile->post->name;
+                                return $model->profiles['sucursal'];
                             },
                         ],
                     ],
-                    'searchClass' => 'mdm\admin\models\searchs\User'*/
+                    'searchClass' => 'mdm\admin\models\searchs\User'
                     //'searchClass' => 'app\models\User'
                 ],
             ],
@@ -172,7 +180,9 @@ $config = [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             'site/*',
-            'admin/*',
+            'profile/create',
+            'empresa/sucursales',
+            //'admin/*',
             //'empresa/*'
             //'some-controller/some-action',
             // The actions listed here will be allowed to everyone including guests.

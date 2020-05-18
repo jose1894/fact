@@ -63,8 +63,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
 
     public static function getTipoDocumento( $tipo = null, $esDoc = null)
     {
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal', [':status' => self::STATUS_ACTIVO, ':sucursal' => $sucursal]];
 
@@ -128,8 +127,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
         return NULL;
       }
 
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal and  id_tipod = :id', [':status' => self::STATUS_ACTIVO, ':sucursal' => $sucursal, ':id' => $id]];
 

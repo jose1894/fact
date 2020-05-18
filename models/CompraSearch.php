@@ -41,8 +41,7 @@ class CompraSearch extends Compra
      */
     public function search($params)
     {
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Compra::find()
                  ->where('sucursal_compra = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);
@@ -79,4 +78,21 @@ class CompraSearch extends Compra
 
         return $dataProvider;
     }
+
+    /* Selecciona el conteo total de compras generadas */
+    public static function showCountCompra()
+    {
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
+        $query = Compra::find()
+                // ->select( ["COUNT(*) as total"] )
+                ->where('sucursal_compra = :sucursal',[':sucursal' => $sucursal])
+                ->andWhere(['estatus_compra' => [Documento::DOCUMENTO_GENERADO]])
+                // ->andWhere('tipo_compra = :tipo',[':tipo' => Documento::TIPODOC_FACTURA])
+                ->andWhere('fecha_compra = "' . date('Y-m-d') . '"')
+                ->all();
+
+      return $dataProvider = new ActiveDataProvider([
+           'query' => $query,
+       ]);
+    } /* fin de funcion showCountCompra*/
 }

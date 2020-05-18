@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\User;
+use app\models\SignupForm;
 
 class SiteController extends Controller
 {
@@ -50,9 +51,9 @@ class SiteController extends Controller
     public function actions()
     {
         return [
-            /*'error' => [
+            'error' => [
                 'class' => 'yii\web\ErrorAction',
-            ],*/
+            ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
@@ -67,7 +68,17 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+
+        if (!Yii::$app->user->isGuest) {
+          if (is_null(Yii::$app->user->identity->profiles)) {
+            return $this->redirect( ['profile/create','user_id' => Yii::$app->user->id]);
+            // return $this->redirect( ['profile/create']);
+          }
+          // var_dump(Yii::$app->user->identity->profiles->nombre);exit;
+          return $this->render('index');
+        }
+
+        return $this->redirect( ['login'] );
     }
 
     /**
@@ -194,14 +205,14 @@ class SiteController extends Controller
 
     public static function getImpuesto()
     {
-      $user = User::findOne(Yii::$app->user->id);
-
+      //$user = User::findOne(Yii::$app->user->id);
+      print_r(Yii::$app->user->identity->sucursal0);exit();
       return $user->sucursal0->impuesto_suc;
     }
 
     public function actionConsultaRuc(){
       return $this->render('_consultaRuc',[
-        
+
       ]);
     }
 }

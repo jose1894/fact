@@ -55,8 +55,7 @@ class TipoIdentificacion extends \yii\db\ActiveRecord
 
     public static function getTipoIdList()
     {
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $tipoid = self::find()
                      ->select(['id_tipoi', 'CONCAT(cod_tipoi,\' | \',des_tipoi) AS des_tipoi'])

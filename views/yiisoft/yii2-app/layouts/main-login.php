@@ -1,5 +1,8 @@
 <?php
-use backend\assets\AppAsset;
+dmstr\web\AdminLteAsset::register($this);
+app\assets\AdminLtePluginAsset::register($this);
+app\assets\AdminLteInitAsset::register($this);
+app\assets\AppAsset::register($this);
 use yii\helpers\Html;
 
 /* @var $this \yii\web\View */

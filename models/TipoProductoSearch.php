@@ -40,8 +40,7 @@ class TipoProductoSearch extends TipoProducto
      */
     public function search($params)
     {
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = TipoProducto::find()
                  ->where('sucursal_tpdcto = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);

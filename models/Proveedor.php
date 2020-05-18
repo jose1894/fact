@@ -112,8 +112,7 @@ class Proveedor extends \yii\db\ActiveRecord
 
     public static function getProveedorList()
     {
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condiciones = Proveedor::find()
                      ->where('status_prove = :status and sucursal_prove = :sucursal',[':status' => 1, ':sucursal' => $sucursal])

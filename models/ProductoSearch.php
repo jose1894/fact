@@ -42,8 +42,7 @@ class ProductoSearch extends Producto
      */
     public function search($params)
     {
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Producto::find()
                  ->where('sucursal_prod = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);

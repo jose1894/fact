@@ -297,4 +297,10 @@ class EmpresaController extends Controller
 
       return $out;
    }
+
+   /*Devuelve el nombre de la empresa*/
+   public static function getEmpresa()
+   {
+     return Empresa::getEmpresa()->nombre_empresa;
+   }
 }

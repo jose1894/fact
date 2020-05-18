@@ -51,8 +51,7 @@ class MotivoTraslado extends \yii\db\ActiveRecord
 
     public static function getMotivos( )
     {
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condicion = ['status_motivo = :status and sucursal_motivo = :sucursal', [':status' => self::STATUS_ACTIVE, ':sucursal' => $sucursal]];
 

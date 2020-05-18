@@ -1,13 +1,14 @@
 <?php
 use yii\helpers\Html;
-
+use yii\helpers\Url;
+use app\controllers\EmpresaController;
 /* @var $this \yii\web\View */
 /* @var $content string */
 ?>
 
 <header class="main-header">
 
-    <?= Html::a('<span class="logo-mini">Inicio</span><span class="logo-lg">' . Yii::$app->name . '</span>', Yii::$app->homeUrl, ['class' => 'logo']) ?>
+    <?= Html::a('<span class="logo-mini">' . Yii::t( 'app', 'Home') . '</span><span class="logo-lg">' . EmpresaController::getEmpresa() . '</span>', Yii::$app->homeUrl, ['class' => 'logo']) ?>
 
     <nav class="navbar navbar-static-top" role="navigation">
 
@@ -20,6 +21,7 @@ use yii\helpers\Html;
             <ul class="nav navbar-nav">
 
                 <!-- Messages: style can be found in dropdown.less-->
+                <?php /*
                 <li class="dropdown messages-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-envelope-o"></i>
@@ -225,12 +227,17 @@ use yii\helpers\Html;
                         </li>
                     </ul>
                 </li>
+                */ ?>
                 <!-- User Account: style can be found in dropdown.less -->
 
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= $directoryAsset ?>/img/user2-160x160.jpg" class="user-image" alt="User Image"/>
-                        <span class="hidden-xs">Alexander Pierce</span>
+                        <span class="hidden-xs">
+                        <?php
+                          echo Yii::$app->user->identity->profiles->nombre." ".Yii::$app->user->identity->profiles->apellido;
+                          ?>
+                        </span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
@@ -239,11 +246,17 @@ use yii\helpers\Html;
                                  alt="User Image"/>
 
                             <p>
-                                Alexander Pierce - Web Developer
-                                <small>Member since Nov. 2012</small>
+                                <?php
+                                    $rol = "";
+                                    foreach(Yii::$app->authManager->getRolesByUser(Yii::$app->user->id) as $key => $value) {
+                                          $rol =  $key;
+                                    }
+                                    ?>
+                                <?= Yii::$app->user->identity->profiles->nombre ?> <?= Yii::$app->user->identity->profiles->apellido ?> - <?= $rol ?>
+                                <small><?= Yii::t('app','Member since') ?>: <?= date('d/m/Y',Yii::$app->user->identity->created_at) ?></small>
                             </p>
                         </li>
-                        <!-- Menu Body -->
+                        <!-- Menu Body --
                         <li class="user-body">
                             <div class="col-xs-4 text-center">
                                 <a href="#">Followers</a>
@@ -258,7 +271,7 @@ use yii\helpers\Html;
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                <a href="<?= Url::to(['/profile/update','id' => Yii::$app->user->identity->profiles->id])?>" class="btn btn-default btn-flat">Profile</a>
                             </div>
                             <div class="pull-right">
                                 <?= Html::a(
@@ -272,10 +285,35 @@ use yii\helpers\Html;
                 </li>
 
                 <!-- User Account: style can be found in dropdown.less -->
-                <li>
+                <!--li>
                     <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-                </li>
+                </li-->
             </ul>
         </div>
     </nav>
 </header>
+
+<?php
+$this->registerCss('
+.skin-red .main-header .logo {
+    background-color: #d73925;
+    color: #fff;
+    border-bottom: 0 solid transparent;
+}
+.main-header .logo {
+    -webkit-transition: width .3s ease-in-out;
+    -o-transition: width .3s ease-in-out;
+    transition: width .3s ease-in-out;
+    display: block;
+    float: left;
+    height: 50px;
+    font-size: 13px;
+    line-height: 50px;
+    text-align: center;
+    width: 230px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    padding: 0 15px;
+    font-weight: 300;
+    overflow: hidden;
+}
+');

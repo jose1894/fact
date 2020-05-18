@@ -55,8 +55,7 @@ class TipoMovimiento extends \yii\db\ActiveRecord
 
     public static function getTipoMovList( $tipo )
     {
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $tipom = TipoMovimiento::find()
                  ->where('status_tipom = :status and sucursal_tipom = :sucursal and tipo_tipom like :tipo ',[':status' => 1, ':sucursal' => $sucursal, ':tipo' => $tipo])

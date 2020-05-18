@@ -63,15 +63,17 @@ use yii\helpers\Url;
 </div>
 <!-- Modal tipo cambio -->
 <?php
-$this->registerJsVar('consultaTipoC',Url::to(['tipo-cambio/consulta-tipo','fecha' => date('Y-m-d')]));
+$this->registerJsVar('consultaTipoC',Url::to(['tipo-cambio/consulta-tipo']));
+$this->registerJsVar('fecha', date('Y-m-d'));
 $this->registerJsVar('frameTipoC',Url::to(['tipo-cambio/diario']));
 //$this->registerJsVar('fechaTipoC',date('Y-m-d'));
 $js = <<<JS
   // Consulta si el tipo de cambio ha sido seteado al dia
-  
+
   $.ajax({
     method	: 'GET',
     url		: consultaTipoC,
+    data : { fecha: fecha },
     success : function( data ){
       data = JSON.parse(data);
       if ( !data.success ) {
@@ -83,12 +85,12 @@ $js = <<<JS
 		console.log( data );
 	}
   });
-  // Cerrar modal tipo de cambio 
+  // Cerrar modal tipo de cambio
   $( '.close-btn' ).click( function(){
     $( '#modal-tipoc' ).modal( 'hide' );
   });
-  
-  $( '#submit-tipoc' ).click(function( e ){ 
+
+  $( '#submit-tipoc' ).click(function( e ){
       e.preventDefault();
       e.stopPropagation();
 
@@ -104,9 +106,9 @@ $js = <<<JS
             swal(data.title, data.message, data.type);
 
             if ( $( _form ).attr( 'action' ).indexOf( 'create' ) != -1) {
-              $( _form ).trigger( 'reset' );              
+              $( _form ).trigger( 'reset' );
             }
-            
+
             $( '#modal-tipoc' ).modal( 'hide' );
 
             return;

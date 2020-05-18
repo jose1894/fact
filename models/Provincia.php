@@ -74,8 +74,7 @@ class Provincia extends \yii\db\ActiveRecord
 
     public static function getProvinciaList( $pais )
     {
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condiciones = Provincia::find()
                      ->where('status_prov = :status and sucursal_prov = :sucursal and pais_prov = :pais',[':status' => 1, ':sucursal' => $sucursal, ':pais' => $pais])

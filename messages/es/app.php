@@ -23,6 +23,17 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'Member since' => 'Miembro desde',
+	'Home' => 'Inicio',
+	'Signup' => 'Registro de usuario',
+	'Please fill out the following fields to signup:' => 'Por favor complete los campos para registrar al usuario',
+	'Sign in' => 'Ingrese',
+	'Remember Me' => 'Recuérdame',
+	'Username' => 'Nombre de usuario',
+	'Password' => 'Contraseña',
+	'Email' => 'Correo electrónico',
+	'Sign in to start your session' => 'Ingrese para iniciar sesión',
+	'Administrative system' => 'Sistema administ.',
 	'More' => 'Más',
     'Record not found!' => '¡Registro a consultar no existe!',
     'Search' => 'Buscar',

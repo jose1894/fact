@@ -146,6 +146,14 @@ return [
               'producto' => 'producto.php',
             ],
         ],
+        'profile' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'perfil' => 'perfil.php',
+            ],
+        ],
         'proveedor' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',

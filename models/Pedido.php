@@ -28,7 +28,7 @@ class Pedido extends \yii\db\ActiveRecord
     const GUIA_GENERADA = 1;
     const DOCUMENTO_GENERADO = 2;
     const PEDIDO_FINALIZADO = 3;
-    const PEDIDO_ANULADO = 4;    
+    const PEDIDO_ANULADO = 4;
     const PEDIDO = 'NP';
     const PROFORMA = 'PR';
     const COTIZACION = 'CT';

@@ -52,8 +52,7 @@ class TipoProveedor extends \yii\db\ActiveRecord
 
     public static function getTipoProveedor( )
     {
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
         $condicion = ['status_tprov = :status and sucursal_tprov = :sucursal', [':status' => self::STATUS_ACTIVE, ':sucursal' => $sucursal]];
 

@@ -1,86 +1,104 @@
 <?php
+use mdm\admin\components\Helper;
 
 /* @var $this yii\web\View */
 use yii\helpers\Url;
 use yii\web\View;
 use antishov\Morris;
 use yii\web\JsExpression;
+use app\models\PedidoSearch;
+use app\models\DocumentoSearch;
+use app\models\CompraSearch;
+use app\models\User;
 
 $this->title = 'Resumen';
+
+//echo "ak";
+// echo Helper::checkRoute('/empresa/create');
+
 ?>
 <div class="site-index">
 
         <section class="content">
-      <!-- Small boxes (Stat box) -->
-      <div class="row">
-        <div class="col-lg-4 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-aqua">
-            <div class="inner">
-              <h3>0</h3>
+          <!-- Small boxes (Stat box) -->
+            <div class="row">
+              <div class="col-lg-4 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-aqua">
+                  <div class="inner">
+                    <h3><?php
+                      $model = PedidoSearch::showCountPedidos();
+                      echo count($model->query);
+                      ?></h3>
 
-              <p><?= Yii::t('pedido', 'New orders')?></p>
-            </div>
-            <div class="icon">
-			  <i class="ion ion-ios-albums-outline"></i>
-            </div>
-            <a href="<?= Url::to(['pedido/index'])?>" class="small-box-footer"><?= Yii::t('app','More')?> <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-4 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-green">
-            <div class="inner">
-              <h3>0</h3>
+                    <p><?= Yii::t('pedido', 'New orders')?></p>
+                  </div>
+                  <div class="icon">
+      			  <i class="ion ion-ios-albums-outline"></i>
+                  </div>
+                  <a href="<?= Url::to(['pedido/index'])?>" class="small-box-footer"><?= Yii::t('app','More')?> <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
+              <!-- ./col -->
+              <div class="col-lg-4 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-green">
+                  <div class="inner">
+                    <h3><?php
+                      $model = DocumentoSearch::showCountFactura();
+                      echo count($model->query);
+                      ?></h3>
 
-              <p><?= Yii::t('documento', 'Invoices')?></p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-stats-bars"></i>
-            </div>
-            <a href="<?= Url::to(['documento/listado-factura'])?>" class="small-box-footer"><?= Yii::t('app', 'More')?> <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-4 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-yellow">
-            <div class="inner">
-              <h3>0</h3>
+                    <p><?= Yii::t('documento', 'Invoices')?></p>
+                  </div>
+                  <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                  </div>
+                  <a href="<?= Url::to(['documento/listado-factura'])?>" class="small-box-footer"><?= Yii::t('app', 'More')?> <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
+              <!-- ./col -->
+              <div class="col-lg-4 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-yellow">
+                  <div class="inner">
+                    <h3><?php
+                      $model = CompraSearch::showCountCompra();
+                      echo count($model->query);
+                      ?></h3>
 
-              <p><?= Yii::t('compra', 'Purchase order')?></p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-bag"></i>
-            </div>
-            <a href="<?= Url::to(['compra/index'])?>" class="small-box-footer"><?= Yii::t('app', 'More')?> <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
+                    <p><?= Yii::t('compra', 'Purchase order')?></p>
+                  </div>
+                  <div class="icon">
+                    <i class="ion ion-bag"></i>
+                  </div>
+                  <a href="<?= Url::to(['compra/index'])?>" class="small-box-footer"><?= Yii::t('app', 'More')?> <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
+              <!-- ./col -->
 
-      </div>
-	  
-	  <div class="row">
-			<section class="col-lg-12 connectedSortable">
-			  <!-- Custom tabs (Charts with tabs)-->
-			  <div class="nav-tabs-custom">
-				<!-- Tabs within a box -->
-				<ul class="nav nav-tabs pull-right">
-				  <li class="active"><a href="#revenue-chart" data-toggle="tab">Area</a></li>				  
-				  <li class="pull-left header"><i class="fa fa-inbox"></i> Ventas (Datos demo)</li>
-				</ul>
-				<div class="tab-content no-padding">
-				  <!-- Morris chart - Sales -->
-				  <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;"></div>				  
-				</div>
-			  </div>
-			  <!-- /.nav-tabs-custom -->
-			</section>
-	  </div>
-	  
+            </div>
+
+        	  <div class="row">
+        			<section class="col-lg-12 connectedSortable">
+        			  <!-- Custom tabs (Charts with tabs)-->
+        			  <div class="nav-tabs-custom">
+        				<!-- Tabs within a box -->
+        				<ul class="nav nav-tabs pull-right">
+        				  <li class="active"><a href="#revenue-chart" data-toggle="tab">Area</a></li>
+        				  <li class="pull-left header"><i class="fa fa-inbox"></i> Ventas (Datos demo)</li>
+        				</ul>
+        				<div class="tab-content no-padding">
+        				  <!-- Morris chart - Sales -->
+        				  <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;"></div>
+        				</div>
+        			  </div>
+        			  <!-- /.nav-tabs-custom -->
+        			</section>
+        	  </div>
+
 	  <div class="row" style="display:none">
-	  
+
 	  <?= Morris\Line::widget([
      'resize' => true,
      'gridTextSize' => 11,
@@ -109,7 +127,7 @@ $this->title = 'Resumen';
 
 <?php
 echo   $this->render('//site/_modalForm',[]);
-$js = "  
+$js = "
   /* Morris.js Charts */
   // Sales chart
   var area = new Morris.Area({
@@ -162,5 +180,5 @@ $js = "
     gridTextFamily   : 'Open Sans',
     gridTextSize     : 10
   });";
-  
+
   $this->registerJs($js, View::POS_LOAD);

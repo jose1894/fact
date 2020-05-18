@@ -148,8 +148,7 @@ class Cliente extends \yii\db\ActiveRecord
 
     public static function getClienteList()
     {
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condiciones = Cliente::find()
                      ->where('estatus_ctle = :status and sucursal_clte = :sucursal',[':status' => 1, ':sucursal' => $sucursal])

@@ -79,4 +79,10 @@ class Empresa extends \yii\db\ActiveRecord
       return ArrayHelper::map($empresas,'id_empresa','nombre_empresa');
 
     }
+
+    /* Obtiene el nombre de la empresa */
+    public static function getEmpresa()
+    {
+      return self::find()->where(['estatus_empresa' => 1])->one();
+    }
 }

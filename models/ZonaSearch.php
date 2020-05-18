@@ -42,8 +42,7 @@ class ZonaSearch extends Zona
     public function search($params)
     {
 
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Zona::find()
                  ->where('sucursal_zona = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);

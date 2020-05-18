@@ -10,22 +10,10 @@ nbproject
 .settings
 
 # windows thumbnail cache
-#Thumbs.db
-
-# Config dir
-#/config
+Thumbs.db
 
 # composer vendor dir
-#/vendor
-
-#XML sunat
-/xml
-
-# web assets
-/web/assets
-
-#logs
-/logs
+/vendor
 
 # composer itself is not needed
 composer.phar

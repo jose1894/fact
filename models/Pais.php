@@ -53,8 +53,7 @@ class Pais extends \yii\db\ActiveRecord
 
     public static function getPaisList()
     {
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condiciones = Pais::find()
                      ->where('status_pais = :status and sucursal_pais = :sucursal',[':status' => 1, ':sucursal' => $sucursal])

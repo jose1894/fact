@@ -42,8 +42,7 @@ class DocumentoSearch extends Documento
      */
     public function search($params)
     {
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Documento::find()
                  ->where('sucursal_doc = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);
@@ -90,8 +89,7 @@ class DocumentoSearch extends Documento
      */
     public function searchDocumento($params)
     {
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Documento::find()->joinWith(['pedidoDoc'])->joinWith('pedidoDoc.cltePedido')
                  ->where([
                             'sucursal_doc' => $sucursal,
@@ -145,4 +143,21 @@ class DocumentoSearch extends Documento
 
         return $dataProvider;
     }
+
+    /* Selecciona el conteo total de facturas generadas */
+    public static function showCountFactura()
+    {
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
+        $query = Documento::find()
+                // ->select( ["COUNT(*) as total"] )
+                ->where('sucursal_doc = :sucursal',[':sucursal' => $sucursal])
+                ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
+                ->andWhere('tipo_doc = :tipo',[':tipo' => Documento::TIPODOC_FACTURA])
+                ->andWhere('fecha_doc = "' . date('Y-m-d') . '"')
+                ->all();
+
+      return $dataProvider = new ActiveDataProvider([
+           'query' => $query,
+       ]);
+    } /* fin de funcion showCountFactura*/
 }

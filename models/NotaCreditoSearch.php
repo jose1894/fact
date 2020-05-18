@@ -43,8 +43,7 @@ class NotaCreditoSearch extends NotaCredito
      */
     public function search($params)
     {
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = NotaCredito::find()
             ->where([
                 'sucursal_doc' => $sucursal,
@@ -94,8 +93,7 @@ class NotaCreditoSearch extends NotaCredito
      */
     public function searchNotaCredito($params)
     {
-        $user = User::findOne(Yii::$app->user->id);
-        $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = NotaCredito::find()->joinWith(['pedidoDoc'])->joinWith('pedidoDoc.cltePedido')
                  ->where([
                             'sucursal_doc' => $sucursal,

@@ -53,8 +53,7 @@ class Transportista extends \yii\db\ActiveRecord
 
     public static function getTransportista( )
     {
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condicion = ['status_transp = :status and sucursal_transp = :sucursal', [':status' => self::STATUS_ACTIVE, ':sucursal' => $sucursal]];
 

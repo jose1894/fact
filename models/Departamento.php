@@ -83,8 +83,7 @@ class Departamento extends \yii\db\ActiveRecord
 
     public static function getDeptoList( $pais, $provincia )
     {
-      $user = User::findOne(Yii::$app->user->id);
-      $sucursal = $user->sucursal0->id_suc;
+$sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condiciones = Departamento::find()
                      ->where(
