@@ -191,23 +191,17 @@ class SiteController extends Controller
 
     public static function getEmpresa()
     {
-      $user = User::findOne(Yii::$app->user->id);
-
-      return $user->empresa0;
+      return Yii::$app->user->identity->profiles->empresa0;
     }
 
     public static function getSucursal()
     {
-      $user = User::findOne(Yii::$app->user->id);
-
-      return $user->sucursal0->id_suc;
+      return Yii::$app->user->identity->profiles->sucursal0->id_suc;
     }
 
     public static function getImpuesto()
     {
-      //$user = User::findOne(Yii::$app->user->id);
-      print_r(Yii::$app->user->identity->sucursal0);exit();
-      return $user->sucursal0->impuesto_suc;
+      return Yii::$app->user->identity->profiles->sucursal0->impuesto_suc;
     }
 
     public function actionConsultaRuc(){

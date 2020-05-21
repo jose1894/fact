@@ -73,12 +73,13 @@ class ProfileController extends Controller
 
         if (Yii::$app->request->isGet) {
           $id = (int) Yii::$app->request->get('user_id');
-          $existe = Profile::find( $id )->one();
+          $existe = Profile::find( $id );
+          // print_r( count($existe) ); exit();
           // exit('ak');
         }
 
 
-        if ( is_null($existe) || count($existe) == 0 ) {
+        if ( is_null( $existe ) ) {
             return $this->redirect(['site/index']);
         }
 
