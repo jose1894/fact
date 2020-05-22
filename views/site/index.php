@@ -11,7 +11,7 @@ use app\models\DocumentoSearch;
 use app\models\CompraSearch;
 use app\models\User;
 
-$this->title = 'Resumen prueba';
+$this->title = 'Resumen Facturas';
 
 //echo "ak";
 // echo Helper::checkRoute('/empresa/create');
