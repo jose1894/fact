@@ -5,7 +5,6 @@
  *
  * @author Wanderson Bragança <wanderson.wbc@gmail.com>
  */
- console.log("akiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
 (function ($) {
     var pluginName = 'yiiDynamicForm';
 
