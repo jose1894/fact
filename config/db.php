@@ -16,7 +16,7 @@ $production = [
 
 $development = [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=leophard_dev',
+    'dsn' => 'mysql:host=localhost;dbname=fact',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8',
