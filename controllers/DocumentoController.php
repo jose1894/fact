@@ -10,6 +10,7 @@ use app\models\NotaSalida;
 use app\models\NotaSalidaDetalle;
 use app\models\DocumentoDetalle;
 use app\models\Pedido;
+use app\models\NotaCredito;
 use app\models\Producto;
 use app\models\TipoCambio;
 use app\models\Numeracion;
@@ -32,6 +33,8 @@ use Greenter\Model\Sale\SaleDetail;
 use Greenter\Model\Sale\Legend;
 use Greenter\Ws\Services\SunatEndpoints;
 use Greenter\See;
+use yii\data\SqlDataProvider;
+
 
 
 /**
@@ -780,6 +783,28 @@ class DocumentoController extends Controller
       echo json_encode($return);
       // Guardar CDR
       file_put_contents(Yii::getAlias('@app') . '/xml/response/' . 'R-'.$invoice->getName().'.zip', $result->getCdrZip());
+    }
+
+    function actionAnularDocumento()
+    {
+      $searchModel = new DocumentoSearch();
+      // $searchModel->tipo_doc = [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
+      // $params = ['DocumentoSearch' => ['cod_doc' => 1, 'tipo_doc' => [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO]]];
+      // $params = [ 'DocumentoSearch' => [ 'cod_doc' => 0000000001,'tipo_doc' => [2], 'status_doc' => [2,3] ]];
+      // print_r($params);
+      // exit();
+      $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
+
+
+      return $this->render('_listadoAnular', [
+          'searchModel' => $searchModel,
+          'dataProvider' => $dataProvider,
+      ]);
+
+
+      return $this->render('_listadoAnular', [
+          'dataProvider' => $dataProvider,
+      ]);
     }
 
 }

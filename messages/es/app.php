@@ -23,7 +23,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Member since' => 'Miembro desde',
+  'Summary' => 'Resumen',
+  'Member since' => 'Miembro desde',
 	'Home' => 'Inicio',
 	'Signup' => 'Registro de usuario',
 	'Please fill out the following fields to signup:' => 'Por favor complete los campos para registrar al usuario',

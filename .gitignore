@@ -18,6 +18,9 @@ vendor
 # web assets
 /web/assets
 
+#config
+config
+
 # composer itself is not needed
 composer.phar
 
