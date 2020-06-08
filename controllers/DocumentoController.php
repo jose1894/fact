@@ -789,22 +789,22 @@ class DocumentoController extends Controller
     {
       $searchModel = new DocumentoSearch();
       // $searchModel->tipo_doc = [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
-      // $params = ['DocumentoSearch' => ['cod_doc' => 1, 'tipo_doc' => [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO]]];
+      $params = ['DocumentoSearch' => ['cod_doc' => 1, 'tipo_doc' => [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO]]];
       // $params = [ 'DocumentoSearch' => [ 'cod_doc' => 0000000001,'tipo_doc' => [2], 'status_doc' => [2,3] ]];
       // print_r($params);
       // exit();
       $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
 
-
+      // print_r($dataProvider); exit();
       return $this->render('_listadoAnular', [
           'searchModel' => $searchModel,
           'dataProvider' => $dataProvider,
       ]);
 
 
-      return $this->render('_listadoAnular', [
-          'dataProvider' => $dataProvider,
-      ]);
+      // return $this->render('_listadoAnular', [
+      //     'dataProvider' => $dataProvider,
+      // ]);
     }
 
 }

@@ -67,17 +67,26 @@ class DocumentoSearch extends Documento
             'id_doc' => $this->id_doc,
             // 'tipo_doc' => $this->tipo_doc,
             'pedido_doc' => $this->pedido_doc,
-            'fecha_doc' => $this->fecha_doc,
+            // 'fecha_doc' => $this->fecha_doc,
             'totalimp_doc' => $this->totalimp_doc,
             'totaldsc_doc' => $this->totaldsc_doc,
             'total_doc' => $this->total_doc,
             'sucursal_doc' => $this->sucursal_doc,
         ]);
 
+
         $query->andFilterWhere(['like', 'cod_doc', $this->cod_doc])
             ->andFilterWhere(['in', 'tipo_doc', $this->tipo_doc])
             ->andFilterWhere(['like', 'obsv_doc', $this->obsv_doc])
             ->andFilterWhere(['in', 'status_doc', $this->status_doc]);
+
+        if ( !empty($this->fecha_doc) ) {
+          // var_dump($this->fecha_doc); exit();
+          $fechaDoc = explode(" - ", $this->fecha_doc);
+          $fechaDocInicio = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[0]))->format('Y-m-d');
+          $fechaDocFin = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[1]))->format('Y-m-d');
+          $query->andFilterWhere(['between', 'fecha_doc', $fechaDocInicio, $fechaDocFin]);
+        }
 
         return $dataProvider;
     }

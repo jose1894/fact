@@ -37,16 +37,26 @@ $status = [ 2 => 'DOCUMENTO GENERADO'];
                     'width' => '5%'
                 ],
                 [
-                    'attribute'=>'fecha_doc',
-                    // 'value' => function($data){
-                    //     return Yii::$app->formatter->asDate($data->fecha_doc, 'dd/MM/yyyy');
-                    // },
-                    'format' => ['date', 'php:d/m/yy'],
-                    'width' => '10%',
-                    'filterType' => GridView::FILTER_DATE,
-                    'contentOptions' => ['style'=>'text-align: right;'],
-                ],
-                'tipo_doc',
+                  // 'format' => 'date',
+                  'value' => function($data){
+                       return Yii::$app->formatter->asDate($data->fecha_doc, 'dd/MM/yyyy');
+                  },
+                  'attribute' => 'fecha_doc',
+                  'hAlign' => 'center',
+                  'vAlign' => 'middle',
+                  'filterType' => GridView::FILTER_DATE_RANGE,
+                  'filterWidgetOptions' => [
+                          'presetDropdown' => true,
+                          'pluginOptions' => [
+                                  'format' => 'DD/MM/YYYY',
+                                  'separator' => ' A ',
+                          ],
+                          'pluginEvents' => [
+                                  "apply.daterangepicker" => "function() { aplicarDateRangeFilter('FechaEmision') }",
+                          ],
+                  ],
+              ],
+              'tipo_doc',
                 // [
                 //     'attribute' => 'cliente',
                 //     'label' => Yii::t('cliente','Customer'),
@@ -124,6 +134,7 @@ $status = [ 2 => 'DOCUMENTO GENERADO'];
 <?php
 
 $js = <<<JS
+    // debugger;
     $( 'body' ).on( 'click', '.pjax-print-document', function( e ){
         e.preventDefault();
         let url = $( this ).prop( 'href' );
@@ -154,3 +165,10 @@ $js = <<<JS
 
 JS;
 $this->registerJs( $js, View::POS_LOAD);
+
+$js = <<<JS
+function aplicarDateRangeFilter() {
+  $('.grid-view').yiiGridView('applyFilter');
+}
+JS;
+$this->registerJs( $js, View::POS_BEGIN);
