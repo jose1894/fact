@@ -24,6 +24,7 @@
  */
 return [
   'Summary' => 'Resumen',
+  'Select range' => 'Seleccione el rango',
   'Member since' => 'Miembro desde',
 	'Home' => 'Inicio',
 	'Signup' => 'Registro de usuario',

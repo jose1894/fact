@@ -8,6 +8,8 @@ use yii\widgets\Pjax;
 use kartik\select2\Select2;
 use app\models\Cliente;
 use app\models\Documento;
+use app\models\TipoDocumento;
+use kartik\daterange\DateRangePicker;
 
 
 /* @var $this yii\web\View */
@@ -17,6 +19,9 @@ use app\models\Documento;
 $this->title = Yii::t('documento', 'Documentos');
 $this->params['breadcrumbs'][] = $this->title;
 $status = [ 2 => 'DOCUMENTO GENERADO'];
+$primerDiaMes = date('01-m-Y'); // hard-coded '01' for first day
+$ultimoDiaMes  = date('d-m-Y');
+
 ?>
     <div class="documento-index">
 
@@ -38,6 +43,7 @@ $status = [ 2 => 'DOCUMENTO GENERADO'];
                 ],
                 [
                   // 'format' => 'date',
+                  'width' => '25%',
                   'value' => function($data){
                        return Yii::$app->formatter->asDate($data->fecha_doc, 'dd/MM/yyyy');
                   },
@@ -46,17 +52,44 @@ $status = [ 2 => 'DOCUMENTO GENERADO'];
                   'vAlign' => 'middle',
                   'filterType' => GridView::FILTER_DATE_RANGE,
                   'filterWidgetOptions' => [
-                          'presetDropdown' => true,
+                          'presetDropdown'=>true,
+                          'convertFormat'=>true,
+                          // 'includeMonthsFilter'=>true,
                           'pluginOptions' => [
-                                  'format' => 'DD/MM/YYYY',
-                                  'separator' => ' A ',
+                                'locale' => ['format' => 'd/m/Y'],
+                                'maxDate' => $ultimoDiaMes,
                           ],
+                          'options' => ['placeholder' => Yii::t( 'app', 'Select range' )."..." ],
                           'pluginEvents' => [
                                   "apply.daterangepicker" => "function() { aplicarDateRangeFilter('FechaEmision') }",
                           ],
                   ],
               ],
               'tipo_doc',
+
+                [
+                    'attribute' => 'tipoDocumento',
+                    'label' => Yii::t('cliente','Document type'),
+                    'value' => 'tipoDoc.des_tipod',
+                    'filter'=>TipoDocumento::getTipoDocumentoListAnular(),
+                    'filterType' => GridView::FILTER_SELECT2,
+                    // 'filterWidgetOptions' => [
+                    //     'language' => Yii::$app->language,
+                    //     'theme' => Select2::THEME_DEFAULT,
+                    //     'pluginOptions' => ['allowClear' => true],
+                    //     'pluginEvents' =>[],
+                    //     'options' => ['prompt' => ''],
+                    // ],
+                    'filterWidgetOptions'=>[
+                          'language' => Yii::$app->language,
+                          'theme' => Select2::THEME_DEFAULT,
+                          'pluginOptions'=>[
+                                  'allowClear'=>true,
+                                  //'multiple'=>true
+                          ],
+                		],
+                    'width' => '40%'
+                ],
                 // [
                 //     'attribute' => 'cliente',
                 //     'label' => Yii::t('cliente','Customer'),

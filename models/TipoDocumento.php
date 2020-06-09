@@ -63,7 +63,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
 
     public static function getTipoDocumento( $tipo = null, $esDoc = null)
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+      $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal', [':status' => self::STATUS_ACTIVO, ':sucursal' => $sucursal]];
 
@@ -121,13 +121,44 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
       return  $tipoDoc;
     }
 
+    public static function getTipoDocumentoListAnular()
+    {
+      $sucursal = Yii::$app->user->identity->profiles->sucursal;
+
+      $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal', [':status' => self::STATUS_ACTIVO, ':sucursal' => $sucursal]];
+
+      // if ( !is_null($esDoc) && $esDoc ==  self::ES_DOCUMENTO) {
+      //   $condicion[ 0 ] .= ' and tipo_tipod = :documento ';
+      //   $condicion[ 1 ][ ':documento' ] = self::ES_DOCUMENTO;
+      // }
+
+      // if ( !is_null($esDoc) && $esDoc == self::ES_GUIA){
+      //     $condicion[ 0 ] .= ' and tipo_tipod = :guia ';
+      //     $condicion[ 1 ][ ':guia' ] = self::ES_GUIA;
+      // }
+
+      // if ( !is_null($tipo) || $tipo ){
+      //   $condicion[ 0 ] .= ' and ope_tipod like :tipo ';
+      //   $condicion[ 1 ][ ':tipo' ] = $tipo;
+      // }
+
+      // if ( !is_null($esDoc) || $esDoc != 0 ){
+        $tipom = TipoDocumento::find()
+        //->joinWith('numeracions')
+        ->where($condicion[0], $condicion[1])
+        ->orderBy('des_tipod')
+        ->all();
+
+        return ArrayHelper::map( $tipom, 'id_tipod', 'des_tipod');
+    }
+
     public function getTipoDocumentoById( $id = null)
     {
       if( is_null($id) ) {
         return NULL;
       }
 
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+      $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal and  id_tipod = :id', [':status' => self::STATUS_ACTIVO, ':sucursal' => $sucursal, ':id' => $id]];
 

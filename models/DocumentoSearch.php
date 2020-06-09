@@ -12,6 +12,7 @@ use yii\data\ActiveDataProvider;
 class DocumentoSearch extends Documento
 {
     public $cliente;
+    public $tipoDocumento;
     /**
      * {@inheritdoc}
      */
@@ -19,7 +20,7 @@ class DocumentoSearch extends Documento
     {
         return [
             [['id_doc', 'tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cliente'], 'integer'],
-            [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc','cliente','tipo_doc'], 'safe'],
+            [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc','cliente','tipo_doc','tipoDocumento'], 'safe'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
         ];
     }
@@ -44,8 +45,13 @@ class DocumentoSearch extends Documento
     {
         $sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Documento::find()
+                 ->joinWith(['pedidoDoc'])
+                 ->joinWith('pedidoDoc.cltePedido')
+                 ->joinWith('tipoDoc')
                  ->where('sucursal_doc = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);
+
+
 
         // add conditions that should always apply here
 
@@ -53,8 +59,19 @@ class DocumentoSearch extends Documento
             'query' => $query,
         ]);
 
+        $dataProvider->sort->attributes['cliente'] = [
+            'asc' => ['cliente.nombre_clte' => SORT_ASC],
+            'desc' => ['cliente.nombre_clte' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['tipoDocumento'] = [
+            'asc' => ['tipo_documento.des_tipod' => SORT_ASC],
+            'desc' => ['tipo_documento.des_tipod' => SORT_DESC],
+        ];
+
 
         $this->load($params);
+        // var_dump($this->tipo_doc);exit();
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -76,15 +93,18 @@ class DocumentoSearch extends Documento
 
 
         $query->andFilterWhere(['like', 'cod_doc', $this->cod_doc])
-            ->andFilterWhere(['in', 'tipo_doc', $this->tipo_doc])
+            // ->andFilterWhere(['in', 'tipo_doc', $this->tipo_doc])
             ->andFilterWhere(['like', 'obsv_doc', $this->obsv_doc])
+            ->andFilterWhere(['like', 'tipo_documento.id_tipod', $this->tipoDocumento])
             ->andFilterWhere(['in', 'status_doc', $this->status_doc]);
 
         if ( !empty($this->fecha_doc) ) {
           // var_dump($this->fecha_doc); exit();
           $fechaDoc = explode(" - ", $this->fecha_doc);
           $fechaDocInicio = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[0]))->format('Y-m-d');
+          // $fechaDocInicio = trim($fechaDoc[0]);
           $fechaDocFin = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[1]))->format('Y-m-d');
+          // $fechaDocFin = trim($fechaDoc[1]);
           $query->andFilterWhere(['between', 'fecha_doc', $fechaDocInicio, $fechaDocFin]);
         }
 
@@ -113,11 +133,11 @@ class DocumentoSearch extends Documento
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
         $dataProvider->sort->attributes['cliente'] = [
-            'asc' => ['cliente.nombre_clte' => SORT_ASC],
-            'desc' => ['cliente.nombre_clte' => SORT_DESC],
+          'asc' => ['cliente.nombre_clte' => SORT_ASC],
+          'desc' => ['cliente.nombre_clte' => SORT_DESC],
         ];
+
 
         $this->load($params);
 
