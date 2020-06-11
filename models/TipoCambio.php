@@ -54,7 +54,7 @@ class TipoCambio extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getTipoCambio( $fecha = null )
+    public static function getTipoCambio( $fecha = null )
     {
         if ( empty($fecha) ){
             $fecha = date('Y-m-d' );

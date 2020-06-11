@@ -152,7 +152,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
         return ArrayHelper::map( $tipom, 'id_tipod', 'des_tipod');
     }
 
-    public function getTipoDocumentoById( $id = null)
+    public static function getTipoDocumentoById( $id = null)
     {
       if( is_null($id) ) {
         return NULL;
