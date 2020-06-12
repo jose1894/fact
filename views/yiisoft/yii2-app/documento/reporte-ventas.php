@@ -23,21 +23,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
         'columns' => [
-          [
-              'attribute' => 'cod_doc',
-              'width' => '5%'
-          ],
-          [
-            // 'format' => 'date',
-            'width' => '25%',
-            'value' => function($data){
-                 return Yii::$app->formatter->asDate($data->fecha_doc, 'dd/MM/yyyy');
-            },
-            'attribute' => 'fecha_doc',
-            'hAlign' => 'center',
-            'vAlign' => 'middle',
-            'filterType' => GridView::FILTER_DATE_RANGE,
-        ],
+              [
+                  'attribute' => 'cod_doc',
+                  'width' => '5%'
+              ],
+              [
+                // 'format' => 'date',
+                'width' => '25%',
+                'value' => function($data){
+                     return Yii::$app->formatter->asDate($data->fecha_doc, 'dd/MM/yyyy');
+                },
+                'attribute' => 'fecha_doc',
+                'hAlign' => 'center',
+                'vAlign' => 'middle',
+                'filterType' => GridView::FILTER_DATE_RANGE,
+            ],
+            [
+              'attribute' => 'tipoDocumento',
+              'value' => 'tipoDoc.des_tipod',
+            ],
+
         ],
     ]); ?>
 

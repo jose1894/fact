@@ -788,7 +788,7 @@ class DocumentoController extends Controller
     function actionAnularDocumento()
     {
       $searchModel = new DocumentoSearch();
-      // $searchModel->tipo_doc = [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
+      $searchModel->tipoDocumento = [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
       $params = Yii::$app->request->queryParams;
       // $params = ['DocumentoSearch' => ['cod_doc' => 1, 'tipo_doc' => [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO]]];
       // $params = [ 'DocumentoSearch' => [ 'cod_doc' => 0000000001,'tipo_doc' => [2], 'status_doc' => [2,3] ]];
@@ -813,8 +813,10 @@ class DocumentoController extends Controller
 
     function actionReporteVentas() {
       $searchModel = new DocumentoSearch();
+
       $params = Yii::$app->request->queryParams;
-      $params[$searchModel->formName()]['tipo_doc'] = [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
+      // $params[$searchModel->formName()]['tipo_doc'] = [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
+
       $dataProvider = $searchModel->search( $params );
       return $this->render('reporte-ventas', [
           'dataProvider' => $dataProvider,

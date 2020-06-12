@@ -65,31 +65,30 @@ $ultimoDiaMes  = date('d-m-Y');
                           ],
                   ],
               ],
-              'tipo_doc',
+              [
+                  'attribute' => 'tipoDocumento',
+                  'label' => Yii::t('cliente','Document type'),
+                  'value' => 'tipoDoc.des_tipod',
+                  'filter'=>TipoDocumento::getTipoDocumentoList(null, TipoDocumento::ES_DOCUMENTO),
+                  'filterType' => GridView::FILTER_SELECT2,
+                  // 'filterWidgetOptions' => [
+                  //     'language' => Yii::$app->language,
+                  //     'theme' => Select2::THEME_DEFAULT,
+                  //     'pluginOptions' => ['allowClear' => true],
+                  //     'pluginEvents' =>[],
+                  //     'options' => ['prompt' => ''],
+                  // ],
 
-                [
-                    'attribute' => 'tipoDocumento',
-                    'label' => Yii::t('cliente','Document type'),
-                    'value' => 'tipoDoc.des_tipod',
-                    'filter'=>TipoDocumento::getTipoDocumentoListAnular(),
-                    'filterType' => GridView::FILTER_SELECT2,
-                    // 'filterWidgetOptions' => [
-                    //     'language' => Yii::$app->language,
-                    //     'theme' => Select2::THEME_DEFAULT,
-                    //     'pluginOptions' => ['allowClear' => true],
-                    //     'pluginEvents' =>[],
-                    //     'options' => ['prompt' => ''],
-                    // ],
-                    'filterWidgetOptions'=>[
-                          'language' => Yii::$app->language,
-                          'theme' => Select2::THEME_DEFAULT,
-                          'pluginOptions'=>[
-                                  'allowClear'=>true,
-                                  //'multiple'=>true
-                          ],
-                		],
-                    'width' => '40%'
-                ],
+                  'filterWidgetOptions'=>[
+                        'language' => Yii::$app->language,
+                        'theme' => Select2::THEME_DEFAULT,
+                        'pluginOptions'=>[
+                                'allowClear'=>true,
+                                'multiple'=>true
+                        ],
+              		],
+                  'width' => '40%'
+              ],
                 // [
                 //     'attribute' => 'cliente',
                 //     'label' => Yii::t('cliente','Customer'),

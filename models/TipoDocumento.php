@@ -121,26 +121,26 @@ class TipoDocumento extends \yii\db\ActiveRecord
       return  $tipoDoc;
     }
 
-    public static function getTipoDocumentoListAnular()
+    public static function getTipoDocumentoList( $tipo = null, $esDoc = null)
     {
       $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condicion = ['status_tipod = :status and sucursal_tipod = :sucursal', [':status' => self::STATUS_ACTIVO, ':sucursal' => $sucursal]];
 
-      // if ( !is_null($esDoc) && $esDoc ==  self::ES_DOCUMENTO) {
-      //   $condicion[ 0 ] .= ' and tipo_tipod = :documento ';
-      //   $condicion[ 1 ][ ':documento' ] = self::ES_DOCUMENTO;
-      // }
+      if ( !is_null($esDoc) && $esDoc ==  self::ES_DOCUMENTO) {
+        $condicion[ 0 ] .= ' and tipo_tipod = :documento ';
+        $condicion[ 1 ][ ':documento' ] = self::ES_DOCUMENTO;
+      }
 
-      // if ( !is_null($esDoc) && $esDoc == self::ES_GUIA){
-      //     $condicion[ 0 ] .= ' and tipo_tipod = :guia ';
-      //     $condicion[ 1 ][ ':guia' ] = self::ES_GUIA;
-      // }
+      if ( !is_null($esDoc) && $esDoc == self::ES_GUIA){
+          $condicion[ 0 ] .= ' and tipo_tipod = :guia ';
+          $condicion[ 1 ][ ':guia' ] = self::ES_GUIA;
+      }
 
-      // if ( !is_null($tipo) || $tipo ){
-      //   $condicion[ 0 ] .= ' and ope_tipod like :tipo ';
-      //   $condicion[ 1 ][ ':tipo' ] = $tipo;
-      // }
+      if ( !is_null($tipo) || $tipo ){
+        $condicion[ 0 ] .= ' and ope_tipod like :tipo ';
+        $condicion[ 1 ][ ':tipo' ] = $tipo;
+      }
 
       // if ( !is_null($esDoc) || $esDoc != 0 ){
         $tipom = TipoDocumento::find()

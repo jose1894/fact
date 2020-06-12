@@ -71,7 +71,7 @@ class DocumentoSearch extends Documento
 
 
         $this->load($params);
-        // var_dump($this->tipo_doc);exit();
+        // print_r($this->validate());exit();
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -95,8 +95,15 @@ class DocumentoSearch extends Documento
         $query->andFilterWhere(['like', 'cod_doc', $this->cod_doc])
             // ->andFilterWhere(['in', 'tipo_doc', $this->tipo_doc])
             ->andFilterWhere(['like', 'obsv_doc', $this->obsv_doc])
-            ->andFilterWhere(['like', 'tipo_documento.id_tipod', $this->tipoDocumento])
             ->andFilterWhere(['in', 'status_doc', $this->status_doc]);
+
+        if ( is_array($this->tipoDocumento) ) {
+          $query->andFilterWhere(['in', 'tipo_doc', $this->tipoDocumento]);
+        } else {
+          $query->andFilterWhere(['tipo_doc' => $this->tipoDocumento]);          
+        }
+
+
 
         if ( !empty($this->fecha_doc) ) {
           // var_dump($this->fecha_doc); exit();
