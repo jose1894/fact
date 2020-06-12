@@ -812,9 +812,12 @@ class DocumentoController extends Controller
     }
 
     function actionReporteVentas() {
-      $var = 'marialva1705';
+      $searchModel = new DocumentoSearch();
+      $params = Yii::$app->request->queryParams;
+      $params[$searchModel->formName()]['tipo_doc'] = [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
+      $dataProvider = $searchModel->search( $params );
       return $this->render('reporte-ventas', [
-          'var' => $var,
+          'dataProvider' => $dataProvider,
       ]);
 
     }
