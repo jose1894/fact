@@ -84,7 +84,7 @@
                     ['label' => Yii::t('app', 'Sales'), 'icon' => 'inbox',
                       'items' => [
                         ['label' => Yii::t('pedido','Order').'s', 'url' => ['/pedido'], 'icon' => 'inbox', 'visible' => Yii::$app->user->can('/pedido/index')],
-                        [ 'label' => Yii::t('documento','Sales report'), 'url' => ['/documento/pedidos-pendientes'],'icon' => 'play-circle', 'visible' => Yii::$app->user->can('/documento/pedidos-pendientes')],
+                        [ 'label' => Yii::t('documento','Sales report'), 'url' => ['/documento/reporte-ventas'],'icon' => 'play-circle', 'visible' => Yii::$app->user->can('/documento/reporte-ventas')],
                         [ 'label' => Yii::t('documento','Orders to bill'), 'url' => ['/documento/pedidos-pendientes'],'icon' => 'play-circle', 'visible' => Yii::$app->user->can('/documento/pedidos-pendientes')],
                         [ 'label' => Yii::t('documento','Send proforma'), 'url' => ['/documento/proforma-pendientes'], 'icon' => 'check', 'visible' => Yii::$app->user->can('/documento/proforma-pendientes')],
                         [ 'label' => Yii::t('documento','Credit note'), 'url' => ['/nota-credito/index'], 'icon' => 'edit', 'visible' => Yii::$app->user->can('/nota-credito/index')],

@@ -811,4 +811,12 @@ class DocumentoController extends Controller
       // ]);
     }
 
+    function actionReporteVentas() {
+      $var = 'marialva1705';
+      return $this->render('reporte-ventas', [
+          'var' => $var,
+      ]);
+
+    }
+
 }
