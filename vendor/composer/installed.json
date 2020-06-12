@@ -1839,24 +1839,24 @@
     },
     {
         "name": "kartik-v/bootstrap-fileinput",
-        "version": "v5.0.9",
-        "version_normalized": "5.0.9.0",
+        "version": "5.1.0",
+        "version_normalized": "5.1.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/kartik-v/bootstrap-fileinput.git",
-            "reference": "8a6f6eda352d48c678602d0dd2155751ef088e7f"
+            "reference": "b20ed6eee45c2155b11aa6d7ec0a3cc46fe1adad"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/8a6f6eda352d48c678602d0dd2155751ef088e7f",
-            "reference": "8a6f6eda352d48c678602d0dd2155751ef088e7f",
+            "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/b20ed6eee45c2155b11aa6d7ec0a3cc46fe1adad",
+            "reference": "b20ed6eee45c2155b11aa6d7ec0a3cc46fe1adad",
             "shasum": ""
         },
-        "time": "2020-06-02T11:45:44+00:00",
+        "time": "2020-06-11T12:37:47+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "5.0.x-dev"
+                "dev-master": "5.1.x-dev"
             }
         },
         "installation-source": "dist",
@@ -2318,17 +2318,17 @@
     },
     {
         "name": "kartik-v/yii2-grid",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "v3.3.5",
+        "version_normalized": "3.3.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/kartik-v/yii2-grid.git",
-            "reference": "7b7199cd40caa347604b27a895450a0c1f01966e"
+            "reference": "e4ba0c68ecb864e1a158f16cc73a5e73a6cdf7c7"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/7b7199cd40caa347604b27a895450a0c1f01966e",
-            "reference": "7b7199cd40caa347604b27a895450a0c1f01966e",
+            "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/e4ba0c68ecb864e1a158f16cc73a5e73a6cdf7c7",
+            "reference": "e4ba0c68ecb864e1a158f16cc73a5e73a6cdf7c7",
             "shasum": ""
         },
         "require": {
@@ -2338,7 +2338,7 @@
         "suggest": {
             "kartik-v/yii2-mpdf": "For exporting grids to PDF"
         },
-        "time": "2020-05-21T06:21:06+00:00",
+        "time": "2020-03-27T11:31:59+00:00",
         "type": "yii2-extension",
         "extra": {
             "branch-alias": {
@@ -5920,8 +5920,8 @@
     },
     {
         "name": "symfony/console",
-        "version": "v4.4.9",
-        "version_normalized": "4.4.9.0",
+        "version": "v4.4.10",
+        "version_normalized": "4.4.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/console.git",
@@ -5999,8 +5999,8 @@
     },
     {
         "name": "symfony/css-selector",
-        "version": "v3.4.41",
-        "version_normalized": "3.4.41.0",
+        "version": "v3.4.42",
+        "version_normalized": "3.4.42.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/css-selector.git",
@@ -6054,8 +6054,8 @@
     },
     {
         "name": "symfony/dom-crawler",
-        "version": "v3.4.41",
-        "version_normalized": "3.4.41.0",
+        "version": "v3.4.42",
+        "version_normalized": "3.4.42.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/dom-crawler.git",
@@ -6113,8 +6113,8 @@
     },
     {
         "name": "symfony/event-dispatcher",
-        "version": "v4.4.9",
-        "version_normalized": "4.4.9.0",
+        "version": "v4.4.10",
+        "version_normalized": "4.4.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/event-dispatcher.git",
@@ -6245,8 +6245,8 @@
     },
     {
         "name": "symfony/finder",
-        "version": "v4.4.9",
-        "version_normalized": "4.4.9.0",
+        "version": "v4.4.10",
+        "version_normalized": "4.4.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/finder.git",
@@ -6783,8 +6783,8 @@
     },
     {
         "name": "symfony/yaml",
-        "version": "v4.4.9",
-        "version_normalized": "4.4.9.0",
+        "version": "v4.4.10",
+        "version_normalized": "4.4.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/yaml.git",

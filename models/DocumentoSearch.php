@@ -13,6 +13,8 @@ class DocumentoSearch extends Documento
 {
     public $cliente;
     public $tipoDocumento;
+    public $docNoEsGuia = true;
+    public $anulado = false;
     /**
      * {@inheritdoc}
      */
@@ -20,7 +22,7 @@ class DocumentoSearch extends Documento
     {
         return [
             [['id_doc', 'tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cliente'], 'integer'],
-            [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc','cliente','tipo_doc','tipoDocumento'], 'safe'],
+            [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc','cliente','tipo_doc','tipoDocumento','$docNoEsGuia'], 'safe'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
         ];
     }
@@ -71,7 +73,7 @@ class DocumentoSearch extends Documento
 
 
         $this->load($params);
-        // print_r($this->validate());exit();
+        // print_r($this->cliente);exit();
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -95,12 +97,22 @@ class DocumentoSearch extends Documento
         $query->andFilterWhere(['like', 'cod_doc', $this->cod_doc])
             // ->andFilterWhere(['in', 'tipo_doc', $this->tipo_doc])
             ->andFilterWhere(['like', 'obsv_doc', $this->obsv_doc])
-            ->andFilterWhere(['in', 'status_doc', $this->status_doc]);
+            ->andFilterWhere(['in', 'status_doc', $this->status_doc])
+            ->andFilterWhere(['=', 'pedido.clte_pedido', $this->cliente]);
 
         if ( is_array($this->tipoDocumento) ) {
           $query->andFilterWhere(['in', 'tipo_doc', $this->tipoDocumento]);
         } else {
-          $query->andFilterWhere(['tipo_doc' => $this->tipoDocumento]);          
+          $query->andFilterWhere(['tipo_doc' => $this->tipoDocumento]);
+        }
+
+        if ( $this->docNoEsGuia ) {
+          $query->andFilterWhere(['not in', 'tipo_doc', Documento::TIPODOC_GUIA]);
+        }
+
+        if ( !$this->anulado ) {
+          $query->andFilterWhere(['<>', 'status_doc', Documento::DOCUMENTO_ANULADO]);
+          $query->andFilterWhere(['<', 'datediff(curdate(),fecha_doc)', 7]);
         }
 
 

@@ -789,6 +789,7 @@ class DocumentoController extends Controller
     {
       $searchModel = new DocumentoSearch();
       $searchModel->tipoDocumento = [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
+
       $params = Yii::$app->request->queryParams;
       // $params = ['DocumentoSearch' => ['cod_doc' => 1, 'tipo_doc' => [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO]]];
       // $params = [ 'DocumentoSearch' => [ 'cod_doc' => 0000000001,'tipo_doc' => [2], 'status_doc' => [2,3] ]];

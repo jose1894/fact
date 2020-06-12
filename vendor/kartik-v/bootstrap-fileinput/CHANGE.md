@@ -1,6 +1,22 @@
 Change Log: `bootstrap-fileinput`
 =================================
 
+## version 5.1.0
+
+**Date:** 11-Jun-2020
+
+- (enh #1584): Revamp Krajee Explorer Themes.
+- (bug #1583): Correct cspBuffer stash html content store.
+- (enh #1582): Set `showConsoleLogs` to `false` as default.
+- (enh #1581): Enhance Sortable Behavior & Styles.
+    - Update to use latest release of Rubaxa Sortable Plugin
+    - Fix errors in sortable init
+    - Update drag handle styles to show correct grab cursor
+- (enh #1580): Validate drop zone title by correctly checking if native input has files.
+- (enh #1578): Enhance progress bar styling.
+- (enh #1577): Use `&hellip;` instead of three dots.
+- (enh #1576): Update French Translations.
+
 ## version 5.0.9
 
 **Date:** 02-Jun-2020
@@ -9,7 +25,7 @@ Change Log: `bootstrap-fileinput`
     - fixes issue when multiple file input plugins are initialized on the same page
 - (enh #1573): Update French Translations.
 - (enh #1572): Correct image auto orientation based on browser support.
-- (bug #1565, 1571): Implement CSP compliance for HTML markup via templates.
+- (bug #1565, #1571): Implement CSP compliance for HTML markup via templates.
 - (bug #1569): Correctly validate persistent file validation errors and display them.
 - (enh #1568): Correct timeout and resumable validation for async uploads.
 - (enh #1536, #1567): Parse response as string in `_parseError` function.

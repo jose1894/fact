@@ -24,7 +24,7 @@
         "mootensai/yii2-relation-trait": "dev-master",
         "kartik-v/yii2-detail-view": "dev-master",
         "kartik-v/yii2-widget-depdrop": "dev-master",
-        "kartik-v/yii2-widget-select2": "@dev",
+        "kartik-v/yii2-widget-select2": "dev-master",
         "wbraganca/yii2-dynamicform": "dev-master",
         "kartik-v/yii2-checkbox-x": "@dev",
         "kartik-v/yii2-widget-datepicker": "~1.4.7",

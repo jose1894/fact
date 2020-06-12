@@ -8,6 +8,7 @@ use yii\widgets\Pjax;
 use kartik\select2\Select2;
 use app\models\Cliente;
 use app\models\Documento;
+use app\models\NotaCredito;
 use app\models\TipoDocumento;
 use kartik\daterange\DateRangePicker;
 
@@ -29,9 +30,9 @@ $ultimoDiaMes  = date('d-m-Y');
         <?php Pjax::begin(['id' => 'grid']); ?>
         <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-        <p>
+        <!-- <p>
             <?= Html::a(Yii::t('documento', 'Create Documento'), ['create'], ['class' => 'btn btn-success']) ?>
-        </p>
+        </p> -->
 
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
@@ -43,7 +44,7 @@ $ultimoDiaMes  = date('d-m-Y');
                 ],
                 [
                   // 'format' => 'date',
-                  'width' => '25%',
+                  'width' => '20%',
                   'value' => function($data){
                        return Yii::$app->formatter->asDate($data->fecha_doc, 'dd/MM/yyyy');
                   },
@@ -67,7 +68,7 @@ $ultimoDiaMes  = date('d-m-Y');
               ],
               [
                   'attribute' => 'tipoDocumento',
-                  'label' => Yii::t('cliente','Document type'),
+                  'label' => Yii::t('tipo_documento','Document type'),
                   'value' => 'tipoDoc.des_tipod',
                   'filter'=>TipoDocumento::getTipoDocumentoList(null, TipoDocumento::ES_DOCUMENTO),
                   'filterType' => GridView::FILTER_SELECT2,
@@ -87,23 +88,23 @@ $ultimoDiaMes  = date('d-m-Y');
                                 'multiple'=>true
                         ],
               		],
-                  'width' => '40%'
+                  'width' => '25%'
               ],
-                // [
-                //     'attribute' => 'cliente',
-                //     'label' => Yii::t('cliente','Customer'),
-                //     'value' => 'pedidoDoc.cltePedido.nombre_clte',
-                //     'filter'=>Cliente::getClienteList(),
-                //     'filterType' => GridView::FILTER_SELECT2,
-                //     'filterWidgetOptions' => [
-                //         'language' => Yii::$app->language,
-                //         'theme' => Select2::THEME_DEFAULT,
-                //         'pluginOptions' => ['allowClear' => true],
-                //         'pluginEvents' =>[],
-                //         'options' => ['prompt' => ''],
-                //     ],
-                //     'width' => '40%'
-                // ],
+              [
+                  'attribute' => 'cliente',
+                  'label' => Yii::t('cliente','Customer'),
+                  'value' => 'pedidoDoc.cltePedido.nombre_clte',
+                  'filter'=>Cliente::getClienteList(),
+                  'filterType' => GridView::FILTER_SELECT2,
+                  'filterWidgetOptions' => [
+                      'language' => Yii::$app->language,
+                      'theme' => Select2::THEME_DEFAULT,
+                      'pluginOptions' => ['allowClear' => true],
+                      'pluginEvents' =>[],
+                      'options' => ['prompt' => ''],
+                  ],
+                  'width' => '30%'
+              ],
                 // [
                 //     'attribute' => 'status_doc',
                 //     //'filter' => $status,
@@ -116,47 +117,56 @@ $ultimoDiaMes  = date('d-m-Y');
                 [
                     'class' => '\kartik\grid\ActionColumn',
                     'headerOptions' => ['style' => 'color:#337ab7'],
-                    'template' => '{print}&nbsp;&nbsp;{sunat} ',
-                    // 'buttons' => [
-                    //     'print' =>  function ($url, $model) {
-                    //         return
-                    //             Html::a('<button class="btn btn-flat btn-primary"><i class="fa fa-print"></i></button>',
-                    //                 $url,
-                    //                 [
-                    //                     'title' => Yii::t('app', 'Print'),
-                    //                     'class' => 'pjax-print-document',
-                    //                     'data' => [
-                    //                         'id' => $model->id_doc,
-                    //                     ]
-                    //                 ]) ;
-                    //     },
-                    //     'sunat' =>  function ($url, $model) {
-                    //         return ($model->statussunat_doc < 0 && $model->status_doc == $model::DOCUMENTO_GENERADO) ? Html::a('<button class="btn btn-flat btn-success"><i class="fa fa-play-circle-o"></i></button>',
-                    //             $url,
-                    //             [
-                    //                 'title' => Yii::t('app', 'Send'). ' SUNAT',
-                    //                 'class' => 'pjax-send-sunat',
-                    //                 'data' => [
-                    //                     'id' => $model->id_doc,
-                    //                 ]
-                    //             ]) : (($model->statussunat_doc === 0) ? Html::a('<button class="btn btn-flat btn-success"><i class="fa fa-check"></i></button>',
-                    //             '#',
-                    //             [
-                    //                 'title' => Yii::t('app', 'Sended'). ' SUNAT',
-                    //             ]) : '');
-                    //     },
-                    // ],
-                    // 'urlCreator' => function ($action, $model) {
-                    //     if ($action === 'print') {
-                    //         $url = Url::to(['documento/documento-rpt','id' => $model->id_doc]);
-                    //         return $url;
-                    //     }
-                    //
-                    //     if ($action === 'sunat') {
-                    //         $url = Url::to(['documento/ajax-gen-fact-xml','id' => $model->id_doc]);
-                    //         return $url;
-                    //     }
-                    // }
+                    'template' => '{print}&nbsp;{anular}',
+                    'buttons' => [
+                        'print' =>  function ($url, $model) {
+                            return
+                                Html::a('<button class="btn btn-flat btn-primary"><i class="fa fa-print"></i></button>',
+                                    $url,
+                                    [
+                                        'title' => Yii::t('app', 'Print'),
+                                        'class' => 'pjax-print-document',
+                                        'data' => [
+                                            'id' => $model->id_doc,
+                                        ]
+                                    ]) ;
+                        },
+                        'anular' =>  function ($url, $model) {
+                            // return ($model->statussunat_doc < 0 && $model->status_doc == $model::DOCUMENTO_GENERADO) ?
+                              return  Html::a('<button class="btn btn-flat btn-danger"><i class="fa fa-ban"></i></button>',
+                                  $url,
+                                  [
+                                      'title' => Yii::t('documento', 'Cancel document'),
+                                      'class' => 'pjax-cancel',
+                                      'data' => [
+                                          'id' => $model->id_doc,
+                                        ]
+                                  ]
+                                );
+                                // : (($model->statussunat_doc === 0) ? Html::a('<button class="btn btn-flat btn-success"><i class="fa fa-cancel"></i></button>','#',['title' => Yii::t('app', 'Can'). ' SUNAT',])
+                                // : '');
+                        },
+                    ],
+                    'urlCreator' => function ($action, $model) {
+                        if ($action === 'print') {
+                            $url = "";
+
+                            switch ($model->tipo_doc){
+                              case Documento::TIPODOC_FACTURA:
+                              case Documento::TIPODOC_BOLETA:
+                                                        $url = 'documento/documento-rpt'; break;
+                              case NotaCredito::TIPODOC_NCREDITO:
+                                                        $url = 'nota-credito/nota-rpt'; break;
+                            }
+
+                            return Url::to([ $url ,'id' => $model->id_doc]);
+                        }
+
+                        if ($action === 'anular') {
+                            // $url = Url::to(['documento/ajax-gen-fact-xml','id' => $model->id_doc]);
+                            // return $url;
+                        }
+                    }
                 ],
             ],
         ]); ?>

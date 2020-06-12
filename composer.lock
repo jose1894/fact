@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "401dab195dfaff902b5696847f7bcf10",
+    "content-hash": "43c4b1445fc28035d7f15dbea83858b4",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -1036,22 +1036,22 @@
         },
         {
             "name": "kartik-v/bootstrap-fileinput",
-            "version": "v5.0.9",
+            "version": "5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/bootstrap-fileinput.git",
-                "reference": "8a6f6eda352d48c678602d0dd2155751ef088e7f"
+                "reference": "b20ed6eee45c2155b11aa6d7ec0a3cc46fe1adad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/8a6f6eda352d48c678602d0dd2155751ef088e7f",
-                "reference": "8a6f6eda352d48c678602d0dd2155751ef088e7f",
+                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/b20ed6eee45c2155b11aa6d7ec0a3cc46fe1adad",
+                "reference": "b20ed6eee45c2155b11aa6d7ec0a3cc46fe1adad",
                 "shasum": ""
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.0.x-dev"
+                    "dev-master": "5.1.x-dev"
                 }
             },
             "autoload": {
@@ -1085,7 +1085,7 @@
                 "progress",
                 "upload"
             ],
-            "time": "2020-06-02T11:45:44+00:00"
+            "time": "2020-06-11T12:37:47+00:00"
         },
         {
             "name": "kartik-v/bootstrap-star-rating",
@@ -1497,16 +1497,16 @@
         },
         {
             "name": "kartik-v/yii2-grid",
-            "version": "dev-master",
+            "version": "v3.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-grid.git",
-                "reference": "7b7199cd40caa347604b27a895450a0c1f01966e"
+                "reference": "e4ba0c68ecb864e1a158f16cc73a5e73a6cdf7c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/7b7199cd40caa347604b27a895450a0c1f01966e",
-                "reference": "7b7199cd40caa347604b27a895450a0c1f01966e",
+                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/e4ba0c68ecb864e1a158f16cc73a5e73a6cdf7c7",
+                "reference": "e4ba0c68ecb864e1a158f16cc73a5e73a6cdf7c7",
                 "shasum": ""
             },
             "require": {
@@ -1546,7 +1546,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2020-05-21T06:21:06+00:00"
+            "time": "2020-03-27T11:31:59+00:00"
         },
         {
             "name": "kartik-v/yii2-helpers",
@@ -3457,7 +3457,7 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v3.4.41",
+            "version": "v3.4.42",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
@@ -3510,7 +3510,7 @@
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v3.4.41",
+            "version": "v3.4.42",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
@@ -6564,7 +6564,7 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.4.9",
+            "version": "v4.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
@@ -6641,7 +6641,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v4.4.9",
+            "version": "v4.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -6769,7 +6769,7 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v4.4.9",
+            "version": "v4.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
@@ -6996,7 +6996,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v4.4.9",
+            "version": "v4.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
@@ -7311,8 +7311,7 @@
         "kartik-v/yii2-builder": 20,
         "kartik-v/yii2-number": 20,
         "kartik-v/yii2-mpdf": 20,
-        "kartik-v/yii2-date-range": 20,
-        "kartik-v/yii2-grid": 20
+        "kartik-v/yii2-date-range": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
