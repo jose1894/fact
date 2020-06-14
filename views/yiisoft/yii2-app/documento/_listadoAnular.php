@@ -17,7 +17,7 @@ use kartik\daterange\DateRangePicker;
 /* @var $searchModel app\models\DocumentoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('documento', 'Documentos');
+$this->title = Yii::t('documento', 'Cancel documents');
 $this->params['breadcrumbs'][] = $this->title;
 $status = [ 2 => 'DOCUMENTO GENERADO'];
 $primerDiaMes = date('01-m-Y'); // hard-coded '01' for first day
@@ -163,8 +163,8 @@ $ultimoDiaMes  = date('d-m-Y');
                         }
 
                         if ($action === 'anular') {
-                            // $url = Url::to(['documento/ajax-gen-fact-xml','id' => $model->id_doc]);
-                            // return $url;
+                            $url = Url::to(['documento/anular-documento','id' => $model->id_doc]);
+                            return $url;
                         }
                     }
                 ],

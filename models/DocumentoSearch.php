@@ -110,22 +110,44 @@ class DocumentoSearch extends Documento
           $query->andFilterWhere(['not in', 'tipo_doc', Documento::TIPODOC_GUIA]);
         }
 
-        if ( !$this->anulado ) {
-          $query->andFilterWhere(['<>', 'status_doc', Documento::DOCUMENTO_ANULADO]);
-          $query->andFilterWhere(['<', 'datediff(curdate(),fecha_doc)', 7]);
-        }
-
-
-
+        //Condicional para la fecha, verifica si es rango o solo una fecha
         if ( !empty($this->fecha_doc) ) {
-          // var_dump($this->fecha_doc); exit();
           $fechaDoc = explode(" - ", $this->fecha_doc);
           $fechaDocInicio = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[0]))->format('Y-m-d');
-          // $fechaDocInicio = trim($fechaDoc[0]);
           $fechaDocFin = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[1]))->format('Y-m-d');
-          // $fechaDocFin = trim($fechaDoc[1]);
           $query->andFilterWhere(['between', 'fecha_doc', $fechaDocInicio, $fechaDocFin]);
         }
+
+
+        if ( $this->anulado ) {
+            $query->andFilterWhere(['=', 'statussunat_doc',-1]);
+
+            $noEsTipoDoc = "";
+            if ( $this->docNoEsGuia ) {
+              $noEsTipoDoc = [Documento::TIPODOC_GUIA];
+            }
+
+            $fechaDocInicio = "";
+            $fechaDocFin = "";
+
+            if ( !empty($this->fecha_doc) ) {
+              $fechaDoc = explode(" - ", $this->fecha_doc);
+              $fechaDocInicio = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[0]))->format('Y-m-d');
+              $fechaDocFin = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[1]))->format('Y-m-d');
+            }
+
+            $query->orFilterWhere(['and',
+                ['in', 'tipo_doc', $this->tipoDocumento],
+                ['not in', 'tipo_doc', $noEsTipoDoc],
+                ['<>', 'status_doc', Documento::DOCUMENTO_ANULADO],
+                ['between', 'fecha_doc', $fechaDocInicio, $fechaDocFin],
+                ['<', 'datediff(curdate(),fecha_doc)', 7],
+                ['=', 'pedido.clte_pedido', $this->cliente],
+                ['<', 'datediff(curdate(),fecha_doc)', 7]
+              ]);
+        }
+
+        // echo $query->createCommand()->sql;
 
         return $dataProvider;
     }

@@ -89,7 +89,7 @@
                         [ 'label' => Yii::t('documento','Send proforma'), 'url' => ['/documento/proforma-pendientes'], 'icon' => 'check', 'visible' => Yii::$app->user->can('/documento/proforma-pendientes')],
                         [ 'label' => Yii::t('documento','Credit note'), 'url' => ['/nota-credito/index'], 'icon' => 'edit', 'visible' => Yii::$app->user->can('/nota-credito/index')],
                         [ 'label' => Yii::t('documento','Document list'), 'url' => ['/documento/listado-factura'], 'icon' => 'bar-chart-o', 'visible' => Yii::$app->user->can('/documento/listado-factura')],
-                        [ 'label' => Yii::t('documento','Cancel documents'), 'url' => ['/documento/anular-documento'], 'icon' => 'minus-circle', 'visible' => Yii::$app->user->can('/documento/anular-documento')],
+                        [ 'label' => Yii::t('documento','Cancel documents'), 'url' => ['/documento/listado-anular-documento'], 'icon' => 'minus-circle', 'visible' => Yii::$app->user->can('/documento/listado-anular-documento')],
 
                       ]
                     ],

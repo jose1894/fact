@@ -785,44 +785,34 @@ class DocumentoController extends Controller
       file_put_contents(Yii::getAlias('@app') . '/xml/response/' . 'R-'.$invoice->getName().'.zip', $result->getCdrZip());
     }
 
-    function actionAnularDocumento()
+    public function actionReporteVentas() {
+      $searchModel = new DocumentoSearch();
+
+      $params = Yii::$app->request->queryParams;
+      $dataProvider = $searchModel->search( $params );
+
+      return $this->render('reporte-ventas', [
+          'dataProvider' => $dataProvider,
+      ]);
+    }
+
+    public function actionListadoAnularDocumento()
     {
       $searchModel = new DocumentoSearch();
       $searchModel->tipoDocumento = [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
+      $searchModel->anulado = true;
 
       $params = Yii::$app->request->queryParams;
-      // $params = ['DocumentoSearch' => ['cod_doc' => 1, 'tipo_doc' => [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO]]];
-      // $params = [ 'DocumentoSearch' => [ 'cod_doc' => 0000000001,'tipo_doc' => [2], 'status_doc' => [2,3] ]];
-      // $params[$searchModel->formName()]['tipo_doc'] = [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
-      // print_r($params);
-      // exit();
-
       $dataProvider = $searchModel->search( $params );
-      // $dataProvider = $searchModel->search( [$searchModel->formName()=>['tipo_doc'=>[3,2]]] );
 
-      // print_r($dataProvider); exit();
       return $this->render('_listadoAnular', [
           'searchModel' => $searchModel,
           'dataProvider' => $dataProvider,
       ]);
-
-
-      // return $this->render('_listadoAnular', [
-      //     'dataProvider' => $dataProvider,
-      // ]);
     }
 
-    function actionReporteVentas() {
-      $searchModel = new DocumentoSearch();
-
-      $params = Yii::$app->request->queryParams;
-      // $params[$searchModel->formName()]['tipo_doc'] = [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
-
-      $dataProvider = $searchModel->search( $params );
-      return $this->render('reporte-ventas', [
-          'dataProvider' => $dataProvider,
-      ]);
-
+    public function actionAnularDocumento ( $id ) {
+      return $id;
     }
 
 }
