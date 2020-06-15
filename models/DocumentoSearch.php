@@ -49,9 +49,9 @@ class DocumentoSearch extends Documento
         $query = Documento::find()
                  ->joinWith(['pedidoDoc'])
                  ->joinWith('pedidoDoc.cltePedido')
-                 ->joinWith('tipoDoc')
-                 ->where('sucursal_doc = :sucursal')
-                 ->addParams([':sucursal' => $sucursal]);
+                 ->joinWith('tipoDoc');
+                 // ->where('sucursal_doc = :sucursal')
+                 // ->addParams([':sucursal' => $sucursal]);
 
 
 
@@ -74,6 +74,7 @@ class DocumentoSearch extends Documento
 
         $this->load($params);
         // print_r($this->cliente);exit();
+        $this->sucursal_doc = $sucursal;
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -121,6 +122,7 @@ class DocumentoSearch extends Documento
 
         if ( $this->anulado ) {
             $query->andFilterWhere(['=', 'statussunat_doc',-1]);
+            $query->andFilterWhere(['<>', 'status_doc',Documento::DOCUMENTO_ANULADO]);
 
             $noEsTipoDoc = "";
             if ( $this->docNoEsGuia ) {
@@ -143,11 +145,12 @@ class DocumentoSearch extends Documento
                 ['between', 'fecha_doc', $fechaDocInicio, $fechaDocFin],
                 ['<', 'datediff(curdate(),fecha_doc)', 7],
                 ['=', 'pedido.clte_pedido', $this->cliente],
-                ['<', 'datediff(curdate(),fecha_doc)', 7]
+                ['=', 'sucursal_doc', $this->sucursal_doc]
               ]);
         }
 
-        // echo $query->createCommand()->sql;
+        echo $query->createCommand()->sql;
+        //
 
         return $dataProvider;
     }

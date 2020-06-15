@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 11-06-2020 a las 21:39:17
+-- Tiempo de generación: 15-06-2020 a las 00:24:15
 -- Versión del servidor: 10.4.10-MariaDB
 -- Versión de PHP: 7.3.12
 
@@ -205,16 +205,19 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/distrito/view', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/documento/*', 2, NULL, NULL, NULL, 1587333020, 1587333020),
 ('/documento/ajax-gen-fact-xml', 2, NULL, NULL, NULL, 1587333020, 1587333020),
-('/documento/anular-documento', 2, NULL, NULL, NULL, 1590188224, 1590188224),
+('/documento/anular-documento', 2, NULL, NULL, NULL, 1592157228, 1592157228),
 ('/documento/despachar-proforma', 2, NULL, NULL, NULL, 1587333020, 1587333020),
 ('/documento/documento-rpt', 2, NULL, NULL, NULL, 1587333020, 1587333020),
+('/documento/documentos', 2, NULL, NULL, NULL, 1592156538, 1592156538),
 ('/documento/factura-create', 2, NULL, NULL, NULL, 1587333020, 1587333020),
 ('/documento/guia-create', 2, NULL, NULL, NULL, 1587333020, 1587333020),
 ('/documento/guia-rpt', 2, NULL, NULL, NULL, 1587333020, 1587333020),
 ('/documento/index', 2, NULL, NULL, NULL, 1587333020, 1587333020),
+('/documento/listado-anular-documento', 2, NULL, NULL, NULL, 1592154685, 1592154685),
 ('/documento/listado-factura', 2, NULL, NULL, NULL, 1587333020, 1587333020),
 ('/documento/pedidos-pendientes', 2, NULL, NULL, NULL, 1587333020, 1587333020),
 ('/documento/proforma-pendientes', 2, NULL, NULL, NULL, 1587333020, 1587333020),
+('/documento/reporte-ventas', 2, NULL, NULL, NULL, 1591929183, 1591929183),
 ('/empresa/*', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/empresa/create', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/empresa/delete', 2, NULL, NULL, NULL, 1562771697, 1562771697),
@@ -440,7 +443,7 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('Administrador', 1, 'Rol para usuarios administradores', NULL, NULL, 1587328731, 1591909840),
 ('Invitado', 1, 'Rol para los usuarios recien registrados o usuarios invitados', NULL, NULL, 1587345072, 1587345281),
 ('superAdministrador', 1, 'Super Administrador (SA)', NULL, NULL, 1587328487, 1587936571),
-('Usuario', 1, 'Rol para los usuarios', NULL, NULL, 1587328819, 1591578485);
+('Usuario', 1, 'Rol para los usuarios', NULL, NULL, 1587328819, 1592157268);
 
 -- --------------------------------------------------------
 
@@ -702,13 +705,16 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('Usuario', '/documento/anular-documento'),
 ('Usuario', '/documento/despachar-proforma'),
 ('Usuario', '/documento/documento-rpt'),
+('Usuario', '/documento/documentos'),
 ('Usuario', '/documento/factura-create'),
 ('Usuario', '/documento/guia-create'),
 ('Usuario', '/documento/guia-rpt'),
 ('Usuario', '/documento/index'),
+('Usuario', '/documento/listado-anular-documento'),
 ('Usuario', '/documento/listado-factura'),
 ('Usuario', '/documento/pedidos-pendientes'),
 ('Usuario', '/documento/proforma-pendientes'),
+('Usuario', '/documento/reporte-ventas'),
 ('Usuario', '/nota-credito/create'),
 ('Usuario', '/nota-credito/get-documento'),
 ('Usuario', '/nota-credito/index'),
@@ -7434,7 +7440,7 @@ CREATE TABLE IF NOT EXISTS `tipo_cambio` (
   `sucursal_tipoc` int(11) NOT NULL COMMENT 'SUCURSAL TIPO DE CAMBIO',
   PRIMARY KEY (`id_tipoc`),
   KEY `sucursal_tipoc` (`sucursal_tipoc`)
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
 
 --
 -- Volcado de datos para la tabla `tipo_cambio`
@@ -7516,7 +7522,9 @@ INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_t
 (75, '2020-06-07', NULL, NULL, '3.382', '3.384', '3.384', 1),
 (76, '2020-06-10', NULL, NULL, '3.382', '3.384', '3.384', 1),
 (77, '2020-06-11', NULL, NULL, '3.382', '3.384', '3.384', 1),
-(78, '2020-06-11', NULL, NULL, '3.382', '3.384', '3.384', 1);
+(78, '2020-06-11', NULL, NULL, '3.382', '3.384', '3.384', 1),
+(79, '2020-06-12', NULL, NULL, '3.382', '3.384', '3.384', 1),
+(80, '2020-06-14', NULL, NULL, '3.382', '3.384', '3.384', 1);
 
 -- --------------------------------------------------------
 
