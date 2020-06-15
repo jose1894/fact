@@ -69,7 +69,7 @@ $ultimoDiaMes  = date('d-m-Y');
                   'attribute' => 'tipoDocumento',
                   'label' => Yii::t('tipo_documento','Document type'),
                   'value' => 'tipoDoc.des_tipod',
-                  'filter'=>TipoDocumento::getTipoDocumentoList(null, TipoDocumento::ES_DOCUMENTO),
+                  'filter'=>TipoDocumento::getTipoDocumentoList(NULL, TipoDocumento::ES_DOCUMENTO),
                   'filterType' => GridView::FILTER_SELECT2,
                   'filterWidgetOptions'=>[
                         'language' => Yii::$app->language,
@@ -162,22 +162,37 @@ $js = <<<JS
     $( 'body' ).on( 'click', '.pjax-cancel', function( e ){
         e.preventDefault();
         let url = $( this ).prop( 'href' );
-        debugger;
-        console.log("Anular url:" + url);
+
         $.ajax({
             url: url,
             success: function(data){
-                data = JSON.parse(data);
-                if ( data.code == "0" ){
-                    swal('Success',data.description,'success');
-                } else {
-                    swal('Warning',data.code + ' - ' + data.description,'warning');
-                }
-                $.pjax.reload( { container: '#grid' } )
-
+              var res = $.parseJSON(data);
+              if( res ) {
+                  swal(title, succMessage, "success")
+                  $.pjax.reload( { container: '#grid' } );
+                  return;
+              }
             },
             error: function(data){
-                console.log(data);
+              let message;
+
+              if ( data.responseJSON )
+              {
+                let error = data.responseJSON;
+                message =   "Se ha encontrado un error: " +
+                  "Code " + error.code +
+                  "File: " + error.file +
+                  "Line: " + error.line +
+                  "Name: " + error.name +
+                  "Message: " + error.message;
+              }
+              else
+              {
+                  message = data.responseText;
+              }
+
+              swal('Oops!!!',message,"error" );
+                return;
             }
         });
     });

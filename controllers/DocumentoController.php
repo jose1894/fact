@@ -7,6 +7,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use app\models\Documento;
 use app\models\NotaSalida;
+use app\models\NotaIngreso;
+use app\models\NotaIngresoDetalle;
 use app\models\NotaSalidaDetalle;
 use app\models\DocumentoDetalle;
 use app\models\Pedido;
@@ -600,6 +602,13 @@ class DocumentoController extends Controller
       // $pdf->cssFile = "@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css";
       $mpdf = $pdf->api; // fetches mpdf api
 
+      $mpdf = new \Mpdf\Mpdf();
+
+      if ( $modelDocumento->status_doc === Documento::DOCUMENTO_ANULADO ) {
+          $mpdf->SetWatermarkText(Yii::t('documento','Document canceled'));
+          $mpdf->showWatermarkText = true;
+      }
+
       $f = Yii::$app->formatter;
       $date = $f->asDate($modelDocumento->fecha_doc, 'php:d/m/Y');
 
@@ -753,9 +762,6 @@ class DocumentoController extends Controller
             // break;
       }
 
-      // var_dump($item);
-      // exit();
-
       $legend = (new Legend())
           ->setCode('1000')
           ->setValue(NumerosEnLetras::convertir($model->total_doc));
@@ -799,7 +805,7 @@ class DocumentoController extends Controller
     public function actionListadoAnularDocumento()
     {
       $searchModel = new DocumentoSearch();
-      $searchModel->tipoDocumento = [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
+      // $searchModel->tipoDocumento = [Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
       $searchModel->anulado = true;
 
       $params = Yii::$app->request->queryParams;
@@ -812,7 +818,132 @@ class DocumentoController extends Controller
     }
 
     public function actionAnularDocumento ( $id ) {
-      return $id;
+      if (!Yii::$app->request->isAjax) {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $return = [
+          'success' => false,
+          'title' => Yii::t('documento', 'Document'),
+          'message' => Yii::t('app','Document can\'t be canceled!'),
+          'type' => 'error'
+        ];
+        return $return;
+      }
+
+      $tipoDocs = [Documento::TIPODOC_BOLETA,Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
+      $model = $this->findModel( $id );
+
+      //Verifica que el documento no este anulado
+      if ( $model->status_doc === Documento::DOCUMENTO_ANULADO ) {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $return = [
+          'success' => false,
+          'title' => Yii::t('documento', 'Document'),
+          'message' => Yii::t('app','Document is already canceled!'),
+          'type' => 'error'
+        ];
+        return $return;
+      }
+
+      //Verifica que el tipo de documento no sea diferente a Boletas,Facturas o  Notas de credito
+      if ( !in_array($model->tipo_doc,$tipoDocs) ) {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $return = [
+          'success' => false,
+          'title' => Yii::t('documento', 'Document'),
+          'message' => Yii::t('app','Document is allowed to be canceled!'),
+          'type' => 'error'
+        ];
+        return $return;
+      }
+
+      // Si el documento es Boleta o Factura
+      if ( $model->tipo_doc === Documento::TIPODOC_BOLETA ||  $model->tipo_doc === Documento::TIPODOC_FACTURA ) {
+        $modelPedido        = Pedido::findOne($model->pedido_doc);            //Modelo del pedido
+        $modelGuiaRem       = $this->findModel( $model->guiaRem->id_doc);    //Modelo de la guia de remision asociada
+        $modelNotaIngreso   = new NotaIngreso();                              //Instancia el modelo para crear la nota de ingreso
+        $notaIngresoDetalle = $model->pedidoDoc->detalles;               //Asigna los items a retornar el stock
+
+        $model->status_doc           = Documento::DOCUMENTO_ANULADO;          //Anula el Documento
+        $modelPedido->estatus_pedido = Pedido::PEDIDO_ANULADO;                //Anula el pedido
+        $modelGuiaRem->status_doc    = Documento::DOCUMENTO_ANULADO;          //Anula la guia de remision
+
+        try {
+          $flag = true;
+          $transaction = \Yii::$app->db->beginTransaction();
+          $modelNotaIngreso->idrefdoc_trans = $model->id_doc;
+          $modelNotaIngreso->status_trans = $modelNotaIngreso::STATUS_APPROVED;
+
+          $sucursal = SiteController::getSucursal();
+          $modelNotaIngreso->sucursal_trans = $sucursal;
+          $modelNotaIngreso->usuario_trans = Yii::$app->user->id;
+          $modelNotaIngreso->ope_trans = $modelNotaIngreso::OPE_TRANS;
+          $num = Numeracion::getNumeracion( $modelNotaIngreso::NOTA_INGRESO );
+          $codigo = intval( $num[0]['numero_num'] ) + 1;
+          $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
+          $fecha = explode("/",date('d/m/Y'));
+          $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
+          $modelNotaIngreso->fecha_trans = $fecha;
+          $modelNotaIngreso->codigo_trans = $codigo;
+          $modelNotaIngreso->tipo_trans = Documento::INGRESO_ANULACION;
+          $modelNotaIngreso->almacen_trans = $modelPedido->almacen_pedido;
+
+          $flag = $model->save() && $modelPedido->save() && $modelGuiaRem->save() && $modelNotaIngreso->save() && $flag;
+
+          if ( $flag ) {
+            for($i = 0; $i < count($notaIngresoDetalle); $i++) {
+                  $modelNotaIngresoDetalle = new NotaIngresoDetalle();
+                  $modelNotaIngresoDetalle->trans_detalle = $modelNotaIngreso->id_trans;
+                  $modelNotaIngresoDetalle->prod_detalle = $notaIngresoDetalle[$i]['prod_pdetalle'];
+                  $modelNotaIngresoDetalle->cant_detalle = $notaIngresoDetalle[$i]['cant_pdetalle'];
+
+                  if ( !($flag = $modelNotaIngresoDetalle->save()) ) {
+                      $transaction->rollBack();
+                      throw new \Exception("Error Processing Request", 1);
+                      break;
+                  }
+
+                  $producto = Producto::findOne(['id_prod' => $notaIngresoDetalle[$i]['prod_pdetalle']]);
+                  $producto->stock_prod += $notaIngresoDetalle[$i]['cant_pdetalle'];
+
+                  if (! ($flag = $producto->save(false))) {
+                      $transaction->rollBack();
+                      throw new \Exception("Error Processing Request", 1);
+                      break;
+                  }
+              }
+
+              $flag = $model->save() && $flag;
+          }
+
+          $numeracion = Numeracion::findOne($num[0]['id_num']);
+          $numeracion->numero_num = $codigo;
+          $flag = $numeracion->save() && $flag;
+
+          if ( $flag ) {
+            $transaction->commit();
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $return = [
+              'success' => true,
+              'title' => Yii::t('documento', 'Document'),
+              'id' => $model->id_doc,
+              'message' => Yii::t('app','Record has been canceled successfully!'),
+              'type' => 'success'
+            ];
+            return $return;
+          }
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $return = [
+              'success' => false,
+              'title' => Yii::t('documento', 'Document'),
+              'message' => Yii::t('app','Record couldn´t be canceled!') . " \nError: ". $e->errorMessage(),
+              'type' => 'error'
+            ];
+            return $return;
+        }
+
+      }
     }
 
 }

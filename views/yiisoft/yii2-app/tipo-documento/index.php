@@ -36,6 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'des_tipod',
             [
+              'attribute'=>'tipodsunat_tipod',
+              'width' => '7%'
+            ],
+            [
               'attribute'=>'abrv_tipod',
               'width' => '7%'
             ],

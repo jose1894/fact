@@ -50,13 +50,8 @@ class DocumentoSearch extends Documento
                  ->joinWith(['pedidoDoc'])
                  ->joinWith('pedidoDoc.cltePedido')
                  ->joinWith('tipoDoc');
-                 // ->where('sucursal_doc = :sucursal')
-                 // ->addParams([':sucursal' => $sucursal]);
-
-
 
         // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -73,7 +68,6 @@ class DocumentoSearch extends Documento
 
 
         $this->load($params);
-        // print_r($this->cliente);exit();
         $this->sucursal_doc = $sucursal;
 
         if (!$this->validate()) {
@@ -96,7 +90,6 @@ class DocumentoSearch extends Documento
 
 
         $query->andFilterWhere(['like', 'cod_doc', $this->cod_doc])
-            // ->andFilterWhere(['in', 'tipo_doc', $this->tipo_doc])
             ->andFilterWhere(['like', 'obsv_doc', $this->obsv_doc])
             ->andFilterWhere(['in', 'status_doc', $this->status_doc])
             ->andFilterWhere(['=', 'pedido.clte_pedido', $this->cliente]);
@@ -130,7 +123,7 @@ class DocumentoSearch extends Documento
             }
 
             $fechaDocInicio = "";
-            $fechaDocFin = "";
+            $fechaDocFin    = "";
 
             if ( !empty($this->fecha_doc) ) {
               $fechaDoc = explode(" - ", $this->fecha_doc);
@@ -148,10 +141,7 @@ class DocumentoSearch extends Documento
                 ['=', 'sucursal_doc', $this->sucursal_doc]
               ]);
         }
-
-        echo $query->createCommand()->sql;
-        //
-
+        // echo $query->createCommand()->sql;
         return $dataProvider;
     }
 

@@ -124,7 +124,7 @@ class NotaCreditoController extends Controller
                 $model->total_doc       = $post['total'];
                 $model->motivosunat_doc = $post['NotaCredito']['motivo_doc'];
                 $model->tipo_doc        = $post['NotaCredito']['tipod_doc'];
-                $model->almacen_doc     = $post['NotaCredito']['almacen_doc'];				
+                $model->almacen_doc     = $post['NotaCredito']['almacen_doc'];
                 $model->tipocambio_doc  = TipoCambio::getTipoCambio()->valorf_tipoc;
                 $model->sucursal_doc    = $documentoAnt->sucursal_doc;
                 $numDoc                 = Numeracion::getNumeracion( $model::NOTA_CREDITO_DOC,$model->tipo_doc );
@@ -153,7 +153,7 @@ class NotaCreditoController extends Controller
 
                 if ( !($flag = $model->save()) ) {
                     $transaction->rollBack();
-                    throw new \Exception("Error Processing Request", 1);                    
+                    throw new \Exception("Error Processing Request", 1);
                 }
 
                 $tipoDoc               = $model->numeracion->tipoDocumento->tipodsunat_tipod;
@@ -180,9 +180,9 @@ class NotaCreditoController extends Controller
 
                 if ( $flag ) {
                   foreach ($post['NotaCredito-Detalle'] as $key => $value) {
-                    // code...                    
+                    // code...
                     if ( isset($value['check_ddetalle']) && $value['check_ddetalle'] === "on" ) {
-					  $modelsDetalles   				  = new DocumentoDetalle();
+					            $modelsDetalles   				          = new DocumentoDetalle();
                       $modelsDetalles->prod_ddetalle      = $value['prod_ddetalle'];
                       $modelsDetalles->cant_ddetalle      = $value['cant_ddetalle'];
                       $modelsDetalles->precio_ddetalle    = $value['precio_ddetalle'];
@@ -327,7 +327,7 @@ class NotaCreditoController extends Controller
           return $documento;
         }
     }
-	
+
 	public function actionNotaRpt( $id ) {
       Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
       $modelNotaCredito = NotaCredito::find()
