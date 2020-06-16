@@ -28,6 +28,10 @@ $config = [
              'currencyCode' => 'S',
              'dateFormat' => 'dd/mm/yyyy',
              'decimalSeparator' => '.',
+             'numberFormatterOptions' => [
+                  NumberFormatter::MIN_FRACTION_DIGITS => 2,
+                  NumberFormatter::MAX_FRACTION_DIGITS => 2,
+              ]
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
