@@ -604,10 +604,7 @@ class DocumentoController extends Controller
 
       $mpdf = new \Mpdf\Mpdf();
 
-      if ( $modelDocumento->status_doc === Documento::DOCUMENTO_ANULADO ) {
-          $mpdf->SetWatermarkText(Yii::t('documento','Document canceled'));
-          $mpdf->showWatermarkText = true;
-      }
+
 
       $f = Yii::$app->formatter;
       $date = $f->asDate($modelDocumento->fecha_doc, 'php:d/m/Y');
@@ -671,6 +668,10 @@ class DocumentoController extends Controller
       $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
       $mpdf->AddPage('P','','','','',10,10,80,10,10,5);
       $mpdf->WriteHtml( $content ); // call mpdf write html
+      if ( $modelDocumento->status_doc === Documento::DOCUMENTO_ANULADO ) {
+          $mpdf->showWatermarkText = true;
+          $mpdf->WriteHTML('<watermarktext style="color:red" content="' . Yii::t('app','CANCELED') . '" alpha="0.4" />');
+      }
 
       $titulo =  $nroComprobante .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
 

@@ -1,6 +1,7 @@
 <?php
 return [
     'Cancel documents' => 'Anular documentos',
+    'Document' => 'Documento',
     'Code' => 'Código',
     'Name' => 'Nombre',
     'Status' => 'Estatus',

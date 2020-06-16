@@ -23,6 +23,10 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+  'Are you sure you want to cancel this item?' => '¿Está seguro que desea anular este item?',
+  'Item canceled successfully!' => '¡Item anulado satisfactoriamente!',
+  'Cancel' => 'Anular',
+  'CANCELED' => 'ANULADO',
   'Summary' => 'Resumen',
   'Select range' => 'Seleccione el rango',
   'Member since' => 'Miembro desde',

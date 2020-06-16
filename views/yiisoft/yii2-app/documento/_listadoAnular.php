@@ -119,8 +119,16 @@ $ultimoDiaMes  = date('d-m-Y');
                                   'title' => Yii::t('documento', 'Cancel document'),
                                   'class' => 'pjax-cancel',
                                   'data' => [
-                                      'id' => $model->id_doc,
-                                    ]
+                                      'message' => Yii::t('app','Are you sure you want to cancel this item?'),
+                                      'succmessage' => Yii::t('app', 'Item canceled successfully!'),
+                                      'method' => 'post',
+                                      'pjax' => 0,
+                                      'icon' => 'warning',
+                                      'title' => Yii::t('documento', 'Document'),
+                                      'ok' => Yii::t('app', 'Confirm'),
+                                      'cancel' => Yii::t('app', 'Cancel'),
+                                      'id' => $model->id_doc
+                                  ],
                               ]
                             );
                       },
@@ -161,41 +169,70 @@ $js = <<<JS
 
     $( 'body' ).on( 'click', '.pjax-cancel', function( e ){
         e.preventDefault();
-        let url = $( this ).prop( 'href' );
+        var id = $( this ).data( 'id' );
+        var title = $( this ).data( 'title' );
+        var icon =  $( this ).data( 'icon' );
+        var ok =  $( this ).data( 'ok' );
+        var url =  $( this ).attr( 'href' );
+        var message = $( this ).data( 'message' );
+        var succMessage = $( this ).data( 'succmessage' );
 
-        $.ajax({
-            url: url,
-            success: function(data){
-              var res = $.parseJSON(data);
-              if( res ) {
-                  swal(title, succMessage, "success")
-                  $.pjax.reload( { container: '#grid' } );
-                  return;
-              }
-            },
-            error: function(data){
-              let message;
+        data  = {
+                title: title,
+                text: message,
+                icon: icon,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: ok ,
+                showCancelButton: true,
+                buttons: true,
+                dangerMode: true,
+            };
 
-              if ( data.responseJSON )
-              {
-                let error = data.responseJSON;
-                message =   "Se ha encontrado un error: " +
-                  "Code " + error.code +
-                  "File: " + error.file +
-                  "Line: " + error.line +
-                  "Name: " + error.name +
-                  "Message: " + error.message;
-              }
-              else
-              {
-                  message = data.responseText;
-              }
+        // Show the user a swal confirmation window
+        swal( data ).
+            then( (willdelete) => {
+                if (willdelete) {
+                    let url = $( this ).prop( 'href' );
 
-              swal('Oops!!!',message,"error" );
-                return;
-            }
-        });
+                    $.ajax({
+                        url: url,
+                        success: function(data){
+                          if( data.success ) {
+                              swal(data.title, data.message, data.type)
+                              $.pjax.reload( { container: '#grid' } );
+                              return;
+                          }
+                        },
+                        error: function(data){
+                          let message;
+
+                          if ( data.responseJSON )
+                          {
+                            let error = data.responseJSON;
+                            message =   "Se ha encontrado un error: " +
+                              "Code " + error.code +
+                              "File: " + error.file +
+                              "Line: " + error.line +
+                              "Name: " + error.name +
+                              "Message: " + error.message;
+                          }
+                          else
+                          {
+                              message = data.responseText;
+                          }
+
+                          swal('Oops!!!',message,"error" );
+                            return;
+                        }
+                    });
+                }
+              });
+
+              return false;
     });
+
+
+
 
 JS;
 $this->registerJs( $js, View::POS_LOAD);
