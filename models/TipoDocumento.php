@@ -22,6 +22,9 @@ class TipoDocumento extends \yii\db\ActiveRecord
     const STATUS_INACTIVO = 0;
     const ES_DOCUMENTO = 1;
     const ES_GUIA = 2;
+    const TD_SALIDA = 'S';
+    const TD_ENTRADA = 'E';
+    const TD_NINGUNO = 'N';
     /**
      * {@inheritdoc}
      */

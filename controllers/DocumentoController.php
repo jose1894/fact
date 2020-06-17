@@ -857,54 +857,88 @@ class DocumentoController extends Controller
         return $return;
       }
 
-      // Si el documento es Boleta o Factura
-      if ( $model->tipo_doc === Documento::TIPODOC_BOLETA ||  $model->tipo_doc === Documento::TIPODOC_FACTURA ) {
-        $modelPedido        = Pedido::findOne($model->pedido_doc);            //Modelo del pedido
-        $modelGuiaRem       = $this->findModel( $model->guiaRem->id_doc);    //Modelo de la guia de remision asociada
-        $modelNotaIngreso   = new NotaIngreso();                              //Instancia el modelo para crear la nota de ingreso
-        $notaIngresoDetalle = $model->pedidoDoc->detalles;               //Asigna los items a retornar el stock
+      if ( $model->tipo_doc === Documento::TIPODOC_BOLETA  ||  $model->tipo_doc === Documento::TIPODOC_FACTURA ) {
+          $modelAjuste   = new NotaIngreso();                              //Instancia el modelo para crear la nota de ingreso
+          $modelPedido        = Pedido::findOne($model->pedido_doc);            //Modelo del pedido
+          $modelGuiaRem       = $this->findModel( $model->guiaRem->id_doc);    //Modelo de la guia de remision asociada
+          $modelPedido->estatus_pedido = Pedido::PEDIDO_ANULADO;                //Anula el pedido
+          $modelGuiaRem->status_doc    = Documento::DOCUMENTO_ANULADO;          //Anula la guia de remision
+          $notaAjusteDetalle = $model->pedidoDoc->detalles;               //Asigna los items a retornar el stock
+      } else if ( $model->tipo_doc === NotaCredito::TIPODOC_NCREDITO ) {
+          $modelAjuste   = new NotaSalida();                              //Instancia el modelo para crear la nota de ingreso
+          $notaAjusteDetalle = $model->detalles;               //Asigna los items a retornar el stock
+      }
 
-        $model->status_doc           = Documento::DOCUMENTO_ANULADO;          //Anula el Documento
-        $modelPedido->estatus_pedido = Pedido::PEDIDO_ANULADO;                //Anula el pedido
-        $modelGuiaRem->status_doc    = Documento::DOCUMENTO_ANULADO;          //Anula la guia de remision
+      $model->status_doc           = Documento::DOCUMENTO_ANULADO;          //Anula el Documento
 
-        try {
+      try {
           $flag = true;
           $transaction = \Yii::$app->db->beginTransaction();
-          $modelNotaIngreso->idrefdoc_trans = $model->id_doc;
-          $modelNotaIngreso->status_trans = $modelNotaIngreso::STATUS_APPROVED;
+          $modelAjuste->idrefdoc_trans = $model->id_doc;
+          $modelAjuste->status_trans = $modelNotaIngreso::STATUS_APPROVED;
 
           $sucursal = SiteController::getSucursal();
-          $modelNotaIngreso->sucursal_trans = $sucursal;
-          $modelNotaIngreso->usuario_trans = Yii::$app->user->id;
-          $modelNotaIngreso->ope_trans = $modelNotaIngreso::OPE_TRANS;
-          $num = Numeracion::getNumeracion( $modelNotaIngreso::NOTA_INGRESO );
+          $modelAjuste->sucursal_trans = $sucursal;
+          $modelAjuste->usuario_trans = Yii::$app->user->id;
+          $modelAjuste->ope_trans = $modelAjuste::OPE_TRANS;
+
+          if ( $model->tipo_doc === Documento::TIPODOC_BOLETA  ||  $model->tipo_doc === Documento::TIPODOC_FACTURA ) {
+              $num = Numeracion::getNumeracion( $modelAjuste::NOTA_INGRESO );
+              $modelAjuste->tipo_trans = Documento::INGRESO_ANULACION;
+              $modelAjuste->almacen_trans = $modelPedido->almacen_pedido;
+          } else if ( $model->tipo_doc === NotaCredito::TIPODOC_NCREDITO ) {
+              $num = Numeracion::getNumeracion( $modelAjuste::NOTA_SALIDA );
+              $modelAjuste->tipo_trans = Documento::SALIDA_ANULACION;
+              $modelAjuste->almacen_trans = $model->almacen_doc;
+          }
+
           $codigo = intval( $num[0]['numero_num'] ) + 1;
           $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
           $fecha = explode("/",date('d/m/Y'));
           $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
-          $modelNotaIngreso->fecha_trans = $fecha;
-          $modelNotaIngreso->codigo_trans = $codigo;
-          $modelNotaIngreso->tipo_trans = Documento::INGRESO_ANULACION;
-          $modelNotaIngreso->almacen_trans = $modelPedido->almacen_pedido;
+          $modelAjuste->fecha_trans = $fecha;
+          $modelAjuste->codigo_trans = $codigo;
 
-          $flag = $model->save() && $modelPedido->save() && $modelGuiaRem->save() && $modelNotaIngreso->save() && $flag;
+          if ( $model->tipo_doc === Documento::TIPODOC_BOLETA  ||  $model->tipo_doc === Documento::TIPODOC_FACTURA ) {
+              $flag = $model->save() && $modelPedido->save() && $modelGuiaRem->save() && $modelAjuste->save() && $flag;
+          } else if ( $model->tipo_doc === NotaCredito::TIPODOC_NCREDITO ) {
+              $flag = $model->save() && $modelAjuste->save() && $flag;
+          }
 
           if ( $flag ) {
-            for($i = 0; $i < count($notaIngresoDetalle); $i++) {
-                  $modelNotaIngresoDetalle = new NotaIngresoDetalle();
-                  $modelNotaIngresoDetalle->trans_detalle = $modelNotaIngreso->id_trans;
-                  $modelNotaIngresoDetalle->prod_detalle = $notaIngresoDetalle[$i]['prod_pdetalle'];
-                  $modelNotaIngresoDetalle->cant_detalle = $notaIngresoDetalle[$i]['cant_pdetalle'];
+            for($i = 0; $i < count($notaAjusteDetalle); $i++) {
+                  $idProd = 0;
+                  $cantProd = 0;
 
-                  if ( !($flag = $modelNotaIngresoDetalle->save()) ) {
+                  if ( $model->tipo_doc === Documento::TIPODOC_BOLETA  ||  $model->tipo_doc === Documento::TIPODOC_FACTURA ) {
+                      $modelAjusteDetalle = new NotaIngresoDetalle();
+                      $modelAjusteDetalle->prod_detalle = $notaAjusteDetalle[$i]['prod_pdetalle'];
+                      $modelAjusteDetalle->cant_detalle = $notaAjusteDetalle[$i]['cant_pdetalle'];
+                      $idProd = $notaAjusteDetalle[$i]['prod_pdetalle'];
+                      $cantProd = $notaAjusteDetalle[$i]['cant_pdetalle'];
+                  } else if ( $model->tipo_doc === NotaCredito::TIPODOC_NCREDITO ) {
+                      $modelAjusteDetalle = new NotaSalidaDetalle();
+                      $modelAjusteDetalle->prod_detalle = $notaAjusteDetalle[$i]['prod_ddetalle'];
+                      $modelAjusteDetalle->cant_detalle = $notaAjusteDetalle[$i]['cant_ddetalle'];
+                      $idProd = $notaAjusteDetalle[$i]['prod_ddetalle'];
+                      $cantProd = $notaAjusteDetalle[$i]['cant_ddetalle'];
+                  }
+
+                  $modelAjusteDetalle->trans_detalle = $modelAjuste->id_trans;
+
+                  if ( !($flag = $modelAjusteDetalle->save()) ) {
                       $transaction->rollBack();
                       throw new \Exception("Error Processing Request", 1);
                       break;
                   }
 
-                  $producto = Producto::findOne(['id_prod' => $notaIngresoDetalle[$i]['prod_pdetalle']]);
-                  $producto->stock_prod += $notaIngresoDetalle[$i]['cant_pdetalle'];
+                  $producto = Producto::findOne(['id_prod' => $idProd]);
+
+                  if ( $modelAjuste->ope_trans === TipoDocumento::TD_SALIDA ) {
+                      $producto->stock_prod -= $cantProd;
+                  } else if ( $modelAjuste->ope_trans === TipoDocumento::TD_ENTRADA ) {
+                      $producto->stock_prod += $cantProd;
+                  }
 
                   if (! ($flag = $producto->save(false))) {
                       $transaction->rollBack();
@@ -943,8 +977,6 @@ class DocumentoController extends Controller
             ];
             return $return;
         }
-
-      }
     }
 
 }
