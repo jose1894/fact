@@ -2,6 +2,7 @@
 return [
     'Cancel documents' => 'Anular documentos',
     'Document' => 'Documento',
+    'Document list' => 'Listado de documentos',
     'Code' => 'Código',
     'Name' => 'Nombre',
     'Status' => 'Estatus',

@@ -7,23 +7,26 @@ use yii\web\View;
 use yii\widgets\Pjax;
 use kartik\select2\Select2;
 use app\models\Cliente;
+use app\models\Documento;
+use app\models\TipoDocumento;
+use app\models\NotaCredito;
+use kartik\daterange\DateRangePicker;
+
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\DocumentoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('documento', 'Documentos');
+$this->title = Yii::t('documento', 'Document list');
 $this->params['breadcrumbs'][] = $this->title;
 $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
+$primerDiaMes = date('01/MM/yyyy'); // hard-coded '01' for first day
+$ultimoDiaMes  = date('dd/MM/yyyy');
 ?>
     <div class="documento-index">
 
         <h1><?= Html::encode($this->title) ?></h1>
         <?php Pjax::begin(['id' => 'grid']); ?>
-        <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-        <p>
-            <?= Html::a(Yii::t('documento', 'Create Documento'), ['create'], ['class' => 'btn btn-success']) ?>
-        </p>
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
@@ -33,14 +36,29 @@ $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
                     'width' => '5%'
                 ],
                 [
-                    'attribute'=>'fecha_doc',
-                    'value' => function($data){
-                        return Yii::$app->formatter->asDate($data->fecha_doc, 'dd/MM/yyyy');
-                    },
-                    'width' => '10%',
-                    'filterType' => GridView::FILTER_DATE,
-                    'contentOptions' => ['style'=>'text-align: right;'],
-                ],
+                  'width' => '20%',
+                  'value' => function($data){
+                       return Yii::$app->formatter->asDate($data->fecha_doc, 'dd/MM/yyyy');
+                  },
+                  'attribute' => 'fecha_doc',
+                  'hAlign' => 'center',
+                  'vAlign' => 'middle',
+                  'filterType' => GridView::FILTER_DATE_RANGE,
+                  'filterWidgetOptions' => [
+                          'presetDropdown'=>true,
+                          'convertFormat'=>true,
+                          // 'includeMonthsFilter'=>true,
+                          'pluginOptions' => [
+                                'locale' => ['format' => 'd/m/Y'],
+                                'maxDate' => $ultimoDiaMes,
+                                'showDropdowns'=>true
+                          ],
+                          'options' => ['placeholder' => Yii::t( 'app', 'Select range' )."..." ],
+                          'pluginEvents' => [
+                                  "apply.daterangepicker" => "function() { aplicarDateRangeFilter() }",
+                          ],
+                  ],
+              ],
                 [
                     'attribute' => 'cliente',
                     'label' => Yii::t('cliente','Customer'),
@@ -52,19 +70,40 @@ $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
                         'theme' => Select2::THEME_DEFAULT,
                         'pluginOptions' => ['allowClear' => true],
                         'pluginEvents' =>[],
-                        'options' => ['prompt' => ''],
+                        // 'options' => ['prompt' => '',],
                     ],
-                    'width' => '40%'
+                    'filterInputOptions' =>[
+                      'prompt' => '*',
+                      'multiple' => true,
+                    ],
+                    'width' => '25%'
                 ],
                 [
-                    'attribute' => 'status_doc',
-                    'filter' => $status,
-                    'value' => function($data){
-                        $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
-                        return $status[$data->status_doc];
-                    },
-                    'width' => '20%'
+                    'attribute' => 'tipoDocumento',
+                    'label' => Yii::t('tipo_documento','Document type'),
+                    'value' => 'tipoDoc.des_tipod',
+                    'filter'=>TipoDocumento::getTipoDocumentoList(NULL, TipoDocumento::ES_DOCUMENTO),
+                    'filterType' => GridView::FILTER_SELECT2,
+                    'filterWidgetOptions'=>[
+                          'language' => Yii::$app->language,
+                          'theme' => Select2::THEME_DEFAULT,
+                          'pluginOptions'=>[
+                                  'allowClear'=>true,
+                                  'multiple'=>true
+                          ],
+                		],
+                    'width' => '15%'
                 ],
+                'status_doc',
+                // [
+                //     'attribute' => 'status_doc',
+                //     'filter' => $status,
+                //     'value' => function($data){
+                //         $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
+                //         return $status[$data->status_doc];
+                //     },
+                //     'width' => '20%'
+                // ],
                 [
                     'class' => '\kartik\grid\ActionColumn',
                     'headerOptions' => ['style' => 'color:#337ab7'],
@@ -83,7 +122,7 @@ $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
                                     ]) ;
                         },
                         'sunat' =>  function ($url, $model) {
-                            return ($model->statussunat_doc < 0 && $model->status_doc == $model::DOCUMENTO_GENERADO) ? Html::a('<button class="btn btn-flat btn-success"><i class="fa fa-play-circle-o"></i></button>',
+                            return ($model->statussunat_doc < 0 && $model->status_doc == $model::DOCUMENTO_GENERADO) ? Html::a('<button class="btn btn-flat btn-success"><i class="fa fa-upload"></i></button>',
                                 $url,
                                 [
                                     'title' => Yii::t('app', 'Send'). ' SUNAT',
@@ -95,13 +134,25 @@ $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
                                 '#',
                                 [
                                     'title' => Yii::t('app', 'Sended'). ' SUNAT',
-                                ]) : '');
+                                ]) : Html::a('<button class="btn btn-flat btn-danger"><i class="fa fa-ban"></i></button>',
+                                    "",
+                                    [
+                                        'title' => Yii::t('app', 'CANCELED'),
+                                        'class' => 'pjax-canceled',
+                                    ]));
                         },
                     ],
                     'urlCreator' => function ($action, $model) {
                         if ($action === 'print') {
-                            $url = Url::to(['documento/documento-rpt','id' => $model->id_doc]);
-                            return $url;
+                            $url = "";
+                            switch ($model->tipo_doc){
+                              case Documento::TIPODOC_FACTURA:
+                              case Documento::TIPODOC_BOLETA:
+                                                        $url = 'documento/documento-rpt'; break;
+                              case NotaCredito::TIPODOC_NCREDITO:
+                                                        $url = 'nota-credito/nota-rpt'; break;
+                            }
+                            return Url::to([ $url ,'id' => $model->id_doc]);
                         }
 
                         if ($action === 'sunat') {
@@ -148,3 +199,10 @@ $js = <<<JS
 
 JS;
 $this->registerJs( $js, View::POS_LOAD);
+
+$js = <<<JS
+function aplicarDateRangeFilter() {
+  $('.grid-view').yiiGridView('applyFilter');
+}
+JS;
+$this->registerJs( $js, View::POS_BEGIN);

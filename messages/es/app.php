@@ -24,7 +24,8 @@
  */
 return [
   'Are you sure you want to cancel this item?' => '¿Está seguro que desea anular este item?',
-  'Item canceled successfully!' => '¡Item anulado satisfactoriamente!',
+  'Record canceled successfully!' => '¡Registro anulado satisfactoriamente!',
+  'Record canceled!' => '¡Registro anulado!',
   'Cancel' => 'Anular',
   'CANCELED' => 'ANULADO',
   'Summary' => 'Resumen',

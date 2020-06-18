@@ -66,22 +66,25 @@ class ProfileController extends Controller
     {
         $model = new Profile();
 
-        if (Yii::$app->request->isPost) {
-          $id = (int) Yii::$app->request->post('user_id');
-          $existe = Profile::find( $id )->one();
+        $post = Yii::$app->request->post();
+        
+        if ( empty($post['_csrf']) ) {
+          if (Yii::$app->request->isGet) {
+            $id = (int) Yii::$app->request->post('user_id');
+            $existe = Profile::find( $id )->one();
+          }
+
+          if (Yii::$app->request->isGet) {
+            $id = (int) Yii::$app->request->get('user_id');
+            $existe = Profile::find( $id );
+          }
+
+
+          if ( is_null( $existe ) ) {
+              return $this->redirect(['site/index']);
+          }
         }
 
-        if (Yii::$app->request->isGet) {
-          $id = (int) Yii::$app->request->get('user_id');
-          $existe = Profile::find( $id );
-          // print_r( count($existe) ); exit();
-          // exit('ak');
-        }
-
-
-        if ( is_null( $existe ) ) {
-            return $this->redirect(['site/index']);
-        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['site/index']);

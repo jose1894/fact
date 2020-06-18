@@ -489,8 +489,14 @@ class DocumentoController extends Controller
     public function actionListadoFactura()
     {
         $searchModel = new DocumentoSearch();
-        $dataProvider = $searchModel->searchDocumento(Yii::$app->request->queryParams);
-
+        $searchModel->listado = true;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->setSort([
+            'defaultOrder' => [
+                'cod_doc' => SORT_DESC,
+                'fecha_doc' => SORT_DESC
+            ]
+        ]);
 
         return $this->render('_facturaGenerada', [
             'searchModel' => $searchModel,

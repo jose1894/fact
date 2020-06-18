@@ -17,7 +17,7 @@ use yii\web\View ;
     <div class="row">
     	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
         <?php
-          $mov = TipoDocumento::getTipoDocumento( );
+          $mov = TipoDocumento::getTipoDocumentoList( );
         ?>
         <?= $form->field($model, 'tipo_num',[
             'addClass' => 'form-control'

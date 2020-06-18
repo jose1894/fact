@@ -40,7 +40,8 @@ use app\base\Model;
                                       ->select(['id_num','concat(td.abrv_tipod,"/",serie_num," - ",td.des_tipod) numero_num'])
                                       ->joinWith(['tipoDocumento td'])
                                       ->where([
-                                              'td.id_tipod' => [Documento::TIPODOC_FACTURA,Documento::TIPODOC_BOLETA ]
+                                              'td.tipo_tipod' => TipoDocumento::ES_DOCUMENTO,
+                                              'td.ope_tipod' => TipoDocumento::TD_SALIDA
                                       ])
                                       ->orderBy('td.abrv_tipod asc,serie_num asc')->all(), 'id_num', 'numero_num'),
                           [
@@ -447,6 +448,12 @@ $js = '
         success   : function( data ) {
           console.log("success");
           $( "#await" ).css( "display", "none" );
+          if ( data.anulado ) {
+            swal("Oops!!!","' . Yii::t( 'app', 'Record canceled!')  . '","warning" );
+            $( "#documento" ).css( "display", "none" );
+            return;
+          }
+
           if ( !data ) {
             swal("Oops!!!","' . Yii::t( 'app', 'Record not found!')  . '","warning" );
             $( "#documento" ).css( "display", "none" );
@@ -598,7 +605,7 @@ $js = '
                                 "<input id=\\"NotaCredito_Detalle-" + deta + "-plista_ddetalle\\" name=\\"NotaCredito-Detalle[" + deta + "][plista_ddetalle]\\" "+
                                 " class=\\"form-control number-decimals\\" value=\\"" + data[opc][deta]["plista_pdetalle"] + "\\" readonly>" +
 								"<input id=\\"NotaCredito-Detalle-" + deta + "-impuesto_ddetalle\\" name=\\"NotaCredito-Detalle[" + deta + "][impuesto_ddetalle]\\" value=\\"" +
-								data[opc][deta]["impuesto_pdetalle"] + "\\" type=\\"hidden\\">" + 
+								data[opc][deta]["impuesto_pdetalle"] + "\\" type=\\"hidden\\">" +
                             "</div>"+
                             "<div class=\\"col-sm-1 col-xs-12\\">"+
                                 "<input id=\\"NotaCredito_Detalle-" + deta + "-descu_ddetalle\\" name=\\"NotaCredito-Detalle[" + deta + "][descu_ddetalle]\\" "+
@@ -697,15 +704,15 @@ $js = '
        method  : "POST",
        success : function (data) {
           if ( data.success ) {
-            //swal(data.title, data.message, data.type);          
-			
+            //swal(data.title, data.message, data.type);
+
             $( "form#'.$model->formName().'" ).trigger( "reset" );
             selects = $("form#'.$model->formName().'").find("select");
 
             if ( selects.length ){
               selects.trigger( "change" );
             }
-			
+
 			window.open(
 			  "'.Url::to(['nota-credito/nota-rpt']).'?id=" + data.id,
 			  "'. Yii::t('documento','Credit note').'",
@@ -719,14 +726,14 @@ $js = '
 			  "left = 490," +
 			  "top=300");
 			swal(data.title, data.message, data.type);
-            
+
 
             $( ".table-body" ).empty();
 			$( "#documento" ).css( "display", "none" );
 
             return;
           }
-		  
+
 		  return swal("Oops!", data, "error");
        },
        error   : function (data) {

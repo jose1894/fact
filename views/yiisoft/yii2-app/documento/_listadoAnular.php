@@ -28,11 +28,6 @@ $ultimoDiaMes  = date('d-m-Y');
 
         <h1><?= Html::encode($this->title) ?></h1>
         <?php Pjax::begin(['id' => 'grid']); ?>
-        <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-        <!-- <p>
-            <?= Html::a(Yii::t('documento', 'Create Documento'), ['create'], ['class' => 'btn btn-success']) ?>
-        </p> -->
 
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
@@ -58,6 +53,7 @@ $ultimoDiaMes  = date('d-m-Y');
                           'pluginOptions' => [
                                 'locale' => ['format' => 'd/m/Y'],
                                 'maxDate' => $ultimoDiaMes,
+                                'showDropdowns'=>true
                           ],
                           'options' => ['placeholder' => Yii::t( 'app', 'Select range' )."..." ],
                           'pluginEvents' => [
@@ -99,7 +95,7 @@ $ultimoDiaMes  = date('d-m-Y');
               [
                   'class' => '\kartik\grid\ActionColumn',
                   'headerOptions' => ['style' => 'color:#337ab7'],
-                  'template' => '{print}&nbsp;{anular}',
+                  'template' => '{print}&nbsp;&nbsp;{anular}',
                   'buttons' => [
                       'print' =>  function ($url, $model) {
                           return  Html::a('<button class="btn btn-flat btn-primary"><i class="fa fa-print"></i></button>',
@@ -120,7 +116,7 @@ $ultimoDiaMes  = date('d-m-Y');
                                   'class' => 'pjax-cancel',
                                   'data' => [
                                       'message' => Yii::t('app','Are you sure you want to cancel this item?'),
-                                      'succmessage' => Yii::t('app', 'Item canceled successfully!'),
+                                      'succmessage' => Yii::t('app', 'Record canceled successfully!'),
                                       'method' => 'post',
                                       'pjax' => 0,
                                       'icon' => 'warning',

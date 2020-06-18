@@ -12,6 +12,7 @@ use app\models\NotaIngreso;
 use app\models\NotaIngresoDetalle;
 use app\models\DocumentoDetalle;
 use app\models\Pedido;
+use app\models\Documento;
 use app\models\Producto;
 use app\models\TipoCambio;
 use app\models\Numeracion;
@@ -288,6 +289,10 @@ class NotaCreditoController extends Controller
 
           if ( empty($model) ) {
             return false;
+          }
+
+          if ( $model->status_doc === Documento::DOCUMENTO_ANULADO ) {
+            return [ 'anulado' => true ];
           }
 
           $documento = [

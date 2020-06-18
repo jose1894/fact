@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 18-06-2020 a las 00:12:13
--- Versión del servidor: 10.1.36-MariaDB
--- Versión de PHP: 7.2.10
+-- Servidor: 127.0.0.1:3306
+-- Tiempo de generación: 18-06-2020 a las 22:24:57
+-- Versión del servidor: 10.4.10-MariaDB
+-- Versión de PHP: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,10 +19,11 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `leophard_fact`
+-- Base de datos: `leophard_dev`
 --
-CREATE DATABASE IF NOT EXISTS `leophard_fact` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `leophard_fact`;
+DROP DATABASE IF EXISTS `leophard_dev`;
+CREATE DATABASE IF NOT EXISTS `leophard_dev` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `leophard_dev`;
 
 -- --------------------------------------------------------
 
@@ -30,12 +31,15 @@ USE `leophard_fact`;
 -- Estructura de tabla para la tabla `almacen`
 --
 
-CREATE TABLE `almacen` (
-  `id_almacen` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `almacen`;
+CREATE TABLE IF NOT EXISTS `almacen` (
+  `id_almacen` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `des_almacen` varchar(50) NOT NULL COMMENT 'DESCRIPCION ALMACEN',
   `status_almacen` int(11) NOT NULL COMMENT 'ESTATUS ALMACEN',
-  `sucursal_almacen` int(11) NOT NULL COMMENT 'SUCURSAL ALMACEN'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT=' GUARDA DATOS DE ALMACENES';
+  `sucursal_almacen` int(11) NOT NULL COMMENT 'SUCURSAL ALMACEN',
+  PRIMARY KEY (`id_almacen`),
+  KEY `sucursal_almacen` (`sucursal_almacen`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT=' GUARDA DATOS DE ALMACENES';
 
 --
 -- Volcado de datos para la tabla `almacen`
@@ -50,10 +54,13 @@ INSERT INTO `almacen` (`id_almacen`, `des_almacen`, `status_almacen`, `sucursal_
 -- Estructura de tabla para la tabla `auth_assignment`
 --
 
-CREATE TABLE `auth_assignment` (
+DROP TABLE IF EXISTS `auth_assignment`;
+CREATE TABLE IF NOT EXISTS `auth_assignment` (
   `item_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `user_id` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` int(11) DEFAULT NULL
+  `created_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`item_name`,`user_id`),
+  KEY `idx-auth_assignment-user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -70,14 +77,18 @@ INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
 -- Estructura de tabla para la tabla `auth_item`
 --
 
-CREATE TABLE `auth_item` (
+DROP TABLE IF EXISTS `auth_item`;
+CREATE TABLE IF NOT EXISTS `auth_item` (
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `type` smallint(6) NOT NULL,
-  `description` text COLLATE utf8_unicode_ci,
+  `description` text COLLATE utf8_unicode_ci DEFAULT NULL,
   `rule_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `data` blob,
+  `data` blob DEFAULT NULL,
   `created_at` int(11) DEFAULT NULL,
-  `updated_at` int(11) DEFAULT NULL
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`name`),
+  KEY `rule_name` (`rule_name`),
+  KEY `idx-auth_item-type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -152,6 +163,14 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/cliente/index', 2, NULL, NULL, NULL, 1562771696, 1562771696),
 ('/cliente/update', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/cliente/view', 2, NULL, NULL, NULL, 1562771697, 1562771697),
+('/compra/*', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/compra/ajax-compras', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/compra/compra-rpt', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/compra/create', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/compra/delete', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/compra/index', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/compra/update', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/compra/view', 2, NULL, NULL, NULL, 1592494479, 1592494479),
 ('/cond-pago/*', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/cond-pago/create', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/cond-pago/delete', 2, NULL, NULL, NULL, 1562771697, 1562771697),
@@ -182,12 +201,33 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/distrito/index', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/distrito/update', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/distrito/view', 2, NULL, NULL, NULL, 1562771697, 1562771697),
+('/documento/*', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/documento/ajax-gen-fact-xml', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/documento/anular-documento', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/documento/despachar-proforma', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/documento/documento-rpt', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/documento/factura-create', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/documento/guia-create', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/documento/guia-rpt', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/documento/index', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/documento/listado-anular-documento', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/documento/listado-factura', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/documento/pedidos-pendientes', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/documento/proforma-pendientes', 2, NULL, NULL, NULL, 1592494479, 1592494479),
+('/documento/reporte-ventas', 2, NULL, NULL, NULL, 1592494479, 1592494479),
 ('/empresa/*', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/empresa/create', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/empresa/delete', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/empresa/index', 2, NULL, NULL, NULL, 1562771697, 1562771697),
+('/empresa/sucursales', 2, NULL, NULL, NULL, 1592494480, 1592494480),
 ('/empresa/update', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/empresa/view', 2, NULL, NULL, NULL, 1562771697, 1562771697),
+('/empusuario/*', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/empusuario/create', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/empusuario/delete', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/empusuario/index', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/empusuario/update', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/empusuario/view', 2, NULL, NULL, NULL, 1592494480, 1592494480),
 ('/gii/*', 2, NULL, NULL, NULL, 1562771696, 1562771696),
 ('/gii/default/*', 2, NULL, NULL, NULL, 1562771696, 1562771696),
 ('/gii/default/action', 2, NULL, NULL, NULL, 1562771696, 1562771696),
@@ -210,6 +250,54 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/moneda/index', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/moneda/update', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/moneda/view', 2, NULL, NULL, NULL, 1562771697, 1562771697),
+('/motivo-traslado/*', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/motivo-traslado/create', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/motivo-traslado/delete', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/motivo-traslado/index', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/motivo-traslado/update', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/motivo-traslado/view', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-credito/*', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-credito/create', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-credito/get-documento', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-credito/index', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-credito/nota-rpt', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso-detalle/*', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso-detalle/create', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso-detalle/delete', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso-detalle/index', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso-detalle/update', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso-detalle/view', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso/*', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso/anular-nota', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso/aprobar-nota', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso/create', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso/delete', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso/index', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso/notai-rpt', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso/update', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-ingreso/view', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida-detalle/*', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida-detalle/create', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida-detalle/delete', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida-detalle/index', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida-detalle/update', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida-detalle/view', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida/*', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida/anular-nota', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida/aprobar-nota', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida/create', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida/delete', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida/index', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida/notas-rpt', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida/update', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/nota-salida/view', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/numeracion/*', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/numeracion/ajax-get-numeracion', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/numeracion/create', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/numeracion/delete', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/numeracion/index', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/numeracion/update', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/numeracion/view', 2, NULL, NULL, NULL, 1592494480, 1592494480),
 ('/pais/*', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/pais/create', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/pais/delete', 2, NULL, NULL, NULL, 1562771697, 1562771697),
@@ -237,10 +325,17 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/producto/producto-list', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/producto/update', 2, NULL, NULL, NULL, 1562771697, 1562771697),
 ('/producto/view', 2, NULL, NULL, NULL, 1562771697, 1562771697),
+('/profile/*', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/profile/create', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/profile/delete', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/profile/index', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/profile/update', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/profile/view', 2, NULL, NULL, NULL, 1592494480, 1592494480),
 ('/proveedor/*', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/proveedor/create', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/proveedor/delete', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/proveedor/index', 2, NULL, NULL, NULL, 1562771698, 1562771698),
+('/proveedor/proveedor-list', 2, NULL, NULL, NULL, 1592494480, 1592494480),
 ('/proveedor/update', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/proveedor/view', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/provincia/*', 2, NULL, NULL, NULL, 1562771698, 1562771698),
@@ -250,22 +345,56 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/provincia/provincias', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/provincia/update', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/provincia/view', 2, NULL, NULL, NULL, 1562771698, 1562771698),
+('/series/*', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/series/create', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/series/delete', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/series/index', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/series/update', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/series/view', 2, NULL, NULL, NULL, 1592494480, 1592494480),
 ('/site/*', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/site/about', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/site/add-admin', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/site/captcha', 2, NULL, NULL, NULL, 1562771698, 1562771698),
+('/site/consulta-ruc', 2, NULL, NULL, NULL, 1592494480, 1592494480),
 ('/site/contact', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/site/error', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/site/index', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/site/login', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/site/logout', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/site/signup', 2, NULL, NULL, NULL, 1562771698, 1562771698),
+('/tipo-cambio/*', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-cambio/consulta-tipo', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-cambio/create', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/tipo-cambio/delete', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-cambio/diario', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/tipo-cambio/index', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/tipo-cambio/update', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-cambio/view', 2, NULL, NULL, NULL, 1592494480, 1592494480),
+('/tipo-documento/*', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-documento/ajax-tipo-documento', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-documento/create', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-documento/delete', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-documento/index', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-documento/update', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-documento/view', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-identificacion/*', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-identificacion/create', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-identificacion/delete', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-identificacion/index', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-identificacion/update', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-identificacion/view', 2, NULL, NULL, NULL, 1592494481, 1592494481),
 ('/tipo-listap/*', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/tipo-listap/create', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/tipo-listap/delete', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/tipo-listap/index', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/tipo-listap/update', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/tipo-listap/view', 2, NULL, NULL, NULL, 1562771698, 1562771698),
+('/tipo-movimiento/*', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-movimiento/create', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-movimiento/delete', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-movimiento/index', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-movimiento/update', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/tipo-movimiento/view', 2, NULL, NULL, NULL, 1592494481, 1592494481),
 ('/tipo-producto/*', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/tipo-producto/create', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/tipo-producto/delete', 2, NULL, NULL, NULL, 1562771698, 1562771698),
@@ -278,12 +407,24 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/tipo-proveedor/index', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/tipo-proveedor/update', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/tipo-proveedor/view', 2, NULL, NULL, NULL, 1562771698, 1562771698),
+('/transportista/*', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/transportista/create', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/transportista/delete', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/transportista/index', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/transportista/update', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/transportista/view', 2, NULL, NULL, NULL, 1592494481, 1592494481),
 ('/unidad-medida/*', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/unidad-medida/create', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/unidad-medida/delete', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/unidad-medida/index', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/unidad-medida/update', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/unidad-medida/view', 2, NULL, NULL, NULL, 1562771698, 1562771698),
+('/unidad-transporte/*', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/unidad-transporte/create', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/unidad-transporte/delete', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/unidad-transporte/index', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/unidad-transporte/update', 2, NULL, NULL, NULL, 1592494481, 1592494481),
+('/unidad-transporte/view', 2, NULL, NULL, NULL, 1592494481, 1592494481),
 ('/vendedor/*', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/vendedor/create', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/vendedor/delete', 2, NULL, NULL, NULL, 1562771698, 1562771698),
@@ -296,9 +437,9 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/zona/index', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/zona/update', 2, NULL, NULL, NULL, 1562771698, 1562771698),
 ('/zona/view', 2, NULL, NULL, NULL, 1562771698, 1562771698),
-('Administradores', 1, NULL, NULL, NULL, 1562771725, 1563458419),
-('SuperSU', 1, 'Super Administrador', NULL, NULL, 1563458274, 1563462877),
-('Usuarios', 1, NULL, NULL, NULL, 1562772110, 1563458361);
+('Administradores', 1, NULL, NULL, NULL, 1562771725, 1592495663),
+('SuperSU', 1, 'Super Administrador', NULL, NULL, 1563458274, 1592495699),
+('Usuarios', 1, NULL, NULL, NULL, 1562772110, 1592494493);
 
 -- --------------------------------------------------------
 
@@ -306,9 +447,12 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 -- Estructura de tabla para la tabla `auth_item_child`
 --
 
-CREATE TABLE `auth_item_child` (
+DROP TABLE IF EXISTS `auth_item_child`;
+CREATE TABLE IF NOT EXISTS `auth_item_child` (
   `parent` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `child` varchar(64) COLLATE utf8_unicode_ci NOT NULL
+  `child` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`parent`,`child`),
+  KEY `child` (`child`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -529,13 +673,190 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('SuperSU', '/admin/user/signup'),
 ('SuperSU', '/admin/user/view'),
 ('SuperSU', 'Administradores'),
+('SuperSU', 'Usuarios'),
+('Usuarios', '/almacen/create'),
+('Usuarios', '/almacen/delete'),
+('Usuarios', '/almacen/index'),
+('Usuarios', '/almacen/update'),
+('Usuarios', '/almacen/view'),
+('Usuarios', '/cliente/cliente-list'),
+('Usuarios', '/cliente/create'),
+('Usuarios', '/cliente/delete'),
+('Usuarios', '/cliente/index'),
+('Usuarios', '/cliente/update'),
+('Usuarios', '/cliente/view'),
+('Usuarios', '/compra/ajax-compras'),
+('Usuarios', '/compra/compra-rpt'),
+('Usuarios', '/compra/create'),
+('Usuarios', '/compra/delete'),
+('Usuarios', '/compra/index'),
+('Usuarios', '/compra/update'),
+('Usuarios', '/compra/view'),
+('Usuarios', '/cond-pago/create'),
+('Usuarios', '/cond-pago/delete'),
+('Usuarios', '/cond-pago/index'),
+('Usuarios', '/cond-pago/update'),
+('Usuarios', '/cond-pago/view'),
+('Usuarios', '/documento/ajax-gen-fact-xml'),
+('Usuarios', '/documento/anular-documento'),
+('Usuarios', '/documento/despachar-proforma'),
+('Usuarios', '/documento/documento-rpt'),
+('Usuarios', '/documento/factura-create'),
+('Usuarios', '/documento/guia-create'),
+('Usuarios', '/documento/guia-rpt'),
+('Usuarios', '/documento/index'),
+('Usuarios', '/documento/listado-anular-documento'),
+('Usuarios', '/documento/listado-factura'),
+('Usuarios', '/documento/pedidos-pendientes'),
+('Usuarios', '/documento/proforma-pendientes'),
+('Usuarios', '/documento/reporte-ventas'),
+('Usuarios', '/moneda/create'),
+('Usuarios', '/moneda/delete'),
+('Usuarios', '/moneda/index'),
+('Usuarios', '/moneda/update'),
+('Usuarios', '/moneda/view'),
+('Usuarios', '/motivo-traslado/create'),
+('Usuarios', '/motivo-traslado/delete'),
+('Usuarios', '/motivo-traslado/index'),
+('Usuarios', '/motivo-traslado/update'),
+('Usuarios', '/motivo-traslado/view'),
+('Usuarios', '/nota-credito/create'),
+('Usuarios', '/nota-credito/get-documento'),
+('Usuarios', '/nota-credito/index'),
+('Usuarios', '/nota-credito/nota-rpt'),
+('Usuarios', '/nota-ingreso/anular-nota'),
+('Usuarios', '/nota-ingreso/aprobar-nota'),
+('Usuarios', '/nota-ingreso/create'),
+('Usuarios', '/nota-ingreso/delete'),
+('Usuarios', '/nota-ingreso/index'),
+('Usuarios', '/nota-ingreso/notai-rpt'),
+('Usuarios', '/nota-ingreso/update'),
+('Usuarios', '/nota-ingreso/view'),
+('Usuarios', '/nota-salida/anular-nota'),
+('Usuarios', '/nota-salida/aprobar-nota'),
+('Usuarios', '/nota-salida/create'),
+('Usuarios', '/nota-salida/delete'),
+('Usuarios', '/nota-salida/index'),
+('Usuarios', '/nota-salida/notas-rpt'),
+('Usuarios', '/nota-salida/update'),
+('Usuarios', '/nota-salida/view'),
+('Usuarios', '/numeracion/ajax-get-numeracion'),
+('Usuarios', '/numeracion/create'),
+('Usuarios', '/numeracion/delete'),
+('Usuarios', '/numeracion/index'),
+('Usuarios', '/numeracion/update'),
+('Usuarios', '/numeracion/view'),
+('Usuarios', '/pais/create'),
+('Usuarios', '/pais/delete'),
+('Usuarios', '/pais/index'),
+('Usuarios', '/pais/update'),
+('Usuarios', '/pais/view'),
 ('Usuarios', '/pedido/*'),
 ('Usuarios', '/pedido/create'),
 ('Usuarios', '/pedido/delete'),
 ('Usuarios', '/pedido/index'),
 ('Usuarios', '/pedido/pedido-rpt'),
 ('Usuarios', '/pedido/update'),
-('Usuarios', '/pedido/view');
+('Usuarios', '/pedido/view'),
+('Usuarios', '/producto/create'),
+('Usuarios', '/producto/delete'),
+('Usuarios', '/producto/index'),
+('Usuarios', '/producto/product-price'),
+('Usuarios', '/producto/producto-list'),
+('Usuarios', '/producto/update'),
+('Usuarios', '/producto/view'),
+('Usuarios', '/profile/create'),
+('Usuarios', '/profile/delete'),
+('Usuarios', '/profile/index'),
+('Usuarios', '/profile/update'),
+('Usuarios', '/profile/view'),
+('Usuarios', '/proveedor/create'),
+('Usuarios', '/proveedor/delete'),
+('Usuarios', '/proveedor/index'),
+('Usuarios', '/proveedor/proveedor-list'),
+('Usuarios', '/proveedor/update'),
+('Usuarios', '/proveedor/view'),
+('Usuarios', '/provincia/create'),
+('Usuarios', '/provincia/delete'),
+('Usuarios', '/provincia/index'),
+('Usuarios', '/provincia/provincias'),
+('Usuarios', '/provincia/update'),
+('Usuarios', '/provincia/view'),
+('Usuarios', '/series/create'),
+('Usuarios', '/series/delete'),
+('Usuarios', '/series/index'),
+('Usuarios', '/series/update'),
+('Usuarios', '/series/view'),
+('Usuarios', '/site/consulta-ruc'),
+('Usuarios', '/site/contact'),
+('Usuarios', '/site/error'),
+('Usuarios', '/site/index'),
+('Usuarios', '/site/login'),
+('Usuarios', '/site/logout'),
+('Usuarios', '/tipo-cambio/*'),
+('Usuarios', '/tipo-cambio/consulta-tipo'),
+('Usuarios', '/tipo-cambio/create'),
+('Usuarios', '/tipo-cambio/delete'),
+('Usuarios', '/tipo-cambio/diario'),
+('Usuarios', '/tipo-cambio/index'),
+('Usuarios', '/tipo-cambio/update'),
+('Usuarios', '/tipo-cambio/view'),
+('Usuarios', '/tipo-documento/*'),
+('Usuarios', '/tipo-documento/ajax-tipo-documento'),
+('Usuarios', '/tipo-documento/create'),
+('Usuarios', '/tipo-documento/delete'),
+('Usuarios', '/tipo-documento/index'),
+('Usuarios', '/tipo-documento/update'),
+('Usuarios', '/tipo-documento/view'),
+('Usuarios', '/tipo-identificacion/*'),
+('Usuarios', '/tipo-identificacion/create'),
+('Usuarios', '/tipo-identificacion/delete'),
+('Usuarios', '/tipo-identificacion/index'),
+('Usuarios', '/tipo-identificacion/update'),
+('Usuarios', '/tipo-identificacion/view'),
+('Usuarios', '/tipo-movimiento/*'),
+('Usuarios', '/tipo-movimiento/create'),
+('Usuarios', '/tipo-movimiento/delete'),
+('Usuarios', '/tipo-movimiento/index'),
+('Usuarios', '/tipo-movimiento/update'),
+('Usuarios', '/tipo-movimiento/view'),
+('Usuarios', '/tipo-producto/*'),
+('Usuarios', '/tipo-producto/create'),
+('Usuarios', '/tipo-producto/delete'),
+('Usuarios', '/tipo-producto/index'),
+('Usuarios', '/tipo-producto/update'),
+('Usuarios', '/tipo-producto/view'),
+('Usuarios', '/tipo-proveedor/*'),
+('Usuarios', '/tipo-proveedor/create'),
+('Usuarios', '/tipo-proveedor/delete'),
+('Usuarios', '/tipo-proveedor/index'),
+('Usuarios', '/tipo-proveedor/update'),
+('Usuarios', '/tipo-proveedor/view'),
+('Usuarios', '/transportista/create'),
+('Usuarios', '/transportista/delete'),
+('Usuarios', '/transportista/index'),
+('Usuarios', '/transportista/update'),
+('Usuarios', '/transportista/view'),
+('Usuarios', '/unidad-medida/create'),
+('Usuarios', '/unidad-medida/delete'),
+('Usuarios', '/unidad-medida/index'),
+('Usuarios', '/unidad-medida/update'),
+('Usuarios', '/unidad-medida/view'),
+('Usuarios', '/unidad-transporte/create'),
+('Usuarios', '/unidad-transporte/delete'),
+('Usuarios', '/unidad-transporte/index'),
+('Usuarios', '/unidad-transporte/update'),
+('Usuarios', '/unidad-transporte/view'),
+('Usuarios', '/vendedor/create'),
+('Usuarios', '/vendedor/delete'),
+('Usuarios', '/vendedor/index'),
+('Usuarios', '/vendedor/update'),
+('Usuarios', '/vendedor/view'),
+('Usuarios', '/zona/create'),
+('Usuarios', '/zona/delete'),
+('Usuarios', '/zona/index'),
+('Usuarios', '/zona/update'),
+('Usuarios', '/zona/view');
 
 -- --------------------------------------------------------
 
@@ -543,11 +864,13 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 -- Estructura de tabla para la tabla `auth_rule`
 --
 
-CREATE TABLE `auth_rule` (
+DROP TABLE IF EXISTS `auth_rule`;
+CREATE TABLE IF NOT EXISTS `auth_rule` (
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `data` blob,
+  `data` blob DEFAULT NULL,
   `created_at` int(11) DEFAULT NULL,
-  `updated_at` int(11) DEFAULT NULL
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -556,8 +879,9 @@ CREATE TABLE `auth_rule` (
 -- Estructura de tabla para la tabla `cliente`
 --
 
-CREATE TABLE `cliente` (
-  `id_clte` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `cliente`;
+CREATE TABLE IF NOT EXISTS `cliente` (
+  `id_clte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `dni_clte` varchar(20) NOT NULL COMMENT 'DNI CLIENTE',
   `ruc_clte` varchar(20) NOT NULL COMMENT 'RUC CLIENTE',
   `nombre_clte` varchar(150) NOT NULL COMMENT 'NOMBRE CLIENTE',
@@ -572,9 +896,18 @@ CREATE TABLE `cliente` (
   `estatus_ctle` int(11) NOT NULL COMMENT 'ESTATUS CLIENTE',
   `condp_clte` int(11) NOT NULL COMMENT 'CONDICION DE PAGO',
   `sucursal_clte` int(11) NOT NULL,
-  `lista_clte` int(11) NOT NULL DEFAULT '0' COMMENT 'LISTA DE PRECIOS CLIENTE',
-  `tipoid_clte` int(11) NOT NULL DEFAULT '6' COMMENT 'TIPO DE IDENTIFICACION CLIENTE'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE CLIENTES';
+  `lista_clte` int(11) NOT NULL DEFAULT 0 COMMENT 'LISTA DE PRECIOS CLIENTE',
+  `tipoid_clte` int(11) NOT NULL DEFAULT 6 COMMENT 'TIPO DE IDENTIFICACION CLIENTE',
+  PRIMARY KEY (`id_clte`),
+  KEY `sucursal_clte` (`sucursal_clte`),
+  KEY `cliente_ibfk_1` (`vendedor_clte`),
+  KEY `pais_cte` (`pais_cte`),
+  KEY `provi_cte` (`provi_cte`),
+  KEY `depto_cte` (`depto_cte`),
+  KEY `dtto_cte` (`dtto_clte`),
+  KEY `lista_clte` (`lista_clte`),
+  KEY `tipoid_clte` (`tipoid_clte`)
+) ENGINE=InnoDB AUTO_INCREMENT=782 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE CLIENTES';
 
 --
 -- Volcado de datos para la tabla `cliente`
@@ -1371,21 +1704,30 @@ INSERT INTO `cliente` (`id_clte`, `dni_clte`, `ruc_clte`, `nombre_clte`, `direcc
 -- Estructura de tabla para la tabla `compra`
 --
 
-CREATE TABLE `compra` (
-  `id_compra` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `compra`;
+CREATE TABLE IF NOT EXISTS `compra` (
+  `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `cod_compra` varchar(10) NOT NULL COMMENT 'CODIGO COMPRA',
   `fecha_compra` date NOT NULL COMMENT 'FECHA COMPRA',
   `provee_compra` int(11) NOT NULL COMMENT 'PROVEEDOR COMPRA',
   `moneda_compra` int(11) NOT NULL COMMENT 'MONEDA COMPRA',
   `condp_compra` int(11) NOT NULL COMMENT 'CONDICION PAGO COMPRA',
   `usuario_compra` int(11) NOT NULL COMMENT 'USUARIO COMPRA',
-  `estatus_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS COMPRA',
+  `estatus_compra` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS COMPRA',
   `edicion_compra` varchar(1) DEFAULT 'N' COMMENT 'EDICION COMPRA',
-  `excento_compra` int(11) NOT NULL DEFAULT '1' COMMENT 'EXCENTO DE IMPUESTO 1=EXCENTO, 0=APLICA IMPUESTO',
-  `afectaalm_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'AFECTA ALMACEN COMPRA',
+  `excento_compra` int(11) NOT NULL DEFAULT 1 COMMENT 'EXCENTO DE IMPUESTO 1=EXCENTO, 0=APLICA IMPUESTO',
+  `afectaalm_compra` int(11) NOT NULL DEFAULT 0 COMMENT 'AFECTA ALMACEN COMPRA',
   `nrodoc_compra` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO COMPRA',
-  `sucursal_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL COMPRA'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA ORDEN DE COMPRAS';
+  `sucursal_compra` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL COMPRA',
+  PRIMARY KEY (`id_compra`),
+  UNIQUE KEY `cod_compra` (`cod_compra`),
+  KEY `fecha_compra` (`fecha_compra`),
+  KEY `provee_compra` (`provee_compra`),
+  KEY `moneda_compra` (`moneda_compra`),
+  KEY `usuario_compra` (`usuario_compra`),
+  KEY `sucursal_compra` (`sucursal_compra`),
+  KEY `condp_compra` (`condp_compra`)
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=latin1 COMMENT='GUARDA ORDEN DE COMPRAS';
 
 --
 -- Volcado de datos para la tabla `compra`
@@ -1446,19 +1788,23 @@ INSERT INTO `compra` (`id_compra`, `cod_compra`, `fecha_compra`, `provee_compra`
 -- Estructura de tabla para la tabla `compra_detalle`
 --
 
-CREATE TABLE `compra_detalle` (
-  `id_cdetalle` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `compra_detalle`;
+CREATE TABLE IF NOT EXISTS `compra_detalle` (
+  `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `prod_cdetalle` int(11) NOT NULL COMMENT 'PRODUCTO COMPRA DETALLE',
-  `cant_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'CANTIDAD COMPRA DETALLE',
-  `precio_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO COMPRA DETALLE',
-  `descu_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'DESCUENTO % COMPRA DETALLE',
-  `impuestouni_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'IMPUESTO UNITARIO COMPRA DETALLE',
-  `status_cdetalle` int(11) NOT NULL DEFAULT '1' COMMENT 'ESTATUS COMPRA DETALLE',
-  `compra_cdetalle` int(11) NOT NULL DEFAULT '0',
-  `plista_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA COMPRA DETALLE',
-  `total_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL COMPRA DETALLE',
-  `impuestototal_cdetalle` decimal(18,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT 'IMPUESTO TOTAL COMPRA DETALLE'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE COMPRAS';
+  `cant_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'CANTIDAD COMPRA DETALLE',
+  `precio_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO COMPRA DETALLE',
+  `descu_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'DESCUENTO % COMPRA DETALLE',
+  `impuestouni_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'IMPUESTO UNITARIO COMPRA DETALLE',
+  `status_cdetalle` int(11) NOT NULL DEFAULT 1 COMMENT 'ESTATUS COMPRA DETALLE',
+  `compra_cdetalle` int(11) NOT NULL DEFAULT 0,
+  `plista_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO LISTA COMPRA DETALLE',
+  `total_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'TOTAL COMPRA DETALLE',
+  `impuestototal_cdetalle` decimal(18,2) UNSIGNED NOT NULL DEFAULT 0.00 COMMENT 'IMPUESTO TOTAL COMPRA DETALLE',
+  PRIMARY KEY (`id_cdetalle`),
+  KEY `prod_cdetalle` (`prod_cdetalle`),
+  KEY `compra_cdetalle` (`compra_cdetalle`)
+) ENGINE=InnoDB AUTO_INCREMENT=857 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE COMPRAS';
 
 --
 -- Volcado de datos para la tabla `compra_detalle`
@@ -2318,12 +2664,15 @@ INSERT INTO `compra_detalle` (`id_cdetalle`, `prod_cdetalle`, `cant_cdetalle`, `
 -- Estructura de tabla para la tabla `cond_pago`
 --
 
-CREATE TABLE `cond_pago` (
-  `id_condp` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `cond_pago`;
+CREATE TABLE IF NOT EXISTS `cond_pago` (
+  `id_condp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `desc_condp` varchar(100) NOT NULL COMMENT 'DESCRIP COND PAGO',
   `status_condp` int(11) NOT NULL COMMENT 'ESTATUS CONDICION PAGO',
-  `sucursal_condp` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL COND PAGO'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA LAS CONDICIONES DE PAGO';
+  `sucursal_condp` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL COND PAGO',
+  PRIMARY KEY (`id_condp`),
+  KEY `sucursal_condp` (`sucursal_condp`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='GUARDA LAS CONDICIONES DE PAGO';
 
 --
 -- Volcado de datos para la tabla `cond_pago`
@@ -2341,14 +2690,18 @@ INSERT INTO `cond_pago` (`id_condp`, `desc_condp`, `status_condp`, `sucursal_con
 -- Estructura de tabla para la tabla `departamento`
 --
 
-CREATE TABLE `departamento` (
-  `id_depto` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `departamento`;
+CREATE TABLE IF NOT EXISTS `departamento` (
+  `id_depto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `des_depto` varchar(30) NOT NULL COMMENT 'DESCRIPCION DEPARTAMENTO',
   `prov_depto` int(11) NOT NULL COMMENT 'PROVINCIA DEPARTAMENTO',
   `pais_depto` int(11) NOT NULL,
   `status_depto` int(11) NOT NULL COMMENT 'ESTATUS DEPARTAMENTO',
-  `sucursal_depto` int(11) NOT NULL COMMENT 'SUCURSAL DEPARTAMENTO'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE DEPARTAMENTOS';
+  `sucursal_depto` int(11) NOT NULL COMMENT 'SUCURSAL DEPARTAMENTO',
+  PRIMARY KEY (`id_depto`),
+  KEY `sucursal_depto` (`sucursal_depto`),
+  KEY `prov_depto` (`prov_depto`)
+) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE DEPARTAMENTOS';
 
 --
 -- Volcado de datos para la tabla `departamento`
@@ -2560,7 +2913,8 @@ INSERT INTO `departamento` (`id_depto`, `des_depto`, `prov_depto`, `pais_depto`,
 -- Estructura de tabla para la tabla `depts`
 --
 
-CREATE TABLE `depts` (
+DROP TABLE IF EXISTS `depts`;
+CREATE TABLE IF NOT EXISTS `depts` (
   `provincia` varchar(100) DEFAULT NULL,
   `depart` varchar(100) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
   `dtto` varchar(100) DEFAULT NULL
@@ -2774,15 +3128,21 @@ INSERT INTO `depts` (`provincia`, `depart`, `dtto`) VALUES
 -- Estructura de tabla para la tabla `distrito`
 --
 
-CREATE TABLE `distrito` (
-  `id_dtto` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `distrito`;
+CREATE TABLE IF NOT EXISTS `distrito` (
+  `id_dtto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `des_dtto` varchar(30) NOT NULL COMMENT 'DESCRIPCION DISTRITO',
   `pais_dtto` int(11) NOT NULL,
   `prov_dtto` int(11) NOT NULL,
   `depto_dtto` int(11) NOT NULL COMMENT 'DEPARTAMENTO DISTRITO',
   `status_dtto` int(11) NOT NULL COMMENT 'ESTATUS DISTRITO',
-  `sucursal_dtto` int(11) NOT NULL COMMENT 'SUCURSAL DISTRITO'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE DISTRITOS';
+  `sucursal_dtto` int(11) NOT NULL COMMENT 'SUCURSAL DISTRITO',
+  PRIMARY KEY (`id_dtto`),
+  KEY `sucursal_dtto` (`sucursal_dtto`),
+  KEY `depto_dtto` (`depto_dtto`),
+  KEY `pais_dtto` (`pais_dtto`),
+  KEY `prov_dtto` (`prov_dtto`)
+) ENGINE=InnoDB AUTO_INCREMENT=218 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE DISTRITOS';
 
 --
 -- Volcado de datos para la tabla `distrito`
@@ -2997,30 +3357,43 @@ INSERT INTO `distrito` (`id_dtto`, `des_dtto`, `pais_dtto`, `prov_dtto`, `depto_
 -- Estructura de tabla para la tabla `documento`
 --
 
-CREATE TABLE `documento` (
-  `id_doc` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `documento`;
+CREATE TABLE IF NOT EXISTS `documento` (
+  `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `cod_doc` varchar(10) DEFAULT '0000000000' COMMENT 'CODIGO DEL DOCUMENTO',
-  `tipo_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO DE DOCUMENTO: FACTURA, NOTA DE CREDITO, NOTA DE DEBITO, GUIA DE REMISION',
+  `tipo_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO DE DOCUMENTO: FACTURA, NOTA DE CREDITO, NOTA DE DEBITO, GUIA DE REMISION',
   `numeracion_doc` int(10) NOT NULL COMMENT 'SERIE DOCUMENTO',
-  `pedido_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'PEDIDO DEL DOCUMENTO',
+  `pedido_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'PEDIDO DEL DOCUMENTO',
   `fecha_doc` date DEFAULT NULL COMMENT 'FECHA DEL DOCUMENTO',
-  `obsv_doc` text COMMENT 'OBSERVACIONES DEL DOCUMENTO',
-  `totalimp_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL IMPUESTO DEL DOCUMENTO',
-  `totaldsc_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL DESCUENTO DEL DOCUMENTO',
-  `total_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL DEL DOCUMENTO',
+  `obsv_doc` text DEFAULT NULL COMMENT 'OBSERVACIONES DEL DOCUMENTO',
+  `totalimp_doc` decimal(18,2) DEFAULT 0.00 COMMENT 'TOTAL IMPUESTO DEL DOCUMENTO',
+  `totaldsc_doc` decimal(18,2) DEFAULT 0.00 COMMENT 'TOTAL DESCUENTO DEL DOCUMENTO',
+  `total_doc` decimal(18,2) DEFAULT 0.00 COMMENT 'TOTAL DEL DOCUMENTO',
   `transp_doc` int(11) DEFAULT NULL COMMENT 'TRANSPORTISTA DOCUMENTO',
   `utransp_doc` int(11) DEFAULT NULL COMMENT 'UNIDAD DE TRANSPORTE DOCUMENTO',
   `almacen_doc` int(11) NOT NULL COMMENT 'ALMACEN DOCUMENTO',
-  `motivo_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'MOTIVO TRASLADO, PARA LAS GUIAS DE REMISION',
-  `tipocambio_doc` decimal(18,3) NOT NULL DEFAULT '0.000' COMMENT 'TIPO DE CAMBIO DE DOCUMENTO',
+  `motivo_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'MOTIVO TRASLADO, PARA LAS GUIAS DE REMISION',
+  `tipocambio_doc` decimal(18,3) NOT NULL DEFAULT 0.000 COMMENT 'TIPO DE CAMBIO DE DOCUMENTO',
   `hash_doc` varchar(255) DEFAULT NULL COMMENT 'CODIGO HASH DEL DOCUMENTO',
   `valorr_doc` varchar(255) DEFAULT NULL COMMENT 'VALOR RESUMEN DEL DOCUMENTO ELECTRONICO',
-  `statussunat_doc` int(11) NOT NULL DEFAULT '-1' COMMENT 'ESTATUS SUNAT',
+  `statussunat_doc` int(11) NOT NULL DEFAULT -1 COMMENT 'ESTATUS SUNAT',
   `docref_doc` int(11) DEFAULT NULL COMMENT 'REFERENCIA A UN DOCUMENTO ANTERIOR  EN EL CASO DE NOTAS DE CREDITO O DEBITO',
   `motivosunat_doc` varchar(2) DEFAULT NULL COMMENT 'MOTIVO SUNAT PARA NOTAS DE CREDITO',
-  `status_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTADO DEL DOCUMENTO: 0 = SIN GENERAR, 1 = GUIA GENERADA, 2 = DOCUMENTO GENERADO, 3 = DOCUMENTO ANULADO',
-  `sucursal_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL DEL DOCUMENTO'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE LOS DOCUMENTOS: FACTURAS, GUIAS DE REMISION, NOTAS DE CREDITO, NOTAS DE DEBITO';
+  `status_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTADO DEL DOCUMENTO: 0 = SIN GENERAR, 1 = GUIA GENERADA, 2 = DOCUMENTO GENERADO, 3 = DOCUMENTO ANULADO',
+  `sucursal_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL DEL DOCUMENTO',
+  PRIMARY KEY (`id_doc`),
+  KEY `cod_doc` (`cod_doc`),
+  KEY `tipo_doc` (`tipo_doc`),
+  KEY `pedido_doc` (`pedido_doc`),
+  KEY `fecha_doc` (`fecha_doc`),
+  KEY `status_doc` (`status_doc`),
+  KEY `sucursal_doc` (`sucursal_doc`),
+  KEY `transp_doc` (`transp_doc`),
+  KEY `utransp_doc` (`utransp_doc`),
+  KEY `almacen_doc` (`almacen_doc`),
+  KEY `almacen_doc_2` (`almacen_doc`),
+  KEY `serie_doc` (`numeracion_doc`)
+) ENGINE=InnoDB AUTO_INCREMENT=188 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE LOS DOCUMENTOS: FACTURAS, GUIAS DE REMISION, NOTAS DE CREDITO, NOTAS DE DEBITO';
 
 --
 -- Volcado de datos para la tabla `documento`
@@ -3202,13 +3575,15 @@ INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `ped
 (175, '0000000183', 3, 9, 142, '2020-03-14', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
 (176, '0000000086', 2, 7, 142, '2020-03-14', '', '312.27', '0.00', '2047.12', NULL, NULL, 1, 0, '3.545', NULL, '20604954241|3|FE01|00000086|312.27|2047.12|2020-03-14|6|10215512105|', 0, NULL, NULL, 2, 1),
 (177, '0000000184', 3, 9, 148, '2020-06-10', '', '0.00', '0.00', '0.00', 2, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
-(178, '0000000087', 2, 7, 148, '2020-06-10', '', '198.17', '0.00', '1299.14', NULL, NULL, 1, 0, '3.440', NULL, '20604954241|3|FE01|00000087|198.17|1299.14|2020-06-10|6|20132111678|', -1, NULL, NULL, 1, 1),
+(178, '0000000087', 2, 7, 148, '2020-06-10', '', '198.17', '0.00', '1299.14', NULL, NULL, 1, 0, '3.440', NULL, '20604954241|3|FE01|00000087|198.17|1299.14|2020-06-10|6|20132111678|', -1, NULL, NULL, 2, 1),
 (179, '0000000185', 3, 9, 150, '2020-06-15', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
-(180, '0000000088', 2, 7, 150, '2020-06-15', '', '229.74', '0.00', '1506.06', NULL, NULL, 1, 0, '3.452', NULL, '20604954241|3|FE01|00000088|229.74|1506.06|2020-06-15|6|20490112619|', -1, NULL, NULL, 1, 1),
+(180, '0000000088', 2, 7, 150, '2020-06-15', '', '229.74', '0.00', '1506.06', NULL, NULL, 1, 0, '3.452', NULL, '20604954241|3|FE01|00000088|229.74|1506.06|2020-06-15|6|20490112619|', -1, NULL, NULL, 2, 1),
 (181, '0000000186', 3, 9, 151, '2020-06-16', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
-(183, '0000000089', 2, 7, 151, '2020-06-16', '', '224.51', '0.00', '1471.81', NULL, NULL, 1, 0, '3.485', NULL, '20604954241|3|FE01|00000089|224.51|1471.81|2020-06-16|6|10238466810|', -1, NULL, NULL, 1, 1),
+(183, '0000000089', 2, 7, 151, '2020-06-16', '', '224.51', '0.00', '1471.81', NULL, NULL, 1, 0, '3.485', NULL, '20604954241|3|FE01|00000089|224.51|1471.81|2020-06-16|6|10238466810|', -1, NULL, NULL, 2, 1),
 (184, '0000000187', 3, 9, 156, '2020-06-17', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
-(185, '0000000090', 2, 7, 156, '2020-06-17', '', '380.38', '0.00', '2493.58', NULL, NULL, 1, 0, '3.477', NULL, '20604954241|3|FE01|00000090|380.38|2493.58|2020-06-17|6|10401808235|', -1, NULL, NULL, 1, 1);
+(185, '0000000090', 2, 7, 156, '2020-06-17', '', '380.38', '0.00', '2493.58', NULL, NULL, 1, 0, '3.477', NULL, '20604954241|3|FE01|00000090|380.38|2493.58|2020-06-17|6|10401808235|', -1, NULL, NULL, 2, 1),
+(186, '0000000001', 10, 10, 18, '2020-06-18', NULL, '198.17', '33.64', '1299.14', NULL, NULL, 1, 0, '3.477', NULL, '20604954241|07|NC01|00000001|198.17|1299.14|2020-06-18|6|20600807391', -1, 1, '01', 2, 1),
+(187, '0000000002', 10, 10, 18, '2020-06-18', NULL, '229.74', '0.00', '1506.06', NULL, NULL, 1, 0, '3.477', NULL, '20604954241|07|NC01|00000002|229.74|1506.06|2020-06-18|6|20600807391', -1, 1, '01', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -3216,18 +3591,22 @@ INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `ped
 -- Estructura de tabla para la tabla `documento_detalle`
 --
 
-CREATE TABLE `documento_detalle` (
-  `id_ddetalle` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `documento_detalle`;
+CREATE TABLE IF NOT EXISTS `documento_detalle` (
+  `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `prod_ddetalle` int(11) NOT NULL COMMENT 'PRODUCTO DOCUMENTO DETALLE',
-  `cant_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'CANTIDAD DOCUMENTO DETALLE',
-  `precio_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO DOCUMENTO DETALLE',
-  `descu_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'DESCUENTO % DOCUMENTO DETALLE',
-  `impuesto_ddetalle` decimal(18,0) NOT NULL DEFAULT '0' COMMENT 'IMPUESTO DOCUMENTO DETALLE',
-  `status_ddetalle` int(11) NOT NULL DEFAULT '1' COMMENT 'ESTATUS DOCUMENTO DETALLE',
-  `documento_ddetalle` int(11) NOT NULL DEFAULT '0' COMMENT 'DOCUMENTO DETALLE',
-  `plista_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA DOCUMENTO DETALLE',
-  `total_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL DOCUMENTO DETALLE'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE DOCUMENTOS, PRINCIPALMENTE PENSADO PARA GUARDAR LAS CANTIDADES DE LAS GUIAS DE REMISION';
+  `cant_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'CANTIDAD DOCUMENTO DETALLE',
+  `precio_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO DOCUMENTO DETALLE',
+  `descu_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'DESCUENTO % DOCUMENTO DETALLE',
+  `impuesto_ddetalle` decimal(18,0) NOT NULL DEFAULT 0 COMMENT 'IMPUESTO DOCUMENTO DETALLE',
+  `status_ddetalle` int(11) NOT NULL DEFAULT 1 COMMENT 'ESTATUS DOCUMENTO DETALLE',
+  `documento_ddetalle` int(11) NOT NULL DEFAULT 0 COMMENT 'DOCUMENTO DETALLE',
+  `plista_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO LISTA DOCUMENTO DETALLE',
+  `total_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'TOTAL DOCUMENTO DETALLE',
+  PRIMARY KEY (`id_ddetalle`),
+  KEY `prod_pdetalle` (`prod_ddetalle`),
+  KEY `pedido_pdetalle` (`documento_ddetalle`)
+) ENGINE=InnoDB AUTO_INCREMENT=1081 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE DOCUMENTOS, PRINCIPALMENTE PENSADO PARA GUARDAR LAS CANTIDADES DE LAS GUIAS DE REMISION';
 
 --
 -- Volcado de datos para la tabla `documento_detalle`
@@ -4284,7 +4663,37 @@ INSERT INTO `documento_detalle` (`id_ddetalle`, `prod_ddetalle`, `cant_ddetalle`
 (1047, 147, '1.00', '0.00', '0.00', '0', 1, 184, '0.00', '0.00'),
 (1048, 1205, '1.00', '0.00', '0.00', '0', 1, 184, '0.00', '0.00'),
 (1049, 163, '1.00', '0.00', '0.00', '0', 1, 184, '0.00', '0.00'),
-(1050, 56, '1.00', '0.00', '0.00', '0', 1, 184, '0.00', '0.00');
+(1050, 56, '1.00', '0.00', '0.00', '0', 1, 184, '0.00', '0.00'),
+(1051, 61, '1.00', '30.05', '5.50', '18', 1, 186, '31.80', '30.05'),
+(1052, 62, '1.00', '30.05', '5.50', '18', 1, 186, '31.80', '30.05'),
+(1053, 742, '5.00', '32.05', '5.50', '18', 1, 186, '33.92', '160.27'),
+(1054, 743, '5.00', '32.05', '5.50', '18', 1, 186, '33.92', '160.27'),
+(1055, 457, '5.00', '31.80', '0.00', '18', 1, 186, '31.80', '159.00'),
+(1056, 458, '5.00', '31.80', '0.00', '18', 1, 186, '31.80', '159.00'),
+(1057, 790, '10.00', '30.00', '0.00', '18', 1, 186, '30.00', '300.00'),
+(1058, 791, '5.00', '30.05', '5.50', '18', 1, 186, '31.80', '150.25'),
+(1059, 792, '5.00', '30.05', '5.50', '18', 1, 186, '31.80', '150.25'),
+(1060, 939, '2.00', '13.78', '0.00', '18', 1, 187, '13.78', '27.56'),
+(1061, 652, '2.00', '13.78', '0.00', '18', 1, 187, '13.78', '27.56'),
+(1062, 653, '2.00', '13.78', '0.00', '18', 1, 187, '13.78', '27.56'),
+(1063, 940, '2.00', '13.78', '0.00', '18', 1, 187, '13.78', '27.56'),
+(1064, 656, '2.00', '16.43', '0.00', '18', 1, 187, '16.43', '32.86'),
+(1065, 657, '2.00', '16.43', '0.00', '18', 1, 187, '16.43', '32.86'),
+(1066, 654, '2.00', '16.43', '0.00', '18', 1, 187, '16.43', '32.86'),
+(1067, 655, '2.00', '16.43', '0.00', '18', 1, 187, '16.43', '32.86'),
+(1068, 957, '2.00', '23.32', '0.00', '18', 1, 187, '23.32', '46.64'),
+(1069, 986, '2.00', '20.14', '0.00', '18', 1, 187, '20.14', '40.28'),
+(1070, 1016, '2.00', '23.85', '0.00', '18', 1, 187, '23.85', '47.70'),
+(1071, 1017, '2.00', '23.85', '0.00', '18', 1, 187, '23.85', '47.70'),
+(1072, 975, '2.00', '26.50', '0.00', '18', 1, 187, '26.50', '53.00'),
+(1073, 790, '2.00', '30.00', '0.00', '18', 1, 187, '30.00', '60.00'),
+(1074, 791, '1.00', '31.80', '0.00', '18', 1, 187, '31.80', '31.80'),
+(1075, 792, '1.00', '31.80', '0.00', '18', 1, 187, '31.80', '31.80'),
+(1076, 1209, '3.00', '97.52', '0.00', '18', 1, 187, '97.52', '292.56'),
+(1077, 94, '2.00', '111.94', '0.00', '18', 1, 187, '111.94', '223.88'),
+(1078, 118, '3.00', '50.88', '0.00', '18', 1, 187, '50.88', '152.64'),
+(1079, 1211, '1.00', '114.48', '0.00', '18', 1, 187, '114.48', '114.48'),
+(1080, 1213, '1.00', '121.90', '0.00', '18', 1, 187, '121.90', '121.90');
 
 -- --------------------------------------------------------
 
@@ -4292,8 +4701,9 @@ INSERT INTO `documento_detalle` (`id_ddetalle`, `prod_ddetalle`, `cant_ddetalle`
 -- Estructura de tabla para la tabla `empresa`
 --
 
-CREATE TABLE `empresa` (
-  `id_empresa` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `empresa`;
+CREATE TABLE IF NOT EXISTS `empresa` (
+  `id_empresa` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `nombre_empresa` varchar(150) NOT NULL COMMENT 'NOMBRE EMPRESA',
   `estatus_empresa` int(11) NOT NULL COMMENT 'ESTATUS EMPRESA',
   `dni_empresa` varchar(20) NOT NULL COMMENT 'DNI EMPRESA',
@@ -4302,8 +4712,9 @@ CREATE TABLE `empresa` (
   `tlf_empresa` varchar(150) NOT NULL COMMENT 'TELEFONO EMPRESA',
   `movil_empresa` varchar(150) DEFAULT NULL COMMENT 'TELEFONO MOVIL EMPRESA',
   `correo_empresa` varchar(70) DEFAULT NULL COMMENT 'CORREO EMPRESA',
-  `direcc_empresa` text NOT NULL COMMENT 'DIRECCION EMPRESA'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `direcc_empresa` text NOT NULL COMMENT 'DIRECCION EMPRESA',
+  PRIMARY KEY (`id_empresa`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `empresa`
@@ -4318,15 +4729,18 @@ INSERT INTO `empresa` (`id_empresa`, `nombre_empresa`, `estatus_empresa`, `dni_e
 -- Estructura de tabla para la tabla `inventario`
 --
 
-CREATE TABLE `inventario` (
-  `id_inv` int(11) NOT NULL COMMENT 'ID UNICO',
-  `tipotrans_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO TRANSACCION INVENTARIO',
+DROP TABLE IF EXISTS `inventario`;
+CREATE TABLE IF NOT EXISTS `inventario` (
+  `id_inv` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+  `tipotrans_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO TRANSACCION INVENTARIO',
   `fecha_inv` date NOT NULL COMMENT 'FECHA DE CREACION INVENTARIO',
   `fecham_inv` date NOT NULL COMMENT 'FECHA DE MODIFICACION INVENTARIO',
-  `prod_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO INVENTARIO',
-  `cantidad_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'CANTIDAD INVENTARIO',
-  `orden_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'NUMERO DE ORDEN PEDIDO / COMPRA INVENTARIO',
-  `sucursal_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL INVENTARIO'
+  `prod_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO INVENTARIO',
+  `cantidad_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'CANTIDAD INVENTARIO',
+  `orden_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'NUMERO DE ORDEN PEDIDO / COMPRA INVENTARIO',
+  `sucursal_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL INVENTARIO',
+  PRIMARY KEY (`id_inv`),
+  KEY `sucursal_inv` (`sucursal_inv`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA MOVIMIENTOS DE ALMACEN';
 
 -- --------------------------------------------------------
@@ -4335,17 +4749,23 @@ CREATE TABLE `inventario` (
 -- Estructura de tabla para la tabla `lista_precios`
 --
 
-CREATE TABLE `lista_precios` (
-  `id_lista` int(11) NOT NULL COMMENT 'ID UNICO',
-  `tipo_lista` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO DE LISTA DE PRECIO',
-  `prod_lista` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO LISTA',
-  `precio_lista` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA',
-  `sucursal_lista` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL LISTA',
-  `preciod_lista` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO DIVISAS LISTA',
-  `preciom_lista` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO MONEDA LOCAL LISTA',
-  `utilidad1_lista` decimal(5,2) NOT NULL DEFAULT '0.00' COMMENT 'UTILIDAD 1 LISTA',
-  `utilidad2_lista` decimal(5,2) NOT NULL DEFAULT '0.00' COMMENT 'UTILIDAD 2 LISTA'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA LISTAS DE PRECIOS';
+DROP TABLE IF EXISTS `lista_precios`;
+CREATE TABLE IF NOT EXISTS `lista_precios` (
+  `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+  `tipo_lista` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO DE LISTA DE PRECIO',
+  `prod_lista` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO LISTA',
+  `precio_lista` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO LISTA',
+  `sucursal_lista` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL LISTA',
+  `preciod_lista` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO DIVISAS LISTA',
+  `preciom_lista` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO MONEDA LOCAL LISTA',
+  `utilidad1_lista` decimal(5,2) NOT NULL DEFAULT 0.00 COMMENT 'UTILIDAD 1 LISTA',
+  `utilidad2_lista` decimal(5,2) NOT NULL DEFAULT 0.00 COMMENT 'UTILIDAD 2 LISTA',
+  PRIMARY KEY (`id_lista`),
+  UNIQUE KEY `lista` (`prod_lista`,`tipo_lista`),
+  KEY `tipo_lista` (`tipo_lista`),
+  KEY `prod_lista` (`prod_lista`),
+  KEY `sucursal_lista` (`sucursal_lista`)
+) ENGINE=InnoDB AUTO_INCREMENT=809 DEFAULT CHARSET=latin1 COMMENT='GUARDA LISTAS DE PRECIOS';
 
 --
 -- Volcado de datos para la tabla `lista_precios`
@@ -5166,13 +5586,16 @@ INSERT INTO `lista_precios` (`id_lista`, `tipo_lista`, `prod_lista`, `precio_lis
 -- Estructura de tabla para la tabla `menu`
 --
 
-CREATE TABLE `menu` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `menu`;
+CREATE TABLE IF NOT EXISTS `menu` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
   `parent` int(11) DEFAULT NULL,
   `route` varchar(255) DEFAULT NULL,
   `order` int(11) DEFAULT NULL,
-  `data` blob
+  `data` blob DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `parent` (`parent`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -5181,9 +5604,11 @@ CREATE TABLE `menu` (
 -- Estructura de tabla para la tabla `migration`
 --
 
-CREATE TABLE `migration` (
+DROP TABLE IF EXISTS `migration`;
+CREATE TABLE IF NOT EXISTS `migration` (
   `version` varchar(180) NOT NULL,
-  `apply_time` int(11) DEFAULT NULL
+  `apply_time` int(11) DEFAULT NULL,
+  PRIMARY KEY (`version`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -5203,14 +5628,17 @@ INSERT INTO `migration` (`version`, `apply_time`) VALUES
 -- Estructura de tabla para la tabla `moneda`
 --
 
-CREATE TABLE `moneda` (
-  `id_moneda` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `moneda`;
+CREATE TABLE IF NOT EXISTS `moneda` (
+  `id_moneda` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `des_moneda` varchar(50) NOT NULL COMMENT 'DESCRIPCION MONEDA',
   `tipo_moneda` varchar(1) NOT NULL DEFAULT 'N' COMMENT 'TIPO MONEDA',
   `sunatm_moneda` varchar(10) DEFAULT NULL COMMENT 'ABREVIACION DE MONEDA SEGUN SUNAT',
   `status_moneda` int(11) NOT NULL COMMENT 'ESTATUS MONEDA',
-  `sucursal_moneda` int(11) NOT NULL COMMENT 'SUCURSAL MONEDA'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT=' GUARDA DATOS DE MONEDAS';
+  `sucursal_moneda` int(11) NOT NULL COMMENT 'SUCURSAL MONEDA',
+  PRIMARY KEY (`id_moneda`),
+  KEY `sucursal_moneda` (`sucursal_moneda`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT=' GUARDA DATOS DE MONEDAS';
 
 --
 -- Volcado de datos para la tabla `moneda`
@@ -5226,12 +5654,14 @@ INSERT INTO `moneda` (`id_moneda`, `des_moneda`, `tipo_moneda`, `sunatm_moneda`,
 -- Estructura de tabla para la tabla `motivo_traslado`
 --
 
-CREATE TABLE `motivo_traslado` (
-  `id_motivo` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `motivo_traslado`;
+CREATE TABLE IF NOT EXISTS `motivo_traslado` (
+  `id_motivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `des_motivo` varchar(100) NOT NULL COMMENT 'DESCRIPCION MOTIVO',
-  `status_motivo` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS MOTIVO',
-  `sucursal_motivo` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL MOTIVO'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE MOTIVOS DE TRASLADO';
+  `status_motivo` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS MOTIVO',
+  `sucursal_motivo` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL MOTIVO',
+  PRIMARY KEY (`id_motivo`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE MOTIVOS DE TRASLADO';
 
 --
 -- Volcado de datos para la tabla `motivo_traslado`
@@ -5259,14 +5689,18 @@ INSERT INTO `motivo_traslado` (`id_motivo`, `des_motivo`, `status_motivo`, `sucu
 -- Estructura de tabla para la tabla `numeracion`
 --
 
-CREATE TABLE `numeracion` (
-  `id_num` int(11) NOT NULL COMMENT 'ID UNICO',
-  `tipo_num` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO NUMERACION',
+DROP TABLE IF EXISTS `numeracion`;
+CREATE TABLE IF NOT EXISTS `numeracion` (
+  `id_num` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+  `tipo_num` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO NUMERACION',
   `numero_num` varchar(10) NOT NULL DEFAULT '0000000000' COMMENT 'NUMERO NUMERACION',
-  `sucursal_num` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL NUMERACION',
+  `sucursal_num` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL NUMERACION',
   `serie_num` varchar(2) NOT NULL COMMENT 'SERIE NUMERACION',
-  `status_num` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS NUMERACION'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA NUMERACION DE DOCUMENTOS';
+  `status_num` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS NUMERACION',
+  PRIMARY KEY (`id_num`),
+  KEY `sucursal_num` (`sucursal_num`),
+  KEY `tipo_num` (`tipo_num`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='GUARDA NUMERACION DE DOCUMENTOS';
 
 --
 -- Volcado de datos para la tabla `numeracion`
@@ -5277,11 +5711,12 @@ INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `s
 (2, 7, '0000000039', 1, '00', 1),
 (3, 8, '0000000000', 1, '00', 1),
 (4, 6, '0000000047', 1, '00', 1),
-(5, 4, '0000000054', 1, '00', 1),
+(5, 4, '0000000056', 1, '00', 1),
 (6, 5, '0000000103', 1, '00', 1),
 (7, 2, '0000000090', 1, '01', 1),
 (8, 9, '0000000000', 1, '01', 1),
-(9, 3, '0000000187', 1, '01', 1);
+(9, 3, '0000000187', 1, '01', 1),
+(10, 10, '0000000002', 1, '01', 1);
 
 -- --------------------------------------------------------
 
@@ -5289,13 +5724,15 @@ INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `s
 -- Estructura de tabla para la tabla `pais`
 --
 
-CREATE TABLE `pais` (
-  `id_pais` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `pais`;
+CREATE TABLE IF NOT EXISTS `pais` (
+  `id_pais` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `cod_pais` varchar(3) NOT NULL COMMENT 'CODIGO PAIS',
   `des_pais` varchar(100) NOT NULL COMMENT 'DESCIPCION DE PAIS',
-  `status_pais` int(11) NOT NULL DEFAULT '1' COMMENT 'ESTATUS PAIS',
-  `sucursal_pais` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL PAIS'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PAISES';
+  `status_pais` int(11) NOT NULL DEFAULT 1 COMMENT 'ESTATUS PAIS',
+  `sucursal_pais` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL PAIS',
+  PRIMARY KEY (`id_pais`)
+) ENGINE=InnoDB AUTO_INCREMENT=243 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PAISES';
 
 --
 -- Volcado de datos para la tabla `pais`
@@ -5550,8 +5987,9 @@ INSERT INTO `pais` (`id_pais`, `cod_pais`, `des_pais`, `status_pais`, `sucursal_
 -- Estructura de tabla para la tabla `pedido`
 --
 
-CREATE TABLE `pedido` (
-  `id_pedido` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `pedido`;
+CREATE TABLE IF NOT EXISTS `pedido` (
+  `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `cod_pedido` varchar(10) NOT NULL COMMENT 'CODIGO PEDIDO',
   `fecha_pedido` date NOT NULL COMMENT 'FECHA PEDIDO',
   `clte_pedido` int(11) NOT NULL COMMENT 'CLIENTE PEDIDO',
@@ -5559,13 +5997,24 @@ CREATE TABLE `pedido` (
   `moneda_pedido` int(11) NOT NULL COMMENT 'MONEDA PEDIDO',
   `almacen_pedido` int(11) NOT NULL COMMENT 'ALMACEN PEDIDO',
   `usuario_pedido` int(11) NOT NULL COMMENT 'USUARIO PEDIDO',
-  `estatus_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS PEDIDO: STATUS_INACTIVO=0;GUIA_GENERADA = 1; DOCUMENTO_GENERADO = 2; PEDIDO_FINALIZADO = 3; PEDIDO_ANULADO = 4;',
-  `sucursal_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL PEDIDO',
-  `condp_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'CONDICION PAGO PEDIDO',
+  `estatus_pedido` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS PEDIDO: STATUS_INACTIVO=0;GUIA_GENERADA = 1; DOCUMENTO_GENERADO = 2; PEDIDO_FINALIZADO = 3; PEDIDO_ANULADO = 4;',
+  `sucursal_pedido` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL PEDIDO',
+  `condp_pedido` int(11) NOT NULL DEFAULT 0 COMMENT 'CONDICION PAGO PEDIDO',
   `tipo_pedido` varchar(2) NOT NULL COMMENT 'TIPO DE PEDIDO NP = PEDIDO, PR = PROFORMA, CT = COTIZACION  ',
   `edicion_pedido` varchar(1) DEFAULT 'N' COMMENT 'EDICION PEDIDO',
-  `nrodoc_pedido` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO PEDIDO'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA PEDIDOS';
+  `nrodoc_pedido` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO PEDIDO',
+  PRIMARY KEY (`id_pedido`,`cod_pedido`,`tipo_pedido`),
+  UNIQUE KEY `cod_pedido` (`cod_pedido`,`tipo_pedido`),
+  KEY `fecha_pedido` (`fecha_pedido`),
+  KEY `clte_pedido` (`clte_pedido`),
+  KEY `vend_pedido` (`vend_pedido`),
+  KEY `moneda_pedido` (`moneda_pedido`),
+  KEY `almacen_pedido` (`almacen_pedido`),
+  KEY `usuario_pedido` (`usuario_pedido`),
+  KEY `sucursal_pedido` (`sucursal_pedido`),
+  KEY `condp_pedido` (`condp_pedido`),
+  KEY `tipo_pedido` (`tipo_pedido`)
+) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=latin1 COMMENT='GUARDA PEDIDOS';
 
 --
 -- Volcado de datos para la tabla `pedido`
@@ -5720,18 +6169,22 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 -- Estructura de tabla para la tabla `pedido_detalle`
 --
 
-CREATE TABLE `pedido_detalle` (
-  `id_pdetalle` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `pedido_detalle`;
+CREATE TABLE IF NOT EXISTS `pedido_detalle` (
+  `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `prod_pdetalle` int(11) NOT NULL COMMENT 'PRODUCTO PEDIDO DETALLE',
-  `cant_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'CANTIDAD PEDIDO DETALLE',
-  `precio_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO PEDIDO DETALLE',
-  `descu_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'DESCUENTO % PEDIDO DETALLE',
-  `impuesto_pdetalle` decimal(18,0) NOT NULL DEFAULT '0' COMMENT 'IMPUESTO PEDIDO DETALLE',
-  `status_pdetalle` int(11) NOT NULL DEFAULT '1' COMMENT 'ESTATUS PEDIDO DETALLE',
-  `pedido_pdetalle` int(11) NOT NULL DEFAULT '0',
-  `plista_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA PEDIDO DETALLE',
-  `total_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL PEDIDO DETALLE'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE PEDIDOS';
+  `cant_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'CANTIDAD PEDIDO DETALLE',
+  `precio_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO PEDIDO DETALLE',
+  `descu_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'DESCUENTO % PEDIDO DETALLE',
+  `impuesto_pdetalle` decimal(18,0) NOT NULL DEFAULT 0 COMMENT 'IMPUESTO PEDIDO DETALLE',
+  `status_pdetalle` int(11) NOT NULL DEFAULT 1 COMMENT 'ESTATUS PEDIDO DETALLE',
+  `pedido_pdetalle` int(11) NOT NULL DEFAULT 0,
+  `plista_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO LISTA PEDIDO DETALLE',
+  `total_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'TOTAL PEDIDO DETALLE',
+  PRIMARY KEY (`id_pdetalle`),
+  KEY `prod_pdetalle` (`prod_pdetalle`),
+  KEY `pedido_pdetalle` (`pedido_pdetalle`)
+) ENGINE=InnoDB AUTO_INCREMENT=1934 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE PEDIDOS';
 
 --
 -- Volcado de datos para la tabla `pedido_detalle`
@@ -7510,9 +7963,11 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 -- Estructura de tabla para la tabla `precios`
 --
 
-CREATE TABLE `precios` (
+DROP TABLE IF EXISTS `precios`;
+CREATE TABLE IF NOT EXISTS `precios` (
   `codigo` varchar(20) NOT NULL,
-  `precio` decimal(18,2) DEFAULT NULL
+  `precio` decimal(18,2) DEFAULT NULL,
+  PRIMARY KEY (`codigo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -8297,8 +8752,9 @@ INSERT INTO `precios` (`codigo`, `precio`) VALUES
 -- Estructura de tabla para la tabla `producto`
 --
 
-CREATE TABLE `producto` (
-  `id_prod` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `producto`;
+CREATE TABLE IF NOT EXISTS `producto` (
+  `id_prod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `cod_prod` varchar(25) NOT NULL COMMENT 'CODIGO PRODUCTO',
   `codfab_prod` varchar(45) DEFAULT NULL,
   `des_prod` text NOT NULL COMMENT 'DESCRIPCION PRODUCTO',
@@ -8306,15 +8762,20 @@ CREATE TABLE `producto` (
   `umed_prod` int(11) NOT NULL COMMENT 'UNIDAD DE MEDIDA PRODUCTO',
   `contenido_prod` int(11) NOT NULL COMMENT 'CONTENIDO PRODUCTO',
   `exctoigv_prod` int(11) NOT NULL COMMENT 'EXCENTO IGV (IVA) PRODUCTO',
-  `compra_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO PARA COMPRA',
-  `venta_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO PARA VENTA',
-  `stockini_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'STOCK INICIAL PRODUCTO',
-  `stockmax_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'STOCK MAXIMO PRODUCTO',
-  `stockmin_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'STOCK MINIMO PRODUCTO',
-  `stock_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'STOCK PRODUCTO',
+  `compra_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO PARA COMPRA',
+  `venta_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO PARA VENTA',
+  `stockini_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'STOCK INICIAL PRODUCTO',
+  `stockmax_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'STOCK MAXIMO PRODUCTO',
+  `stockmin_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'STOCK MINIMO PRODUCTO',
+  `stock_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'STOCK PRODUCTO',
   `status_prod` int(11) NOT NULL COMMENT 'ESTATUS PRODUCTO',
-  `sucursal_prod` int(11) NOT NULL COMMENT 'SUCURSAL PRODUCTO'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS PRODUCTOS';
+  `sucursal_prod` int(11) NOT NULL COMMENT 'SUCURSAL PRODUCTO',
+  PRIMARY KEY (`id_prod`),
+  UNIQUE KEY `cod_prod` (`cod_prod`),
+  KEY `tipo_prod` (`tipo_prod`),
+  KEY `sucursal_prod` (`sucursal_prod`),
+  KEY `umed_prod` (`umed_prod`)
+) ENGINE=InnoDB AUTO_INCREMENT=1219 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS PRODUCTOS';
 
 --
 -- Volcado de datos para la tabla `producto`
@@ -8381,8 +8842,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (58, 'LP-PO4', 'CM13-PRT2', 'FARO NEBLI.PARACH. HY PORTER II 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
 (59, 'LP-SF2', 'CM09-SF2', 'FARO NEBLI.PARACH. HY SANTA FE 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
 (60, 'LP-MA2', 'CM07-MX2', 'FARO NEBLI.PARACH. HY MATRIX 2005(SET X 2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(61, 'LP-SO2L', 'CM03-SON4L', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(62, 'LP-SO2R', 'CM03-SON4R', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
+(61, 'LP-SO2L', 'CM03-SON4L', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(62, 'LP-SO2R', 'CM03-SON4R', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
 (63, 'LP-SO4', 'CM08-SON2', 'FARO NEBLI.PARACH.HY SONATA 2008(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
 (64, 'LP-TU2', 'CM03-TS2', 'FARO NEBLI.PARACH.HY TUCSON 2003 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (65, 'LP-EO4', 'CM11-EON4', 'FARO NEBLI.PARACH.HY EON 2011-2013 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
@@ -8413,7 +8874,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (91, 'LP-AM2', 'CM-9483', 'FARO NEBLI.AMAROK-JETTA III-GOLF V 2001-2016(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (92, 'LP-FU2', 'CM86-MF4', 'FARO NEBLI.PARACH.MITSUB.FUSO 1986(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (93, 'LP-RO2', 'CM-MR04', 'FARO NEBLI.PARACH MITSUB.ROSA(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
-(94, 'LP-TR2', 'CM-9236', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2008...(SET2)CROMADO     ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(94, 'LP-TR2', 'CM-9236', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2008...(SET2)CROMADO     ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (95, 'LP-TR2S', 'CM-9242', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2008 S/TAPA..(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
 (96, 'LP-TR4', 'CM-9417', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2016...(SET2)CROMO     ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 65, 1, 1),
 (97, 'LP-AD2', 'CM00-AD4L', 'FARO NEBLI.NISSAN AD WAGON WINGROAD 1998-2005', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
@@ -8437,7 +8898,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (115, 'LP-MH2', 'CM-9255', 'FARO NEBLI.NISS.MARCH 2010 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (116, 'LP-NE2', 'CM-9374', 'FARO NEBLI.NISS.NEO 2004 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (117, 'LP-SW2', 'CM4-SW02', 'FARO NEBLI.SUZ.SWIFT SX4 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(118, 'LP-SW4', 'CM-9197', 'FARO NEBLI.SUZ.SWIFT05-10/SX4 06-13/ALTO 09/CELERIO14/(SET2)UNIVERSAL', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(118, 'LP-SW4', 'CM-9197', 'FARO NEBLI.SUZ.SWIFT05-10/SX4 06-13/ALTO 09/CELERIO14/(SET2)UNIVERSAL', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
 (120, 'LP-SW4N', 'CM-9310', 'FARO NEBLI.SUZ.SWIFT 2012....(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
 (122, 'LP-AE2', 'CM03-AE02     ', 'FARO NEBLI.SUZ.AERIO 2003 (SET2)               ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
 (123, 'LP-AZ4', 'CM-9262', 'FARO NEBLI.TY AVANZA 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1),
@@ -8519,8 +8980,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (454, 'LP-3001ARR', '', 'MANIJA.EXT PTA.POST HYUNDAI EXCEL 90-94  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
 (455, 'LP-2110 L           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI I10 2008.....                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (456, 'LP-2110 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI I10 2008....                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(457, 'LP-3110 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI I10 2008-2013                        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(458, 'LP-3110 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI I10 2008-2013                        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
+(457, 'LP-3110 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI I10 2008-2013                        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
+(458, 'LP-3110 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI I10 2008-2013                        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
 (459, 'LP-3232 L           ', '', 'MANIJA EXT.PTA.DELANTERO HYUNDAI ACCENT 1998-2000                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 49, 1, 1),
 (460, 'LP-3232 R           ', '', 'MANIJA EXT.PTA.DELANTERO HYUNDAI ACCENT 1998-2000                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 50, 1, 1),
 (461, 'LP-2323AL          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 00-06 NEGRO              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -8714,12 +9175,12 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (649, 'LP-2567 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANT.TOY.HIACE-HILUX VIGO 2005.....             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 109, 1, 1),
 (650, 'LP-3033 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN50,55 84-88                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (651, 'LP-3033 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN50,55 84-88                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
-(652, 'LP-3105 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(653, 'LP-31050L         ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(654, 'LP-31070MAL        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(655, 'LP-31070MAR        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(656, 'LP-3107MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(657, 'LP-3107MAR         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(652, 'LP-3105 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(653, 'LP-31050L         ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
+(654, 'LP-31070MAL        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(655, 'LP-31070MAR        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(656, 'LP-3107MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
+(657, 'LP-3107MAR         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
 (658, 'LP-3190ATG', NULL, 'MANIJA DE COMPUERTA POSTERIOR TOYOTA HILUX RN50,RN55 84-88            ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 90, 1, 1),
 (659, 'LP-31620MAL        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN95 98-04 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (660, 'LP-3162MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN95 98-04 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
@@ -8805,8 +9266,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (739, 'LP-HY2511A-LH', 'LP-HY2511A', 'MANIJA INT.DELANT.HY PORTER 98-02 / HD 65', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (740, 'LP-HY2511A-RH', 'LP-HY2511B', 'MANIJA INT.DELANT.HY PORTER 98-02 / HD 65', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (741, 'LP-HY2513A-MR', 'LP-HY2513A', 'MANIJA INT.DE PUERTA CORREDIZA HYUNDAI STAREX H1 98-06  MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
-(742, 'LP-HY3110A-RL', 'LP-HY3110A', 'MANIJA EXT.PTA.POST.HYUNDAI I10 2008-2013 RL  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(743, 'LP-HY3110A-RR', 'LP-HY3110B', 'MANIJA EXT.PTA.POST.HYUNDAI I10 2008-2013 RR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(742, 'LP-HY3110A-RL', 'LP-HY3110A', 'MANIJA EXT.PTA.POST.HYUNDAI I10 2008-2013 RL  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
+(743, 'LP-HY3110A-RR', 'LP-HY3110B', 'MANIJA EXT.PTA.POST.HYUNDAI I10 2008-2013 RR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (744, 'LP-HY3228A-FL', 'LP-HY3228A', 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (745, 'LP-HY3228A-FR', 'LP-HY3228B', 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (746, 'LP-HY3228A-MR', 'LP-HY3228M', 'MANIJA EXT.PUERTA CORREDIZA HY.PORTER/GRACE 92-97 MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
@@ -8853,9 +9314,9 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (787, 'LP-KA2500G-RH', 'LP-KA2500H', 'MANIJA DE PTA INT.KIA SPORTAGE 95-02 GRH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (788, 'LP-KA2900A-FL', 'LP-KA2900A', 'MANIJA INT.DELANT KIA BONGO , K-2700 AFL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (789, 'LP-KA2900A-FR', 'LP-KA2900B', 'MANIJA INT.DELANT KIA BONGO , K-2700 AFR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(790, 'LP-KA3004P-F', 'LP-KA3004P', 'MANIJA EXT.DELANT.KIA PICANTO 11-C C/H PFL=PFR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
-(791, 'LP-KA3004P-FLK', 'LP-KA3004D', 'MANIJA EXT.DELANT.KIA PICANTO 11-C S/H PFLK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
-(792, 'LP-KA3004P-FRK', 'LP-KA3004R', 'MANIJA EXT.DELANT.KIA PICANTO 11-C S/H PFRK ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
+(790, 'LP-KA3004P-F', 'LP-KA3004P', 'MANIJA EXT.DELANT.KIA PICANTO 11-C C/H PFL=PFR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
+(791, 'LP-KA3004P-FLK', 'LP-KA3004D', 'MANIJA EXT.DELANT.KIA PICANTO 11-C S/H PFLK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(792, 'LP-KA3004P-FRK', 'LP-KA3004R', 'MANIJA EXT.DELANT.KIA PICANTO 11-C S/H PFRK ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1),
 (793, 'LP-KA3010P-FL', 'LP-KA3010P', 'MANIJA EXT.PTA DELANT KIA CERATO 09-13 PFL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (794, 'LP-KA3010P-FRK', 'LP-KA3010D', 'MANIJA EXT.PTA DELANT KIA CERATO 09-13 PFRK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (795, 'LP-KA3950P-FL', 'LP-KA3950P', 'MANIJA EXT.DELANT.KIA BONGO-K-2700 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -9002,8 +9463,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (936, 'LP-TY2575G-LH', 'LP-TY2575G', 'MANIJA INT.TOYOTA CORONA PREMIO 98-01 GRIS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (937, 'LP-TY2575G-RH', 'LP-TY2575H', 'MANIJA INT.TOYOTA CORONA PREMIO 98-01 GRIS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (938, 'LP-TY2579G-MR', 'LP-TY2579G', 'MANIJA INT.PTA CORREDIZA TOY.HIACE 2L 85-89 GRIS MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(939, 'LP-3105 L          ', 'LP-3105 L          ', 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1),
-(940, 'LP-31050R     ', 'LP-31050R     ', 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(939, 'LP-3105 L          ', 'LP-3105 L          ', 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
+(940, 'LP-31050R     ', 'LP-31050R     ', 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
 (941, 'LP-TY3115A-FL', 'LP-TY3115A', 'MANIJA EXT.DELANTERA TOYOTA HIACE 2L 85-89 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
 (942, 'LP-TY3115A-FR', 'LP-TY3115B', 'MANIJA EXT.DELANTERA TOYOTA HIACE 2L 85-89 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
 (943, 'LP-TY3115A-M', 'LP-TY3115M', 'MANIJA EXT.PTA CORREDIZA TOYOTA HIACE 2L 85-89 A-M', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -9020,7 +9481,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (954, 'LP-TY3180A-FRK', 'LP-TY3180A', '\"MANIJA EXT.PTA.DELANT.TY.H.VIGO,ALTIS YARIS,CAMRY 06-12 FRK\"', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (955, 'LP-TY3180A-RER', 'LP-TY3180E', '\"MANIJA EXT.POST.TY.HIGHLAN.01-07/CAMRY,VIGO, YARIS 06-12(L=R)\"', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
 (956, 'LP-TY3191A-TG', 'LP-TY3191A', 'MANIJA DE TOLVA TOYOTA HILUX  NEGRO VIGO 05 A-TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(957, 'LP-TY3191M-TG', 'LP-TY3191M', 'MANIJA DE TOLVA TOYOTA HILUX  CROMADO VIGO 05 M-TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 154, 1, 1),
+(957, 'LP-TY3191M-TG', 'LP-TY3191M', 'MANIJA DE TOLVA TOYOTA HILUX  CROMADO VIGO 05 M-TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 156, 1, 1),
 (958, 'LP-TY3192A-FL', 'LP-TY3192A', 'MANIJA EXT.DELANT.TOYOTA CORONA 88-92 NEGRO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (959, 'LP-TY3192A-FR', 'LP-TY3192B', 'MANIJA EXT.DELANT.TOYOTA CORONA 88-92 NEGRO FR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (960, 'LP-TY3192A-RL', 'LP-TY3192L', 'MANIJA EXT.POST.TOYOTA CORONA 88-92 NEGRO RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -9038,7 +9499,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (972, 'LP-TY3215A-MR', 'LP-TY3215R', 'MANIJA EXTERIOR PTA CORREDIZA TOY.HIACE 3L 90-97 MR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 75, 1, 1),
 (973, 'LP-TY3215-TL', 'LP-TY3215T', 'GATILLO DE COMPUERTA TOYOTA HIACE 3L 90-04 TL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 45, 1, 1),
 (974, 'LP-32171 R          ', 'LP-32171 R          ', 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005..                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(975, 'LP-TY3217A-MR', 'LP-TY3217A', 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005 MR                 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
+(975, 'LP-TY3217A-MR', 'LP-TY3217A', 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005 MR                 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (976, 'LP-TY3217M-FL', 'LP-TY3217M', 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005...CROMO FL        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (977, 'LP-TY3217M-FR', 'LP-TY3217N', 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005...CROMO FR      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (978, 'LP-TY3240A-FL', 'LP-TY3240A', 'MANIJA EXT.PUERTA DELANTERA TOYOTA DYNA FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -9049,7 +9510,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (983, 'LP-TY3412M-RER', 'LP-TY3412N', 'MANIJA EXT.POST.HILUX REVO 15 CROMADO (RH=LH)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (984, 'LP-TY4143', 'LP-TY4143', 'CHAPA DE PTA MALETERA TOYOTA COROLLA AE100 SW 88-91', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
 (985, 'LP-TY4163-LHD', 'LP-TY4163D', 'CHAPA DE CAPOT TOYOTA HILUX  2005-12 LHD', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
-(986, 'LP-TY4167-LHD', 'LP-TY4167', 'CHAPA DE CAPOT TOYOTA HILUX  89-98 LHD', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(986, 'LP-TY4167-LHD', 'LP-TY4167', 'CHAPA DE CAPOT TOYOTA HILUX  89-98 LHD', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (987, 'LP-TY4186', 'LP-TY4186', 'CHAPA DE PUERTA MALETERA TOYOTA COROLLA AE100 93-97', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
 (988, 'LP-TY4187', 'LP-TY4187', 'CHAPA DE PUERTA MALETERA TOYOTA COROLLA 88-92', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
 (989, 'LP-TY4188', 'LP-TY4188', 'CHAPA DE PUERTA MALETERA AUTO TOYOTA COROLLA 98-01', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -9079,8 +9540,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (1013, 'LP-TY6037-RH', 'LP-TY6037R', 'BISAGRA DE CAPOT TOYOTA YARIS 2007-2012 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
 (1014, 'LP-TY6163-LH', 'LP-TY6163L', 'BISAGRA DE CAPOT TOYOTA  HILUX VIGO  2005-2013 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
 (1015, 'LP-TY6163-RH', 'LP-TY6163R', 'BISAGRA DE CAPOT TOYOTA  HILUX VIGO  2005-2013 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
-(1016, 'LP-TY6217-LH', 'LP-TY6217L', 'BISAGRA DE CAPOT TOYOTA HIACE 5L 2005-2014 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 38, 1, 1),
-(1017, 'LP-TY6217-RH', 'LP-TY6217R', 'BISAGRA DE CAPOT TOYOTA HIACE 5L 2005-2014 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 38, 1, 1),
+(1016, 'LP-TY6217-LH', 'LP-TY6217L', 'BISAGRA DE CAPOT TOYOTA HIACE 5L 2005-2014 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
+(1017, 'LP-TY6217-RH', 'LP-TY6217R', 'BISAGRA DE CAPOT TOYOTA HIACE 5L 2005-2014 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
 (1018, 'LP-TY7054-FL', 'LP-TY7054L', 'CHAPA DE PUERTA DELANTERA TOYOTA HILUX 89/95 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
 (1019, 'LP-TY7054-FR', 'LP-TY7054R', 'CHAPA DE PUERTA DELANTERA TOYOTA HILUX 89/95 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
 (1020, 'LP-TYB032G', 'LP-TYB032G', 'MANIJA DE GUANTERA TOYOTA COROLLA AE100 93-97 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 388, 1, 1),
@@ -9120,11 +9581,11 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (1206, 'LP-YS6', 'LP-YS6', 'FARO NEBLI.TY YARIS SEDAN 2017 (SET2) (KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
 (1207, 'LP-CO4T', 'LP-CO4T', 'FARO NEBLI.TY.COROLLA 2011-2013 CROMADO(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 49, 1, 1),
 (1208, 'LP-CO4H', 'LP-CO4H', 'FARO NEBLI.TY.COROLLA 2008-2011 NEGRO(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
-(1209, 'LP-ET4', 'LP-ET4', 'FARO NEBLI.TOYOTA ETIOS SEDAN/HATCHBACK CK2017(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
+(1209, 'LP-ET4', 'LP-ET4', 'FARO NEBLI.TOYOTA ETIOS SEDAN/HATCHBACK CK2017(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (1210, 'LP-HX4T', 'LP-HX4T', 'FARO NEBLI.TY.AVANZA 2015(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(1211, 'LP-SU8', 'LP-SU8', 'FARO NEBLINERO SUZUKI UNIVERSAL(SET2-KIT)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(1211, 'LP-SU8', 'LP-SU8', 'FARO NEBLINERO SUZUKI UNIVERSAL(SET2-KIT)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
 (1212, 'LP-TH4H', 'LP-TH4H', 'FARO NEBLI.TY HIACE 2011-2013(SET2)(KIT COMP)  ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(1213, 'LP-AM4', 'LP-AM4', 'FARO NEBLI.AMAROK 2014(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(1213, 'LP-AM4', 'LP-AM4', 'FARO NEBLI.AMAROK 2014(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (1214, 'LP-FC2', 'LP-FC2', 'FARO NEBLI.CHEV.TRAX/TRACKER`1 2014- 2016...(SET2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (1215, 'LP-FTN2', 'LP-FTN2', 'FARO NEBLI.FORTUNER/HILUX/SW4 2012- 2015...(SET2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
 (1216, 'LP-AF2', 'LP-AF2', 'FARO NEBL.TOY.AXIO FIELDER 2007/COROLLA 2011 CROMO(SET2KIT)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
@@ -9137,14 +9598,24 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 -- Estructura de tabla para la tabla `profile`
 --
 
-CREATE TABLE `profile` (
-  `id` int(11) NOT NULL COMMENT 'ID UNICO',
-  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT 'ID USER',
+DROP TABLE IF EXISTS `profile`;
+CREATE TABLE IF NOT EXISTS `profile` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+  `user_id` int(11) NOT NULL DEFAULT 0 COMMENT 'ID USER',
   `nombre` varchar(50) NOT NULL DEFAULT '' COMMENT 'NOMBRE USUARIO',
   `apellido` varchar(50) NOT NULL DEFAULT '' COMMENT 'APELLIDO USUARIO',
-  `empresa` int(11) NOT NULL DEFAULT '0' COMMENT 'EMPRESA USUARIO',
-  `sucursal` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL USUARIO'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA PERFILES DE USUARIOS';
+  `empresa` int(11) NOT NULL DEFAULT 0 COMMENT 'EMPRESA USUARIO',
+  `sucursal` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL USUARIO',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='GUARDA PERFILES DE USUARIOS';
+
+--
+-- Volcado de datos para la tabla `profile`
+--
+
+INSERT INTO `profile` (`id`, `user_id`, `nombre`, `apellido`, `empresa`, `sucursal`) VALUES
+(2, 2, 'Administrador', 'Admin', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -9152,8 +9623,9 @@ CREATE TABLE `profile` (
 -- Estructura de tabla para la tabla `proveedor`
 --
 
-CREATE TABLE `proveedor` (
-  `id_prove` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `proveedor`;
+CREATE TABLE IF NOT EXISTS `proveedor` (
+  `id_prove` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `dni_prove` varchar(20) NOT NULL COMMENT 'DNI PROVEEDOR',
   `ruc_prove` varchar(20) NOT NULL COMMENT 'RUC PROVEEDOR',
   `nombre_prove` varchar(150) NOT NULL COMMENT 'NOMBRE PROVEEDOR',
@@ -9165,8 +9637,14 @@ CREATE TABLE `proveedor` (
   `tlf_prove` varchar(100) NOT NULL COMMENT 'TELEFONO PROVEEDOR',
   `tipo_prove` int(11) NOT NULL COMMENT 'TIPO PROVEEDOR',
   `status_prove` int(11) NOT NULL COMMENT 'ESTATUS PROVEEDOR',
-  `sucursal_prove` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PROVEEDORES';
+  `sucursal_prove` int(11) NOT NULL,
+  PRIMARY KEY (`id_prove`),
+  KEY `sucursal_prove` (`sucursal_prove`),
+  KEY `pais_prove` (`pais_prove`),
+  KEY `provi_prove` (`provi_prove`),
+  KEY `depto_prove` (`depto_prove`),
+  KEY `dttp_prove` (`dtto_prove`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PROVEEDORES';
 
 --
 -- Volcado de datos para la tabla `proveedor`
@@ -9181,13 +9659,17 @@ INSERT INTO `proveedor` (`id_prove`, `dni_prove`, `ruc_prove`, `nombre_prove`, `
 -- Estructura de tabla para la tabla `provincia`
 --
 
-CREATE TABLE `provincia` (
-  `id_prov` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `provincia`;
+CREATE TABLE IF NOT EXISTS `provincia` (
+  `id_prov` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `des_prov` varchar(30) NOT NULL COMMENT 'DESCRIPCION PROVINCIA',
   `status_prov` int(11) NOT NULL COMMENT 'ESTATUS PROVINCIA',
   `sucursal_prov` int(11) NOT NULL COMMENT 'SUCURSAL PROVINCIA',
-  `pais_prov` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PROVINCIA';
+  `pais_prov` int(11) NOT NULL,
+  PRIMARY KEY (`id_prov`),
+  KEY `sucursal_prov` (`sucursal_prov`),
+  KEY `fx_pais_prov_idx` (`pais_prov`)
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PROVINCIA';
 
 --
 -- Volcado de datos para la tabla `provincia`
@@ -9228,12 +9710,15 @@ INSERT INTO `provincia` (`id_prov`, `des_prov`, `status_prov`, `sucursal_prov`, 
 -- Estructura de tabla para la tabla `series`
 --
 
-CREATE TABLE `series` (
-  `id_serie` int(11) NOT NULL COMMENT 'ID SERIE',
+DROP TABLE IF EXISTS `series`;
+CREATE TABLE IF NOT EXISTS `series` (
+  `id_serie` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID SERIE',
   `des_serie` varchar(3) DEFAULT '000' COMMENT 'DESCRIPCION SERIE',
-  `status_serie` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS SERIE',
-  `sucursal_serie` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL SERIE'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE SERIES DE DOCUMENTOS';
+  `status_serie` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS SERIE',
+  `sucursal_serie` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL SERIE',
+  PRIMARY KEY (`id_serie`),
+  KEY `sucursal_serie` (`sucursal_serie`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE SERIES DE DOCUMENTOS';
 
 --
 -- Volcado de datos para la tabla `series`
@@ -9250,13 +9735,16 @@ INSERT INTO `series` (`id_serie`, `des_serie`, `status_serie`, `sucursal_serie`)
 -- Estructura de tabla para la tabla `sucursal`
 --
 
-CREATE TABLE `sucursal` (
-  `id_suc` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `sucursal`;
+CREATE TABLE IF NOT EXISTS `sucursal` (
+  `id_suc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `nombre_suc` varchar(50) NOT NULL COMMENT 'NOMBRE SUCURSAL',
   `estatus_suc` int(11) NOT NULL COMMENT 'ESTATUS SUCURSAL',
   `empresa_suc` int(11) NOT NULL COMMENT 'EMPRESA  DE LA SUCURSAL',
-  `impuesto_suc` decimal(7,2) NOT NULL DEFAULT '0.00'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE SUCURSALES';
+  `impuesto_suc` decimal(7,2) NOT NULL DEFAULT 0.00,
+  PRIMARY KEY (`id_suc`),
+  KEY `EMPRESA_SUC` (`empresa_suc`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE SUCURSALES';
 
 --
 -- Volcado de datos para la tabla `sucursal`
@@ -9271,16 +9759,19 @@ INSERT INTO `sucursal` (`id_suc`, `nombre_suc`, `estatus_suc`, `empresa_suc`, `i
 -- Estructura de tabla para la tabla `tipo_cambio`
 --
 
-CREATE TABLE `tipo_cambio` (
-  `id_tipoc` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `tipo_cambio`;
+CREATE TABLE IF NOT EXISTS `tipo_cambio` (
+  `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `fecha_tipoc` date NOT NULL COMMENT 'FECHA TIPO CAMBIO',
   `monedac_tipoc` int(11) DEFAULT NULL COMMENT 'MONEDA A CAMBIAR',
   `moneda_tipoc` int(11) DEFAULT NULL COMMENT 'MONEDA CAMBIADA',
   `cambioc_tipoc` decimal(18,3) NOT NULL COMMENT 'VALOR COMPRA TIPO CAMBIO',
   `venta_tipoc` decimal(18,3) NOT NULL COMMENT 'VALOR DE VENTA TIPO CAMBIO',
   `valorf_tipoc` decimal(18,3) NOT NULL COMMENT 'VALOR A FACTURAR',
-  `sucursal_tipoc` int(11) NOT NULL COMMENT 'SUCURSAL TIPO DE CAMBIO'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
+  `sucursal_tipoc` int(11) NOT NULL COMMENT 'SUCURSAL TIPO DE CAMBIO',
+  PRIMARY KEY (`id_tipoc`),
+  KEY `sucursal_tipoc` (`sucursal_tipoc`)
+) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
 
 --
 -- Volcado de datos para la tabla `tipo_cambio`
@@ -9371,7 +9862,8 @@ INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_t
 (84, '2020-06-13', NULL, NULL, '3.452', '3.450', '3.452', 1),
 (85, '2020-06-15', NULL, NULL, '3.452', '3.450', '3.452', 1),
 (86, '2020-06-16', NULL, NULL, '3.485', '3.485', '3.485', 1),
-(87, '2020-06-17', NULL, NULL, '3.477', '3.473', '3.477', 1);
+(87, '2020-06-17', NULL, NULL, '3.477', '3.473', '3.477', 1),
+(88, '2020-06-18', NULL, NULL, '3.477', '3.473', '3.477', 1);
 
 -- --------------------------------------------------------
 
@@ -9379,16 +9871,21 @@ INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_t
 -- Estructura de tabla para la tabla `tipo_documento`
 --
 
-CREATE TABLE `tipo_documento` (
-  `id_tipod` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `tipo_documento`;
+CREATE TABLE IF NOT EXISTS `tipo_documento` (
+  `id_tipod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `des_tipod` varchar(100) DEFAULT NULL COMMENT 'DESCRIPCION TIPO DOCUMENTO',
   `abrv_tipod` varchar(4) NOT NULL COMMENT 'ABREVIACION TIPO DOCUMENTO',
   `ope_tipod` varchar(1) DEFAULT 'N' COMMENT 'E = ENTRADA, S = SALIDA, N'' = NINGUNO OPERACION TIPO DOCUMENTO',
-  `tipo_tipod` int(11) NOT NULL DEFAULT '0' COMMENT '1 = ES DOCUMENTO, 0 = ES PEDIDO, 2 = ES GUIA',
+  `tipo_tipod` int(11) NOT NULL DEFAULT 0 COMMENT '1 = ES DOCUMENTO, 0 = ES PEDIDO, 2 = ES GUIA',
   `tipodsunat_tipod` varchar(2) DEFAULT NULL COMMENT 'TIPO DOCUMENTO DE SUNAT ',
-  `sucursal_tipod` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TIPO DOCUMENTO',
-  `status_tipod` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TIPO DOCUMENTO'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA TIPOS DE DOCUMENTOS';
+  `sucursal_tipod` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TIPO DOCUMENTO',
+  `status_tipod` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS TIPO DOCUMENTO',
+  PRIMARY KEY (`id_tipod`),
+  KEY `id_tipod` (`id_tipod`),
+  KEY `sucursal_tipod` (`sucursal_tipod`),
+  KEY `doc_doc` (`tipo_tipod`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='ALMACENA TIPOS DE DOCUMENTOS';
 
 --
 -- Volcado de datos para la tabla `tipo_documento`
@@ -9396,14 +9893,15 @@ CREATE TABLE `tipo_documento` (
 
 INSERT INTO `tipo_documento` (`id_tipod`, `des_tipod`, `abrv_tipod`, `ope_tipod`, `tipo_tipod`, `tipodsunat_tipod`, `sucursal_tipod`, `status_tipod`) VALUES
 (1, 'PEDIDO', 'NP', 'N', 0, NULL, 1, 1),
-(2, 'FACTURA ELECTRONICA', 'FE', 'S', 1, NULL, 1, 1),
-(3, 'GUIA DE REMISION', 'GR', 'N', 1, NULL, 1, 1),
+(2, 'FACTURA ELECTRONICA', 'FE', 'S', 1, '01', 1, 1),
+(3, 'GUIA DE REMISION', 'GR', 'N', 2, NULL, 1, 1),
 (4, 'NOTA DE INGRESO', 'NI', 'E', 0, NULL, 1, 1),
 (5, 'NOTA DE SALIDA', 'NS', 'S', 0, NULL, 1, 1),
 (6, 'ORDEN DE COMPRA', 'OC', 'N', 0, NULL, 1, 1),
 (7, 'PROFORMA', 'PR', 'S', 0, NULL, 1, 1),
 (8, 'COTIZACION', 'CT', 'N', 0, NULL, 1, 1),
-(9, 'BOLETA', 'BE', 'S', 1, NULL, 1, 1);
+(9, 'BOLETA', 'BE', 'S', 1, '03', 1, 1),
+(10, 'NOTA DE CREDITO', 'NC', 'E', 1, '07', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -9411,13 +9909,15 @@ INSERT INTO `tipo_documento` (`id_tipod`, `des_tipod`, `abrv_tipod`, `ope_tipod`
 -- Estructura de tabla para la tabla `tipo_identificacion`
 --
 
-CREATE TABLE `tipo_identificacion` (
-  `id_tipoi` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `tipo_identificacion`;
+CREATE TABLE IF NOT EXISTS `tipo_identificacion` (
+  `id_tipoi` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `cod_tipoi` char(1) NOT NULL DEFAULT '0' COMMENT 'CODIGO DE TIPO DE IDENTIFICACION',
   `des_tipoi` varchar(150) NOT NULL COMMENT 'DESCRIPCION TIPO IDENTIFICACION',
-  `status_tipoi` int(11) NOT NULL DEFAULT '0' COMMENT 'STATUS DE TIPO DE IDENTIFICACION',
-  `sucursal_tipoi` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TIPO DE IDENTIFICACION'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TIPO DE IDENTIFICACION DE CLIENTES';
+  `status_tipoi` int(11) NOT NULL DEFAULT 0 COMMENT 'STATUS DE TIPO DE IDENTIFICACION',
+  `sucursal_tipoi` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TIPO DE IDENTIFICACION',
+  PRIMARY KEY (`id_tipoi`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TIPO DE IDENTIFICACION DE CLIENTES';
 
 --
 -- Volcado de datos para la tabla `tipo_identificacion`
@@ -9436,12 +9936,15 @@ INSERT INTO `tipo_identificacion` (`id_tipoi`, `cod_tipoi`, `des_tipoi`, `status
 -- Estructura de tabla para la tabla `tipo_listap`
 --
 
-CREATE TABLE `tipo_listap` (
-  `id_lista` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `tipo_listap`;
+CREATE TABLE IF NOT EXISTS `tipo_listap` (
+  `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `desc_lista` varchar(30) NOT NULL DEFAULT '' COMMENT 'DESCRIPCION TIPO LISTA',
   `estatus_lista` int(11) NOT NULL COMMENT 'ESTATUS TIPO LISTA',
-  `sucursal_lista` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TIPO LISTA'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA TIPOS DE LISTA DE PRECIOS';
+  `sucursal_lista` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TIPO LISTA',
+  PRIMARY KEY (`id_lista`),
+  KEY `sucursal_lista` (`sucursal_lista`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='GUARDA TIPOS DE LISTA DE PRECIOS';
 
 --
 -- Volcado de datos para la tabla `tipo_listap`
@@ -9457,13 +9960,16 @@ INSERT INTO `tipo_listap` (`id_lista`, `desc_lista`, `estatus_lista`, `sucursal_
 -- Estructura de tabla para la tabla `tipo_movimiento`
 --
 
-CREATE TABLE `tipo_movimiento` (
-  `id_tipom` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `tipo_movimiento`;
+CREATE TABLE IF NOT EXISTS `tipo_movimiento` (
+  `id_tipom` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `des_tipom` varchar(60) NOT NULL COMMENT 'DESCRIPCION TIPO MOVIMIENTO',
-  `status_tipom` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TIPO MOVIMIENTO',
-  `sucursal_tipom` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TIPO MOVIMIENTO',
-  `tipo_tipom` varchar(1) DEFAULT NULL COMMENT 'TIPO E = ENTRADA, S = SALIDA '
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE TIPOS DE MOVIMIENTOS DE ALMACEN';
+  `status_tipom` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS TIPO MOVIMIENTO',
+  `sucursal_tipom` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TIPO MOVIMIENTO',
+  `tipo_tipom` varchar(1) DEFAULT NULL COMMENT 'TIPO E = ENTRADA, S = SALIDA ',
+  PRIMARY KEY (`id_tipom`),
+  KEY `sucursal_tipom` (`sucursal_tipom`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE TIPOS DE MOVIMIENTOS DE ALMACEN';
 
 --
 -- Volcado de datos para la tabla `tipo_movimiento`
@@ -9488,12 +9994,14 @@ INSERT INTO `tipo_movimiento` (`id_tipom`, `des_tipom`, `status_tipom`, `sucursa
 -- Estructura de tabla para la tabla `tipo_producto`
 --
 
-CREATE TABLE `tipo_producto` (
-  `id_tpdcto` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `tipo_producto`;
+CREATE TABLE IF NOT EXISTS `tipo_producto` (
+  `id_tpdcto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `desc_tpdcto` varchar(255) NOT NULL COMMENT 'DESCRIP TIPO PRODUCTO',
   `status_tpdcto` int(11) NOT NULL COMMENT 'ESTATUS TIPO PRODUCTO',
-  `sucursal_tpdcto` int(11) NOT NULL COMMENT 'SUCURSAL TIPO PRODUCTO'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE TIPO PRODUCTOS';
+  `sucursal_tpdcto` int(11) NOT NULL COMMENT 'SUCURSAL TIPO PRODUCTO',
+  PRIMARY KEY (`id_tpdcto`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE TIPO PRODUCTOS';
 
 --
 -- Volcado de datos para la tabla `tipo_producto`
@@ -9509,12 +10017,15 @@ INSERT INTO `tipo_producto` (`id_tpdcto`, `desc_tpdcto`, `status_tpdcto`, `sucur
 -- Estructura de tabla para la tabla `tipo_proveedor`
 --
 
-CREATE TABLE `tipo_proveedor` (
-  `id_tprov` int(11) NOT NULL,
+DROP TABLE IF EXISTS `tipo_proveedor`;
+CREATE TABLE IF NOT EXISTS `tipo_proveedor` (
+  `id_tprov` int(11) NOT NULL AUTO_INCREMENT,
   `des_tprov` varchar(45) DEFAULT NULL,
   `status_tprov` int(11) NOT NULL,
-  `sucursal_tprov` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA TIPO PROVEEDOR';
+  `sucursal_tprov` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_tprov`),
+  KEY `sucursal_tprov` (`sucursal_tprov`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='GUARDA TIPO PROVEEDOR';
 
 --
 -- Volcado de datos para la tabla `tipo_proveedor`
@@ -9532,21 +10043,31 @@ INSERT INTO `tipo_proveedor` (`id_tprov`, `des_tprov`, `status_tprov`, `sucursal
 -- Estructura de tabla para la tabla `transaccion`
 --
 
-CREATE TABLE `transaccion` (
-  `id_trans` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `transaccion`;
+CREATE TABLE IF NOT EXISTS `transaccion` (
+  `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `codigo_trans` varchar(10) NOT NULL COMMENT 'CODIGO TRANSACCION',
   `fecha_trans` date DEFAULT NULL COMMENT 'FECHA TRANSACCION',
-  `obsv_trans` text COMMENT 'OBSERVACIONES TRANSACCION',
-  `tipo_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO TRANSACCION',
+  `obsv_trans` text DEFAULT NULL COMMENT 'OBSERVACIONES TRANSACCION',
+  `tipo_trans` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO TRANSACCION',
   `ope_trans` varchar(1) NOT NULL COMMENT 'OPERACION TRANSACCION',
   `idrefdoc_trans` int(11) DEFAULT NULL COMMENT 'ID DOCUMENTO REFERENCIA TRANSACCION',
   `seriedocref_trans` varchar(4) DEFAULT NULL COMMENT 'SERIE DOC REFERENCIA TRANSACCION',
   `docref_trans` varchar(10) DEFAULT NULL COMMENT 'DOCUMENTO REFERENCIA TRANSACCION',
   `almacen_trans` int(11) NOT NULL COMMENT 'ALMACEN TRANSACCION',
-  `sucursal_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TRANSACCION',
-  `usuario_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'USUARIO TRANSACCION',
-  `status_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TRANSACCION 0=NO APROBADA, 1 = APROBADA, 2 = ANULADA'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TRANSACCIONES';
+  `sucursal_trans` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TRANSACCION',
+  `usuario_trans` int(11) NOT NULL DEFAULT 0 COMMENT 'USUARIO TRANSACCION',
+  `status_trans` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS TRANSACCION 0=NO APROBADA, 1 = APROBADA, 2 = ANULADA',
+  PRIMARY KEY (`id_trans`) USING BTREE,
+  UNIQUE KEY `codigo_trans_2` (`codigo_trans`,`tipo_trans`) USING BTREE,
+  KEY `codigo_trans` (`codigo_trans`),
+  KEY `fecha_trans` (`fecha_trans`),
+  KEY `tipo_trans` (`tipo_trans`),
+  KEY `almacen_trans` (`almacen_trans`),
+  KEY `usuario_trans` (`usuario_trans`),
+  KEY `grupo_trans` (`ope_trans`),
+  KEY `idrefdoc_trans` (`idrefdoc_trans`)
+) ENGINE=InnoDB AUTO_INCREMENT=174 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TRANSACCIONES';
 
 --
 -- Volcado de datos para la tabla `transaccion`
@@ -9708,7 +10229,9 @@ INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_tran
 (168, '0000000102', '2020-06-16', NULL, 4, 'S', 183, NULL, NULL, 1, 1, 2, 1),
 (169, '0000000053', '2020-06-17', '', 3, 'E', 48, NULL, '', 1, 1, 2, 1),
 (170, '0000000054', '2020-06-17', '', 1, 'E', NULL, NULL, '', 1, 1, 2, 1),
-(171, '0000000103', '2020-06-17', NULL, 4, 'S', 185, NULL, NULL, 1, 1, 2, 1);
+(171, '0000000103', '2020-06-17', NULL, 4, 'S', 185, NULL, NULL, 1, 1, 2, 1),
+(172, '0000000055', '2020-06-18', NULL, 7, 'E', 186, NULL, NULL, 1, 1, 2, 1),
+(173, '0000000056', '2020-06-18', NULL, 7, 'E', 187, NULL, NULL, 1, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -9716,13 +10239,17 @@ INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_tran
 -- Estructura de tabla para la tabla `transportista`
 --
 
-CREATE TABLE `transportista` (
-  `id_transp` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `transportista`;
+CREATE TABLE IF NOT EXISTS `transportista` (
+  `id_transp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `ruc_transp` varchar(12) NOT NULL COMMENT 'RUC TRANSPORTISTA',
   `des_transp` varchar(150) DEFAULT NULL COMMENT 'DESCRIPCION TRANSPORTISTA',
-  `status_transp` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TRANSPORTISTA',
-  `sucursal_transp` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TRANSPORTISTA'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LOS TRANSPORTISTAS';
+  `status_transp` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS TRANSPORTISTA',
+  `sucursal_transp` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TRANSPORTISTA',
+  PRIMARY KEY (`id_transp`),
+  KEY `status_transp` (`status_transp`),
+  KEY `sucursal_transp` (`sucursal_transp`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LOS TRANSPORTISTAS';
 
 --
 -- Volcado de datos para la tabla `transportista`
@@ -9746,12 +10273,16 @@ INSERT INTO `transportista` (`id_transp`, `ruc_transp`, `des_transp`, `status_tr
 -- Estructura de tabla para la tabla `trans_detalle`
 --
 
-CREATE TABLE `trans_detalle` (
-  `id_detalle` int(11) NOT NULL COMMENT 'ID UNICO',
-  `trans_detalle` int(11) NOT NULL DEFAULT '0' COMMENT 'TRANSACCION DETALLE',
-  `prod_detalle` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO DETALLE',
-  `cant_detalle` int(11) NOT NULL DEFAULT '0' COMMENT 'CANTIDAD DETALLE'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE TRANSACCIONES';
+DROP TABLE IF EXISTS `trans_detalle`;
+CREATE TABLE IF NOT EXISTS `trans_detalle` (
+  `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+  `trans_detalle` int(11) NOT NULL DEFAULT 0 COMMENT 'TRANSACCION DETALLE',
+  `prod_detalle` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO DETALLE',
+  `cant_detalle` int(11) NOT NULL DEFAULT 0 COMMENT 'CANTIDAD DETALLE',
+  PRIMARY KEY (`id_detalle`),
+  KEY `trans_detalle` (`trans_detalle`),
+  KEY `prod_detalle` (`prod_detalle`)
+) ENGINE=InnoDB AUTO_INCREMENT=2257 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE TRANSACCIONES';
 
 --
 -- Volcado de datos para la tabla `trans_detalle`
@@ -11761,7 +12292,37 @@ INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `can
 (2223, 171, 147, 1),
 (2224, 171, 1205, 1),
 (2225, 171, 163, 1),
-(2226, 171, 56, 1);
+(2226, 171, 56, 1),
+(2227, 172, 61, 1),
+(2228, 172, 62, 1),
+(2229, 172, 742, 5),
+(2230, 172, 743, 5),
+(2231, 172, 457, 5),
+(2232, 172, 458, 5),
+(2233, 172, 790, 10),
+(2234, 172, 791, 5),
+(2235, 172, 792, 5),
+(2236, 173, 939, 2),
+(2237, 173, 652, 2),
+(2238, 173, 653, 2),
+(2239, 173, 940, 2),
+(2240, 173, 656, 2),
+(2241, 173, 657, 2),
+(2242, 173, 654, 2),
+(2243, 173, 655, 2),
+(2244, 173, 957, 2),
+(2245, 173, 986, 2),
+(2246, 173, 1016, 2),
+(2247, 173, 1017, 2),
+(2248, 173, 975, 2),
+(2249, 173, 790, 2),
+(2250, 173, 791, 1),
+(2251, 173, 792, 1),
+(2252, 173, 1209, 3),
+(2253, 173, 94, 2),
+(2254, 173, 118, 3),
+(2255, 173, 1211, 1),
+(2256, 173, 1213, 1);
 
 -- --------------------------------------------------------
 
@@ -11769,13 +12330,16 @@ INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `can
 -- Estructura de tabla para la tabla `unidad_medida`
 --
 
-CREATE TABLE `unidad_medida` (
-  `id_und` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `unidad_medida`;
+CREATE TABLE IF NOT EXISTS `unidad_medida` (
+  `id_und` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `des_und` varchar(50) NOT NULL COMMENT 'DESCRIPCION UNIDAD MEDIDA',
   `status_und` int(11) NOT NULL COMMENT 'ESTATUS UNIDAD MEDIDA',
   `sunatm_und` varchar(10) DEFAULT NULL COMMENT 'UNIDAD DE MEDIDA DE LA SUNAT',
-  `sucursal_und` int(11) NOT NULL COMMENT 'SUCURSAL UNIDAD MEDIDA'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS UNIDAD MEDIDA';
+  `sucursal_und` int(11) NOT NULL COMMENT 'SUCURSAL UNIDAD MEDIDA',
+  PRIMARY KEY (`id_und`),
+  KEY `sucursal_und` (`sucursal_und`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS UNIDAD MEDIDA';
 
 --
 -- Volcado de datos para la tabla `unidad_medida`
@@ -11791,12 +12355,16 @@ INSERT INTO `unidad_medida` (`id_und`, `des_und`, `status_und`, `sunatm_und`, `s
 -- Estructura de tabla para la tabla `unidad_transporte`
 --
 
-CREATE TABLE `unidad_transporte` (
-  `id_utransp` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `unidad_transporte`;
+CREATE TABLE IF NOT EXISTS `unidad_transporte` (
+  `id_utransp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `des_utransp` varchar(150) DEFAULT NULL COMMENT 'DESCRIPCION UNIDAD TRANSPORTISTA',
-  `status_utransp` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS UNIDAD TRANSPORTISTA',
-  `sucursal_utransp` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL UNIDAD TRANSPORTISTA'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LAS UNIDADES TRANSPORTISTAS';
+  `status_utransp` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS UNIDAD TRANSPORTISTA',
+  `sucursal_utransp` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL UNIDAD TRANSPORTISTA',
+  PRIMARY KEY (`id_utransp`),
+  KEY `status_utransp` (`status_utransp`),
+  KEY `sucursal_utransp` (`sucursal_utransp`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LAS UNIDADES TRANSPORTISTAS';
 
 --
 -- Volcado de datos para la tabla `unidad_transporte`
@@ -11811,19 +12379,23 @@ INSERT INTO `unidad_transporte` (`id_utransp`, `des_utransp`, `status_utransp`, 
 -- Estructura de tabla para la tabla `user`
 --
 
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `auth_key` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password_reset_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `status` smallint(6) NOT NULL DEFAULT '10',
+  `status` smallint(6) NOT NULL DEFAULT 10,
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL,
-  `empresa` int(11) DEFAULT '0',
-  `sucursal` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `empresa` int(11) DEFAULT 0,
+  `sucursal` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `empresa` (`empresa`),
+  KEY `sucursal` (`sucursal`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `user`
@@ -11838,15 +12410,19 @@ INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `password_res
 -- Estructura de tabla para la tabla `vendedor`
 --
 
-CREATE TABLE `vendedor` (
-  `id_vendedor` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `vendedor`;
+CREATE TABLE IF NOT EXISTS `vendedor` (
+  `id_vendedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `dni_vend` varchar(11) NOT NULL COMMENT 'DNI VENDEDOR',
   `nombre_vend` varchar(50) NOT NULL COMMENT 'NOMBRE VENDEDOR',
   `tlf_vend` varchar(20) NOT NULL COMMENT 'TELEFONO VENDEDOR',
   `estatus_vend` int(11) NOT NULL COMMENT 'ESTATUS VENDEDOR',
   `sucursal_vend` int(11) NOT NULL COMMENT 'SUCURSAL VENDEDOR',
-  `zona_vend` int(11) NOT NULL COMMENT 'ZONA VENDEDOR'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE VENDEDORES';
+  `zona_vend` int(11) NOT NULL COMMENT 'ZONA VENDEDOR',
+  PRIMARY KEY (`id_vendedor`),
+  KEY `zona_vend` (`zona_vend`),
+  KEY `sucursal_vend` (`sucursal_vend`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE VENDEDORES';
 
 --
 -- Volcado de datos para la tabla `vendedor`
@@ -11866,7 +12442,8 @@ INSERT INTO `vendedor` (`id_vendedor`, `dni_vend`, `nombre_vend`, `tlf_vend`, `e
 -- Estructura Stand-in para la vista `v_productos`
 -- (Véase abajo para la vista actual)
 --
-CREATE TABLE `v_productos` (
+DROP VIEW IF EXISTS `v_productos`;
+CREATE TABLE IF NOT EXISTS `v_productos` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -11888,13 +12465,16 @@ CREATE TABLE `v_productos` (
 -- Estructura de tabla para la tabla `zona`
 --
 
-CREATE TABLE `zona` (
-  `id_zona` int(11) NOT NULL COMMENT 'ID UNICO',
+DROP TABLE IF EXISTS `zona`;
+CREATE TABLE IF NOT EXISTS `zona` (
+  `id_zona` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
   `nombre_zona` varchar(150) NOT NULL COMMENT 'NOMBRE ZONA',
   `desc_zona` text NOT NULL COMMENT 'DESCRIPCION ZONA',
   `estatus_zona` int(11) NOT NULL COMMENT 'ESTATUS ZONA',
-  `sucursal_zona` int(11) NOT NULL COMMENT 'SUCURSAL ZONA'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE ZONAS';
+  `sucursal_zona` int(11) NOT NULL COMMENT 'SUCURSAL ZONA',
+  PRIMARY KEY (`id_zona`),
+  KEY `sucursal_zona` (`sucursal_zona`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE ZONAS';
 
 --
 -- Volcado de datos para la tabla `zona`
@@ -11913,635 +12493,7 @@ INSERT INTO `zona` (`id_zona`, `nombre_zona`, `desc_zona`, `estatus_zona`, `sucu
 --
 DROP TABLE IF EXISTS `v_productos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `pr`.`id_prod` AS `id_prod`,`pr`.`cod_prod` AS `cod_prod`,`pr`.`des_prod` AS `des_prod`,`pr`.`compra_prod` AS `compra_prod`,`pr`.`venta_prod` AS `venta_prod`,`pr`.`status_prod` AS `status_prod`,`suc`.`id_suc` AS `sucursal_prod`,`pr`.`tipo_prod` AS `tipo_prod`,concat(`pr`.`cod_prod`,' ',`pr`.`des_prod`,' - ',`um`.`des_und`) AS `texto`,`suc`.`impuesto_suc` AS `impuesto_suc`,`um`.`id_und` AS `id_und`,`um`.`des_und` AS `des_und`,(`pr`.`stock_prod` - (select coalesce(sum(`pedido_detalle`.`cant_pdetalle`),0) AS `cant_pedido` from (`pedido_detalle` join `pedido` on((`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`))) where ((`pedido_detalle`.`prod_pdetalle` = `pr`.`id_prod`) and (`pedido`.`sucursal_pedido` = `suc`.`id_suc`) and (`pedido`.`estatus_pedido` = 0)))) AS `stock_prod` from ((`producto` `pr` join `unidad_medida` `um` on((`um`.`id_und` = `pr`.`umed_prod`))) join `sucursal` `suc` on((`pr`.`sucursal_prod` = `suc`.`id_suc`))) group by `pr`.`id_prod`,`pr`.`cod_prod`,`pr`.`des_prod`,`pr`.`compra_prod`,`pr`.`venta_prod`,`pr`.`status_prod`,`pr`.`stock_prod`,`suc`.`id_suc`,`pr`.`tipo_prod`,`suc`.`impuesto_suc`,`um`.`id_und`,`um`.`des_und` order by `pr`.`cod_prod` ;
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `almacen`
---
-ALTER TABLE `almacen`
-  ADD PRIMARY KEY (`id_almacen`),
-  ADD KEY `sucursal_almacen` (`sucursal_almacen`);
-
---
--- Indices de la tabla `auth_assignment`
---
-ALTER TABLE `auth_assignment`
-  ADD PRIMARY KEY (`item_name`,`user_id`),
-  ADD KEY `idx-auth_assignment-user_id` (`user_id`);
-
---
--- Indices de la tabla `auth_item`
---
-ALTER TABLE `auth_item`
-  ADD PRIMARY KEY (`name`),
-  ADD KEY `rule_name` (`rule_name`),
-  ADD KEY `idx-auth_item-type` (`type`);
-
---
--- Indices de la tabla `auth_item_child`
---
-ALTER TABLE `auth_item_child`
-  ADD PRIMARY KEY (`parent`,`child`),
-  ADD KEY `child` (`child`);
-
---
--- Indices de la tabla `auth_rule`
---
-ALTER TABLE `auth_rule`
-  ADD PRIMARY KEY (`name`);
-
---
--- Indices de la tabla `cliente`
---
-ALTER TABLE `cliente`
-  ADD PRIMARY KEY (`id_clte`),
-  ADD KEY `sucursal_clte` (`sucursal_clte`),
-  ADD KEY `cliente_ibfk_1` (`vendedor_clte`),
-  ADD KEY `pais_cte` (`pais_cte`),
-  ADD KEY `provi_cte` (`provi_cte`),
-  ADD KEY `depto_cte` (`depto_cte`),
-  ADD KEY `dtto_cte` (`dtto_clte`),
-  ADD KEY `lista_clte` (`lista_clte`),
-  ADD KEY `tipoid_clte` (`tipoid_clte`);
-
---
--- Indices de la tabla `compra`
---
-ALTER TABLE `compra`
-  ADD PRIMARY KEY (`id_compra`),
-  ADD UNIQUE KEY `cod_compra` (`cod_compra`),
-  ADD KEY `fecha_compra` (`fecha_compra`),
-  ADD KEY `provee_compra` (`provee_compra`),
-  ADD KEY `moneda_compra` (`moneda_compra`),
-  ADD KEY `usuario_compra` (`usuario_compra`),
-  ADD KEY `sucursal_compra` (`sucursal_compra`),
-  ADD KEY `condp_compra` (`condp_compra`);
-
---
--- Indices de la tabla `compra_detalle`
---
-ALTER TABLE `compra_detalle`
-  ADD PRIMARY KEY (`id_cdetalle`),
-  ADD KEY `prod_cdetalle` (`prod_cdetalle`),
-  ADD KEY `compra_cdetalle` (`compra_cdetalle`);
-
---
--- Indices de la tabla `cond_pago`
---
-ALTER TABLE `cond_pago`
-  ADD PRIMARY KEY (`id_condp`),
-  ADD KEY `sucursal_condp` (`sucursal_condp`);
-
---
--- Indices de la tabla `departamento`
---
-ALTER TABLE `departamento`
-  ADD PRIMARY KEY (`id_depto`),
-  ADD KEY `sucursal_depto` (`sucursal_depto`),
-  ADD KEY `prov_depto` (`prov_depto`);
-
---
--- Indices de la tabla `distrito`
---
-ALTER TABLE `distrito`
-  ADD PRIMARY KEY (`id_dtto`),
-  ADD KEY `sucursal_dtto` (`sucursal_dtto`),
-  ADD KEY `depto_dtto` (`depto_dtto`),
-  ADD KEY `pais_dtto` (`pais_dtto`),
-  ADD KEY `prov_dtto` (`prov_dtto`);
-
---
--- Indices de la tabla `documento`
---
-ALTER TABLE `documento`
-  ADD PRIMARY KEY (`id_doc`),
-  ADD KEY `cod_doc` (`cod_doc`),
-  ADD KEY `tipo_doc` (`tipo_doc`),
-  ADD KEY `pedido_doc` (`pedido_doc`),
-  ADD KEY `fecha_doc` (`fecha_doc`),
-  ADD KEY `status_doc` (`status_doc`),
-  ADD KEY `sucursal_doc` (`sucursal_doc`),
-  ADD KEY `transp_doc` (`transp_doc`),
-  ADD KEY `utransp_doc` (`utransp_doc`),
-  ADD KEY `almacen_doc` (`almacen_doc`),
-  ADD KEY `almacen_doc_2` (`almacen_doc`),
-  ADD KEY `serie_doc` (`numeracion_doc`);
-
---
--- Indices de la tabla `documento_detalle`
---
-ALTER TABLE `documento_detalle`
-  ADD PRIMARY KEY (`id_ddetalle`),
-  ADD KEY `prod_pdetalle` (`prod_ddetalle`),
-  ADD KEY `pedido_pdetalle` (`documento_ddetalle`);
-
---
--- Indices de la tabla `empresa`
---
-ALTER TABLE `empresa`
-  ADD PRIMARY KEY (`id_empresa`);
-
---
--- Indices de la tabla `inventario`
---
-ALTER TABLE `inventario`
-  ADD PRIMARY KEY (`id_inv`),
-  ADD KEY `sucursal_inv` (`sucursal_inv`);
-
---
--- Indices de la tabla `lista_precios`
---
-ALTER TABLE `lista_precios`
-  ADD PRIMARY KEY (`id_lista`),
-  ADD UNIQUE KEY `lista` (`prod_lista`,`tipo_lista`),
-  ADD KEY `tipo_lista` (`tipo_lista`),
-  ADD KEY `prod_lista` (`prod_lista`),
-  ADD KEY `sucursal_lista` (`sucursal_lista`);
-
---
--- Indices de la tabla `menu`
---
-ALTER TABLE `menu`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `parent` (`parent`);
-
---
--- Indices de la tabla `migration`
---
-ALTER TABLE `migration`
-  ADD PRIMARY KEY (`version`);
-
---
--- Indices de la tabla `moneda`
---
-ALTER TABLE `moneda`
-  ADD PRIMARY KEY (`id_moneda`),
-  ADD KEY `sucursal_moneda` (`sucursal_moneda`);
-
---
--- Indices de la tabla `motivo_traslado`
---
-ALTER TABLE `motivo_traslado`
-  ADD PRIMARY KEY (`id_motivo`);
-
---
--- Indices de la tabla `numeracion`
---
-ALTER TABLE `numeracion`
-  ADD PRIMARY KEY (`id_num`),
-  ADD KEY `sucursal_num` (`sucursal_num`),
-  ADD KEY `tipo_num` (`tipo_num`);
-
---
--- Indices de la tabla `pais`
---
-ALTER TABLE `pais`
-  ADD PRIMARY KEY (`id_pais`);
-
---
--- Indices de la tabla `pedido`
---
-ALTER TABLE `pedido`
-  ADD PRIMARY KEY (`id_pedido`,`cod_pedido`,`tipo_pedido`),
-  ADD UNIQUE KEY `cod_pedido` (`cod_pedido`,`tipo_pedido`),
-  ADD KEY `fecha_pedido` (`fecha_pedido`),
-  ADD KEY `clte_pedido` (`clte_pedido`),
-  ADD KEY `vend_pedido` (`vend_pedido`),
-  ADD KEY `moneda_pedido` (`moneda_pedido`),
-  ADD KEY `almacen_pedido` (`almacen_pedido`),
-  ADD KEY `usuario_pedido` (`usuario_pedido`),
-  ADD KEY `sucursal_pedido` (`sucursal_pedido`),
-  ADD KEY `condp_pedido` (`condp_pedido`),
-  ADD KEY `tipo_pedido` (`tipo_pedido`);
-
---
--- Indices de la tabla `pedido_detalle`
---
-ALTER TABLE `pedido_detalle`
-  ADD PRIMARY KEY (`id_pdetalle`),
-  ADD KEY `prod_pdetalle` (`prod_pdetalle`),
-  ADD KEY `pedido_pdetalle` (`pedido_pdetalle`);
-
---
--- Indices de la tabla `precios`
---
-ALTER TABLE `precios`
-  ADD PRIMARY KEY (`codigo`);
-
---
--- Indices de la tabla `producto`
---
-ALTER TABLE `producto`
-  ADD PRIMARY KEY (`id_prod`),
-  ADD UNIQUE KEY `cod_prod` (`cod_prod`),
-  ADD KEY `tipo_prod` (`tipo_prod`),
-  ADD KEY `sucursal_prod` (`sucursal_prod`),
-  ADD KEY `umed_prod` (`umed_prod`);
-
---
--- Indices de la tabla `profile`
---
-ALTER TABLE `profile`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indices de la tabla `proveedor`
---
-ALTER TABLE `proveedor`
-  ADD PRIMARY KEY (`id_prove`),
-  ADD KEY `sucursal_prove` (`sucursal_prove`),
-  ADD KEY `pais_prove` (`pais_prove`),
-  ADD KEY `provi_prove` (`provi_prove`),
-  ADD KEY `depto_prove` (`depto_prove`),
-  ADD KEY `dttp_prove` (`dtto_prove`);
-
---
--- Indices de la tabla `provincia`
---
-ALTER TABLE `provincia`
-  ADD PRIMARY KEY (`id_prov`),
-  ADD KEY `sucursal_prov` (`sucursal_prov`),
-  ADD KEY `fx_pais_prov_idx` (`pais_prov`);
-
---
--- Indices de la tabla `series`
---
-ALTER TABLE `series`
-  ADD PRIMARY KEY (`id_serie`),
-  ADD KEY `sucursal_serie` (`sucursal_serie`);
-
---
--- Indices de la tabla `sucursal`
---
-ALTER TABLE `sucursal`
-  ADD PRIMARY KEY (`id_suc`),
-  ADD KEY `EMPRESA_SUC` (`empresa_suc`);
-
---
--- Indices de la tabla `tipo_cambio`
---
-ALTER TABLE `tipo_cambio`
-  ADD PRIMARY KEY (`id_tipoc`),
-  ADD KEY `sucursal_tipoc` (`sucursal_tipoc`);
-
---
--- Indices de la tabla `tipo_documento`
---
-ALTER TABLE `tipo_documento`
-  ADD PRIMARY KEY (`id_tipod`),
-  ADD KEY `id_tipod` (`id_tipod`),
-  ADD KEY `sucursal_tipod` (`sucursal_tipod`),
-  ADD KEY `doc_doc` (`tipo_tipod`);
-
---
--- Indices de la tabla `tipo_identificacion`
---
-ALTER TABLE `tipo_identificacion`
-  ADD PRIMARY KEY (`id_tipoi`);
-
---
--- Indices de la tabla `tipo_listap`
---
-ALTER TABLE `tipo_listap`
-  ADD PRIMARY KEY (`id_lista`),
-  ADD KEY `sucursal_lista` (`sucursal_lista`);
-
---
--- Indices de la tabla `tipo_movimiento`
---
-ALTER TABLE `tipo_movimiento`
-  ADD PRIMARY KEY (`id_tipom`),
-  ADD KEY `sucursal_tipom` (`sucursal_tipom`);
-
---
--- Indices de la tabla `tipo_producto`
---
-ALTER TABLE `tipo_producto`
-  ADD PRIMARY KEY (`id_tpdcto`);
-
---
--- Indices de la tabla `tipo_proveedor`
---
-ALTER TABLE `tipo_proveedor`
-  ADD PRIMARY KEY (`id_tprov`),
-  ADD KEY `sucursal_tprov` (`sucursal_tprov`);
-
---
--- Indices de la tabla `transaccion`
---
-ALTER TABLE `transaccion`
-  ADD PRIMARY KEY (`id_trans`) USING BTREE,
-  ADD UNIQUE KEY `codigo_trans_2` (`codigo_trans`,`tipo_trans`) USING BTREE,
-  ADD KEY `codigo_trans` (`codigo_trans`),
-  ADD KEY `fecha_trans` (`fecha_trans`),
-  ADD KEY `tipo_trans` (`tipo_trans`),
-  ADD KEY `almacen_trans` (`almacen_trans`),
-  ADD KEY `usuario_trans` (`usuario_trans`),
-  ADD KEY `grupo_trans` (`ope_trans`),
-  ADD KEY `idrefdoc_trans` (`idrefdoc_trans`);
-
---
--- Indices de la tabla `transportista`
---
-ALTER TABLE `transportista`
-  ADD PRIMARY KEY (`id_transp`),
-  ADD KEY `status_transp` (`status_transp`),
-  ADD KEY `sucursal_transp` (`sucursal_transp`);
-
---
--- Indices de la tabla `trans_detalle`
---
-ALTER TABLE `trans_detalle`
-  ADD PRIMARY KEY (`id_detalle`),
-  ADD KEY `trans_detalle` (`trans_detalle`),
-  ADD KEY `prod_detalle` (`prod_detalle`);
-
---
--- Indices de la tabla `unidad_medida`
---
-ALTER TABLE `unidad_medida`
-  ADD PRIMARY KEY (`id_und`),
-  ADD KEY `sucursal_und` (`sucursal_und`);
-
---
--- Indices de la tabla `unidad_transporte`
---
-ALTER TABLE `unidad_transporte`
-  ADD PRIMARY KEY (`id_utransp`),
-  ADD KEY `status_utransp` (`status_utransp`),
-  ADD KEY `sucursal_utransp` (`sucursal_utransp`);
-
---
--- Indices de la tabla `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `empresa` (`empresa`),
-  ADD KEY `sucursal` (`sucursal`);
-
---
--- Indices de la tabla `vendedor`
---
-ALTER TABLE `vendedor`
-  ADD PRIMARY KEY (`id_vendedor`),
-  ADD KEY `zona_vend` (`zona_vend`),
-  ADD KEY `sucursal_vend` (`sucursal_vend`);
-
---
--- Indices de la tabla `zona`
---
-ALTER TABLE `zona`
-  ADD PRIMARY KEY (`id_zona`),
-  ADD KEY `sucursal_zona` (`sucursal_zona`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `almacen`
---
-ALTER TABLE `almacen`
-  MODIFY `id_almacen` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `cliente`
---
-ALTER TABLE `cliente`
-  MODIFY `id_clte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=782;
-
---
--- AUTO_INCREMENT de la tabla `compra`
---
-ALTER TABLE `compra`
-  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=49;
-
---
--- AUTO_INCREMENT de la tabla `compra_detalle`
---
-ALTER TABLE `compra_detalle`
-  MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=857;
-
---
--- AUTO_INCREMENT de la tabla `cond_pago`
---
-ALTER TABLE `cond_pago`
-  MODIFY `id_condp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT de la tabla `departamento`
---
-ALTER TABLE `departamento`
-  MODIFY `id_depto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=217;
-
---
--- AUTO_INCREMENT de la tabla `distrito`
---
-ALTER TABLE `distrito`
-  MODIFY `id_dtto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=218;
-
---
--- AUTO_INCREMENT de la tabla `documento`
---
-ALTER TABLE `documento`
-  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=186;
-
---
--- AUTO_INCREMENT de la tabla `documento_detalle`
---
-ALTER TABLE `documento_detalle`
-  MODIFY `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=1051;
-
---
--- AUTO_INCREMENT de la tabla `empresa`
---
-ALTER TABLE `empresa`
-  MODIFY `id_empresa` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `inventario`
---
-ALTER TABLE `inventario`
-  MODIFY `id_inv` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
-
---
--- AUTO_INCREMENT de la tabla `lista_precios`
---
-ALTER TABLE `lista_precios`
-  MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=809;
-
---
--- AUTO_INCREMENT de la tabla `menu`
---
-ALTER TABLE `menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `moneda`
---
-ALTER TABLE `moneda`
-  MODIFY `id_moneda` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `motivo_traslado`
---
-ALTER TABLE `motivo_traslado`
-  MODIFY `id_motivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=15;
-
---
--- AUTO_INCREMENT de la tabla `numeracion`
---
-ALTER TABLE `numeracion`
-  MODIFY `id_num` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT de la tabla `pais`
---
-ALTER TABLE `pais`
-  MODIFY `id_pais` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=243;
-
---
--- AUTO_INCREMENT de la tabla `pedido`
---
-ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=159;
-
---
--- AUTO_INCREMENT de la tabla `pedido_detalle`
---
-ALTER TABLE `pedido_detalle`
-  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=1934;
-
---
--- AUTO_INCREMENT de la tabla `producto`
---
-ALTER TABLE `producto`
-  MODIFY `id_prod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=1219;
-
---
--- AUTO_INCREMENT de la tabla `profile`
---
-ALTER TABLE `profile`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
-
---
--- AUTO_INCREMENT de la tabla `proveedor`
---
-ALTER TABLE `proveedor`
-  MODIFY `id_prove` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `provincia`
---
-ALTER TABLE `provincia`
-  MODIFY `id_prov` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=30;
-
---
--- AUTO_INCREMENT de la tabla `series`
---
-ALTER TABLE `series`
-  MODIFY `id_serie` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID SERIE', AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT de la tabla `sucursal`
---
-ALTER TABLE `sucursal`
-  MODIFY `id_suc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `tipo_cambio`
---
-ALTER TABLE `tipo_cambio`
-  MODIFY `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=88;
-
---
--- AUTO_INCREMENT de la tabla `tipo_documento`
---
-ALTER TABLE `tipo_documento`
-  MODIFY `id_tipod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT de la tabla `tipo_identificacion`
---
-ALTER TABLE `tipo_identificacion`
-  MODIFY `id_tipoi` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT de la tabla `tipo_listap`
---
-ALTER TABLE `tipo_listap`
-  MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `tipo_movimiento`
---
-ALTER TABLE `tipo_movimiento`
-  MODIFY `id_tipom` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT de la tabla `tipo_producto`
---
-ALTER TABLE `tipo_producto`
-  MODIFY `id_tpdcto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `tipo_proveedor`
---
-ALTER TABLE `tipo_proveedor`
-  MODIFY `id_tprov` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT de la tabla `transaccion`
---
-ALTER TABLE `transaccion`
-  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=172;
-
---
--- AUTO_INCREMENT de la tabla `transportista`
---
-ALTER TABLE `transportista`
-  MODIFY `id_transp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `trans_detalle`
---
-ALTER TABLE `trans_detalle`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2227;
-
---
--- AUTO_INCREMENT de la tabla `unidad_medida`
---
-ALTER TABLE `unidad_medida`
-  MODIFY `id_und` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `unidad_transporte`
---
-ALTER TABLE `unidad_transporte`
-  MODIFY `id_utransp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `user`
---
-ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `vendedor`
---
-ALTER TABLE `vendedor`
-  MODIFY `id_vendedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT de la tabla `zona`
---
-ALTER TABLE `zona`
-  MODIFY `id_zona` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `pr`.`id_prod` AS `id_prod`,`pr`.`cod_prod` AS `cod_prod`,`pr`.`des_prod` AS `des_prod`,`pr`.`compra_prod` AS `compra_prod`,`pr`.`venta_prod` AS `venta_prod`,`pr`.`status_prod` AS `status_prod`,`suc`.`id_suc` AS `sucursal_prod`,`pr`.`tipo_prod` AS `tipo_prod`,concat(`pr`.`cod_prod`,' ',`pr`.`des_prod`,' - ',`um`.`des_und`) AS `texto`,`suc`.`impuesto_suc` AS `impuesto_suc`,`um`.`id_und` AS `id_und`,`um`.`des_und` AS `des_und`,`pr`.`stock_prod` - (select coalesce(sum(`pedido_detalle`.`cant_pdetalle`),0) AS `cant_pedido` from (`pedido_detalle` join `pedido` on(`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`)) where `pedido_detalle`.`prod_pdetalle` = `pr`.`id_prod` and `pedido`.`sucursal_pedido` = `suc`.`id_suc` and `pedido`.`estatus_pedido` = 0) AS `stock_prod` from ((`producto` `pr` join `unidad_medida` `um` on(`um`.`id_und` = `pr`.`umed_prod`)) join `sucursal` `suc` on(`pr`.`sucursal_prod` = `suc`.`id_suc`)) group by `pr`.`id_prod`,`pr`.`cod_prod`,`pr`.`des_prod`,`pr`.`compra_prod`,`pr`.`venta_prod`,`pr`.`status_prod`,`pr`.`stock_prod`,`suc`.`id_suc`,`pr`.`tipo_prod`,`suc`.`impuesto_suc`,`um`.`id_und`,`um`.`des_und` order by `pr`.`cod_prod` ;
 
 --
 -- Restricciones para tablas volcadas
