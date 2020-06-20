@@ -41,6 +41,7 @@ class Documento extends \yii\db\ActiveRecord
     const SALIDA_ANULACION = 10; //Tipo de operacion para las anulaciones de notas de credito SALIDA POR ANULACION
 
     public $cliente;
+    public $tipoDocumento;
     /**
      * {@inheritdoc}
      */
@@ -58,7 +59,7 @@ class Documento extends \yii\db\ActiveRecord
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc'], 'required', 'on' => self::SCENARIO_FACTURA],
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc','transp_doc','utransp_doc','motivo_doc',], 'required', 'on' => self::SCENARIO_GUIA],
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','numeracion_doc','statussunat_doc'], 'integer'],
-            [['fecha_doc','clte_nombre','status_doc','tipo_doc','cliente'], 'safe'],
+            [['fecha_doc','clte_nombre','status_doc','tipo_doc','cliente', 'tipoDocumento'], 'safe'],
             [['obsv_doc','valorr_doc','hash_doc','cliente'], 'string'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
             [['cod_doc'], 'string', 'max' => 10],

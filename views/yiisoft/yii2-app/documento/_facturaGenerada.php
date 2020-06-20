@@ -27,73 +27,45 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
 
         <h1><?= Html::encode($this->title) ?></h1>
         <?php Pjax::begin(['id' => 'grid']); ?>
+
+        <p><?php  echo $this->render('_searchListadoFactura', ['model' => $searchModel]); ?></p>
+
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
-            'filterModel' => $searchModel,
+            // 'filterModel' => $searchModel,
             'columns' => [
                 [
                     'attribute' => 'cod_doc',
-                    'width' => '5%'
+                    'hAlign' => 'center',
+                    'vAlign' => 'middle',
+                    // 'width' => '5%'
                 ],
                 [
-                  'width' => '20%',
+                  // 'width' => '10%',
                   'value' => function($data){
                        return Yii::$app->formatter->asDate($data->fecha_doc, 'dd/MM/yyyy');
                   },
                   'attribute' => 'fecha_doc',
                   'hAlign' => 'center',
                   'vAlign' => 'middle',
-                  'filterType' => GridView::FILTER_DATE_RANGE,
-                  'filterWidgetOptions' => [
-                          'presetDropdown'=>true,
-                          'convertFormat'=>true,
-                          // 'includeMonthsFilter'=>true,
-                          'pluginOptions' => [
-                                'locale' => ['format' => 'd/m/Y'],
-                                'maxDate' => $ultimoDiaMes,
-                                'showDropdowns'=>true
-                          ],
-                          'options' => ['placeholder' => Yii::t( 'app', 'Select range' )."..." ],
-                          'pluginEvents' => [
-                                  "apply.daterangepicker" => "function() { aplicarDateRangeFilter() }",
-                          ],
-                  ],
               ],
                 [
                     'attribute' => 'cliente',
                     'label' => Yii::t('cliente','Customer'),
                     'value' => 'pedidoDoc.cltePedido.nombre_clte',
-                    'filter'=>Cliente::getClienteList(),
-                    'filterType' => GridView::FILTER_SELECT2,
-                    'filterWidgetOptions' => [
-                        'language' => Yii::$app->language,
-                        'theme' => Select2::THEME_DEFAULT,
-                        'pluginOptions' => ['allowClear' => true],
-                        'pluginEvents' =>[],
-                        // 'options' => ['prompt' => '',],
-                    ],
-                    'filterInputOptions' =>[
-                      'prompt' => '*',
-                      'multiple' => true,
-                    ],
-                    'width' => '25%'
+                    // 'width' => '25%',
+                    'hAlign' => 'center',
+                    'vAlign' => 'middle',
+
                 ],
                 [
                     'attribute' => 'tipoDocumento',
                     'label' => Yii::t('tipo_documento','Document type'),
                     'value' => 'tipoDoc.des_tipod',
-                    'filter'=>TipoDocumento::getTipoDocumentoList(NULL, TipoDocumento::ES_DOCUMENTO),
-                    'filterType' => GridView::FILTER_SELECT2,
-                    'filterWidgetOptions'=>[
-                          'language' => Yii::$app->language,
-                          'theme' => Select2::THEME_DEFAULT,
-                          'pluginOptions'=>[
-                                  'allowClear'=>true,
-                                  'multiple'=>true
-                          ],
-                		],
-                    'width' => '15%'
-                ],                
+                    'hAlign' => 'center',
+                    'vAlign' => 'middle',
+                    // 'width' => '15%'
+                ],
                 [
                     'attribute' => 'status_doc',
                     'filter' => $status,
@@ -101,8 +73,12 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                         $status = [ Documento::DOCUMENTO_GENERADO => 'DOCUMENTO GENERADO', Documento::DOCUMENTO_ANULADO => 'DOCUMENTO ANULADO'];
                         return $status[$data->status_doc];
                     },
-                    'width' => '20%'
+                    'hAlign' => 'center',
+                    'vAlign' => 'middle',
+                    // 'width' => '10%'
                 ],
+                'totalimp_doc',
+                'total_doc',
                 [
                     'class' => '\kartik\grid\ActionColumn',
                     'headerOptions' => ['style' => 'color:#337ab7'],
