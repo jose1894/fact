@@ -239,3 +239,5 @@ function aplicarDateRangeFilter() {
 }
 JS;
 $this->registerJs( $js, View::POS_BEGIN);
+
+echo   $this->render('//site/_modalForm',[]);

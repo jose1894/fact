@@ -93,17 +93,16 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                           ],
                 		],
                     'width' => '15%'
+                ],                
+                [
+                    'attribute' => 'status_doc',
+                    'filter' => $status,
+                    'value' => function($data){
+                        $status = [ Documento::DOCUMENTO_GENERADO => 'DOCUMENTO GENERADO', Documento::DOCUMENTO_ANULADO => 'DOCUMENTO ANULADO'];
+                        return $status[$data->status_doc];
+                    },
+                    'width' => '20%'
                 ],
-                'status_doc',
-                // [
-                //     'attribute' => 'status_doc',
-                //     'filter' => $status,
-                //     'value' => function($data){
-                //         $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
-                //         return $status[$data->status_doc];
-                //     },
-                //     'width' => '20%'
-                // ],
                 [
                     'class' => '\kartik\grid\ActionColumn',
                     'headerOptions' => ['style' => 'color:#337ab7'],
@@ -206,3 +205,5 @@ function aplicarDateRangeFilter() {
 }
 JS;
 $this->registerJs( $js, View::POS_BEGIN);
+
+echo   $this->render('//site/_modalForm',[]);

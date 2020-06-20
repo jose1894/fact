@@ -150,7 +150,7 @@ class NotaCreditoController extends Controller
                 $model->cod_doc        = $codigoDoc;
                 $model->numeracion_doc = $id_num;
                 $model->sucursal_doc   = $sucursal;
-                $model->status_doc     = 1;
+                $model->status_doc     = Documento::DOCUMENTO_GENERADO;
 
                 if ( !($flag = $model->save()) ) {
                     $transaction->rollBack();

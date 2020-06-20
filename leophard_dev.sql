@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 18-06-2020 a las 22:24:57
+-- Tiempo de generación: 20-06-2020 a las 16:38:11
 -- Versión del servidor: 10.4.10-MariaDB
 -- Versión de PHP: 7.3.12
 
@@ -3393,7 +3393,7 @@ CREATE TABLE IF NOT EXISTS `documento` (
   KEY `almacen_doc` (`almacen_doc`),
   KEY `almacen_doc_2` (`almacen_doc`),
   KEY `serie_doc` (`numeracion_doc`)
-) ENGINE=InnoDB AUTO_INCREMENT=188 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE LOS DOCUMENTOS: FACTURAS, GUIAS DE REMISION, NOTAS DE CREDITO, NOTAS DE DEBITO';
+) ENGINE=InnoDB AUTO_INCREMENT=189 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE LOS DOCUMENTOS: FACTURAS, GUIAS DE REMISION, NOTAS DE CREDITO, NOTAS DE DEBITO';
 
 --
 -- Volcado de datos para la tabla `documento`
@@ -3583,7 +3583,8 @@ INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `ped
 (184, '0000000187', 3, 9, 156, '2020-06-17', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
 (185, '0000000090', 2, 7, 156, '2020-06-17', '', '380.38', '0.00', '2493.58', NULL, NULL, 1, 0, '3.477', NULL, '20604954241|3|FE01|00000090|380.38|2493.58|2020-06-17|6|10401808235|', -1, NULL, NULL, 2, 1),
 (186, '0000000001', 10, 10, 18, '2020-06-18', NULL, '198.17', '33.64', '1299.14', NULL, NULL, 1, 0, '3.477', NULL, '20604954241|07|NC01|00000001|198.17|1299.14|2020-06-18|6|20600807391', -1, 1, '01', 2, 1),
-(187, '0000000002', 10, 10, 18, '2020-06-18', NULL, '229.74', '0.00', '1506.06', NULL, NULL, 1, 0, '3.477', NULL, '20604954241|07|NC01|00000002|229.74|1506.06|2020-06-18|6|20600807391', -1, 1, '01', 2, 1);
+(187, '0000000002', 10, 10, 18, '2020-06-18', NULL, '229.74', '0.00', '1506.06', NULL, NULL, 1, 0, '3.477', NULL, '20604954241|07|NC01|00000002|229.74|1506.06|2020-06-18|6|20600807391', -1, 1, '01', 2, 1),
+(188, '0000000003', 10, 10, 18, '2020-06-20', NULL, '229.74', '0.00', '1506.06', NULL, NULL, 1, 0, '3.477', NULL, '20604954241|07|NC01|00000003|229.74|1506.06|2020-06-20|6|20600807391', -1, 1, '01', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -3606,7 +3607,7 @@ CREATE TABLE IF NOT EXISTS `documento_detalle` (
   PRIMARY KEY (`id_ddetalle`),
   KEY `prod_pdetalle` (`prod_ddetalle`),
   KEY `pedido_pdetalle` (`documento_ddetalle`)
-) ENGINE=InnoDB AUTO_INCREMENT=1081 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE DOCUMENTOS, PRINCIPALMENTE PENSADO PARA GUARDAR LAS CANTIDADES DE LAS GUIAS DE REMISION';
+) ENGINE=InnoDB AUTO_INCREMENT=1102 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE DOCUMENTOS, PRINCIPALMENTE PENSADO PARA GUARDAR LAS CANTIDADES DE LAS GUIAS DE REMISION';
 
 --
 -- Volcado de datos para la tabla `documento_detalle`
@@ -4693,7 +4694,28 @@ INSERT INTO `documento_detalle` (`id_ddetalle`, `prod_ddetalle`, `cant_ddetalle`
 (1077, 94, '2.00', '111.94', '0.00', '18', 1, 187, '111.94', '223.88'),
 (1078, 118, '3.00', '50.88', '0.00', '18', 1, 187, '50.88', '152.64'),
 (1079, 1211, '1.00', '114.48', '0.00', '18', 1, 187, '114.48', '114.48'),
-(1080, 1213, '1.00', '121.90', '0.00', '18', 1, 187, '121.90', '121.90');
+(1080, 1213, '1.00', '121.90', '0.00', '18', 1, 187, '121.90', '121.90'),
+(1081, 939, '2.00', '13.78', '0.00', '18', 1, 188, '13.78', '27.56'),
+(1082, 652, '2.00', '13.78', '0.00', '18', 1, 188, '13.78', '27.56'),
+(1083, 653, '2.00', '13.78', '0.00', '18', 1, 188, '13.78', '27.56'),
+(1084, 940, '2.00', '13.78', '0.00', '18', 1, 188, '13.78', '27.56'),
+(1085, 656, '2.00', '16.43', '0.00', '18', 1, 188, '16.43', '32.86'),
+(1086, 657, '2.00', '16.43', '0.00', '18', 1, 188, '16.43', '32.86'),
+(1087, 654, '2.00', '16.43', '0.00', '18', 1, 188, '16.43', '32.86'),
+(1088, 655, '2.00', '16.43', '0.00', '18', 1, 188, '16.43', '32.86'),
+(1089, 957, '2.00', '23.32', '0.00', '18', 1, 188, '23.32', '46.64'),
+(1090, 986, '2.00', '20.14', '0.00', '18', 1, 188, '20.14', '40.28'),
+(1091, 1016, '2.00', '23.85', '0.00', '18', 1, 188, '23.85', '47.70'),
+(1092, 1017, '2.00', '23.85', '0.00', '18', 1, 188, '23.85', '47.70'),
+(1093, 975, '2.00', '26.50', '0.00', '18', 1, 188, '26.50', '53.00'),
+(1094, 790, '2.00', '30.00', '0.00', '18', 1, 188, '30.00', '60.00'),
+(1095, 791, '1.00', '31.80', '0.00', '18', 1, 188, '31.80', '31.80'),
+(1096, 792, '1.00', '31.80', '0.00', '18', 1, 188, '31.80', '31.80'),
+(1097, 1209, '3.00', '97.52', '0.00', '18', 1, 188, '97.52', '292.56'),
+(1098, 94, '2.00', '111.94', '0.00', '18', 1, 188, '111.94', '223.88'),
+(1099, 118, '3.00', '50.88', '0.00', '18', 1, 188, '50.88', '152.64'),
+(1100, 1211, '1.00', '114.48', '0.00', '18', 1, 188, '114.48', '114.48'),
+(1101, 1213, '1.00', '121.90', '0.00', '18', 1, 188, '121.90', '121.90');
 
 -- --------------------------------------------------------
 
@@ -5711,12 +5733,12 @@ INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `s
 (2, 7, '0000000039', 1, '00', 1),
 (3, 8, '0000000000', 1, '00', 1),
 (4, 6, '0000000047', 1, '00', 1),
-(5, 4, '0000000056', 1, '00', 1),
+(5, 4, '0000000057', 1, '00', 1),
 (6, 5, '0000000103', 1, '00', 1),
 (7, 2, '0000000090', 1, '01', 1),
 (8, 9, '0000000000', 1, '01', 1),
 (9, 3, '0000000187', 1, '01', 1),
-(10, 10, '0000000002', 1, '01', 1);
+(10, 10, '0000000003', 1, '01', 1);
 
 -- --------------------------------------------------------
 
@@ -8874,7 +8896,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (91, 'LP-AM2', 'CM-9483', 'FARO NEBLI.AMAROK-JETTA III-GOLF V 2001-2016(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (92, 'LP-FU2', 'CM86-MF4', 'FARO NEBLI.PARACH.MITSUB.FUSO 1986(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (93, 'LP-RO2', 'CM-MR04', 'FARO NEBLI.PARACH MITSUB.ROSA(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
-(94, 'LP-TR2', 'CM-9236', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2008...(SET2)CROMADO     ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(94, 'LP-TR2', 'CM-9236', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2008...(SET2)CROMADO     ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
 (95, 'LP-TR2S', 'CM-9242', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2008 S/TAPA..(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
 (96, 'LP-TR4', 'CM-9417', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2016...(SET2)CROMO     ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 65, 1, 1),
 (97, 'LP-AD2', 'CM00-AD4L', 'FARO NEBLI.NISSAN AD WAGON WINGROAD 1998-2005', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
@@ -8898,7 +8920,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (115, 'LP-MH2', 'CM-9255', 'FARO NEBLI.NISS.MARCH 2010 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (116, 'LP-NE2', 'CM-9374', 'FARO NEBLI.NISS.NEO 2004 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (117, 'LP-SW2', 'CM4-SW02', 'FARO NEBLI.SUZ.SWIFT SX4 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(118, 'LP-SW4', 'CM-9197', 'FARO NEBLI.SUZ.SWIFT05-10/SX4 06-13/ALTO 09/CELERIO14/(SET2)UNIVERSAL', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(118, 'LP-SW4', 'CM-9197', 'FARO NEBLI.SUZ.SWIFT05-10/SX4 06-13/ALTO 09/CELERIO14/(SET2)UNIVERSAL', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (120, 'LP-SW4N', 'CM-9310', 'FARO NEBLI.SUZ.SWIFT 2012....(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
 (122, 'LP-AE2', 'CM03-AE02     ', 'FARO NEBLI.SUZ.AERIO 2003 (SET2)               ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
 (123, 'LP-AZ4', 'CM-9262', 'FARO NEBLI.TY AVANZA 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1),
@@ -9175,12 +9197,12 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (649, 'LP-2567 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANT.TOY.HIACE-HILUX VIGO 2005.....             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 109, 1, 1),
 (650, 'LP-3033 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN50,55 84-88                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (651, 'LP-3033 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN50,55 84-88                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
-(652, 'LP-3105 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(653, 'LP-31050L         ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
-(654, 'LP-31070MAL        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
-(655, 'LP-31070MAR        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
-(656, 'LP-3107MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
-(657, 'LP-3107MAR         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
+(652, 'LP-3105 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
+(653, 'LP-31050L         ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
+(654, 'LP-31070MAL        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(655, 'LP-31070MAR        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(656, 'LP-3107MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
+(657, 'LP-3107MAR         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
 (658, 'LP-3190ATG', NULL, 'MANIJA DE COMPUERTA POSTERIOR TOYOTA HILUX RN50,RN55 84-88            ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 90, 1, 1),
 (659, 'LP-31620MAL        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN95 98-04 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (660, 'LP-3162MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN95 98-04 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
@@ -9314,9 +9336,9 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (787, 'LP-KA2500G-RH', 'LP-KA2500H', 'MANIJA DE PTA INT.KIA SPORTAGE 95-02 GRH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (788, 'LP-KA2900A-FL', 'LP-KA2900A', 'MANIJA INT.DELANT KIA BONGO , K-2700 AFL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (789, 'LP-KA2900A-FR', 'LP-KA2900B', 'MANIJA INT.DELANT KIA BONGO , K-2700 AFR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(790, 'LP-KA3004P-F', 'LP-KA3004P', 'MANIJA EXT.DELANT.KIA PICANTO 11-C C/H PFL=PFR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(791, 'LP-KA3004P-FLK', 'LP-KA3004D', 'MANIJA EXT.DELANT.KIA PICANTO 11-C S/H PFLK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(792, 'LP-KA3004P-FRK', 'LP-KA3004R', 'MANIJA EXT.DELANT.KIA PICANTO 11-C S/H PFRK ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1),
+(790, 'LP-KA3004P-F', 'LP-KA3004P', 'MANIJA EXT.DELANT.KIA PICANTO 11-C C/H PFL=PFR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(791, 'LP-KA3004P-FLK', 'LP-KA3004D', 'MANIJA EXT.DELANT.KIA PICANTO 11-C S/H PFLK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
+(792, 'LP-KA3004P-FRK', 'LP-KA3004R', 'MANIJA EXT.DELANT.KIA PICANTO 11-C S/H PFRK ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1),
 (793, 'LP-KA3010P-FL', 'LP-KA3010P', 'MANIJA EXT.PTA DELANT KIA CERATO 09-13 PFL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (794, 'LP-KA3010P-FRK', 'LP-KA3010D', 'MANIJA EXT.PTA DELANT KIA CERATO 09-13 PFRK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (795, 'LP-KA3950P-FL', 'LP-KA3950P', 'MANIJA EXT.DELANT.KIA BONGO-K-2700 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -9463,8 +9485,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (936, 'LP-TY2575G-LH', 'LP-TY2575G', 'MANIJA INT.TOYOTA CORONA PREMIO 98-01 GRIS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (937, 'LP-TY2575G-RH', 'LP-TY2575H', 'MANIJA INT.TOYOTA CORONA PREMIO 98-01 GRIS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (938, 'LP-TY2579G-MR', 'LP-TY2579G', 'MANIJA INT.PTA CORREDIZA TOY.HIACE 2L 85-89 GRIS MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(939, 'LP-3105 L          ', 'LP-3105 L          ', 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
-(940, 'LP-31050R     ', 'LP-31050R     ', 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
+(939, 'LP-3105 L          ', 'LP-3105 L          ', 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1),
+(940, 'LP-31050R     ', 'LP-31050R     ', 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
 (941, 'LP-TY3115A-FL', 'LP-TY3115A', 'MANIJA EXT.DELANTERA TOYOTA HIACE 2L 85-89 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
 (942, 'LP-TY3115A-FR', 'LP-TY3115B', 'MANIJA EXT.DELANTERA TOYOTA HIACE 2L 85-89 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
 (943, 'LP-TY3115A-M', 'LP-TY3115M', 'MANIJA EXT.PTA CORREDIZA TOYOTA HIACE 2L 85-89 A-M', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -9481,7 +9503,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (954, 'LP-TY3180A-FRK', 'LP-TY3180A', '\"MANIJA EXT.PTA.DELANT.TY.H.VIGO,ALTIS YARIS,CAMRY 06-12 FRK\"', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (955, 'LP-TY3180A-RER', 'LP-TY3180E', '\"MANIJA EXT.POST.TY.HIGHLAN.01-07/CAMRY,VIGO, YARIS 06-12(L=R)\"', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
 (956, 'LP-TY3191A-TG', 'LP-TY3191A', 'MANIJA DE TOLVA TOYOTA HILUX  NEGRO VIGO 05 A-TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(957, 'LP-TY3191M-TG', 'LP-TY3191M', 'MANIJA DE TOLVA TOYOTA HILUX  CROMADO VIGO 05 M-TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 156, 1, 1),
+(957, 'LP-TY3191M-TG', 'LP-TY3191M', 'MANIJA DE TOLVA TOYOTA HILUX  CROMADO VIGO 05 M-TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 158, 1, 1),
 (958, 'LP-TY3192A-FL', 'LP-TY3192A', 'MANIJA EXT.DELANT.TOYOTA CORONA 88-92 NEGRO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (959, 'LP-TY3192A-FR', 'LP-TY3192B', 'MANIJA EXT.DELANT.TOYOTA CORONA 88-92 NEGRO FR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (960, 'LP-TY3192A-RL', 'LP-TY3192L', 'MANIJA EXT.POST.TOYOTA CORONA 88-92 NEGRO RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -9499,7 +9521,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (972, 'LP-TY3215A-MR', 'LP-TY3215R', 'MANIJA EXTERIOR PTA CORREDIZA TOY.HIACE 3L 90-97 MR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 75, 1, 1),
 (973, 'LP-TY3215-TL', 'LP-TY3215T', 'GATILLO DE COMPUERTA TOYOTA HIACE 3L 90-04 TL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 45, 1, 1),
 (974, 'LP-32171 R          ', 'LP-32171 R          ', 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005..                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(975, 'LP-TY3217A-MR', 'LP-TY3217A', 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005 MR                 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(975, 'LP-TY3217A-MR', 'LP-TY3217A', 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005 MR                 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
 (976, 'LP-TY3217M-FL', 'LP-TY3217M', 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005...CROMO FL        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (977, 'LP-TY3217M-FR', 'LP-TY3217N', 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005...CROMO FR      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (978, 'LP-TY3240A-FL', 'LP-TY3240A', 'MANIJA EXT.PUERTA DELANTERA TOYOTA DYNA FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -9510,7 +9532,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (983, 'LP-TY3412M-RER', 'LP-TY3412N', 'MANIJA EXT.POST.HILUX REVO 15 CROMADO (RH=LH)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (984, 'LP-TY4143', 'LP-TY4143', 'CHAPA DE PTA MALETERA TOYOTA COROLLA AE100 SW 88-91', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
 (985, 'LP-TY4163-LHD', 'LP-TY4163D', 'CHAPA DE CAPOT TOYOTA HILUX  2005-12 LHD', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
-(986, 'LP-TY4167-LHD', 'LP-TY4167', 'CHAPA DE CAPOT TOYOTA HILUX  89-98 LHD', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(986, 'LP-TY4167-LHD', 'LP-TY4167', 'CHAPA DE CAPOT TOYOTA HILUX  89-98 LHD', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
 (987, 'LP-TY4186', 'LP-TY4186', 'CHAPA DE PUERTA MALETERA TOYOTA COROLLA AE100 93-97', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
 (988, 'LP-TY4187', 'LP-TY4187', 'CHAPA DE PUERTA MALETERA TOYOTA COROLLA 88-92', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
 (989, 'LP-TY4188', 'LP-TY4188', 'CHAPA DE PUERTA MALETERA AUTO TOYOTA COROLLA 98-01', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -9540,8 +9562,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (1013, 'LP-TY6037-RH', 'LP-TY6037R', 'BISAGRA DE CAPOT TOYOTA YARIS 2007-2012 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
 (1014, 'LP-TY6163-LH', 'LP-TY6163L', 'BISAGRA DE CAPOT TOYOTA  HILUX VIGO  2005-2013 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
 (1015, 'LP-TY6163-RH', 'LP-TY6163R', 'BISAGRA DE CAPOT TOYOTA  HILUX VIGO  2005-2013 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
-(1016, 'LP-TY6217-LH', 'LP-TY6217L', 'BISAGRA DE CAPOT TOYOTA HIACE 5L 2005-2014 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
-(1017, 'LP-TY6217-RH', 'LP-TY6217R', 'BISAGRA DE CAPOT TOYOTA HIACE 5L 2005-2014 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
+(1016, 'LP-TY6217-LH', 'LP-TY6217L', 'BISAGRA DE CAPOT TOYOTA HIACE 5L 2005-2014 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 42, 1, 1),
+(1017, 'LP-TY6217-RH', 'LP-TY6217R', 'BISAGRA DE CAPOT TOYOTA HIACE 5L 2005-2014 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 42, 1, 1),
 (1018, 'LP-TY7054-FL', 'LP-TY7054L', 'CHAPA DE PUERTA DELANTERA TOYOTA HILUX 89/95 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
 (1019, 'LP-TY7054-FR', 'LP-TY7054R', 'CHAPA DE PUERTA DELANTERA TOYOTA HILUX 89/95 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
 (1020, 'LP-TYB032G', 'LP-TYB032G', 'MANIJA DE GUANTERA TOYOTA COROLLA AE100 93-97 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 388, 1, 1),
@@ -9581,11 +9603,11 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (1206, 'LP-YS6', 'LP-YS6', 'FARO NEBLI.TY YARIS SEDAN 2017 (SET2) (KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
 (1207, 'LP-CO4T', 'LP-CO4T', 'FARO NEBLI.TY.COROLLA 2011-2013 CROMADO(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 49, 1, 1),
 (1208, 'LP-CO4H', 'LP-CO4H', 'FARO NEBLI.TY.COROLLA 2008-2011 NEGRO(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
-(1209, 'LP-ET4', 'LP-ET4', 'FARO NEBLI.TOYOTA ETIOS SEDAN/HATCHBACK CK2017(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(1209, 'LP-ET4', 'LP-ET4', 'FARO NEBLI.TOYOTA ETIOS SEDAN/HATCHBACK CK2017(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1),
 (1210, 'LP-HX4T', 'LP-HX4T', 'FARO NEBLI.TY.AVANZA 2015(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(1211, 'LP-SU8', 'LP-SU8', 'FARO NEBLINERO SUZUKI UNIVERSAL(SET2-KIT)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(1211, 'LP-SU8', 'LP-SU8', 'FARO NEBLINERO SUZUKI UNIVERSAL(SET2-KIT)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (1212, 'LP-TH4H', 'LP-TH4H', 'FARO NEBLI.TY HIACE 2011-2013(SET2)(KIT COMP)  ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(1213, 'LP-AM4', 'LP-AM4', 'FARO NEBLI.AMAROK 2014(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(1213, 'LP-AM4', 'LP-AM4', 'FARO NEBLI.AMAROK 2014(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (1214, 'LP-FC2', 'LP-FC2', 'FARO NEBLI.CHEV.TRAX/TRACKER`1 2014- 2016...(SET2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (1215, 'LP-FTN2', 'LP-FTN2', 'FARO NEBLI.FORTUNER/HILUX/SW4 2012- 2015...(SET2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
 (1216, 'LP-AF2', 'LP-AF2', 'FARO NEBL.TOY.AXIO FIELDER 2007/COROLLA 2011 CROMO(SET2KIT)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
@@ -9771,7 +9793,7 @@ CREATE TABLE IF NOT EXISTS `tipo_cambio` (
   `sucursal_tipoc` int(11) NOT NULL COMMENT 'SUCURSAL TIPO DE CAMBIO',
   PRIMARY KEY (`id_tipoc`),
   KEY `sucursal_tipoc` (`sucursal_tipoc`)
-) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
+) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
 
 --
 -- Volcado de datos para la tabla `tipo_cambio`
@@ -9863,7 +9885,8 @@ INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_t
 (85, '2020-06-15', NULL, NULL, '3.452', '3.450', '3.452', 1),
 (86, '2020-06-16', NULL, NULL, '3.485', '3.485', '3.485', 1),
 (87, '2020-06-17', NULL, NULL, '3.477', '3.473', '3.477', 1),
-(88, '2020-06-18', NULL, NULL, '3.477', '3.473', '3.477', 1);
+(88, '2020-06-18', NULL, NULL, '3.477', '3.473', '3.477', 1),
+(89, '2020-06-20', NULL, NULL, '3.477', '3.473', '3.477', 1);
 
 -- --------------------------------------------------------
 
@@ -10067,7 +10090,7 @@ CREATE TABLE IF NOT EXISTS `transaccion` (
   KEY `usuario_trans` (`usuario_trans`),
   KEY `grupo_trans` (`ope_trans`),
   KEY `idrefdoc_trans` (`idrefdoc_trans`)
-) ENGINE=InnoDB AUTO_INCREMENT=174 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TRANSACCIONES';
+) ENGINE=InnoDB AUTO_INCREMENT=175 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TRANSACCIONES';
 
 --
 -- Volcado de datos para la tabla `transaccion`
@@ -10231,7 +10254,8 @@ INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_tran
 (170, '0000000054', '2020-06-17', '', 1, 'E', NULL, NULL, '', 1, 1, 2, 1),
 (171, '0000000103', '2020-06-17', NULL, 4, 'S', 185, NULL, NULL, 1, 1, 2, 1),
 (172, '0000000055', '2020-06-18', NULL, 7, 'E', 186, NULL, NULL, 1, 1, 2, 1),
-(173, '0000000056', '2020-06-18', NULL, 7, 'E', 187, NULL, NULL, 1, 1, 2, 1);
+(173, '0000000056', '2020-06-18', NULL, 7, 'E', 187, NULL, NULL, 1, 1, 2, 1),
+(174, '0000000057', '2020-06-20', NULL, 7, 'E', 188, NULL, NULL, 1, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -10282,7 +10306,7 @@ CREATE TABLE IF NOT EXISTS `trans_detalle` (
   PRIMARY KEY (`id_detalle`),
   KEY `trans_detalle` (`trans_detalle`),
   KEY `prod_detalle` (`prod_detalle`)
-) ENGINE=InnoDB AUTO_INCREMENT=2257 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE TRANSACCIONES';
+) ENGINE=InnoDB AUTO_INCREMENT=2278 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE TRANSACCIONES';
 
 --
 -- Volcado de datos para la tabla `trans_detalle`
@@ -12322,7 +12346,28 @@ INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `can
 (2253, 173, 94, 2),
 (2254, 173, 118, 3),
 (2255, 173, 1211, 1),
-(2256, 173, 1213, 1);
+(2256, 173, 1213, 1),
+(2257, 174, 939, 2),
+(2258, 174, 652, 2),
+(2259, 174, 653, 2),
+(2260, 174, 940, 2),
+(2261, 174, 656, 2),
+(2262, 174, 657, 2),
+(2263, 174, 654, 2),
+(2264, 174, 655, 2),
+(2265, 174, 957, 2),
+(2266, 174, 986, 2),
+(2267, 174, 1016, 2),
+(2268, 174, 1017, 2),
+(2269, 174, 975, 2),
+(2270, 174, 790, 2),
+(2271, 174, 791, 1),
+(2272, 174, 792, 1),
+(2273, 174, 1209, 3),
+(2274, 174, 94, 2),
+(2275, 174, 118, 3),
+(2276, 174, 1211, 1),
+(2277, 174, 1213, 1);
 
 -- --------------------------------------------------------
 
