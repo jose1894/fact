@@ -33,28 +33,29 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             // 'filterModel' => $searchModel,
+            'showPageSummary' => true,
             'columns' => [
                 [
                     'attribute' => 'cod_doc',
                     'hAlign' => 'center',
                     'vAlign' => 'middle',
-                    // 'width' => '5%'
+                    'width' => '5%'
                 ],
                 [
-                  // 'width' => '10%',
+                  'width' => '5%',
                   'value' => function($data){
                        return Yii::$app->formatter->asDate($data->fecha_doc, 'dd/MM/yyyy');
                   },
                   'attribute' => 'fecha_doc',
-                  'hAlign' => 'center',
+                  // 'hAlign' => 'center',
                   'vAlign' => 'middle',
               ],
                 [
                     'attribute' => 'cliente',
                     'label' => Yii::t('cliente','Customer'),
                     'value' => 'pedidoDoc.cltePedido.nombre_clte',
-                    // 'width' => '25%',
-                    'hAlign' => 'center',
+                    'width' => '30%',
+                    'hAlign' => 'left',
                     'vAlign' => 'middle',
 
                 ],
@@ -62,23 +63,40 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                     'attribute' => 'tipoDocumento',
                     'label' => Yii::t('tipo_documento','Document type'),
                     'value' => 'tipoDoc.des_tipod',
-                    'hAlign' => 'center',
+                    'hAlign' => 'left',
                     'vAlign' => 'middle',
-                    // 'width' => '15%'
+                    'width' => '15%'
                 ],
                 [
                     'attribute' => 'status_doc',
                     'filter' => $status,
                     'value' => function($data){
-                        $status = [ Documento::DOCUMENTO_GENERADO => 'DOCUMENTO GENERADO', Documento::DOCUMENTO_ANULADO => 'DOCUMENTO ANULADO'];
+                        $status = [ Documento::DOCUMENTO_GENERADO => 'GENERADO', Documento::DOCUMENTO_ANULADO => 'ANULADO'];
                         return $status[$data->status_doc];
                     },
-                    'hAlign' => 'center',
+                    'hAlign' => 'left',
                     'vAlign' => 'middle',
-                    // 'width' => '10%'
+                    'width' => '10%'
                 ],
-                'totalimp_doc',
-                'total_doc',
+                [
+                  'attribute' => 'totalimp_doc',
+                  'value' => function($data) {
+                    return ($data->status_doc !== Documento::DOCUMENTO_ANULADO) ? Yii::$app->formatter->asDecimal($data->totalimp_doc) : Yii::$app->formatter->asDecimal('000');
+                  },
+                  'hAlign' => 'center',
+                  'width' => '10%',
+                  'pageSummary' => true
+                ],
+                [
+                  'attribute' => 'total_doc',
+                  'value' => function($data) {
+                    return ($data->status_doc !== Documento::DOCUMENTO_ANULADO) ? Yii::$app->formatter->asDecimal($data->total_doc) : Yii::$app->formatter->asDecimal('000');
+                  },
+                  'hAlign' => 'center',
+                  'width' => '10%',
+                  'pageSummary' => true,
+                ],
+                // 'total_doc',
                 [
                     'class' => '\kartik\grid\ActionColumn',
                     'headerOptions' => ['style' => 'color:#337ab7'],

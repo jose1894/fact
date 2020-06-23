@@ -6,6 +6,8 @@ use kartik\daterange\DateRangePicker;
 use kartik\select2\Select2;
 use app\models\Cliente;
 use app\models\TipoDocumento;
+use app\models\Documento;
+use yii\web\View ;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\DocumentoSearch */
@@ -29,7 +31,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
           'addClass' => 'form-control ',
           'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-barcode"></i>']]])->textInput(['maxlength' => true]) ?>
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
         <?= $form->field($model, 'fecha_doc',[
             'addClass' => 'form-control ',
             // 'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-calendar"></i>']]
@@ -40,7 +42,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
               // 'includeMonthsFilter'=>true,
               'pluginOptions' => [
                     'locale' => ['format' => 'd/m/Y'],
-                    'maxDate' => $ultimoDiaMes,
+                    'maxDate' => 0,
                     'showDropdowns'=>true
               ],
               'options' => ['placeholder' => Yii::t( 'app', 'Select range' )."..." ],
@@ -49,6 +51,19 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
               // ],
           ]) ?>
         </div>
+
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+        <?= $form->field($model, 'status_doc',[
+            'addClass' => 'form-control ',
+            'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-ticket"></i>']]
+          ])->dropDownList([
+            // '' => '',
+            Documento::DOCUMENTO_GENERADO => 'GENERADO',
+            Documento::DOCUMENTO_ANULADO => 'ANULADO'
+          ],
+          ['prompt' => Yii::t('app','Select...')]) ?>
+        </div>
+
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
           <?= $form->field($model, 'tipoDocumento',[
             'addClass' => 'form-control ',
@@ -67,7 +82,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
               ],
               ]) ?>
       </div>
-      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
           <?= $form->field($model, 'cliente',[
             'addClass' => 'form-control ',
             ])->widget(Select2::classname(), [
@@ -84,30 +99,26 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                 'multiple' => true
               ],
               ]) ?>
-      </div>
   </div>
-
-
-    <!-- <?= $form->field($model, 'pedido_doc') ?> -->
-
-
-    <?php // echo $form->field($model, 'obsv_doc') ?>
-
-    <?php // echo $form->field($model, 'totalimp_doc') ?>
-
-    <?php // echo $form->field($model, 'totaldsc_doc') ?>
-
-    <?php // echo $form->field($model, 'total_doc') ?>
-
-    <?php // echo $form->field($model, 'status_doc') ?>
-
-    <?php // echo $form->field($model, 'sucursal_doc') ?>
-
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
-
 </div>
+<div class="form-group">
+  <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
+  <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default', 'id' => 'reset']) ?>
+</div>
+<hr>
+<?php ActiveForm::end();
+$js = <<<JS
+$('#reset').on('click', function() {
+  console.log('reset');
+  $( '.range-value' ).trigger('cancel.daterangepicker');
+  $( '#documentosearch-tipodocumento' ).val(null).trigger("change");
+  $( '#documentosearch-cliente' ).val(null).trigger("change");
+  $( '#documentosearch-status_doc' ).val(null).trigger("change");
+});
+
+$('.range-value').on('cancel.daterangepicker', function(ev, picker) {
+  //do something, like clearing an input
+  $('.range-value').val('');
+});
+JS;
+$this->registerJs($js,View::POS_LOAD);

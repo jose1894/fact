@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 20-06-2020 a las 16:38:11
+-- Tiempo de generación: 22-06-2020 a las 21:53:11
 -- Versión del servidor: 10.4.10-MariaDB
 -- Versión de PHP: 7.3.12
 
@@ -9793,7 +9793,7 @@ CREATE TABLE IF NOT EXISTS `tipo_cambio` (
   `sucursal_tipoc` int(11) NOT NULL COMMENT 'SUCURSAL TIPO DE CAMBIO',
   PRIMARY KEY (`id_tipoc`),
   KEY `sucursal_tipoc` (`sucursal_tipoc`)
-) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
 
 --
 -- Volcado de datos para la tabla `tipo_cambio`
@@ -9886,7 +9886,8 @@ INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_t
 (86, '2020-06-16', NULL, NULL, '3.485', '3.485', '3.485', 1),
 (87, '2020-06-17', NULL, NULL, '3.477', '3.473', '3.477', 1),
 (88, '2020-06-18', NULL, NULL, '3.477', '3.473', '3.477', 1),
-(89, '2020-06-20', NULL, NULL, '3.477', '3.473', '3.477', 1);
+(89, '2020-06-20', NULL, NULL, '3.477', '3.473', '3.477', 1),
+(90, '2020-06-22', NULL, NULL, '3.477', '3.473', '3.477', 1);
 
 -- --------------------------------------------------------
 
