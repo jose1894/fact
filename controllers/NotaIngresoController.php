@@ -7,6 +7,7 @@ use app\models\Almacen;
 use app\models\NotaIngreso;
 use app\models\Producto;
 use app\models\Compra;
+use app\models\TipoMovimiento;
 use app\models\User;
 use app\models\NotaIngresoDetalle;
 use app\models\NotaIngresoSearch;
@@ -91,7 +92,7 @@ class NotaIngresoController extends Controller
           $model->usuario_trans = Yii::$app->user->id;
           $model->ope_trans = $model::OPE_TRANS;
           $num = Numeracion::getNumeracion( $model::NOTA_INGRESO );
-          $codigo = intval( $num['numero_num'] ) + 1;
+          $codigo = intval( $num[0]['numero_num'] ) + 1;
           $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
           $model->codigo_trans = $codigo;
 
@@ -132,7 +133,7 @@ class NotaIngresoController extends Controller
                       }
 
                       if ($flag) {
-                        $numeracion = Numeracion::findOne($num['id_num']);
+                        $numeracion = Numeracion::findOne($num[0]['id_num']);
                         $numeracion->numero_num = $codigo;
                         $numeracion->save();
                         $transaction->commit();
@@ -298,8 +299,13 @@ class NotaIngresoController extends Controller
       $nota = Yii::$app->request->post( 'NotaIngreso' );
 
 
-      if ( $nota['codigo_trans'] ){
-        $model = NotaIngreso::findOne(['codigo_trans' => $nota['codigo_trans']]);
+      if ( $nota['id_trans'] ){
+
+        $model = NotaIngreso::find()
+        ->where([
+          'id_trans' => $nota['id_trans'],
+          'ope_trans' => NotaIngreso::OPE_TRANS
+          ])->one();
 
         if ( $model->status_trans == 1 )
         {
@@ -349,7 +355,7 @@ class NotaIngresoController extends Controller
                       if ( !empty( $compra ) ) {
                         $compra->save();
                       }
-                      
+
                       $transaction->commit();
                       //return $this->redirect(['view', 'id' => $model->id_empresa]);
                       Yii::$app->response->format = Response::FORMAT_JSON;

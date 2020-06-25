@@ -288,9 +288,9 @@ class NotaSalidaController extends Controller
       $nota = Yii::$app->request->post( 'NotaSalida' );
 
 
-      if ( $nota['codigo_trans'] ){
+      if ( $nota['id_trans'] ){
         $model = NotaSalida::findOne([
-          'codigo_trans' => $nota['codigo_trans'],
+          'id_trans' => $nota['id_trans'],
           'ope_trans' => NotaSalida::OPE_TRANS
         ]);
 

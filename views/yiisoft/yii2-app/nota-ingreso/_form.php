@@ -62,6 +62,7 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
         <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true]); ?>
         <div class="row">
           <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+            <?php echo Html::activeHiddenInput($model, "id_trans"); ?>
             <?= $form
             ->field($model, 'codigo_trans',['addClass' => 'form-control '])
             ->textInput([
@@ -507,30 +508,30 @@ $( "body" ).on( "click", buttonCancel, function(){
 $js2 = "
 $( \"#notaingreso-tipo_trans\" ).on(\"change\", function(){
     let val = $( \"#notaingreso-tipo_trans option:selected\" ).val();
-    
-    if( val == " . Compra::TIPO_MOVIMIENTO . "){            
+
+    if( val == " . Compra::TIPO_MOVIMIENTO . "){
         $( this ).parent().parent().switchClass( \"col-lg-6\", \"col-lg-3\", 1000, \"easeInOutQuad\" );
         $( this ).parent().parent().switchClass( \"col-md-6\", \"col-md-3\", 1000, \"easeInOutQuad\" );
         $( this ).parent().parent().switchClass( \"col-sm-6\", \"col-sm-3\", 1000, \"easeInOutQuad\" );
-        setTimeout( function(){        
+        setTimeout( function(){
             $( \"#nro_compra\" ).css( \"display\", \"block\");
         }, 1050);
-        
+
         $.post('" . Url::to(['compra/ajax-compras']) . "', function( data ) {
             $(\"#idrefdoc_trans\").empty();
-            let s = new Option('" . Yii::t('app','Select') . "', '');                
+            let s = new Option('" . Yii::t('app','Select') . "', '');
             $(s).html('" . Yii::t('app','Select') . "');
             $('#idrefdoc_trans').append(s);
-            $.each(data, function(key, value) {  
-                option = '<option value=\"' + value.id_compra + '\" data-details=\'' + JSON.stringify(value.details) + '\'>' + value.cod_compra + '</option>';                
+            $.each(data, function(key, value) {
+                option = '<option value=\"' + value.id_compra + '\" data-details=\'' + JSON.stringify(value.details) + '\'>' + value.cod_compra + '</option>';
                 $('#idrefdoc_trans').append(option);
-             });              
+             });
         } );
-        
+
         $(\".add-item\").hide( \"drop\", { direction: \"down\" }, 1000 );
 
-        
-        
+
+
     } else {
         $( \"#nro_compra\" ).css( \"display\", \"none\");
         $( this ).parent().parent().switchClass( \"col-lg-3\", \"col-lg-6\", 1000, \"easeInOutQuad\" );
@@ -541,9 +542,9 @@ $( \"#notaingreso-tipo_trans\" ).on(\"change\", function(){
         $( \" .table-body select[id$='prod_detalle']\").prop('readonly',false);
         $( \" .table-body select[id$='cant_detalle']\").prop('readonly',false);
         $( \" .table-body .delete-item\").prop('disabled',false);
-        $( \".table-body select[id$='prod_detalle']\").val(null).change();         
+        $( \".table-body select[id$='prod_detalle']\").val(null).change();
     }
-    $( \".table-body\" ).empty(); 
+    $( \".table-body\" ).empty();
 });
 ";
 
@@ -551,24 +552,24 @@ $js2 .= '
 $("#idrefdoc_trans").on("change", function( e ){
     let option = $( "#" + this.id + " option:selected" );
     let details =  $(option).data("details");
-    let options = [];    
-    
+    let options = [];
+
     $( ".table-body" ).empty();
-    
+
     $.each(details, function(i,value){
         $( ".add-item" ).trigger("click");
-        let s = new Option(value.des_prod, value.id_prod);                
+        let s = new Option(value.des_prod, value.id_prod);
         $(s).html(value.des_prod);
         options.push( $(s) );
     });
-    
+
     $( ".table-body select[id$=\'prod_detalle\']").append(options);
-        
+
     $.each(options, function( i,value){
-        $( "select#notaingresodetalle-" + i + "-prod_detalle" ).val(value.val()).trigger("change");        
-        $( "input#notaingresodetalle-" + i + "-cant_detalle" ).val(details[i].cant_detalle);        
+        $( "select#notaingresodetalle-" + i + "-prod_detalle" ).val(value.val()).trigger("change");
+        $( "input#notaingresodetalle-" + i + "-cant_detalle" ).val(details[i].cant_detalle);
     });
-    
+
     $( ".table-body select[id$=\'prod_detalle\']").attr("readonly", true);
     $( ".table-body input[id$=\'cant_detalle\']").prop(\'readonly\',true);
     $( ".table-body .remove-item").prop(\'disabled\',true);

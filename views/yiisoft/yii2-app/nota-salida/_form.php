@@ -32,6 +32,7 @@ if ( !$model->status_trans ) {
         <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true]); ?>
         <div class="row">
           <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <?php echo Html::activeHiddenInput($model, "id_trans"); ?>
             <?= $form
             ->field($model, 'codigo_trans',['addClass' => 'form-control '])
             ->textInput([

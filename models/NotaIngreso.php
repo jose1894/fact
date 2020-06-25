@@ -21,7 +21,7 @@ class NotaIngreso extends \yii\db\ActiveRecord
     const STATUS_APPROVED = 1;
     const STATUS_CANCELED = 2;
     const OPE_TRANS = 'E';
-    const NOTA_INGRESO = 'NI';
+    const NOTA_INGRESO = 'NI';       
     /**
      * {@inheritdoc}
      */

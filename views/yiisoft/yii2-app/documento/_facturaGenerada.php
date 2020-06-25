@@ -34,7 +34,25 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
             'dataProvider' => $dataProvider,
             // 'filterModel' => $searchModel,
             'showPageSummary' => true,
+            'floatHeader'=>true,
+            'toolbar' => [
+                '{export}',
+                '{toggleData}'
+            ],
+            'panel' => [
+                'heading'=>'<h3 class="panel-title"><i class="fa fa-book"></i> ' . Yii::t('documento','Document list') . '</h3>',
+                // 'type'=>'success',
+                // 'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Create Country', ['create'], ['class' => 'btn btn-success']),
+                // 'after'=>Html::a('<i class="fa fa-refresh"></i> ' . Yii::t('app','Refresh '), ['listado-factura'], ['class' => 'btn btn-success']),
+                // 'footer'=>true,
+            ],
             'columns' => [
+                [
+                  'value' => 'numeracion.tipoDocumento.abrv_tipod',
+                  'hAlign' => 'center',
+                  'vAlign' => 'middle',
+                  'width' => '3%'
+                ],
                 [
                     'attribute' => 'cod_doc',
                     'hAlign' => 'center',
@@ -65,7 +83,9 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                     'value' => 'tipoDoc.des_tipod',
                     'hAlign' => 'left',
                     'vAlign' => 'middle',
-                    'width' => '15%'
+                    'width' => '10%',
+                    // 'group' => true,  // enable grouping
+                    // 'subGroupOf' => 1 // supplier column index is the parent group
                 ],
                 [
                     'attribute' => 'status_doc',
@@ -76,25 +96,29 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                     },
                     'hAlign' => 'left',
                     'vAlign' => 'middle',
-                    'width' => '10%'
+                    'width' => '10%',
+                    'pageSummary' => Yii::t('app','Page Summary'),
+                    'pageSummaryOptions' => ['class' => 'text-right'],
                 ],
                 [
                   'attribute' => 'totalimp_doc',
                   'value' => function($data) {
-                    return ($data->status_doc !== Documento::DOCUMENTO_ANULADO) ? Yii::$app->formatter->asDecimal($data->totalimp_doc) : Yii::$app->formatter->asDecimal('000');
+                    return ($data->status_doc !== Documento::DOCUMENTO_ANULADO) ? ($data->tipo_doc === NotaCredito::TIPODOC_NCREDITO ? -1 * $data->totalimp_doc : $data->totalimp_doc) : '0';
                   },
                   'hAlign' => 'center',
                   'width' => '10%',
+                  'format' => ['decimal', 2],
                   'pageSummary' => true
                 ],
                 [
                   'attribute' => 'total_doc',
                   'value' => function($data) {
-                    return ($data->status_doc !== Documento::DOCUMENTO_ANULADO) ? Yii::$app->formatter->asDecimal($data->total_doc) : Yii::$app->formatter->asDecimal('000');
+                    return ($data->status_doc !== Documento::DOCUMENTO_ANULADO) ? ($data->tipo_doc === NotaCredito::TIPODOC_NCREDITO ? -1 * $data->total_doc : $data->total_doc) : '0';
                   },
                   'hAlign' => 'center',
                   'width' => '10%',
                   'pageSummary' => true,
+                  'format' => ['decimal', 2],
                 ],
                 // 'total_doc',
                 [
@@ -154,6 +178,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                         }
                     }
                 ],
+
             ],
         ]); ?>
         <?php Pjax::end(); ?>

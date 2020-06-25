@@ -103,12 +103,13 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
 </div>
 <div class="form-group">
   <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
-  <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default', 'id' => 'reset']) ?>
+  <?= Html::a('<i class="fa fa-refresh"></i> ' . Yii::t('app','Refresh '), ['listado-factura'], ['class' => 'btn btn-success'])?>
 </div>
 <hr>
 <?php ActiveForm::end();
 $js = <<<JS
-$('#reset').on('click', function() {
+$('#reset').on('click', function(e) {
+  e.preventDefault();
   console.log('reset');
   $( '.range-value' ).trigger('cancel.daterangepicker');
   $( '#documentosearch-tipodocumento' ).val(null).trigger("change");

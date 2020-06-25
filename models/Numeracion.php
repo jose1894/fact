@@ -67,7 +67,7 @@ class Numeracion extends \yii\db\ActiveRecord
 
     public static function getSerieNum( $tipo )
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+      $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condicion = [
           "status_num = :status and sucursal_num = :sucursal and tipo_documento.abrv_tipod like :tipo",
@@ -96,7 +96,7 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
     public static function getNumeracion( $tipo, $serie = false )
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+      $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       if ( $serie ){
 
@@ -133,7 +133,7 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
     public static function getNumeracionById( $id ){
         $numeracion = [];
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
         $numeracion = Numeracion::find()
             ->joinWith('tipoDocumento')
