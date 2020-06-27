@@ -91,7 +91,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                     'attribute' => 'status_doc',
                     'filter' => $status,
                     'value' => function($data){
-                        $status = [ Documento::DOCUMENTO_GENERADO => 'GENERADO', Documento::DOCUMENTO_ANULADO => 'ANULADO'];
+                        $status = [ Documento::GUIA_GENERADA => 'GUIA GENERADA', Documento::DOCUMENTO_GENERADO => 'GENERADO', Documento::DOCUMENTO_ANULADO => 'ANULADO'];
                         return $status[$data->status_doc];
                     },
                     'hAlign' => 'left',
