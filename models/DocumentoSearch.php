@@ -140,25 +140,22 @@ class DocumentoSearch extends Documento
               ]);
         }
 
-        // echo $query->createCommand()->sql;
+        //echo $query->createCommand()->sql;
         return $dataProvider;
     }
 
     /* Selecciona el conteo total de facturas generadas */
     public static function showCountFactura()
     {
+
         $sucursal = Yii::$app->user->identity->profiles->sucursal;
-        $query = Documento::find()
+        return Documento::find()
                 // ->select( ["COUNT(*) as total"] )
                 ->where('sucursal_doc = :sucursal',[':sucursal' => $sucursal])
                 ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
                 ->andWhere('tipo_doc = :tipo',[':tipo' => Documento::TIPODOC_FACTURA])
-                ->andWhere('fecha_doc = "' . date('Y-m-d') . '"')
+                ->andWhere('fecha_doc between "' . date('Y-m-01') . '" and "' . date('Y-m-d') . '"')
                 ->all();
-
-      return $dataProvider = new ActiveDataProvider([
-           'query' => $query,
-       ]);
     } /* fin de funcion showCountFactura*/
 
     /**

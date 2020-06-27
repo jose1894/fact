@@ -40,5 +40,5 @@ return [
     'G.Price' => 'P.Bruto',
     'Orders list' => 'Listado de pedidos',
     'U.Price' => 'P.Unitario',
-	'New orders' => 'Nuevos pedidos',
+	  'New orders on' => 'Nuevos pedidos en',
 ];

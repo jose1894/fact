@@ -12,6 +12,7 @@ return [
     'Are you sure to delete this product?' => '¿Está seguro de eliminar este producto?',
     'Product' => 'Producto',
     'Purchase order' => 'Orden de compra',
+    'Purchase orders on' => 'Ordenes de compra en',
     'Purchase order list' => 'Lista de ordenes de compra',
     'Create purchase order' => 'Crear orden de compra',
     'Purchase order: {number} / {name}' => 'Orden de compra: {number} / {name}',

@@ -82,17 +82,13 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
     /* Selecciona el conteo total de compras generadas */
     public static function showCountCompra()
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
-        $query = Compra::find()
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
+        return Compra::find()
                 // ->select( ["COUNT(*) as total"] )
                 ->where('sucursal_compra = :sucursal',[':sucursal' => $sucursal])
                 ->andWhere(['estatus_compra' => [Documento::DOCUMENTO_GENERADO]])
                 // ->andWhere('tipo_compra = :tipo',[':tipo' => Documento::TIPODOC_FACTURA])
-                ->andWhere('fecha_compra = "' . date('Y-m-d') . '"')
-                ->all();
-
-      return $dataProvider = new ActiveDataProvider([
-           'query' => $query,
-       ]);
+                ->andWhere('fecha_compra between "' . date('Y-m-01') . '" and "' . date('Y-m-d') . '"')
+                ->all();      
     } /* fin de funcion showCountCompra*/
 }

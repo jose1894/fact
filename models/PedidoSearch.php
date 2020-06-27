@@ -213,17 +213,17 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
     /* Selecciona el conteo total de pedidos pendientes */
     public static function showCountPedidos()
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
-        $query = Pedido::find()
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
+        return  Pedido::find()
                 // ->select( ["COUNT(*) as total"] )
                 ->where('sucursal_pedido = :sucursal',[':sucursal' => $sucursal])
                 ->andWhere(['estatus_pedido' => [Pedido::STATUS_INACTIVO,Pedido::GUIA_GENERADA]])
                 ->andWhere('tipo_pedido = :tipo',[':tipo' => Pedido::PEDIDO])
-                ->andWhere('fecha_pedido = "' . date('Y-m-d') . '"')
+                ->andWhere('fecha_pedido between "' . date('Y-m-01') . '" and "' . date('Y-m-d') . '"')
                 ->all();
 
-      return $dataProvider = new ActiveDataProvider([
-           'query' => $query,
-       ]);
+      // return $dataProvider = new ActiveDataProvider([
+      //      'query' => $query,
+      //  ]);
     } /* fin de funcion showPendientes*/
 }

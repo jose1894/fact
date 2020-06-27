@@ -16,6 +16,8 @@ $this->title = 'Resumen';
 //echo "ak";
 // echo Helper::checkRoute('/empresa/create');
 
+$date = DateTime::createFromFormat("d/m/Y", date("d/m/Y"));
+$mes = Yii::t('app',strftime("%B",$date->getTimestamp()))
 ?>
 <div class="site-index">
 
@@ -28,10 +30,10 @@ $this->title = 'Resumen';
                   <div class="inner">
                     <h3><?php
                       $model = PedidoSearch::showCountPedidos();
-                      echo count($model->query);
+                      // print_r($model);
+                      echo count($model);
                       ?></h3>
-
-                    <p><?= Yii::t('pedido', 'New orders')?></p>
+                    <p><?= Yii::t('pedido', 'New orders on').' '. $mes ?></p>
                   </div>
                   <div class="icon">
       			  <i class="ion ion-ios-albums-outline"></i>
@@ -46,10 +48,10 @@ $this->title = 'Resumen';
                   <div class="inner">
                     <h3><?php
                       $model = DocumentoSearch::showCountFactura();
-                      echo count($model->query);
+                      echo count($model);
                       ?></h3>
 
-                    <p><?= Yii::t('documento', 'Invoices')?></p>
+                    <p><?= Yii::t('documento', 'Documents on') . ' ' . $mes?></p>
                   </div>
                   <div class="icon">
                     <i class="ion ion-stats-bars"></i>
@@ -64,10 +66,10 @@ $this->title = 'Resumen';
                   <div class="inner">
                     <h3><?php
                       $model = CompraSearch::showCountCompra();
-                      echo count($model->query);
+                      echo count($model);
                       ?></h3>
 
-                    <p><?= Yii::t('compra', 'Purchase order')?></p>
+                    <p><?= Yii::t('compra', 'Purchase orders on') . ' '. $mes?></p>
                   </div>
                   <div class="icon">
                     <i class="ion ion-bag"></i>
