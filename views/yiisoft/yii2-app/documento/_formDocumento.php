@@ -811,8 +811,7 @@ function setPrices( value = null, row, tipo_lista ) {
           id: value,
           tipo_listap: tipo_lista,
           id_pedido:' . $modelPedido->id_pedido . '
-        },
-        async:false,
+        },        
         success: function( data ) {
           if ( data.results ) {
             let precioLista = data.results[ 0 ].precio;

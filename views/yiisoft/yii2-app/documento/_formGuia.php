@@ -800,8 +800,7 @@ function setPrices( value = null, row, tipo_lista ) {
         data:{
           id: value,
           tipo_listap: tipo_lista
-        },
-        async:false,
+        },        
         success: function( data ) {
           if ( data.results ) {
             let precioLista = data.results[ 0 ].precio;

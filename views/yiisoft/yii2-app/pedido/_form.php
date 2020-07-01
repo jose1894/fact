@@ -482,8 +482,7 @@ $( "#pedido-clte_pedido" ).on( "change",function () {
   $.ajax({
     url: "'. Url::to(['cliente/cliente-list']).'",
     method: "GET",
-    data:{ id : $(this).val()},
-    async: false,
+    data:{ id : $(this).val()},    
     success: function( cliente ) {
       console.log("cliente");
       cliente = cliente[ 0 ];
@@ -496,7 +495,11 @@ $( "#pedido-clte_pedido" ).on( "change",function () {
           tpl = cliente.tpl;
 
       $( "#pedido-direccion_pedido" ).val( textDirecc );
-      $( "#pedido-condp_pedido" ).val( condp );
+
+      if ( !$( "#pedido-condp_pedido" ).val() ) {
+        $( "#pedido-condp_pedido" ).val( condp );
+      }
+
       $( "#pedido-vend_pedido" ).val( vendedor );
       $( "#pedido-tipo_listap" ).val( tpl );
       $( "#pedido-condp_pedido" ).trigger( "change" );
@@ -535,7 +538,7 @@ $('#pedido_tipo  input[type="radio"]').iCheck({
   radioClass   : 'iradio_flat-green'
 });
 
-$( '.table-body' ).on('select2:select',"select[id$='prod_pdetalle']",function() {
+  $( '.table-body' ).on('select2:select',"select[id$='prod_pdetalle']",function() {
 	let _currSelect = $( this );
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
@@ -742,9 +745,8 @@ JS
             id: value,
             tipo_listap: tipo_lista
           },
-          async:false,
           success: function( data ) {
-            if ( data.results ) {
+            if ( data.results.length ) {
               let precioLista = data.results[ 0 ].precio;
               let impuestoDetalle = data.results[ 0 ].precio - data.results[ 0 ].precio / ( IMPUESTO + 1 );
 

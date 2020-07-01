@@ -41,7 +41,7 @@ class CompraSearch extends Compra
      */
     public function search($params)
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Compra::find()
                  ->where('sucursal_compra = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);
@@ -89,6 +89,6 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
                 ->andWhere(['estatus_compra' => [Documento::DOCUMENTO_GENERADO]])
                 // ->andWhere('tipo_compra = :tipo',[':tipo' => Documento::TIPODOC_FACTURA])
                 ->andWhere('fecha_compra between "' . date('Y-m-01') . '" and "' . date('Y-m-d') . '"')
-                ->all();      
+                ->all();
     } /* fin de funcion showCountCompra*/
 }

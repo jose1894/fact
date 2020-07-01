@@ -58,21 +58,21 @@ class DocumentoController extends Controller
             ],
         ];
     }
-
-    /**
-     * Lists all Documento models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new DocumentoSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+    // 
+    // /**
+    //  * Lists all Documento models.
+    //  * @return mixed
+    //  */
+    // public function actionIndex()
+    // {
+    //     $searchModel = new DocumentoSearch();
+    //     $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    //
+    //     return $this->render('index', [
+    //         'searchModel' => $searchModel,
+    //         'dataProvider' => $dataProvider,
+    //     ]);
+    // }
 
 
     /**
