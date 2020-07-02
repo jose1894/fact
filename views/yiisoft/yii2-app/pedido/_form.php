@@ -229,7 +229,8 @@ if ( $model->isNewRecord ) {
             ]); ?>
 
             <div class="row">
-                <div class="col-sm-5 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
+                <div class="col-sm-1 col-xs-12">#</div>
+                <div class="col-sm-4 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
                 <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
                 <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'L. price')?></div>
                 <!--th class="col-xs-1"><?= Yii::t( 'pedido', 'Tax')?></th-->
@@ -244,7 +245,10 @@ if ( $model->isNewRecord ) {
             <div class="table-body"><!-- widgetContainer -->
             <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
                     <div class="row detalle-item"><!-- widgetBody -->
-                      <div class="col-sm-5 col-xs-12">
+                      <div class="col-sm-1 col-xs-12">
+                        <?= ( $index + 1 )?>
+                      </div>
+                      <div class="col-sm-4 col-xs-12">
                       <?php
 
                       $resultsJs = '
@@ -283,10 +287,10 @@ if ( $model->isNewRecord ) {
                             'theme' => Select2::THEME_DEFAULT,
                             'pluginOptions' => [
                                 //'allowClear' => true,
-                                'minimumInputLength' => 3,
+                                'minimumInputLength' => 4,
                                 'language' => [
                                     'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
-                                    'inputTooShort' => new JsExpression("function() {  return '".Yii::t('app','Please input {number} or more characters', [ 'number'=> 3 ])."';}"),
+                                    'inputTooShort' => new JsExpression("function() {  return '".Yii::t('app','Please input {number} or more characters', [ 'number'=> 4 ])."';}"),
                                 ],
                             'ajax' => [
                                 'url' => $url,
@@ -452,6 +456,10 @@ $(".dynamicform_wrapper").on("afterInsert", function(e, item) {
     });
     let row = $(".table-body select").length - 1;
     $( "#pedidodetalle-" + row + "-prod_pdetalle" ).val(null).trigger("change");
+
+    jQuery(".dynamicform_wrapper .nro").each(function(index) {
+        jQuery(this).html(index + 1)
+    });
 });
 $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
   if ( confirm("'.Yii::t('producto','Are you sure to delete this product?').'") ) {
@@ -463,6 +471,10 @@ $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
 $(".dynamicform_wrapper").on("afterDelete", function(e) {
     console.log("Deleted item!");
     calculateTotals( IMPUESTO );
+
+    jQuery(".dynamicform_wrapper .nro").each(function(index) {
+        jQuery(this).html(index + 1)
+    });
 });
 $(".dynamicform_wrapper").on("limitReached", function(e, item) {
     alert("Limit reached");
@@ -482,7 +494,7 @@ $( "#pedido-clte_pedido" ).on( "change",function () {
   $.ajax({
     url: "'. Url::to(['cliente/cliente-list']).'",
     method: "GET",
-    data:{ id : $(this).val()},    
+    data:{ id : $(this).val()},
     success: function( cliente ) {
       console.log("cliente");
       cliente = cliente[ 0 ];

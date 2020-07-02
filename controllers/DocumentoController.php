@@ -58,7 +58,7 @@ class DocumentoController extends Controller
             ],
         ];
     }
-    // 
+    //
     // /**
     //  * Lists all Documento models.
     //  * @return mixed
@@ -621,7 +621,7 @@ class DocumentoController extends Controller
       <table class="documento_enc" style="border-collapse: collapse;">
           <tr>
               <td width="25%">
-                <div class="rounded"> <img src="'.Url::base().'/img/logo.jpg'.'" width="180px"/> </div>
+                <div class="rounded"> <img src="'.Url::to('img/logo.jpg').'" width="180px"/> </div>
               </td>
               <td width="50%" align="center" >
                 <div class="titulo-emp" style="font-size:20px;font-weight:bold;">' . SiteController::getEmpresa()->nombre_empresa . '</div><br>
@@ -686,6 +686,14 @@ class DocumentoController extends Controller
     }
 
     function actionAjaxGenFactXml( $id ){
+      $sunatUser = "20604954241MODDATOS";
+      $sunatPass = "moddatos";
+
+
+      if (YII_ENV_DEV) {
+        $sunatUser = '20604954241LEOPHARD';
+        $sunatPass = 'Leophard0';
+      }
 
       $model = Documento::find()
                            ->where('id_doc = :id',[':id' => $id])
@@ -693,13 +701,14 @@ class DocumentoController extends Controller
                            ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
                            ->one();
 
+
       $empresa = SiteController::getEmpresa();
       $IMPUESTO = SiteController::getImpuesto();
 
       $see = new See();
       $see->setService(SunatEndpoints::FE_PRODUCCION);
       $see->setCertificate(file_get_contents('../C19110619915.pem'));
-      $see->setCredentials('20604954241LEOPHARD', 'Leophard0');
+      $see->setCredentials($sunatUser, $sunatPass);
 
 
       // Cliente

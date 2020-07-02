@@ -1,6 +1,7 @@
   <table class="table table-stripped" style="font-size:0.65rem;">
     <thead>
       <tr>
+        <td class="left mayus bold">#</td>
         <td class="left mayus bold"><?= Yii::t('pedido','Code')?></td>
         <td class="left mayus bold"><?= Yii::t('pedido','Description')?></td>
         <td class="left mayus bold"><?= Yii::t('pedido','U.M.')?></td>
@@ -16,6 +17,7 @@
       foreach ($pedido->detalles as $key => $value) {
         // code...
         echo "<tr>";
+        echo "<td style='width:5%;'>" . ($key + 1) . "</td>";
         echo "<td style='width:12%;'>{$value->productoPdetalle->cod_prod }</td>";
         echo "<td style='width:46%;word-wrap: break-word;'>{$value->productoPdetalle->des_prod }</td>";
         echo "<td style='width:7%;' class='right'>{$value->productoPdetalle->umedProd->des_und }</td>";

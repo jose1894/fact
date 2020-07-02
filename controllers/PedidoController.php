@@ -471,7 +471,7 @@ class PedidoController extends Controller
 
         if ($model->tipo_pedido != 'PR') {
             $footer = '
-          <table style="font-size:0.78rem" class="table table-stripped">
+          <table style="border-top:1px  solid black;font-size:0.85rem; font-weight: bold" class="table table-stripped">
             <tr>
               <td style="width:80%" class="right">
               Subtotal
@@ -500,7 +500,7 @@ class PedidoController extends Controller
           ';
         } else {
             $footer = '
-                  <table style="border-top:1px  solid black;font-size:0.85rem; font-weight: bold" class="table table-stripped">            
+                  <table style="border-top:1px  solid black;font-size:0.85rem; font-weight: bold" class="table table-stripped">
                     <tr>
                         <td style="width:80%" class="right">
                             &nbsp;
