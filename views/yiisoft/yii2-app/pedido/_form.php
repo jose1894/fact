@@ -245,7 +245,7 @@ if ( $model->isNewRecord ) {
             <div class="table-body"><!-- widgetContainer -->
             <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
                     <div class="row detalle-item"><!-- widgetBody -->
-                      <div class="col-sm-1 col-xs-12">
+                      <div class="col-sm-1 col-xs-12 nro">
                         <?= ( $index + 1 )?>
                       </div>
                       <div class="col-sm-4 col-xs-12">
