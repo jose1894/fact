@@ -15,6 +15,7 @@ use app\models\Pedido;
 use app\models\NotaCredito;
 use app\models\Producto;
 use app\models\TipoCambio;
+use app\models\TipoDocumento;
 use app\models\Numeracion;
 use app\models\TipoIdentificacion;
 use app\models\DocumentoSearch;
@@ -139,14 +140,16 @@ class DocumentoController extends Controller
         $modelNotaSalida->sucursal_trans = $sucursal;
         $modelNotaSalida->usuario_trans = Yii::$app->user->id;
         $modelNotaSalida->ope_trans = $modelNotaSalida::OPE_TRANS;
-        $num = Numeracion::getNumeracion( $modelNotaSalida::NOTA_SALIDA );
+        $num = Numeracion::getNumeracion( Documento::TIPODOC_PROFORMA );
         $codigo = intval( $num[0]['numero_num'] ) + 1;
         $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
         $fecha = explode("/",date('d/m/Y'));
         $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
-        $modelNotaSalida->fecha_trans = $fecha;
-        $modelNotaSalida->codigo_trans = $codigo;
-        $modelNotaSalida->tipo_trans = Documento::TIPO_PROFORMA;
+        $modelNotaSalida->fecha_trans  = $fecha;
+        $modelNotaSalida->codigo_trans  = $codigo;
+        $modelNotaSalida->tipo_trans    = Documento::TIPO_PROFORMA;
+        $modelNotaSalida->numdoc_trans = $num[0]['id_num'];
+
         $modelNotaSalida->almacen_trans = $modelPedido->almacen_pedido;
 
         $valid = $modelNotaSalida->validate();
@@ -304,6 +307,7 @@ class DocumentoController extends Controller
 
             try {
               $modelNotaSalida->idrefdoc_trans = $model->id_doc;
+              $modelNotaSalida->numdoc_trans = $id_num;
               $modelNotaSalida->status_trans = $modelNotaSalida::STATUS_APPROVED;
               $flag = $modelNotaSalida->save() && $flag;
               if ( $flag ) {
@@ -890,7 +894,7 @@ class DocumentoController extends Controller
           $flag = true;
           $transaction = \Yii::$app->db->beginTransaction();
           $modelAjuste->idrefdoc_trans = $model->id_doc;
-          $modelAjuste->status_trans = $modelNotaIngreso::STATUS_APPROVED;
+          $modelAjuste->status_trans = $modelAjuste::STATUS_APPROVED;
 
           $sucursal = SiteController::getSucursal();
           $modelAjuste->sucursal_trans = $sucursal;

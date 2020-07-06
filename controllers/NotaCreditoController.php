@@ -128,14 +128,18 @@ class NotaCreditoController extends Controller
                 $model->almacen_doc     = $post['NotaCredito']['almacen_doc'];
                 $model->tipocambio_doc  = TipoCambio::getTipoCambio()->valorf_tipoc;
                 $model->sucursal_doc    = $documentoAnt->sucursal_doc;
-                $numDoc                 = Numeracion::getNumeracion( $model::NOTA_CREDITO_DOC,$model->tipo_doc );
+                $numDoc                 = Numeracion::getNumeracionById( $model->tipo_doc );
 
-                foreach( $numDoc as $key => $value) {
-                  if ( $value['id_num'] === intval( $model->tipo_doc ) ) {
-                    $codigoDoc =  $value['numero_num'] + 1;
-                    $id_num    =  $value['id_num'];
-                  }
-                }
+                // foreach( $numDoc as $key => $value) {
+                //   if ( $value['id_num'] === intval( $model->tipo_doc ) ) {
+                //     $codigoDoc =  $value['numero_num'] + 1;
+                //     $id_num    =  $value['id_num'];
+                //   }
+                // }
+
+                $codigoDoc       = (int) $numDoc->numero_num + 1;
+                $id_num          = $numDoc->id_num;
+                $model->tipo_doc = $numDoc->tipo_num;
 
                 $codigoDoc             = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
 
@@ -172,6 +176,7 @@ class NotaCreditoController extends Controller
                   $codigo                           = str_pad($codigo,10,'0',STR_PAD_LEFT);
                   $modelNotaIngreso->codigo_trans   = $codigo;
                   $modelNotaIngreso->tipo_trans     = $model::TIPO_NCREDITO;
+                  $modelNotaIngreso->numdoc_trans   = $id_num;
                   $modelNotaIngreso->almacen_trans  = $post['NotaCredito']['almacen_doc'];
                   $modelNotaIngreso->fecha_trans    = $model->fecha_doc;
                   $modelNotaIngreso->idrefdoc_trans = $model->id_doc;
@@ -234,7 +239,7 @@ class NotaCreditoController extends Controller
                 $flag = $numeracion->save() && $flag;
 
                 if ( $flag ) {
-				  $model->save();
+				          $model->save();
                   $transaction->commit();
                   Yii::$app->response->format = Response::FORMAT_JSON;
                   $return = [

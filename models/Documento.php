@@ -35,6 +35,7 @@ class Documento extends \yii\db\ActiveRecord
     const DOCUMENTO_ANULADO = 3;
     const MOTIVO_GUIAFACTURA = 1; //MOTICOO DE LA GUIA
     const TIPODOC_FACTURA = 2;
+    const TIPODOC_PROFORMA = 7;
     const TIPODOC_BOLETA = 9;
     const TIPODOC_GUIA = 3;
     const INGRESO_ANULACION = 9; //Tipo de operacion para las anulaciones de facturas y boletas INGRESO POR ANULACION

@@ -90,7 +90,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
         //->joinWith('numeracions')
         ->where($condicion[0], $condicion[1])
         ->orderBy('des_tipod')
-        ->all();
+        ->all();        
 
         $tipoDoc = [];
         foreach ($tipom as $value) {

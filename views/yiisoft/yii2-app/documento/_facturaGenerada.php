@@ -193,6 +193,10 @@ $js = <<<JS
         window.open( url,'_blank');
     });
 
+    $( 'body' ).on( 'click', '.pjax-canceled', function( e ){
+        e.preventDefault();        
+    });
+
     $( 'body' ).on( 'click', '.pjax-send-sunat', function( e ){
         e.preventDefault();
         let url = $( this ).prop( 'href' );

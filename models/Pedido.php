@@ -31,7 +31,7 @@ class Pedido extends \yii\db\ActiveRecord
     const PEDIDO_ANULADO = 4;
     const PEDIDO = 'NP';
     const PROFORMA = 'PR';
-    const COTIZACION = 'CT';
+    const COTIZACION = 'CT';    
     /**
      * {@inheritdoc}
      */
