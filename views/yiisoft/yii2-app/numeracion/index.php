@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'value' => function($data){
                    return '(' . $data->tipoDocumento->abrv_tipod. ') - '.$data->tipoDocumento->des_tipod;
               },
-              'filter'=>TipoDocumento::getTipoDocumento(),
+              'filter'=>TipoDocumento::getTipoDocumentoList(),
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,
@@ -113,7 +113,7 @@ $this->params['breadcrumbs'][] = $this->title;
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url = Url::to(['numeracion/delete', 'id'=>$model->id_num]);                                          
+                      $url = Url::to(['numeracion/delete', 'id'=>$model->id_num]);
                       return $url;
                   }
 

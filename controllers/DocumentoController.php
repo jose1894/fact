@@ -283,6 +283,7 @@ class DocumentoController extends Controller
           $id_num                          = $numDoc->id_num;
           $model->tipo_doc                 = $numDoc->tipo_num;
           $codigoDoc                       = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
+          $model->cod_doc                  = $codigoDoc;
           $model->numeracion_doc           = $id_num;
           // validate all models
           $valid                           = $model->validate();
@@ -583,7 +584,7 @@ class DocumentoController extends Controller
       $mpdf->WriteHtml( $content ); // call mpdf write html
       $mpdf->SetHTMLFooter( $footer );
 
-      $titulo = $modelDocumento->cod_doc. '-'. Yii::t('documento','Referral guide') .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
+      $titulo = $modelDocumento->numeracion->tipoDocumento->abrv_tipod.$modelDocumento->numeracion->serie_num.'-'.$modelDocumento->cod_doc. '-'. Yii::t('documento','Referral guide') .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
 
       $mpdf->SetTitle($titulo);
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
@@ -917,6 +918,7 @@ class DocumentoController extends Controller
           $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
           $modelAjuste->fecha_trans = $fecha;
           $modelAjuste->codigo_trans = $codigo;
+          $modelAjuste->numdoc_trans = $num[0]['id_num'];
 
           if ( $model->tipo_doc === Documento::TIPODOC_BOLETA  ||  $model->tipo_doc === Documento::TIPODOC_FACTURA ) {
               $flag = $model->save() && $modelPedido->save() && $modelGuiaRem->save() && $modelAjuste->save() && $flag;
