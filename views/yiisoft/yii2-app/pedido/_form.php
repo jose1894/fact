@@ -23,6 +23,7 @@ $disabled = false;
 
 if ( $model->isNewRecord ) {
   $model->cod_pedido = "0000000000";
+  $model->fecha_pedido = date('d/m/Y');
 } else {
   $disabled = true;
 }
@@ -42,11 +43,10 @@ if ( $model->isNewRecord ) {
 
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
           <?php
-            $model->fecha_pedido = date('d/m/Y');
             echo $form->field($model, 'fecha_pedido',[
               'addClass' => 'form-control ',
             ])->textInput([
-                  'value' => date('d/m/Y'),
+                  'value' => date('d/m/Y',strtotime($model->fecha_pedido)),
                   'readonly' => 'readonly',
                   'style' => ['text-align' => 'right'],
                   'disabled' => $disabled,
@@ -131,9 +131,6 @@ if ( $model->isNewRecord ) {
                         'placeholder' => Yii::t('vendedor','Select a seller').'...',
                       ],
                       'theme' => Select2::THEME_DEFAULT,
-                      // 'pluginOptions' => [
-                      //     'allowClear' => true
-                      // ],
               ])?>
         </div>
 
@@ -149,19 +146,13 @@ if ( $model->isNewRecord ) {
                       'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-money"></i>']],
                       'options' => ['placeholder' => Yii::t('moneda','Select a currency').'...'],
                       'theme' => Select2::THEME_DEFAULT,
-                      // 'pluginOptions' => [
-                      //     'allowClear' => true
-                      // ],
               ])?>
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
           <?= $form->field($model, 'nrodoc_pedido',['addClass' => 'form-control '])->textInput(['maxlength' => true]) ?>
         </div>
-
       </div>
-
-
       <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
           <?php
@@ -192,14 +183,9 @@ if ( $model->isNewRecord ) {
                       'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-tag"></i>']],
                       'options' => ['placeholder' => Yii::t('condicionp','Select a payment condition').'...'],
                       'theme' => Select2::THEME_DEFAULT,
-                      // 'pluginOptions' => [
-                      //     'allowClear' => true,
-                      // ],
               ])?>
               <?php
-            //  $model->usuario_pedido = 1;
-
-              echo Html::activeHiddenInput($model, "usuario_pedido");
+                echo Html::activeHiddenInput($model, "usuario_pedido");
               ?>
         </div>
       </div>

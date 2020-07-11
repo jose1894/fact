@@ -102,6 +102,7 @@
                       'items' =>[
                             [ 'label' => Yii::t('ingreso','Entry note'), 'url' => ['/nota-ingreso'],'icon' => 'download', 'visible' => Yii::$app->user->can('/nota-ingreso/index')],
                             [ 'label' => Yii::t('salida','Exit note'), 'url' => ['/nota-salida'],'icon' => 'upload', 'visible' => Yii::$app->user->can('/nota-salida/index')],
+                          [ 'label' => Yii::t('app','Product movement'), 'url' => ['/rpts/kardex'],'icon' => 'random', /*'visible' => Yii::$app->user->can('/site/kardex')*/],
                           ]
                     ],
                 ],
