@@ -14,11 +14,11 @@ use yii\web\View ;
 /* @var $form yii\widgets\ActiveForm */
 $primerDiaMes = date('01/MM/yyyy'); // hard-coded '01' for first day
 $ultimoDiaMes  = date('dd/MM/yyyy');
-?>
+/*?>
 
-<div class="documento-search">
+<div class="kardex-search">
 
-    <?php $form = ActiveForm::begin([
+    <!-- <?php $form = ActiveForm::begin([
         'action' => ['listado-factura'],
         'method' => 'get',
         'options' => [
@@ -122,4 +122,4 @@ $('.range-value').on('cancel.daterangepicker', function(ev, picker) {
   $('.range-value').val('');
 });
 JS;
-$this->registerJs($js,View::POS_LOAD);
+$this->registerJs($js,View::POS_LOAD); -->
