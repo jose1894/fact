@@ -28,6 +28,25 @@ use Yii;
  */
 class Transaccion extends \yii\db\ActiveRecord
 {
+    public $id_prod;
+    public $cod_prod;
+    public $des_prod;
+    public $fecha_trans;
+    public $docref_trans;
+    public $codigo_trans;
+    public $ope_trans;
+    public $id_tipom;
+    public $des_tipom;
+    public $id_tipod;
+    public $des_tipod;
+    public $ingreso_unidades;
+    public $moneda;
+    public $precio_compra_ext;
+    public $precio_compra_soles;
+    public $ingreso_valorizados;
+    public $salidas_unidades;
+    public $tipo;
+    public $sucursal_trans;
     /**
      * {@inheritdoc}
      */
@@ -43,7 +62,27 @@ class Transaccion extends \yii\db\ActiveRecord
     {
         return [
             [['codigo_trans', 'ope_trans', 'almacen_trans'], 'required'],
-            [['fecha_trans'], 'safe'],
+            [['fecha_trans',
+            'id_prod',
+            'cod_prod',
+            'des_prod',
+            'fecha_trans',
+            'docref_trans',
+            'codigo_trans',
+            'ope_trans',
+            'id_tipom',
+            'des_tipom',
+            'id_tipod',
+            'des_tipod',
+            'ingreso_unidades',
+            'moneda',
+            'precio_compra_ext',
+            'precio_compra_soles',
+            'ingreso_valorizados',
+            'salidas_unidades',
+            'tipo',
+            'sucursal_trans',
+            ], 'safe'],
             [['obsv_trans'], 'string'],
             [['tipo_trans', 'numdoc_trans', 'idrefdoc_trans', 'almacen_trans', 'sucursal_trans', 'usuario_trans', 'status_trans'], 'integer'],
             [['codigo_trans', 'docref_trans'], 'string', 'max' => 10],

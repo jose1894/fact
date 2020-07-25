@@ -72,7 +72,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                     'attribute' => 'cliente',
                     'label' => Yii::t('cliente','Customer'),
                     'value' => 'pedidoDoc.cltePedido.nombre_clte',
-                    'width' => '30%',
+                    'width' => '20%',
                     'hAlign' => 'left',
                     'vAlign' => 'middle',
 
@@ -83,7 +83,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                     'value' => 'tipoDoc.des_tipod',
                     'hAlign' => 'left',
                     'vAlign' => 'middle',
-                    'width' => '10%',
+                    'width' => '15%',
                     // 'group' => true,  // enable grouping
                     // 'subGroupOf' => 1 // supplier column index is the parent group
                 ],
@@ -96,7 +96,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                     },
                     'hAlign' => 'left',
                     'vAlign' => 'middle',
-                    'width' => '10%',
+                    'width' => '5%',
                     'pageSummary' => Yii::t('app','Page Summary'),
                     'pageSummaryOptions' => ['class' => 'text-right'],
                 ],
@@ -194,7 +194,7 @@ $js = <<<JS
     });
 
     $( 'body' ).on( 'click', '.pjax-canceled', function( e ){
-        e.preventDefault();        
+        e.preventDefault();
     });
 
     $( 'body' ).on( 'click', '.pjax-send-sunat', function( e ){
@@ -230,3 +230,4 @@ JS;
 $this->registerJs( $js, View::POS_BEGIN);
 
 echo   $this->render('//site/_modalForm',[]);
+$this->registerCss(".kv-grid-table{ width: 1200px !important; }");

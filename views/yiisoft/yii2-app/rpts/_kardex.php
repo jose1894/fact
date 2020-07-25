@@ -21,7 +21,6 @@ $this->params['breadcrumbs'][] = $this->title;
 $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
 $primerDiaMes = date('01/MM/yyyy'); // hard-coded '01' for first day
 $ultimoDiaMes  = date('dd/MM/yyyy');
-$this->registerCss(".kv-grid-table{ width: 1600px !important; }");
 ?>
 <div class="documento-index">
 
@@ -31,16 +30,7 @@ $this->registerCss(".kv-grid-table{ width: 1600px !important; }");
     <p><?php  echo $this->render('_searchKardex', ['model' => $searchModel]); ?></p>
 
     <?= GridView::widget([
-                'dataProvider' => $dataProvider,
-                // 'responsive' => true,
-                // 'responsiveWrap' => false,
-                // 'floatHeader' => true,
-                // 'floatHeaderOptions' => [
-                //     'scrollingTop' => '0',
-                //     'position' => 'absolute',
-                // ],
-                'perfectScrollbar' => true,
-                'floatOverflowContainer' => true,
+                'dataProvider' => $dataProvider,                
                 'columns' => [
                           [
                             'attribute' => 'fecha_trans',
@@ -86,10 +76,12 @@ $this->registerCss(".kv-grid-table{ width: 1600px !important; }");
                           [
                             'attribute' => 'salidas_unidades',
                             'value' => function( $data ) {
-                                return (-1 * $data['salidas_unidades']);
+                                return $data['salidas_unidades'];
                             },
                             'label' => 'Salidas',
                             'width' => '5%'
                           ],
                   ]
               ]) ?>
+<?php
+$this->registerCss(".kv-grid-table{ width: 1600px !important; }");

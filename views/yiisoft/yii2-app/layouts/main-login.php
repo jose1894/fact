@@ -20,13 +20,42 @@ dmstr\web\AdminLteAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="login-page">
+<body>
+  <style media="screen">
+  body {
+    margin: 0 0;
+  }
+  .top-square{
+    background:#3c8dbc;
+    width: 100%;
+    height: 80vh;
+    position: absolute;
+    transform: skewY(-5deg);
+    top: -42px;
+  }
+  .login-page{
+    /* width: 200px;
+    height: 200px; */
+    position:absolute;
+    left: 50%;
+    top:20%;
+    transform: translate(-50%, -20%);
+  }
+  </style>
+  <header>
+      <div class="top-square">
+      </div>
+      <div class="login-page">
+        <?php  $this->beginBody() ?>
 
-<?php $this->beginBody() ?>
+            <?= $content ?>
 
-    <?= $content ?>
+        <?php $this->endBody() ?>
+      </div>
 
-<?php $this->endBody() ?>
+
+
+  </header>
 </body>
 </html>
 <?php $this->endPage() ?>

@@ -140,7 +140,7 @@ class DocumentoController extends Controller
         $modelNotaSalida->sucursal_trans = $sucursal;
         $modelNotaSalida->usuario_trans = Yii::$app->user->id;
         $modelNotaSalida->ope_trans = $modelNotaSalida::OPE_TRANS;
-        $num = Numeracion::getNumeracion( Documento::TIPODOC_PROFORMA );
+        $num = Numeracion::getNumeracion( NotaSalida::NOTA_SALIDA );
         $codigo = intval( $num[0]['numero_num'] ) + 1;
         $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
         $fecha = explode("/",date('d/m/Y'));
@@ -438,7 +438,6 @@ class DocumentoController extends Controller
               $flag           = $modelPedido->save() && $flag;
 
               if ( $flag ) {
-
                 for($i = 0; $i < count($documentoDetalle); $i++) {
                       $modelDocumentoDetalle                     = new DocumentoDetalle();
                       $modelDocumentoDetalle->documento_ddetalle = $model->id_doc;
@@ -496,12 +495,6 @@ class DocumentoController extends Controller
         $searchModel = new DocumentoSearch();
         $searchModel->listado = true;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->setSort([
-            'defaultOrder' => [
-                'cod_doc' => SORT_DESC,
-                'fecha_doc' => SORT_DESC
-            ]
-        ]);
 
         return $this->render('_facturaGenerada', [
             'searchModel' => $searchModel,

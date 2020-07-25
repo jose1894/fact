@@ -28,6 +28,7 @@ class Documento extends \yii\db\ActiveRecord
     const SCENARIO_GUIA = 'guia';
     const FACTURA_DOC = 'FE'; //TIPO DE DOCUMENTO PARA FACTURA
     const GUIA_DOC = 'GR'; //TIPO DE DOCUMENTO PARA GUIAS
+    const PROFORMA_DOC = 'PR'; //TIPO DE DOCUMENTO PARA PROFORMAS
     const TIPO_FACTURA = 4; //Tipo de operacion para la tabla transaccion cuando tenga que aumentar o descontar almacen
     const TIPO_PROFORMA = 8; //Tipo de operacion para la tabla transaccion cuando tenga que aumentar o descontar almacen
     const GUIA_GENERADA = 1; // ESTATUS DEL DOCUMENTO
@@ -92,6 +93,8 @@ class Documento extends \yii\db\ActiveRecord
             'motivo_doc' => Yii::t('motivo_traslado', 'Transfer reason'),
             'status_doc' => Yii::t('documento', 'Status'),
             'sucursal_doc' => Yii::t('documento', 'Sucursal '),
+            'cliente' => Yii::t('cliente', 'Customer'),
+            'tipoDocumento' => Yii::t('tipo_documento', 'Document type'),
         ];
     }
 

@@ -24,6 +24,7 @@ class DocumentoSearch extends Documento
         return [
             [['id_doc', 'tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc'], 'integer'],
             [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc','cliente','tipo_doc','tipoDocumento','docNoEsGuia'], 'safe'],
+            [['cliente'], 'string'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
         ];
     }
@@ -67,6 +68,12 @@ class DocumentoSearch extends Documento
             'desc' => ['tipo_documento.des_tipod' => SORT_DESC],
         ];
 
+        if ( $this->listado ) {
+          $dataProvider->sort->defaultOrder = [
+                    'cod_doc' => SORT_DESC,
+                    'fecha_doc' => SORT_DESC
+          ];
+        }
 
         $this->load($params);
         $this->sucursal_doc = $sucursal;
@@ -81,20 +88,21 @@ class DocumentoSearch extends Documento
         // grid filtering conditions
         $query->andFilterWhere([
             'id_doc' => $this->id_doc,
-            // 'tipo_doc' => $this->tipo_doc,
+            'tipo_doc' => $this->tipoDocumento,
             'pedido_doc' => $this->pedido_doc,
             // 'fecha_doc' => $this->fecha_doc,
             'totalimp_doc' => $this->totalimp_doc,
             'totaldsc_doc' => $this->totaldsc_doc,
             'total_doc' => $this->total_doc,
             'sucursal_doc' => $this->sucursal_doc,
+            'pedido.clte_pedido' => $this->cliente,
         ]);
 
         $query->andFilterWhere(['like', 'cod_doc', $this->cod_doc])
             ->andFilterWhere(['like', 'obsv_doc', $this->obsv_doc])
-            ->andFilterWhere(['in', 'status_doc', $this->status_doc])
-            ->andFilterWhere(['in', 'tipo_doc', $this->tipoDocumento])
-            ->andFilterWhere(['in', 'pedido.clte_pedido', $this->cliente]);
+            ->andFilterWhere(['in', 'status_doc', $this->status_doc]);
+            // ->andFilterWhere(['in', 'tipo_doc', $this->tipoDocumento]);
+            // ->andFilterWhere(['in', 'pedido.clte_pedido', $this->cliente]);
 
 
 
