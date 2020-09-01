@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 11-07-2020 a las 17:53:13
+-- Tiempo de generación: 01-09-2020 a las 21:41:23
 -- Versión del servidor: 10.4.10-MariaDB
--- Versión de PHP: 7.3.12
+-- Versión de PHP: 7.0.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -10665,7 +10665,7 @@ CREATE TABLE IF NOT EXISTS `tipo_cambio` (
   `sucursal_tipoc` int(11) NOT NULL COMMENT 'SUCURSAL TIPO DE CAMBIO',
   PRIMARY KEY (`id_tipoc`),
   KEY `sucursal_tipoc` (`sucursal_tipoc`)
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
+) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
 
 --
 -- Volcado de datos para la tabla `tipo_cambio`
@@ -10774,7 +10774,14 @@ INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_t
 (102, '2020-07-07', NULL, NULL, '3.541', '3.534', '3.541', 1),
 (103, '2020-07-08', NULL, NULL, '3.541', '3.534', '3.541', 1),
 (104, '2020-07-10', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(105, '2020-07-11', NULL, NULL, '3.541', '3.534', '3.541', 1);
+(105, '2020-07-11', NULL, NULL, '3.541', '3.534', '3.541', 1),
+(106, '2020-07-14', NULL, NULL, '3.541', '3.534', '3.541', 1),
+(107, '2020-07-15', NULL, NULL, '3.541', '3.534', '3.541', 1),
+(108, '2020-07-16', NULL, NULL, '3.541', '3.534', '3.541', 1),
+(109, '2020-07-17', NULL, NULL, '3.541', '3.534', '3.541', 1),
+(110, '2020-07-25', NULL, NULL, '3.541', '3.534', '3.541', 1),
+(111, '2020-07-29', NULL, NULL, '3.541', '3.534', '3.541', 1),
+(112, '2020-07-30', NULL, NULL, '3.541', '3.534', '3.541', 1);
 
 -- --------------------------------------------------------
 
@@ -13822,7 +13829,7 @@ CREATE TABLE IF NOT EXISTS `vendedor` (
   PRIMARY KEY (`id_vendedor`),
   KEY `zona_vend` (`zona_vend`),
   KEY `sucursal_vend` (`sucursal_vend`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE VENDEDORES';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE VENDEDORES';
 
 --
 -- Volcado de datos para la tabla `vendedor`
@@ -13834,7 +13841,8 @@ INSERT INTO `vendedor` (`id_vendedor`, `dni_vend`, `nombre_vend`, `tlf_vend`, `e
 (3, '', 'MELIN HUAMAN', '', 1, 1, 1),
 (4, '', 'IRVIN PEREZ', '', 1, 1, 1),
 (5, '', 'APP', '', 1, 1, 1),
-(6, '', 'GUTIERREZ', '', 1, 1, 3);
+(6, '', 'GUTIERREZ', '', 1, 1, 3),
+(7, '11111111', 'JUAN<script>alert(\"Hola\")</script>', '11111', 1, 1, 2);
 
 -- --------------------------------------------------------
 

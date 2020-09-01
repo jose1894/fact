@@ -15,7 +15,6 @@ use kartik\daterange\DateRangePicker;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\DocumentoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-
 $this->title = Yii::t('app', 'Product movement');
 $this->params['breadcrumbs'][] = $this->title;
 $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
@@ -30,7 +29,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
     <p><?php  echo $this->render('_searchKardex', ['model' => $searchModel]); ?></p>
 
     <?= GridView::widget([
-                'dataProvider' => $dataProvider,                
+                'dataProvider' => $dataProvider,
                 'columns' => [
                           [
                             'attribute' => 'fecha_trans',
@@ -56,22 +55,31 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                           [
                             'attribute' => 'ingreso_unidades',
                             'label' => 'Ingreso',
-                            'width' => '5%'
+                            'format' => ['decimal',2],
+                            'width' => '5%',
+                            'format' => ['decimal',2],
+                            'hAlign' => 'right',
                           ],
                           'moneda',
                           [
                             'attribute' => 'precio_compra_ext',
                             'label' => 'P.Compra$',
-                            'width' => '5%'
+                            'width' => '5%',
+                            'format' => ['decimal',2],
+                            'hAlign' => 'right',
                           ],
                           [
                             'attribute' => 'precio_compra_soles',
                             'label' => 'P.Compra/S',
-                            'width' => '5%'
+                            'width' => '5%',
+                            'format' => ['decimal',2],
+                            'hAlign' => 'right',
                           ],
                           [
                             'attribute' => 'ingreso_valorizados',
                             'label' => 'I.Valorizados',
+                            'format' => ['decimal',2],
+                            'hAlign' => 'right',
                           ],
                           [
                             'attribute' => 'salidas_unidades',
@@ -79,9 +87,12 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                                 return $data['salidas_unidades'];
                             },
                             'label' => 'Salidas',
-                            'width' => '5%'
+                            'width' => '5%',
+                            'format' => ['decimal',2],
+                            'hAlign' => 'right',
                           ],
                   ]
-              ]) ?>
+              ]);?>
+        <?php Pjax::end(); ?>
 <?php
 $this->registerCss(".kv-grid-table{ width: 1600px !important; }");
