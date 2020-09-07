@@ -65,7 +65,7 @@ class Numeracion extends \yii\db\ActiveRecord
         return $this->hasOne(TipoDocumento::className(), ['id_tipod' => 'tipo_num','sucursal_tipod' => 'sucursal_num']);
     }
 
-    public static function getSerieNum( $tipo )
+    /*public static function getSerieNum( $tipo )
     {
       $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
@@ -82,7 +82,7 @@ class Numeracion extends \yii\db\ActiveRecord
 
       foreach ($series as $value) {
         // code...
-        $serie = [
+        $serie[] = [
           'id_num' => $value->id_num,
           'tipo_num' => $value->tipo_num,
           'serie_num' => $value->serie_num,
@@ -92,24 +92,32 @@ class Numeracion extends \yii\db\ActiveRecord
       }
 
       return  $serie;
-    }
+    }*/
 
     public static function getNumeracion( $tipo, $serie = false )
     {
       $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       if ( $serie ){
-
-        $serie = self::getSerieNum( $tipo );
-
         $condicion = [
-            'status_num = :status and sucursal_num = :sucursal and tipo_documento.abrv_tipod like :tipo and serie_num like :serie ',
-            [':status' => self::STATUS_ACTIVE, ':sucursal' => $sucursal, ':tipo' => $tipo, ':serie' => $serie['serie_num']]
+            'status_num = :status and sucursal_num = :sucursal and 
+			tipo_documento.abrv_tipod like :tipo and serie_num = :serie ',
+            [
+				':status' => self::STATUS_ACTIVE, 
+				':sucursal' => $sucursal, 
+				':tipo' => $tipo, 
+				':serie' => $serie
+			]
           ];
-      } else {
+      } else {		
         $condicion = [
-          'status_num = :status and sucursal_num = :sucursal and tipo_documento.abrv_tipod like :tipo',
-          [':status' => self::STATUS_ACTIVE, ':sucursal' => $sucursal, ':tipo' => $tipo]
+          'status_num = :status and sucursal_num = :sucursal and 
+		  tipo_documento.abrv_tipod like :tipo',
+          [
+			':status' => self::STATUS_ACTIVE, 
+			':sucursal' => $sucursal, 
+			':tipo' => $tipo,
+		  ]
         ];
       }
 
@@ -118,6 +126,8 @@ class Numeracion extends \yii\db\ActiveRecord
                  ->where( $condicion[0], $condicion[1] )
                 ->orderBy('serie_num')
                 ->all();
+				
+		//echo $query->createCommand()->sql;
       $numeracion = [];
       foreach ($numeraciones as $value) {        // code...
         $numeracion[] = [
