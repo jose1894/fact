@@ -34,7 +34,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
             'dataProvider' => $dataProvider,
             // 'filterModel' => $searchModel,
             'showPageSummary' => true,
-            'floatHeader'=>true,
+            'pjax' => true,
             'toolbar' => [
                 '{export}',
                 '{toggleData}'
@@ -230,4 +230,4 @@ JS;
 $this->registerJs( $js, View::POS_BEGIN);
 
 echo   $this->render('//site/_modalForm',[]);
-$this->registerCss(".kv-grid-table{ width: 1200px !important; }");
+// $this->registerCss(".kv-grid-table{ width: 1200px !important; }");

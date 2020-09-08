@@ -30,6 +30,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
 
     <?= GridView::widget([
                 'dataProvider' => $dataProvider,
+                'pjax' => true,
                 'columns' => [
                           [
                             'attribute' => 'fecha_trans',
@@ -94,5 +95,6 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                   ]
               ]);?>
         <?php Pjax::end(); ?>
+</div>
 <?php
-$this->registerCss(".kv-grid-table{ width: 1600px !important; }");
+// $this->registerCss(".kv-grid-table{ width: 1600px !important; }");

@@ -158,81 +158,57 @@ class TransaccionSearch extends Transaccion
           select * from entradas_documentos
       ) as sub']);
 
-      $dataProvider = new SqlDataProvider([
-          'sql' => $query->createCommand()->sql,
-          // 'totalCount' => $count,
-          'params' => [':table_name' => '%' . $table_name . '%'],
-          'pagination' => [
-              'pageSize' => 20,
-          ],
+
+
+
+
+      $this->load($params);
+
+
+      //
+      if (!$this->validate()) {
+          // uncomment the following line if you do not want to return any records when validation fails
+          $query->where('0=1');
+          return $dataProvider;
+      }
+
+      //Condicional para la fecha, verifica si es rango o solo una fecha
+      if ( !empty($this->fecha_trans) ) {
+
+        $fechaDoc = explode(" - ", $this->fecha_trans);
+        $fechaDocInicio = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[0]))->format('Y-m-d');
+        $fechaDocFin = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[1]))->format('Y-m-d');
+        $query->andFilterWhere(['between', 'fecha_trans', $fechaDocInicio, $fechaDocFin]);
+      }
+
+
+      //grid filtering conditions
+      $query->andFilterWhere([
+          // 'fecha_trans' => $this->fecha_trans,
+          // 'tipo_doc' => $this->tipoDocumento,
+          // 'pedido_doc' => $this->pedido_doc,
+          // // 'fecha_doc' => $this->fecha_doc,
+          // 'totalimp_doc' => $this->totalimp_doc,
+          // 'totaldsc_doc' => $this->totaldsc_doc,
+          // 'total_doc' => $this->total_doc,
+          // 'sucursal_doc' => $this->sucursal_doc,
+          // 'pedido.clte_pedido' => $this->cliente,
       ]);
 
-      //print_r($params); exit();
+      $query->andFilterWhere(['like', 'id_prod', $this->codigo_trans]);
+      //     ->andFilterWhere(['like', 'obsv_doc', $this->obsv_doc])
+      //     ->andFilterWhere(['in', 'status_doc', $this->status_doc]);
 
-      // return $dataProvider;
-      // print_r ($dataProvider);
-      // exit();
+      echo $query->createCommand()->sql;
 
-
-      // $sqlCount = "select count(*)
-      //               from
-      //               (
-      //               	select * from salidas_ajustes
-      //                   union
-      //                   select * from salidas_documentos
-      //                   union
-      //                   select * from salidas_proformas
-      //                   union
-      //                   select * from entradas_ajustes
-      //                   union
-      //                   select * from entradas_compras
-      //                   union
-      //                   select * from entradas_documentos
-      //               ) as t";
-      // $sqlSelect = "select
-      //                 id_prod,
-      //                 cod_prod,
-      //                 des_prod,
-      //                 fecha_trans,
-      //                 docref_trans,
-      //                 codigo_trans,
-      //                 ope_trans,
-      //                 id_tipom,
-      //                 des_tipom,
-      //                 id_tipod,
-      //                 des_tipod,
-      //                 ingreso_unidades,
-      //                 moneda,
-      //                 precio_compra_ext,
-      //                 precio_compra_soles,
-      //                 ingreso_valorizados,
-      //                 salidas_unidades,
-      //                 tipo,
-      //                 sucursal_trans
-      //               from
-      //               (
-      //               	select * from salidas_ajustes
-      //                   union
-      //                   select * from salidas_documentos
-      //                   union
-      //                   select * from salidas_proformas
-      //                   union
-      //                   select * from entradas_ajustes
-      //                   union
-      //                   select * from entradas_compras
-      //                   union
-      //                   select * from entradas_documentos
-      //               ) as t";
-      //
-      // $count = Yii::$app->db->createCommand($sqlCount, [])->queryScalar();
-
-      // $dataProvider = new SqlDataProvider([
-      //     'sql' => $sqlSelect,
-      //     'totalCount' => $count,
-      //     'pagination' => [
-      //         'pageSize' => 20,
-      //     ],
-      // ]);
+      $dataProvider = new SqlDataProvider([
+        'sql' => $query->createCommand()->sql,
+        // 'totalCount' => $count,
+        //'params' => [':table_name' => '%' . $table_name . '%'],
+        'pagination' => [
+          'pageSize' => 20,
+        ],
+      ]);
 
       $dataProvider->sort->attributes['fecha_trans'] = [
           'asc' => ['fecha_trans' => SORT_ASC],
@@ -294,39 +270,6 @@ class TransaccionSearch extends Transaccion
           'desc' => ['salidas_unidades' => SORT_DESC],
       ];
 
-      $this->load($params);
-      //
-      if (!$this->validate()) {
-          // uncomment the following line if you do not want to return any records when validation fails
-          $query->where('0=1');
-          return $dataProvider;
-      }
-
-      //Condicional para la fecha, verifica si es rango o solo una fecha
-      if ( !empty($this->fecha_trans) ) {
-        $fechaDoc = explode(" - ", $this->fecha_trans);
-        $fechaDocInicio = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[0]))->format('Y-m-d');
-        $fechaDocFin = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[1]))->format('Y-m-d');
-        $query->andFilterWhere(['between', 'fecha_trans', $fechaDocInicio, $fechaDocFin]);
-      }
-
-      //grid filtering conditions
-      $query->andFilterWhere([
-          // 'fecha_trans' => $this->fecha_trans,
-          // 'tipo_doc' => $this->tipoDocumento,
-          // 'pedido_doc' => $this->pedido_doc,
-          // // 'fecha_doc' => $this->fecha_doc,
-          // 'totalimp_doc' => $this->totalimp_doc,
-          // 'totaldsc_doc' => $this->totaldsc_doc,
-          // 'total_doc' => $this->total_doc,
-          // 'sucursal_doc' => $this->sucursal_doc,
-          // 'pedido.clte_pedido' => $this->cliente,
-      ]);
-
-      // $query->andFilterWhere(['like', 'cod_doc', $this->cod_doc])
-      //     ->andFilterWhere(['like', 'obsv_doc', $this->obsv_doc])
-      //     ->andFilterWhere(['in', 'status_doc', $this->status_doc]);
-      echo $query->createCommand()->sql;
       return $dataProvider;
     }
 }
