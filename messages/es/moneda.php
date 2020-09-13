@@ -8,7 +8,7 @@ return [
     'Type' => 'Tipo',
     'Select a type' => 'Seleccione un tipo',
     'Currency' => 'Moneda',
-    'Currency: <span class="label label-primary">{number}</span> {name}' => 'Moneda: <span class="label label-primary">{number}</span> {name}',
+    'Currency: {number} / {name}' => 'Moneda: {number} / {name}',
     'Create currency' => 'Crear moneda',
-    'Update currency: <span class="label label-primary">{number}</span> {name}' => 'Actualizar moneda: <span class="label label-primary">{number}</span> {name}'
+    'Update currency: {number} / {name}' => 'Actualizar moneda: {number} / {name}'
 ];
