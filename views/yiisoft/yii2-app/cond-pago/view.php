@@ -6,10 +6,10 @@ use kartik\detail\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\CondPago */
 
-$this->title =  Yii::t('condicionp', 'Payment condition: <span class="label label-primary">{number}</span> {name}',
+$this->title =  Yii::t('condicionp', 'Payment condition: {number} / {name}',
     [ 'number' => $model->id_condp,
      'name' => $model->desc_condp]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('condicionp', 'Payment condition: <span class="label label-primary">{number}</span> {name}',
+$this->params['breadcrumbs'][] = ['label' => Yii::t('condicionp', 'Payment condition: {number} / {name}',
     [ 'number' => $model->id_condp,
      'name' => $model->desc_condp]), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->id_condp;
