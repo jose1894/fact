@@ -5,8 +5,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\numeracion */
 
-$this->title = Yii::t('numeracion', 'Create numeration');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('numeracion', 'Numeration'), 'url' => ['index']];
+$this->title = Yii::t('serie', 'Create numeration');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('serie', 'Numeration'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="numeracion-create">

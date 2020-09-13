@@ -9,6 +9,6 @@ return [
     'Carrier' => 'Transportista',
     'Create carrier' => 'Crear transportista',
     'Select a carrier' => 'Seleccionar un trasnportista',
-    'Carrier: <span class="label label-primary">{number}</span> {name}' => 'Transportista: <span class="label label-primary">{number}</span> {name}',
-    'Update carrier: <span class="label label-primary">{number}</span> {name}' => 'Actualizar transportista: <span class="label label-primary">{number}</span> {name}',
+    'Carrier: {number} / {name}' => 'Transportista: {number} / {name}',
+    'Update carrier: {number} / {name}' => 'Actualizar transportista: {number} / {name}',
 ];

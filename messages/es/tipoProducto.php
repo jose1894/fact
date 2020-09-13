@@ -7,7 +7,7 @@ return [
     'Product types' => 'Tipo de productos',
     'Select a type' => 'Seleccione un tipo',
     'Product type' => 'Tipo de producto',
-    'Product type: <span class="label label-primary">{number}</span> {name}' => 'Tipo de producto: <span class="label label-primary">{number}</span> {name}',
+    'Product type: {number} / {name}' => 'Tipo de producto: {number} / {name}',
     'Create product type' => 'Crear tipo de producto',
-    'Update product type: <span class="label label-primary">{number}</span> {name}' => 'Actualizar tipo de producto: <span class="label label-primary">{number}</span> {name}'
+    'Update product type: {number} / {name}' => 'Actualizar tipo de producto: {number} / {name}'
 ];

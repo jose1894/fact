@@ -9,8 +9,8 @@ return [
     'Select a type' => 'Seleccione un tipo',
     'Type' => 'Tipo',
     'Document type' => 'Tipo de documento',
-    'Document type: <span class="label label-primary">{number}</span> {name}' => 'Tipo de documento: <span class="label label-primary">{number}</span> {name}',
+    'Document type: {number} / {name}' => 'Tipo de documento: {number} / {name}',
     'Create document type' => 'Crear tipo de documento',
-    'Update document type: <span class="label label-primary">{number}</span> {name}' => 'Actualizar tipo de documento: <span class="label label-primary">{number}</span> {name}',
+    'Update document type: {number} / {name}' => 'Actualizar tipo de documento: {number} / {name}',
     'SUNAT doc type' => 'Tipo documento SUNAT',
 ];

@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Moneda */
 
-$this->title = Yii::t('moneda', 'Update currency: <span class="label label-primary">{number}</span> {name}', [
+$this->title = Yii::t('moneda', 'Update currency: {number} / {name}', [
 	'number' => $model->id_moneda,
   'name' => $model->des_moneda,
 ]);
@@ -16,7 +16,9 @@ $this->params['breadcrumbs'][] = Yii::t('moneda', 'Update');
 <div class="moneda-update">
   <div class="box box-success">
     <div class="box-header with-border">
-      <h3 class="box-title"><?= $this->title ?></h3>
+      <h3 class="box-title">
+        <?= Html::encode($this->title) ?>
+      </h3>
     </div>
     <div class="box-body">
         <div class="container-fluid">

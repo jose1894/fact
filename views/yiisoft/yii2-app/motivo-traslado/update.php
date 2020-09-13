@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\MotivoTraslado */
 
-$this->title = Yii::t('motivo_traslado', 'Update transfer reason: <span class="label label-primary">{number}</span> {name}', [
+$this->title = Yii::t('motivo_traslado', 'Update transfer reason: {number} / {name}', [
 	'number' => $model->id_motivo,
     'name' => $model->des_motivo,
 ]);
@@ -16,7 +16,9 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 <div class="tipo-movimiento-update">
   <div class="box box-success">
     <div class="box-header with-border">
-      <h3 class="box-title"><?= $this->title ?></h3>
+      <h3 class="box-title">
+        <?= Html::encode($this->title) ?>
+      </h3>
     </div>
     <div class="box-body">
         <div class="container-fluid">

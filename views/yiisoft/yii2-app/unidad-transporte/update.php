@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\UnidadMedida */
 
-$this->title = Yii::t('unidad_transporte', 'Update transport unit: <span class="label label-primary">{number}</span> {name}', [
+$this->title = Yii::t('unidad_transporte', 'Update transport unit: {number} / {name}', [
 	'number' => $model->id_utransp,
     'name' => $model->des_utransp,
 ]);
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = Yii::t('unidad_transporte', 'Update');
 <div class="unidad-medida-update">
   <div class="box box-success">
     <div class="box-header with-border">
-      <h3 class="box-title"><?= $this->title ?></h3>
+      <h3 class="box-title"><?= Html::encode($this->title) ?></h3>
     </div>
     <div class="box-body">
         <div class="container-fluid">

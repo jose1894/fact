@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\CondPago */
 
-$this->title = Yii::t('condicionp', 'Update payment condition: <span class="label label-primary">{number}</span> {name}', [
+$this->title = Yii::t('condicionp', 'Update payment condition: {number} / {name}', [
 	'number' => $model->id_condp,
     'name' => $model->desc_condp,
 ]);
@@ -16,7 +16,9 @@ $this->params['breadcrumbs'][] = Yii::t('condicionp', 'Update');
 <div class="cond-pago-update">
     <div class="box box-success">
       <div class="box-header with-border">
-        <h3 class="box-title"><?= $this->title ?></h3>
+        <h3 class="box-title">
+          <?= Html::encode($this->title) ?>
+        </h3>
       </div>
       <div class="box-body">
           <div class="container-fluid">

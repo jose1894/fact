@@ -11,7 +11,7 @@ return [
     'Seller' => 'Vendedor',
     'Sellers' => 'Vendedores',
     'Select a seller' => 'Seleccione un vendedor',
-    "Seller: <span class='label label-primary'>{number}</span> {name}" => "Vendedor: <span class='label label-primary'>{number}</span> {name}",
+    "Seller: {number} / {name}" => "Vendedor: {number} / {name}",
     'Create seller' => 'Crear vendedor',
-    'Update seller: <span class="label label-primary">{number}</span> {name}' => 'Actualizar vendedor: <span class="label label-primary">{number}</span> {name}'
+    'Update seller: {number} / {name}' => 'Actualizar vendedor: {number} / {name}'
 ];

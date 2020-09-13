@@ -6,7 +6,7 @@ use kartik\detail\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\TipoProducto */
 
-$this->title = Yii::t('tipo_movimiento','Movement type: <span class="label label-primary">{number}</span> {name}',[
+$this->title = Yii::t('tipo_movimiento','Movement type: {number} / {name}',[
   'number' => $model->id_tipom,
   'name' => $model->des_tipom
 ]);
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
   <div class="box box-success">
     <div class="box-header with-border">
       <h3 class="box-title">
-        <?= $this->title ?>
+        <?= Html::encode($this->title) ?>
       </h3>
     </div>
     <div class="box-body">

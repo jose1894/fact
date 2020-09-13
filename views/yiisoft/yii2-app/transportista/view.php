@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Transportista */
 
-$this->title = Yii::t('transportista','Carrier: <span class="label label-primary">{number}</span> {name}',[
+$this->title = Yii::t('transportista','Carrier: {number} / {name}',[
   'number' => $model->id_transp,
   'name' => $model->des_transp
 ]);
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
   <div class="box box-success">
     <div class="box-header with-border">
       <h3 class="box-title">
-        <?= $this->title ?>
+        <?= Html::encode($this->title) ?>
       </h3>
     </div>
     <div class="box-body">

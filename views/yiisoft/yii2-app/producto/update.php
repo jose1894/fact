@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Producto */
 
-$this->title = Yii::t('producto', 'Update product: <span class="label label-primary">{number}</span> {name}', [
+$this->title = Yii::t('producto', 'Update product: {number} / {name}', [
 	'number' => $model->id_prod,
   'name' => $model->des_prod,
 ]);
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = Yii::t('producto', 'Update');
 <div class="producto-update">
   <div class="box box-success">
     <div class="box-header with-border">
-      <h3 class="box-title"><?= $this->title ?></h3>
+      <h3 class="box-title"><?= Html::encode($this->title) ?></h3>
     </div>
     <div class="box-body">
         <div class="container-fluid">

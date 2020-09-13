@@ -13,7 +13,7 @@ use kartik\select2\Select2;
 /* @var $searchModel app\models\NumeracionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('numeracion', 'Numertation');
+$this->title = Yii::t('serie', 'Numeration');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="numeracion-index">
@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('numeracion', 'Create numeration'), ['create','asDialog' => 1], ['id' => 'create','class' => 'btn btn-flat btn-success']) ?>
+        <?= Html::a(Yii::t('serie', 'Create numeration'), ['create','asDialog' => 1], ['id' => 'create','class' => 'btn btn-flat btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -93,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                       'method' => 'post',
                                       'pjax' => 0,
                                       'icon' => 'warning',
-                                      'title' => Yii::t('numeracion', 'Numeration'),
+                                      'title' => Yii::t('serie', 'Numeration'),
                                       'ok' => Yii::t('app', 'Confirm'),
                                       'cancel' => Yii::t('app', 'Cancel'),
                                       'id' => $model->id_num

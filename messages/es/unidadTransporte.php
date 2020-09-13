@@ -9,6 +9,6 @@ return [
     'Transport unit' => 'Unidad de transporte',
     'Create transport unit' => 'Crear unidad de transporte',
     'Select a transport unit' => 'Seleccionar un trasnportista',
-    'Transport unit: <span class="label label-primary">{number}</span> {name}' => 'Unidad de transporte: <span class="label label-primary">{number}</span> {name}',
-    'Update transport unit: <span class="label label-primary">{number}</span> {name}' => 'Actualizar unidad de transporte: <span class="label label-primary">{number}</span> {name}',
+    'Transport unit: {number} / {name}' => 'Unidad de transporte: {number} / {name}',
+    'Update transport unit: {number} / {name}' => 'Actualizar unidad de transporte: {number} / {name}',
 ];

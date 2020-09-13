@@ -78,6 +78,7 @@
                         ['label' => Yii::t('proveedor','Supplier'), 'url' => ['/proveedor'], 'icon' => 'suitcase', 'visible' => Yii::$app->user->can('/proveedor/index')],
                         ['label' => Yii::t('producto','Product'), 'url' => ['/producto'], 'icon' => 'tags', 'visible' => Yii::$app->user->can('/producto/index')],
                         ['label' => Yii::t('serie','Numeration'), 'url' => ['/numeracion'], 'icon' => 'tachometer', 'visible' => Yii::$app->user->can('/numeracion/index')],
+                        ['label' => Yii::t('motivo_traslado','Transfer reason'), 'url' => ['/motivo-traslado'], 'icon' => 'tachometer', 'visible' => Yii::$app->user->can('/motivo-traslado/index')],
                       ]
                     ],
                     ['label' => Yii::t('tipo_cambio', 'Exchange'), 'icon' => 'money', 'url' => ['/tipo-cambio/'], 'visible' => Yii::$app->user->can('/tipo-cambio/index')],
