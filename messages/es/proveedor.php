@@ -10,6 +10,6 @@ return [
     'Supplier' => 'Proveedor',
     'Create supplier' => 'Crear proveedor',
     'Select a supplier' => 'Seleccionar un proveedor',
-    'Supplier: <span class="label label-primary">{number}</span> {name}' => 'Proveedor: <span class="label label-primary">{number}</span> {name}',
-    'Update supplier: <span class="label label-primary">{number}</span> {name}' => 'Actualizar proveedor: <span class="label label-primary">{number}</span> {name}',
+    'Supplier: {number} / {name}' => 'Proveedor: {number} / {name}',
+    'Update supplier: {number} / {name}' => 'Actualizar proveedor: {number} / {name}',
 ];
