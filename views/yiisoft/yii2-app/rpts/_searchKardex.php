@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use kartik\daterange\DateRangePicker;
 use kartik\select2\Select2;
-use app\models\Cliente;
+use app\models\Producto;
 use app\models\TipoDocumento;
 use app\models\Documento;
 use yii\web\View ;
@@ -25,12 +25,29 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
       ],
   ]); ?>
   <div class="row">
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-      <?= $form->field($model, 'codigo_trans',[
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <?= $form->field($model, 'id_prod',[
         'addClass' => 'form-control ',
-        'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-barcode"></i>']]])->textInput(['maxlength' => true]) ?>
+        'addon' => [ 
+					'prepend' => ['content'=>'<i class="fa fa-barcode"></i>']
+					]
+		])->widget(Select2::classname(), [
+            'data' => Producto::getProductoList(),
+            'initValueText' => 0,
+            'language' => Yii::$app->language,
+            'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-ticket"></i>']],
+            'options' => [
+				'value' => Yii::t('producto','Select a product').'...',
+				'placeholder' => Yii::t('producto','Select a product').'...',
+            ],
+            'theme' => Select2::THEME_DEFAULT,
+            'pluginOptions' => [
+              'allowClear' => true,
+              //'multiple' => true
+            ],
+            ]) ?>
     </div>
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
       <?= $form->field($model, 'fecha_trans',[
           'addClass' => 'form-control ',
           // 'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-calendar"></i>']]

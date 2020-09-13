@@ -44,7 +44,6 @@ class RptsController extends Controller
     public function actionKardex()
     {
       $searchModel = new TransaccionSearch();
-      // print_r(Yii::$app->request->queryParams);
       $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
       return $this->render('_kardex', [

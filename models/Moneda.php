@@ -55,7 +55,7 @@ class Moneda extends \yii\db\ActiveRecord
 
     public static function getMonedasList( $extr = false, $nac = false)
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+	  $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       if ( !$nac && !$extr ){
         $monedas = Moneda::find()
