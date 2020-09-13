@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "producto".
@@ -27,7 +28,9 @@ use Yii;
  */
 class Producto extends \yii\db\ActiveRecord
 {
-    /**
+	const STATUS_PROD_ACTIVE = 1;
+	const STATUS_PROD_INACTIVE = 0;
+	/**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -95,7 +98,16 @@ class Producto extends \yii\db\ActiveRecord
     }
 
     public function getListas()
-   {
+    {
        return $this->hasMany(ListaPrecios::className(), ['prod_lista' => 'id_prod']);
-   }
+    }
+	
+	public static function getProductoList() 
+	{
+		$productos = Producto::find()
+						->select(['id_prod','concat(rtrim(ltrim(cod_prod)),\' - \',rtrim(ltrim(des_prod))) as des_prod'])
+						->where(['status_prod' => Producto::STATUS_PROD_ACTIVE])->all();
+		
+		return ArrayHelper::map($productos,'id_prod','des_prod');
+	}
 }

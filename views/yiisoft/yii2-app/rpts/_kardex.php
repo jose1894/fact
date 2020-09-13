@@ -31,6 +31,17 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
     <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'pjax' => true,
+				'toolbar' => [
+					'{export}',
+					'{toggleData}'
+				],
+				'panel' => [
+					'heading'=>'<h3 class="panel-title"><i class="fa fa-book"></i> ' . Yii::t('app','Product movement') . '</h3>',
+					// 'type'=>'success',
+					// 'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Create Country', ['create'], ['class' => 'btn btn-success']),
+					// 'after'=>Html::a('<i class="fa fa-refresh"></i> ' . Yii::t('app','Refresh '), ['listado-factura'], ['class' => 'btn btn-success']),
+					// 'footer'=>true,
+				],
                 'columns' => [
                           [
                             'attribute' => 'fecha_trans',
