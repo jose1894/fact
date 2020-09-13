@@ -1,6 +1,27 @@
 Change Log: `bootstrap-fileinput`
 =================================
 
+## version 5.1.2
+
+**Date**: 15-Jul-2020
+
+- (enh #1604): Correct upload stats time calculation for sync uploads.
+- (enh #1603): Add Serbian Latin Translations.
+- (enh #1602): Enhance zoom cache sanitization by parsing all inputs.
+- (enh #1595): Enhance styling for drop zone to maintain consistent size during file selections.
+- (bug #1594): Correct `removeThumb` validation for in readFiles `throwError` method.
+- (enh #1593): Correct resumable test upload validation.
+- (enh #1591): Parse arguments as an array via vanilla JS.
+- (enh #1589): Correct msgPlaceholder for de & uz translations.
+- (enh #1588): Enhance duplicate validation for recently uploaded thumbs.
+
+## version 5.1.1
+
+**Date:** 20-Jun-2020
+
+- (enh #1587): Enhance resumable ajax error trapping.
+- (bug #1585): Correct file sorting and zoom cache handling.
+
 ## version 5.1.0
 
 **Date:** 11-Jun-2020
