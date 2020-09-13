@@ -6,8 +6,8 @@ use kartik\detail\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Numeracion */
 
-$this->title = Yii::t('numeracion','Numeration: {number}',[ 'number' => $model->id_num]);;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('numeracion', 'Numeration'), 'url' => ['index']];
+$this->title = Yii::t('serie','Numeration: {number}',[ 'number' => $model->id_num]);;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('serie', 'Numeration'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
