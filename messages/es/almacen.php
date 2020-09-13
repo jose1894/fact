@@ -7,7 +7,7 @@ return [
     'Warehouses' => 'Almacenes',
     'Select a warehouse' => 'Seleccione un almacén',
     'Warehouse' => 'Almacén',
-    'Warehouse: <span class="label label-primary">{number}</span> {name}' => 'Almacén: <span class="label label-primary">{number}</span> {name}',
+    'Warehouse: {number} / {name}' => 'Almacén: {number} / {name}',
     'Create warehouse' => 'Crear almacén',
-    'Update warehouse: <span class="label label-primary">{number}</span> {name}' => 'Actualizar almacén: <span class="label label-primary">{number}</span> {name}'
+    'Update warehouse: {number} / {name}' => 'Actualizar almacén: {number} / {name}'
 ];

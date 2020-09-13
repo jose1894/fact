@@ -6,7 +6,7 @@ use kartik\detail\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Almacen */
 
-$this->title = Yii::t('almacen','Warehouse: <span class="label label-primary">{number}</span> {name}',[
+$this->title = Yii::t('almacen','Warehouse: {number} / {name}',[
   'number' => $model->id_almacen,
   'name' => $model->des_almacen
 ]);
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
   <div class="box box-success">
     <div class="box-header with-border">
       <h3 class="box-title">
-        <?= $this->title ?>
+        <?= Html::encode($this->title) ?>
       </h3>
     </div>
     <div class="box-body">
