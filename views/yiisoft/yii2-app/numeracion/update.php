@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Pais */
 
-$this->title = Yii::t('numeracion', 'Update numeration: <span class="label label-primary">{number}</span>', [
+$this->title = Yii::t('numeracion', 'Update numeration: {number}', [
 	'number' => $model->id_num,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('numeracion', 'Numeration'), 'url' => ['index']];
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = Yii::t('pais', 'Update');
 <div class="numeration-update">
 	<div class="box box-success">
       <div class="box-header with-border">
-        <h3 class="box-title"><?= $this->title ?></h3>
+        <h3 class="box-title"><?= Html::encode($this->title) ?></h3>
       </div>
       <div class="box-body">
           <div class="container-fluid">

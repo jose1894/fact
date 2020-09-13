@@ -13,7 +13,7 @@ use kartik\select2\Select2;
 /* @var $searchModel app\models\NumeracionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('numeracion', 'Numertation');
+$this->title = Yii::t('numeracion', 'Numeration');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="numeracion-index">
