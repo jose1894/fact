@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Departamento */
 
-$this->title = Yii::t('departamento', 'Update department / county / municipality: {<span class="label label-primary">{number}</span> {name}', [
+$this->title = Yii::t('departamento', 'Update department / county / municipality: {{number} / {name}', [
   'number' => $model->id_depto,
   'name' => $model->des_depto
 ]);
@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
   <div class="box box-success">
       <div class="box-header with-border">
         <h3 class="box-title">
-          <?= $this->title ?>
+          <?= Html::encode($this->title) ?>
         </h3>
       </div>
       <div class="box-body">
