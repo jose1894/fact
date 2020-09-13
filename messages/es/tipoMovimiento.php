@@ -8,7 +8,7 @@ return [
     'Select a type' => 'Seleccione un tipo',
     'Type' => 'Tipo',
     'Movement type' => 'Tipo de movimiento',
-    'Movement type: <span class="label label-primary">{number}</span> {name}' => 'Tipo de movimiento: <span class="label label-primary">{number}</span> {name}',
+    'Movement type: {number} / {name}' => 'Tipo de movimiento: {number} / {name}',
     'Create movement type' => 'Crear tipo de movimiento',
-    'Update movement type: <span class="label label-primary">{number}</span> {name}' => 'Actualizar tipo de movimiento: <span class="label label-primary">{number}</span> {name}'
+    'Update movement type: {number} / {name}' => 'Actualizar tipo de movimiento: {number} / {name}'
 ];

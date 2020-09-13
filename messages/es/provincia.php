@@ -8,8 +8,8 @@ return [
     'Input a code' => 'Ingrese un código',
     'Loading provinces...' => 'Cargando provincias...',
     'Create estate / province' => 'Crear estado / provincia',
-    'Estate / Province: <span class="label label-primary">{number}</span> {name}' => 'Estado / Provincia: <span class="label label-primary">{number}</span> {name}',
+    'Estate / Province: {number} / {name}' => 'Estado / Provincia: {number} / {name}',
     'Country' => 'País',
-    'Update estate / province: <span class="label label-primary">{number}</span> {name}' => 'Actualizar estado / provincia: <span class="label label-primary">{number}</span> {name}'
+    'Update estate / province: {number} / {name}' => 'Actualizar estado / provincia: {number} / {name}'
 
 ];

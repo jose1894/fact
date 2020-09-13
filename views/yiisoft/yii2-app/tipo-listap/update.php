@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\TipoListap */
 
-$this->title = Yii::t('tipo_listap', 'Update list price type: <span class="label label-primary">{number}</span> {name}', [
+$this->title = Yii::t('tipo_listap', 'Update list price type: {number} / {name}', [
     'number' => $model->id_lista,
     'name' => $model->desc_lista
 ]);
@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = Yii::t('tipo_listap', 'Update');
   <div class="box box-success">
       <div class="box-header with-border">
         <h3 class="box-title">
-          <?= $this->title ?>
+          <?= Html::encode($this->title) ?>
         </h3>
       </div>
       <div class="box-body">

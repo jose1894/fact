@@ -1,7 +1,7 @@
 <?php
 return [
-    'Numeration' => 'Serie',
-    'Create numeration' => 'Crear serie',
-    'Update numeration: {number}' => 'Actualizar serie: {number}',
-    'Numeration: {number}' => 'Serie: {number}',
+    'Numeration' => 'Numeración',
+    'Create numeration' => 'Crear numeración',
+    'Update numeration: {number}' => 'Actualizar numeración: {number}',
+    'Numeration: {number}' => 'Numeración: {number}',
 ];
