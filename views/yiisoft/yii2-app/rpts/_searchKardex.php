@@ -25,7 +25,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
       ],
   ]); ?>
   <div class="row">
-    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+    <div class="col-lg-6 col-xs-12">
       <?= $form->field($model, 'id_prod',[
         'addClass' => 'form-control ',
         'addon' => [ 
@@ -33,13 +33,13 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
 					]
 		])->widget(Select2::classname(), [
             'data' => Producto::getProductoList(),
-            'initValueText' => 0,
+            'initValueText' => null,
             'language' => Yii::$app->language,
-            'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-ticket"></i>']],
             'options' => [
-				'value' => Yii::t('producto','Select a product').'...',
+				'allowClear' => true,
 				'placeholder' => Yii::t('producto','Select a product').'...',
             ],
+			'changeOnReset' => true,
             'theme' => Select2::THEME_DEFAULT,
             'pluginOptions' => [
               'allowClear' => true,
@@ -47,7 +47,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
             ],
             ]) ?>
     </div>
-    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+    <div class="col-lg-6 col-xs-12">
       <?= $form->field($model, 'fecha_trans',[
           'addClass' => 'form-control ',
           // 'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-calendar"></i>']]

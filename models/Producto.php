@@ -104,6 +104,7 @@ class Producto extends \yii\db\ActiveRecord
 	
 	public static function getProductoList() 
 	{
+		
 		$productos = Producto::find()
 						->select(['id_prod','concat(rtrim(ltrim(cod_prod)),\' - \',rtrim(ltrim(des_prod))) as des_prod'])
 						->where(['status_prod' => Producto::STATUS_PROD_ACTIVE])->all();

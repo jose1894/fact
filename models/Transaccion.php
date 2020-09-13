@@ -62,27 +62,31 @@ class Transaccion extends \yii\db\ActiveRecord
     {
         return [
             [['codigo_trans', 'ope_trans', 'almacen_trans'], 'required'],
-            [['fecha_trans',
-            'id_prod',
-            'cod_prod',
-            'des_prod',
-            'fecha_trans',
-            'docref_trans',
-            'codigo_trans',
-            'ope_trans',
-            'id_tipom',
-            'des_tipom',
-            'id_tipod',
-            'des_tipod',
-            'ingreso_unidades',
-            'moneda',
-            'precio_compra_ext',
-            'precio_compra_soles',
-            'ingreso_valorizados',
-            'salidas_unidades',
-            'tipo',
-            'sucursal_trans',
-            ], 'safe'],
+            [
+				[
+					'fecha_trans',
+					'id_prod',
+					'cod_prod',
+					'des_prod',
+					'fecha_trans',
+					'docref_trans',
+					'codigo_trans',
+					'ope_trans',
+					'id_tipom',
+					'des_tipom',
+					'id_tipod',
+					'des_tipod',
+					'ingreso_unidades',
+					'moneda',
+					'precio_compra_ext',
+					'precio_compra_soles',
+					'ingreso_valorizados',
+					'salidas_unidades',
+					'tipo',
+					'sucursal_trans',
+				],
+				'safe'
+			],
             [['obsv_trans'], 'string'],
             [['tipo_trans', 'numdoc_trans', 'idrefdoc_trans', 'almacen_trans', 'sucursal_trans', 'usuario_trans', 'status_trans'], 'integer'],
             [['codigo_trans', 'docref_trans'], 'string', 'max' => 10],
@@ -100,7 +104,9 @@ class Transaccion extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_trans' => Yii::t('app', 'Id Trans'),
+			'id_prod' => Yii::t('producto','Product'),
+			'docref_trans' => Yii::t('cliente', 'Customer'),
+            /*'id_trans' => Yii::t('app', 'Id Trans'),
             'codigo_trans' => Yii::t('app', 'Codigo Trans'),
             'fecha_trans' => Yii::t('app', 'Fecha Trans'),
             'obsv_trans' => Yii::t('app', 'Obsv Trans'),
@@ -114,7 +120,30 @@ class Transaccion extends \yii\db\ActiveRecord
             'sucursal_trans' => Yii::t('app', 'Sucursal Trans'),
             'usuario_trans' => Yii::t('app', 'Usuario Trans'),
             'status_trans' => Yii::t('app', 'Status Trans'),
+			'docref_trans' => Yii::t('cliente', 'Customer'),*/
         ];
+		
+		/*return [
+			'docref_trans' => Yii::t('cliente', 'Customer'),
+			'id_prod' => Yii::t('producto','Product'),
+			'cod_prod' => Yii::t('producto','Product code'),
+			'des_prod' => Yii::t('producto','Description'),
+			'id_trans' => Yii::t('app', 'Id Trans'),
+            'codigo_trans' => Yii::t('app', 'Codigo Trans'),
+            'fecha_trans' => Yii::t('app', 'Date'),
+            'obsv_trans' => Yii::t('app', 'Comments'),
+            'tipo_trans' => Yii::t('app', 'Type'),
+            'ope_trans' => Yii::t('app', 'Operation'),
+            'numdoc_trans' => Yii::t('documento', 'Document'),
+            'idrefdoc_trans' => Yii::t('app', 'Idrefdoc Trans'),
+            'seriedocref_trans' => Yii::t('app', 'Seriedocref Trans'),            
+            'almacen_trans' => Yii::t('almacen', 'Warehouse'),
+            'sucursal_trans' => Yii::t('app', 'Sucursal Trans'),
+            'usuario_trans' => Yii::t('app', 'Usuario Trans'),
+            'status_trans' => Yii::t('app', 'Status Trans'),
+		];*/
+			
+
     }
 
     /**

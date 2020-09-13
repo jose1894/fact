@@ -164,7 +164,8 @@ class TransaccionSearch extends Transaccion
 						'defaultOrder' => [
 											'fecha_trans'=>SORT_ASC
 										]
-					]
+					],
+			'pagination' => false,
 		]);
 
 		$dataProvider->sort->attributes['fecha_trans'] = [

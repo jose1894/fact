@@ -20,9 +20,9 @@ $this->params['breadcrumbs'][] = $this->title;
 $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
 $primerDiaMes = date('01/MM/yyyy'); // hard-coded '01' for first day
 $ultimoDiaMes  = date('dd/MM/yyyy');
+$a = 1;
 ?>
 <div class="documento-index">
-
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(['id' => 'grid']); ?>
 
@@ -47,7 +47,10 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                             'attribute' => 'fecha_trans',
                             'format' => ['date', 'php:d/m/Y']
                           ],
-                          'docref_trans',
+                          [
+                            'attribute' => 'docref_trans',	
+							'label' => 'Documento',
+                          ],
                           [
                             'attribute' => 'codigo_trans',
                             'label' => 'Codigo',
@@ -95,7 +98,8 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                           ],
                           [
                             'attribute' => 'salidas_unidades',
-                            'value' => function( $data ) {
+                            'value' => function( $data,$a ) {
+								$a = 2;
                                 return $data['salidas_unidades'];
                             },
                             'label' => 'Salidas',
@@ -108,4 +112,5 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
         <?php Pjax::end(); ?>
 </div>
 <?php
+echo $a;
 // $this->registerCss(".kv-grid-table{ width: 1600px !important; }");
