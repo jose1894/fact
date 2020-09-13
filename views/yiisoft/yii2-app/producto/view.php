@@ -6,7 +6,7 @@ use kartik\detail\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Producto */
 
-$this->title =  Yii::t('producto','Product: <span class="label label-primary">{number}</span> {name}',[
+$this->title =  Yii::t('producto','Product: {number} / {name}',[
   'number' => $model->id_prod,
   'name' => $model->des_prod
 ]);
