@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\UnidadMedida */
 
-$this->title = Yii::t('tipo_producto', 'Update unit of measurement: <span class="label label-primary">{number}</span> {name}', [
+$this->title = Yii::t('unidad_medida', 'Update unit of measurement: {number} / {name}', [
 	'number' => $model->id_und,
     'name' => $model->des_und,
 ]);
@@ -16,7 +16,9 @@ $this->params['breadcrumbs'][] = Yii::t('unidad_medida', 'Update');
 <div class="unidad-medida-update">
   <div class="box box-success">
     <div class="box-header with-border">
-      <h3 class="box-title"><?= $this->title ?></h3>
+      <h3 class="box-title">
+        <?= Html::encode($this->title) ?>
+      </h3>
     </div>
     <div class="box-body">
         <div class="container-fluid">
