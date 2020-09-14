@@ -12,6 +12,7 @@ use app\models\Pedido;
  */
 class PedidoSearch extends Pedido
 {
+	public $pendientes;
     /**
      * {@inheritdoc}
      */
@@ -69,6 +70,13 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
             // $query->where('0=1');
             return $dataProvider;
         }
+		
+		if ( $this->pendientes ) {
+			$query->andFilterWhere(['in','estatus_pedido',[Pedido::STATUS_INACTIVO,Pedido::GUIA_GENERADA]])
+                 ->andFilterWhere(['like','tipo_pedido',[Pedido::PEDIDO]]);
+			//echo $query->createCommand()->sql;
+			return $dataProvider;
+		}
 
 
         // grid filtering conditions

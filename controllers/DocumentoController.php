@@ -96,8 +96,8 @@ class DocumentoController extends Controller
     {
       //$this->layout = "justStuff";
       $searchModel = new PedidoSearch();
-
-      $dataProvider = $searchModel->searchPendientes(Yii::$app->request->queryParams);
+	  $searchModel->pendientes = true;
+      $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
       return $this->render('listado-generar', [
           'searchModel' => $searchModel,
@@ -316,7 +316,7 @@ class DocumentoController extends Controller
                       $modelNotaSalidaDetalle = new NotaSalidaDetalle();
                       $modelNotaSalidaDetalle->trans_detalle = $modelNotaSalida->id_trans;
                       $modelNotaSalidaDetalle->prod_detalle = $notaSalidaDetalle[$i]['prod_detalle'];
-                      $modelNotaSalidaDetalle->cant_detalle = $notaSalidaDetalle[$i]['cant_detalle'];
+                      $modelNotaSalidaDetalle->cant_detalle = $notaSalidaDetalle[$i]['cant_detalle'];				  
 
                       if ( !($flag = $modelNotaSalidaDetalle->save()) ) {
                           $transaction->rollBack();
@@ -614,6 +614,17 @@ class DocumentoController extends Controller
       $date = $f->asDate($modelDocumento->fecha_doc, 'php:d/m/Y');
 
       $nroComprobante = $modelDocumento->tipoDoc->abrv_tipod . $modelDocumento->numeracion->serie_num . "-" . substr($modelDocumento->cod_doc,-8);
+	  
+	  $datoCliente = "";
+	  $labelDato = "";
+	  
+	  if ($modelDocumento->tipo_doc === Documento::TIPODOC_FACTURA) {	  
+		 $datoCliente = $modelDocumento->pedidoDoc->cltePedido->ruc_clte;
+		 $labelDato = Yii::t('cliente','R.U.C.');
+	  } else {
+		 $datoCliente = $modelDocumento->pedidoDoc->cltePedido->dni_clte; 
+		 $labelDato = Yii::t('cliente','D.N.I');
+	  }
 
       $header = '
       <table class="documento_enc" style="border-collapse: collapse;">
@@ -642,8 +653,8 @@ class DocumentoController extends Controller
           <td> &nbsp;' . $modelDocumento->pedidoDoc->cltePedido->nombre_clte . '</td>
         </tr>
         <tr>
-          <td align="right" style="font-weight:bold;">'.Yii::t('cliente','R.U.C.').'</td>
-          <td> &nbsp;' . $modelDocumento->pedidoDoc->cltePedido->ruc_clte . '</td>
+          <td align="right" style="font-weight:bold;">'.$labelDato.'</td>
+          <td> &nbsp;' . $datoCliente . '</td>
         </tr>
         <tr>
           <td align="right" style="font-weight:bold;border:1px solid black">'.Yii::t('cliente','Address').'</td>
@@ -687,12 +698,12 @@ class DocumentoController extends Controller
       $sunatUser = "20604954241MODDATOS";
       $sunatPass = "moddatos";
 
-
+		/*
       if (YII_ENV_DEV) {
         $sunatUser = '20604954241LEOPHARD';
         $sunatPass = 'Leophard0';
       }
-
+		*/
       $model = Documento::find()
                            ->where('id_doc = :id',[':id' => $id])
                            ->andWhere(['tipo_doc' => [Documento::TIPODOC_FACTURA,Documento::TIPODOC_BOLETA]])
@@ -704,7 +715,7 @@ class DocumentoController extends Controller
       $IMPUESTO = SiteController::getImpuesto();
 
       $see = new See();
-      $see->setService(SunatEndpoints::FE_PRODUCCION);
+      $see->setService(SunatEndpoints::FE_BETA);
       $see->setCertificate(file_get_contents('../C19110619915.pem'));
       $see->setCredentials($sunatUser, $sunatPass);
 
@@ -759,7 +770,29 @@ class DocumentoController extends Controller
         $precioUnitarioSIGV = $value->precio_pdetalle /(1 + ($value->impuesto_pdetalle / 100 )); //Precio unitario sin IGV por item
         $precioUnitarioSIGV = number_format($precioUnitarioSIGV / $value->cant_pdetalle, 2, '.', '');
         $cantidad = number_format($value->cant_pdetalle, 3, '.', '');
-
+		$descuento = $value->descu_pdetalle / 100;
+		
+		$item[] = (new SaleDetail())
+					->setCodProducto(trim($value->productoPdetalle->cod_prod))
+					->setUnidad($value->productoPdetalle->umedProd->sunatm_und)
+					->setDescripcion(trim($value->productoPdetalle->des_prod))
+					->setCantidad(floatval($cantidad))
+					->setMtoValorUnitario($precioUnitarioSIGV)
+					->setDescuentos([
+						(new Charge())
+							->setCodTipo('00') // Catalog. 53
+							->setMontoBase(precioUnitarioSIGV * $value->cant_pdetalle)
+							->setFactor($descuento)
+							->setMonto($descu * $cantidad)
+					])
+					->setMtoValorVenta($totalIGV)
+					->setMtoBaseIgv($totalSIGV)
+					->setPorcentajeIgv($value->impuesto_pdetalle)
+					->setIgv($totalIGV)
+					->setTipAfeIgv('10')
+					->setTotalImpuestos($totalIGV)
+					->setMtoPrecioUnitario($value->precio_pdetalle);
+		/*
         $item[] = (new SaleDetail())
             ->setCodProducto(trim($value->productoPdetalle->cod_prod))
             ->setUnidad($value->productoPdetalle->umedProd->sunatm_und)
@@ -772,7 +805,14 @@ class DocumentoController extends Controller
             ->setTotalImpuestos($totalIGV)
             ->setMtoValorVenta($totalIGV)
             ->setMtoValorUnitario($precioUnitarioSIGV)
-            ->setMtoPrecioUnitario($value->precio_pdetalle);
+            ->setMtoPrecioUnitario($value->precio_pdetalle)
+			->setDescuentos([
+				(new Charge())
+					->setCodTipo('00') // Catalog. 53
+					->setMontoBase(200)
+					->setFactor(0.10)
+					->setMonto(20)
+			]);*/
             // break;
       }
 

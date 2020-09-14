@@ -70,8 +70,10 @@ class DocumentoSearch extends Documento
 
         if ( $this->listado ) {
           $dataProvider->sort->defaultOrder = [
+					'fecha_doc' => SORT_DESC,
                     'cod_doc' => SORT_DESC,
-                    'fecha_doc' => SORT_DESC
+					'tipo_doc' => SORT_ASC,
+
           ];
         }
 

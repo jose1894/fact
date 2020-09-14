@@ -211,7 +211,7 @@ class ClienteController extends Controller
      * @return Cliente the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+	protected function findModel($id)
     {
         if (($model = Cliente::findOne($id)) !== null) {
             return $model;
@@ -221,10 +221,11 @@ class ClienteController extends Controller
     }
 
     public function actionClienteList($q = null, $id = null) {
+		exit('ak');
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $sucursal = SiteController::getSucursal();
         $out = ['results' => ['id' => '', 'text' => '']];
-
+		
         if ( !is_null( $q ) ) {
             $query = new Query;
 
@@ -247,7 +248,7 @@ class ClienteController extends Controller
           $query = new Query;
 
           $query->select(['c.id_clte as id','c.vendedor_clte as vendedor', 'c.nombre_clte AS text','c.direcc_clte', 'condp_clte as condp',
-                          'CONCAT(dt.des_dtto,\' - \', dp.des_depto,\' - \',pr.des_prov, \' - \',p.des_pais) as \'geo\'','lista_clte as tpl'])
+                          'CONCAT(dt.des_dtto,\' - \', dp.des_depto,\' - \',pr.des_prov, \' - \',p.des_pais) as \'geo\'','lista_clte as tpl','dni_clte','ruc_clte'])
               ->from(['cliente as c'])
               ->join('inner join ', ['distrito as dt'],' c.dtto_clte = dt.id_dtto and dt.status_dtto = 1 and sucursal_dtto = '.$sucursal)
               ->join('inner join ', ['provincia as pr'] ,' c.provi_cte = pr.id_prov and pr.status_prov = 1 and sucursal_prov = '.$sucursal)
@@ -255,7 +256,8 @@ class ClienteController extends Controller
               ->join('inner join ',['pais as p'],' c.pais_cte = p.id_pais and p.status_pais = 1 and sucursal_pais = '.$sucursal)
               ->andWhere('c.id_clte = :id_clte and c.sucursal_clte = :sucursal', [':id_clte' => $id, ':sucursal' => $sucursal ] )
               ->limit(1);
-
+			echo $query->createCommand()->sql;
+			exit();
           $command = $query->createCommand();
           $data = $command->queryAll();
 

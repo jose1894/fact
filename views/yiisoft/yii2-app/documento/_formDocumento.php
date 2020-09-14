@@ -393,7 +393,7 @@ if ( $model->isNewRecord ) {
                             ],
                         ])->label(false);
 
-                        echo Html::activeHiddenInput($modelDetalle, "[{$index}]prod_pdetalle");
+                        //echo Html::activeHiddenInput($modelDetalle, "[{$index}]prod_pdetalle");
                         ?>
 
                       </div>
@@ -408,7 +408,7 @@ if ( $model->isNewRecord ) {
                         ->field($modelDetalle,"[{$index}]plista_pdetalle", [ 'addClass' => 'form-control number-decimals input-sm'])
                         ->textInput([ 'type' => 'text','readonly' => true, 'readonly' => $disabledPedido])
                         ->label(false)?>
-                        <?php echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle"); ?>
+                        <?php //echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle"); ?>
                       </div>
                       <!--div class="col-xs-1 col-xs-12">
                         <?= $form->field($modelDetalle,"[{$index}]impuesto_pdetalle")
@@ -560,14 +560,14 @@ $( buttonPrint ).on( "click", function(){
 
 
 $( "#pedido-clte_pedido" ).on( "select2:select",function () {
-
+	debugger;
   $.ajax({
     url: "'. Url::to(['cliente/cliente-list']).'",
     method: "GET",
     data:{ id : $(this).val()},
     async: false,
     success: function( cliente ) {
-
+		console.log(\'clienteee\');
       cliente = cliente[ 0 ];
       let direccion = cliente.direcc_clte ? cliente.direcc_clte : " ",
           geo = cliente.geo ? cliente.geo : " ",

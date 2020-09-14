@@ -25,6 +25,7 @@ if ( $model->isNewRecord ) {
   $model->cod_pedido = "0000000000";
   $model->fecha_pedido = date('d/m/Y');
 } else {
+  $model->fecha_pedido = date('d/m/Y',strtotime($model->fecha_pedido));
   $disabled = true;
 }
 ?>
@@ -46,7 +47,7 @@ if ( $model->isNewRecord ) {
             echo $form->field($model, 'fecha_pedido',[
               'addClass' => 'form-control ',
             ])->textInput([
-                  'value' => date('d/m/Y',strtotime($model->fecha_pedido)),
+                  'value' => $model->fecha_pedido,
                   'readonly' => 'readonly',
                   'style' => ['text-align' => 'right'],
                   'disabled' => $disabled,
