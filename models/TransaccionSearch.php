@@ -123,7 +123,7 @@ class TransaccionSearch extends Transaccion
     // }
 
     public function search($params)
-    {	  
+    {
 		$query = new Query;
 		$query->select('id_prod,
 					  cod_prod,
@@ -238,18 +238,18 @@ class TransaccionSearch extends Transaccion
 
 		//Condicional para la fecha, verifica si es rango o solo una fecha
 		if ( !empty($this->fecha_trans) ) {
-		$fechaDoc = explode(" - ", $this->fecha_trans);
-		$fechaDocInicio = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[0]))->format('Y-m-d');
-		$fechaDocFin = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[1]))->format('Y-m-d');
-		$query->andFilterWhere(['between', 'fecha_trans', $fechaDocInicio, $fechaDocFin]);
+    		$fechaDoc = explode(" - ", $this->fecha_trans);
+    		$fechaDocInicio = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[0]))->format('Y-m-d');
+    		$fechaDocFin = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[1]))->format('Y-m-d');
+    		$query->andFilterWhere(['between', 'fecha_trans', $fechaDocInicio, $fechaDocFin]);
 		}
 
 
 		//grid filtering conditions
 		$query->andFilterWhere([
-			'id_prod' => $this->id_prod,		  
+			'id_prod' => $this->id_prod,
 		]);
-		
+
 		return $dataProvider;
     }
 }

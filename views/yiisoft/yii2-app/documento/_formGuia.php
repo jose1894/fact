@@ -446,7 +446,10 @@ if ( $model->isNewRecord ) {
                             'language' => Yii::$app->language,
                             'initValueText' => $productos, // set the initial display text
                             'disabled' => $disabledPedido,
-                            'options' => ['placeholder' => Yii::t('producto','Select a product').'...',],
+                            'options' => [
+                                'placeholder' => Yii::t('producto','Select a product').'...',
+                                'id' => "some_id{$index}",
+                              ],
                             'size' => Select2::SMALL,
                             'pluginOptions' => [
                                 'minimumInputLength' => 3,
@@ -800,7 +803,7 @@ function setPrices( value = null, row, tipo_lista ) {
         data:{
           id: value,
           tipo_listap: tipo_lista
-        },        
+        },
         success: function( data ) {
           if ( data.results ) {
             let precioLista = data.results[ 0 ].precio;

@@ -560,14 +560,13 @@ $( buttonPrint ).on( "click", function(){
 
 
 $( "#pedido-clte_pedido" ).on( "select2:select",function () {
-	debugger;
+
   $.ajax({
     url: "'. Url::to(['cliente/cliente-list']).'",
     method: "GET",
     data:{ id : $(this).val()},
     async: false,
     success: function( cliente ) {
-		console.log(\'clienteee\');
       cliente = cliente[ 0 ];
       let direccion = cliente.direcc_clte ? cliente.direcc_clte : " ",
           geo = cliente.geo ? cliente.geo : " ",
@@ -578,11 +577,22 @@ $( "#pedido-clte_pedido" ).on( "select2:select",function () {
           tpl = cliente.tpl;
 
       $( "#pedido-direccion_pedido" ).val( textDirecc );
-      //$( "#pedido-condp_pedido" ).val( condp );
       $( "#pedido-vend_pedido" ).val( vendedor );
       $( "#pedido-tipo_listap" ).val( tpl );
-      //$( "#pedido-condp_pedido" ).trigger( "change" );
       $( "#pedido-vend_pedido" ).trigger( "change" );
+
+      if ( cliente.tipoid_clte == 4 ) {
+        $( "#documento-tipo_doc" ).val(7);
+        $( "#documento-tipo_doc" ).trigger( "change" );
+
+        if ( !cliente.dni_clte ) {
+          $( "#documento-tipo_doc option" ).each( function( i, v ){            
+            if ( v.value == 8 ) {
+              v.disabled = true;
+            }
+          });
+        }
+      }
 
     }
   });
@@ -811,7 +821,7 @@ function setPrices( value = null, row, tipo_lista ) {
           id: value,
           tipo_listap: tipo_lista,
           id_pedido:' . $modelPedido->id_pedido . '
-        },        
+        },
         success: function( data ) {
           if ( data.results ) {
             let precioLista = data.results[ 0 ].precio;
