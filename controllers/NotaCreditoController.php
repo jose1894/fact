@@ -98,17 +98,18 @@ class NotaCreditoController extends Controller
     public function actionCreate()
     {
         $model = new NotaCredito();
-        // $modelsDetalles = [new DocumentoDetalle];
+        
         $post = Yii::$app->request->post();
-        //
-        //
+        
         if ( !empty($post) ) {
-          //print_r($post['NotaCredito-Detalle'][0]['check_ddetalle'] === "on" ); exit();
 
-          $documentoAnt = NotaCredito::find([
-                                              'id_doc = :doc',
-                                              [':doc' => $post['NotaCredito']['id_doc']]
-                                            ])->one();
+          $documentoAnt = NotaCredito::findOne([
+                                              'id_doc' => $post['NotaCredito']['id_doc'],
+											  'tipo_doc' => [
+																Documento::TIPODOC_FACTURA,
+																Documento::TIPODOC_BOLETA
+															]
+                                            ]);
 
           if ( $documentoAnt === null ) {
                 throw new NotFoundHttpException(Yii::t('documento', 'The requested page does not exist.'));

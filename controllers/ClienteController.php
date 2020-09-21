@@ -256,8 +256,8 @@ class ClienteController extends Controller
               ->join('inner join ',['pais as p'],' c.pais_cte = p.id_pais and p.status_pais = 1 and sucursal_pais = '.$sucursal)
               ->andWhere('c.id_clte = :id_clte and c.sucursal_clte = :sucursal', [':id_clte' => $id, ':sucursal' => $sucursal ] )
               ->limit(1);
-        			// echo $query->createCommand()->sql;
-        			// exit();
+        			 //echo $query->createCommand()->sql;
+        			 //exit();
           $command = $query->createCommand();
           $data = $command->queryAll();
 

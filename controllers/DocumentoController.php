@@ -32,10 +32,12 @@ use Greenter\Model\Client\Client;
 use Greenter\Model\Company\Company;
 use Greenter\Model\Company\Address;
 use Greenter\Model\Sale\Invoice;
+use Greenter\Model\Sale\Note;
 use Greenter\Model\Sale\SaleDetail;
 use Greenter\Model\Sale\Legend;
 use Greenter\Ws\Services\SunatEndpoints;
 use Greenter\See;
+use Greenter\Model\Sale\Charge;
 use yii\data\SqlDataProvider;
 
 
@@ -702,23 +704,27 @@ class DocumentoController extends Controller
       if (YII_ENV_DEV) {
         $sunatUser = '20604954241LEOPHARD';
         $sunatPass = 'Leophard0';
-      }
-		*/
+      }*/
+		
       $model = Documento::find()
                            ->where('id_doc = :id',[':id' => $id])
-                           ->andWhere(['tipo_doc' => [Documento::TIPODOC_FACTURA,Documento::TIPODOC_BOLETA]])
+                           ->andWhere(['tipo_doc' => [
+														Documento::TIPODOC_FACTURA,
+														Documento::TIPODOC_BOLETA
+													]
+							])
                            ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
                            ->one();
 
-
+		
       $empresa = SiteController::getEmpresa();
       $IMPUESTO = SiteController::getImpuesto();
+	  
 
       $see = new See();
       $see->setService(SunatEndpoints::FE_BETA);
       $see->setCertificate(file_get_contents('../C19110619915.pem'));
       $see->setCredentials($sunatUser, $sunatPass);
-
 
       // Cliente
       $client = new Client();
@@ -741,58 +747,42 @@ class DocumentoController extends Controller
           ->setNombreComercial($empresa->nombre_empresa)
           ->setAddress($address);
 
-      $subtotal =  $model->total_doc / 1 + ( $IMPUESTO / 100);
-      $subtotal = number_format( $subtotal,2,'.','');
-      $impuesto = $subtotal * ($IMPUESTO / 100);
-      $impuesto = number_format( $impuesto,2,'.','');
+      $subtotal =  $model->total_doc / (1 + ( $IMPUESTO / 100));
+      $subtotal = floatval(number_format( $subtotal,2,'.',''));
+      $impuesto = $model->total_doc - $subtotal;
+      $impuesto = floatval(number_format( $impuesto,2,'.',''));
+	  
+	  
       // Venta
       $invoice = (new Invoice())
           ->setUblVersion('2.1')
           ->setTipoOperacion('0101') // Catalog. 51
-          ->setTipoDoc('01')
+          ->setTipoDoc($model->tipoDoc->tipodsunat_tipod)
           ->setSerie( $model->tipoDoc->abrv_tipod.$model->numeracion->serie_num)
           ->setCorrelativo(substr($model->cod_doc,-8))
           ->setFechaEmision(new DateTime($model->fecha_doc))
           ->setTipoMoneda($model->pedidoDoc->monedaPedido->sunatm_moneda)
           ->setClient($client)
           ->setMtoOperGravadas( $subtotal ) //Subtotal sin IGV
-          ->setMtoIGV( $IMPUESTO ) // Monto de IGV
-          ->setTotalImpuestos( $model->totalimp_doc )
+          ->setMtoIGV( $impuesto ) // Monto de IGV
+          ->setTotalImpuestos( $impuesto )
           ->setValorVenta( $subtotal )
           ->setSubTotal( $model->total_doc )
-          ->setMtoImpVenta( $model->total_doc)
+          ->setMtoImpVenta( $model->total_doc )
           ->setCompany($company);
+		//var_dump($impuesto);exit();
 
       foreach ($model->pedidoDoc->detalles as $key => $value) {
         // code...
-        $totalSIGV = number_format($value->total_pdetalle / (1 + ($value->impuesto_pdetalle / 100 )), 2 , '.',''); //Total sin IGV por item
+        $totalSIGV = number_format(($value->total_pdetalle / (1 + ($value->impuesto_pdetalle / 100 ))), 2 , '.',''); //Total sin IGV por item
         $totalIGV = number_format($totalSIGV * ($value->impuesto_pdetalle / 100), 2, '.','');// Total de igv por item por cantidad
         $precioUnitarioSIGV = $value->precio_pdetalle /(1 + ($value->impuesto_pdetalle / 100 )); //Precio unitario sin IGV por item
-        $precioUnitarioSIGV = number_format($precioUnitarioSIGV / $value->cant_pdetalle, 2, '.', '');
         $cantidad = number_format($value->cant_pdetalle, 3, '.', '');
 		$descuento = $value->descu_pdetalle / 100;
 		
-		$item[] = (new SaleDetail())
-					->setCodProducto(trim($value->productoPdetalle->cod_prod))
-					->setUnidad($value->productoPdetalle->umedProd->sunatm_und)
-					->setDescripcion(trim($value->productoPdetalle->des_prod))
-					->setCantidad(floatval($cantidad))
-					->setMtoValorUnitario($precioUnitarioSIGV)
-					->setDescuentos([
-						(new Charge())
-							->setCodTipo('00') // Catalog. 53
-							->setMontoBase(precioUnitarioSIGV * $value->cant_pdetalle)
-							->setFactor($descuento)
-							->setMonto($descu * $cantidad)
-					])
-					->setMtoValorVenta($totalIGV)
-					->setMtoBaseIgv($totalSIGV)
-					->setPorcentajeIgv($value->impuesto_pdetalle)
-					->setIgv($totalIGV)
-					->setTipAfeIgv('10')
-					->setTotalImpuestos($totalIGV)
-					->setMtoPrecioUnitario($value->precio_pdetalle);
-		/*
+		//var_dump($totalSIGV);exit();
+		
+		
         $item[] = (new SaleDetail())
             ->setCodProducto(trim($value->productoPdetalle->cod_prod))
             ->setUnidad($value->productoPdetalle->umedProd->sunatm_und)
@@ -803,17 +793,9 @@ class DocumentoController extends Controller
             ->setIgv($totalIGV) //Total de IGV por item
             ->setTipAfeIgv('10')
             ->setTotalImpuestos($totalIGV)
-            ->setMtoValorVenta($totalIGV)
+            ->setMtoValorVenta($totalSIGV)//Total por item sin IGV
             ->setMtoValorUnitario($precioUnitarioSIGV)
-            ->setMtoPrecioUnitario($value->precio_pdetalle)
-			->setDescuentos([
-				(new Charge())
-					->setCodTipo('00') // Catalog. 53
-					->setMontoBase(200)
-					->setFactor(0.10)
-					->setMonto(20)
-			]);*/
-            // break;
+            ->setMtoPrecioUnitario($value->precio_pdetalle);
       }
 
       $legend = (new Legend())
@@ -828,14 +810,15 @@ class DocumentoController extends Controller
       // Guardar XML
       file_put_contents(Yii::getAlias('@app') . '/xml/sent/' . $invoice->getName().'.xml',
                         $see->getFactory()->getLastXml());
-      $model->statussunat_doc = $result->getCdrResponse()->getCode();
+	  //print_r($result);exit();
+      //$model->statussunat_doc = $result->getCdrResponse()->getCode();
       $model->save();
 
       $return = [
           'description' => $result->getCdrResponse()->getDescription(),
           'code' => $result->getCdrResponse()->getCode(),
           'id' => $result->getCdrResponse()->getId(),
-          ];
+      ];
 
       foreach ($result->getCdrResponse()->getNotes() as $key => $value){
             $return['notes'][$key] = $value;
@@ -843,6 +826,159 @@ class DocumentoController extends Controller
       echo json_encode($return);
       // Guardar CDR
       file_put_contents(Yii::getAlias('@app') . '/xml/response/' . 'R-'.$invoice->getName().'.zip', $result->getCdrZip());
+    }
+	
+	function actionAjaxGenNoteXml( $id ){
+      $sunatUser = "20604954241MODDATOS";
+      $sunatPass = "moddatos";
+
+		/*
+      if (YII_ENV_DEV) {
+        $sunatUser = '20604954241LEOPHARD';
+        $sunatPass = 'Leophard0';
+      }*/
+		
+      $model = Documento::find()
+                           ->where('id_doc = :id',[':id' => $id])
+                           ->andWhere(['tipo_doc' => [
+														Documento::TIPODOC_NCREDITO,
+													]])
+                           ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
+                           ->one();
+
+		
+      $empresa = SiteController::getEmpresa();
+      $IMPUESTO = SiteController::getImpuesto();
+	  
+
+      $see = new See();
+      $see->setService(SunatEndpoints::FE_BETA);
+      $see->setCertificate(file_get_contents('../C19110619915.pem'));
+      $see->setCredentials($sunatUser, $sunatPass);
+
+      // Cliente
+      $client = new Client();
+      $client->setTipoDoc('6')
+          ->setNumDoc($model->pedidoDoc->cltePedido->ruc_clte)
+          ->setRznSocial($model->pedidoDoc->cltePedido->nombre_clte);
+
+      // Emisor
+      $address = new Address();
+      $address->setUbigueo('150132')
+          ->setDepartamento('LIMA')
+          ->setProvincia('LIMA')
+          ->setDistrito('SAN JUAN DE LURIGANCHO')
+          ->setUrbanizacion('NONE')
+          ->setDireccion('JR. LAS ALCAPARRAS NRO. 467 URB. LAS FLORES - LIMA LIMA SAN JUAN DE LURIGANCHO');
+
+      $company = new Company();
+      $company->setRuc( $empresa->ruc_empresa )
+          ->setRazonSocial( $empresa->nombre_empresa )
+          ->setNombreComercial($empresa->nombre_empresa)
+          ->setAddress($address);
+
+      $subtotal =  $model->total_doc / (1 + ( $IMPUESTO / 100));
+      $subtotal = floatval(number_format( $subtotal,2,'.',''));
+      $impuesto = $model->total_doc - $subtotal;
+      $impuesto = floatval(number_format( $impuesto,2,'.',''));
+	  
+	  
+      // Venta
+      $note = (new Note())
+          ->setUblVersion('2.1')
+          ->setTipoOperacion('0101') // Catalog. 51
+          ->setTipoDoc($model->tipoDoc->tipodsunat_tipod)
+          ->setSerie( $model->tipoDoc->abrv_tipod.$model->numeracion->serie_num)
+          ->setCorrelativo(substr($model->cod_doc,-8))
+          ->setFechaEmision(new DateTime($model->fecha_doc))
+          ->setTipoMoneda($model->pedidoDoc->monedaPedido->sunatm_moneda)
+          ->setClient($client)
+          ->setMtoOperGravadas( $subtotal ) //Subtotal sin IGV
+          ->setMtoIGV( $impuesto ) // Monto de IGV
+          ->setTotalImpuestos( $impuesto )
+          ->setValorVenta( $subtotal )
+          ->setSubTotal( $model->total_doc )
+          ->setMtoImpVenta( $model->total_doc )
+          ->setCompany($company);
+		//var_dump($impuesto);exit();
+		
+		->setUblVersion('2.1')
+		->setTipoDoc($model->tipoDoc->tipodsunat_tipod)
+		->setSerie($model->tipoDoc->abrv_tipod.$model->numeracion->serie_num)
+		->setCorrelativo(substr($model->cod_doc,-8))
+		->setFechaEmision(new DateTime($model->fecha_doc))
+		->setTipDocAfectado('01') // Tipo Doc: Factura
+		->setNumDocfectado( $model->docAfectado->tipoDoc->abrv_tipod.$model->docAfectado->numeracion->serie_num) // Factura: Serie-Correlativo
+		->setCodMotivo('07') // Catalogo. 09
+		->setDesMotivo('DEVOLUCION POR ITEM')
+		->setTipoMoneda('PEN')
+		->setGuias([/* Guias (Opcional) */
+			(new Document())
+			->setTipoDoc('09')
+			->setNroDoc('0001-213')
+		])
+		->setCompany($util->shared->getCompany())
+		->setClient($util->shared->getClient())
+		->setMtoOperGravadas(200)
+		->setMtoIGV(36)
+		->setTotalImpuestos(36)
+		->setMtoImpVenta(236)
+		;
+
+      foreach ($model->pedidoDoc->detalles as $key => $value) {
+        // code...
+        $totalSIGV = number_format(($value->total_pdetalle / (1 + ($value->impuesto_pdetalle / 100 ))), 2 , '.',''); //Total sin IGV por item
+        $totalIGV = number_format($totalSIGV * ($value->impuesto_pdetalle / 100), 2, '.','');// Total de igv por item por cantidad
+        $precioUnitarioSIGV = $value->precio_pdetalle /(1 + ($value->impuesto_pdetalle / 100 )); //Precio unitario sin IGV por item
+        $cantidad = number_format($value->cant_pdetalle, 3, '.', '');
+		$descuento = $value->descu_pdetalle / 100;
+		
+		//var_dump($totalSIGV);exit();
+		
+		
+        $item[] = (new SaleDetail())
+            ->setCodProducto(trim($value->productoPdetalle->cod_prod))
+            ->setUnidad($value->productoPdetalle->umedProd->sunatm_und)
+            ->setCantidad(floatval($cantidad))
+            ->setDescripcion(trim($value->productoPdetalle->des_prod))
+            ->setMtoBaseIgv($totalSIGV) //Total por item sin IGV
+            ->setPorcentajeIgv($value->impuesto_pdetalle) // 18%
+            ->setIgv($totalIGV) //Total de IGV por item
+            ->setTipAfeIgv('10')
+            ->setTotalImpuestos($totalIGV)
+            ->setMtoValorVenta($totalSIGV)//Total por item sin IGV
+            ->setMtoValorUnitario($precioUnitarioSIGV)
+            ->setMtoPrecioUnitario($value->precio_pdetalle);
+      }
+
+      $legend = (new Legend())
+          ->setCode('1000')
+          ->setValue(NumerosEnLetras::convertir($model->total_doc));
+
+      $note->setDetails($item)
+              ->setLegends([$legend]);
+
+      $result = $see->send($note);
+
+      // Guardar XML
+      file_put_contents(Yii::getAlias('@app') . '/xml/sent/' . $note->getName().'.xml',
+                        $see->getFactory()->getLastXml());
+	  //print_r($result);exit();
+      //$model->statussunat_doc = $result->getCdrResponse()->getCode();
+      $model->save();
+
+      $return = [
+          'description' => $result->getCdrResponse()->getDescription(),
+          'code' => $result->getCdrResponse()->getCode(),
+          'id' => $result->getCdrResponse()->getId(),
+      ];
+
+      foreach ($result->getCdrResponse()->getNotes() as $key => $value){
+            $return['notes'][$key] = $value;
+      }
+      echo json_encode($return);
+      // Guardar CDR
+      file_put_contents(Yii::getAlias('@app') . '/xml/response/' . 'R-'.$note->getName().'.zip', $result->getCdrZip());
     }
 
     public function actionReporteVentas() {

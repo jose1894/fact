@@ -353,7 +353,10 @@ if ( $model->isNewRecord ) {
                             'language' => Yii::$app->language,
                             'initValueText' => $productos, // set the initial display text
                             'disabled' => $disabledPedido,
-                            'options' => ['placeholder' => Yii::t('producto','Select a product').'...',],
+                            'options' => [
+									'placeholder' => Yii::t('producto','Select a product').'...',
+									//'id' => "some_id{$index}",
+									],
                             'size' => Select2::SMALL,
                             'pluginOptions' => [
                                 'minimumInputLength' => 3,
@@ -393,7 +396,7 @@ if ( $model->isNewRecord ) {
                             ],
                         ])->label(false);
 
-                        //echo Html::activeHiddenInput($modelDetalle, "[{$index}]prod_pdetalle");
+                        echo Html::activeHiddenInput($modelDetalle, "[{$index}]prod_pdetalle");
                         ?>
 
                       </div>
@@ -582,8 +585,8 @@ $( "#pedido-clte_pedido" ).on( "select2:select",function () {
       $( "#pedido-vend_pedido" ).trigger( "change" );
 
       if ( cliente.tipoid_clte == 4 ) {
-        $( "#documento-tipo_doc" ).val(7);
-        $( "#documento-tipo_doc" ).trigger( "change" );
+        //$( "#documento-tipo_doc" ).val(7);
+        //$( "#documento-tipo_doc" ).trigger( "change" );
 
         if ( !cliente.dni_clte ) {
           $( "#documento-tipo_doc option" ).each( function( i, v ){            
@@ -591,6 +594,7 @@ $( "#pedido-clte_pedido" ).on( "select2:select",function () {
               v.disabled = true;
             }
           });
+		  //$( "#documento-tipo_doc" ).trigger( "select2:select" );
         }
       }
 

@@ -494,14 +494,16 @@ $( "#pedido-clte_pedido" ).on( "change",function () {
           tpl = cliente.tpl;
 
       $( "#pedido-direccion_pedido" ).val( textDirecc );
+	  
+	  //$( "#pedido-condp_pedido" ).val( 10 ).trigger( "select2:select" );
 
       if ( !$( "#pedido-condp_pedido" ).val() ) {
-        $( "#pedido-condp_pedido" ).val( condp );
+        $( "#pedido-condp_pedido" ).val( condp ).trigger( "select2:select" );
       }
 
       $( "#pedido-vend_pedido" ).val( vendedor );
       $( "#pedido-tipo_listap" ).val( tpl );
-      $( "#pedido-condp_pedido" ).trigger( "change" );
+      //$( "#pedido-condp_pedido" ).trigger( "select2:select" );
       $( "#pedido-vend_pedido" ).trigger( "change" );
 
     }

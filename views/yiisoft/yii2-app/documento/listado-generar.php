@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
 		    'pjax' => true,
-        'columns' => [
+			'columns' => [
             [
               'attribute'=>'tipo_pedido',
               'value' => function($data){
