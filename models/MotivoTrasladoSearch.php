@@ -41,7 +41,7 @@ class MotivoTrasladoSearch extends MotivoTraslado
      */
     public function search($params)
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+		$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = MotivoTraslado::find()
                  ->where('sucursal_motivo = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);

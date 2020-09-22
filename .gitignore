@@ -13,13 +13,17 @@ nbproject
 Thumbs.db
 
 # composer vendor dir
-#vendor
+vendor
 
 # web assets
 /web/assets/*
 
 #config
 config
+
+#xml
+xml/response/*
+xml/sent/*
 
 # composer itself is not needed
 composer.phar

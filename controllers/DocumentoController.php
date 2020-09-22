@@ -837,6 +837,7 @@ class DocumentoController extends Controller
         $sunatUser = '20604954241LEOPHARD';
         $sunatPass = 'Leophard0';
       }*/
+	  
 		
       $model = Documento::find()
                            ->where('id_doc = :id',[':id' => $id])
@@ -882,48 +883,25 @@ class DocumentoController extends Controller
       $impuesto = $model->total_doc - $subtotal;
       $impuesto = floatval(number_format( $impuesto,2,'.',''));
 	  
-	  
+	  //print_r($model->tipoDoc->abrv_tipod.$model->numeracion->serie_num);exit();
       // Venta
       $note = (new Note())
-          ->setUblVersion('2.1')
-          ->setTipoOperacion('0101') // Catalog. 51
-          ->setTipoDoc($model->tipoDoc->tipodsunat_tipod)
-          ->setSerie( $model->tipoDoc->abrv_tipod.$model->numeracion->serie_num)
-          ->setCorrelativo(substr($model->cod_doc,-8))
-          ->setFechaEmision(new DateTime($model->fecha_doc))
-          ->setTipoMoneda($model->pedidoDoc->monedaPedido->sunatm_moneda)
-          ->setClient($client)
-          ->setMtoOperGravadas( $subtotal ) //Subtotal sin IGV
-          ->setMtoIGV( $impuesto ) // Monto de IGV
-          ->setTotalImpuestos( $impuesto )
-          ->setValorVenta( $subtotal )
-          ->setSubTotal( $model->total_doc )
-          ->setMtoImpVenta( $model->total_doc )
-          ->setCompany($company);
-		//var_dump($impuesto);exit();
-		
 		->setUblVersion('2.1')
 		->setTipoDoc($model->tipoDoc->tipodsunat_tipod)
 		->setSerie($model->tipoDoc->abrv_tipod.$model->numeracion->serie_num)
 		->setCorrelativo(substr($model->cod_doc,-8))
 		->setFechaEmision(new DateTime($model->fecha_doc))
-		->setTipDocAfectado('01') // Tipo Doc: Factura
-		->setNumDocfectado( $model->docAfectado->tipoDoc->abrv_tipod.$model->docAfectado->numeracion->serie_num) // Factura: Serie-Correlativo
-		->setCodMotivo('07') // Catalogo. 09
-		->setDesMotivo('DEVOLUCION POR ITEM')
-		->setTipoMoneda('PEN')
-		->setGuias([/* Guias (Opcional) */
-			(new Document())
-			->setTipoDoc('09')
-			->setNroDoc('0001-213')
-		])
-		->setCompany($util->shared->getCompany())
-		->setClient($util->shared->getClient())
-		->setMtoOperGravadas(200)
-		->setMtoIGV(36)
-		->setTotalImpuestos(36)
-		->setMtoImpVenta(236)
-		;
+		->setTipDocAfectado($model->docAfectado->tipoDoc->tipodsunat_tipod) // Tipo Doc: Factura
+		->setNumDocfectado( $model->docAfectado->tipoDoc->abrv_tipod.$model->docAfectado->numeracion->serie_num."-".intval($model->docAfectado->cod_doc)) // Factura: Serie-Correlativo
+		->setCodMotivo($model->motivosunat_doc) // Catalogo. 09
+		->setDesMotivo($model->motivoNcredito->des_motivo)
+		->setTipoMoneda($model->pedidoDoc->monedaPedido->sunatm_moneda)
+		->setCompany($company)
+		->setClient($client)
+		->setMtoOperGravadas( $subtotal )
+		->setMtoIGV( $impuesto )
+		->setTotalImpuestos( $impuesto )
+		->setMtoImpVenta( $model->total_doc);
 
       foreach ($model->pedidoDoc->detalles as $key => $value) {
         // code...

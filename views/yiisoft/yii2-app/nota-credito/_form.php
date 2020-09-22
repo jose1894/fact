@@ -6,6 +6,7 @@ use kartik\form\ActiveForm;
 use yii\helpers\ArrayHelper;
 use app\models\Cliente;
 use app\models\Documento;
+use app\models\MotivoNcredito;
 use app\models\Vendedor;
 use app\models\Moneda;
 use app\models\Almacen;
@@ -198,23 +199,14 @@ use app\base\Model;
                         ])  ?>
                   </div>
                 </div>
+				
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                   <div class="form-group">
                     <label class="control-label" for="motivo_doc"><?= Yii::t('cliente','Motivo')?></label>
-                    <?= Html::dropDownList('NotaCredito[motivo_doc]', null,[
-                                                                '01' =>	'Anulación de la operación',
-                                                                '02' =>	'Anulación por error en el RUC',
-                                                                '03' =>	'Corrección por error en la descripción',
-                                                                '04' =>	'Descuento global',
-                                                                '05' =>	'Descuento por ítem',
-                                                                '06' =>	'Devolución total',
-                                                                '07' =>	'Devolución por ítem',
-                                                                '08' =>	'Bonificación',
-                                                                '09' =>	'Disminución en el valor',
-                                                                '10' =>	'Otros Conceptos ',
-                                                                '11' =>	'Ajustes de operaciones de exportación',
-                                                                '12' =>	'Ajustes afectos al IVAP'
-                                                              ],
+					<?php 
+						$motivosNcredito = MotivoNcredito::getMotivos();
+					?>
+                    <?= Html::dropDownList('NotaCredito[motivo_doc]', null,$motivosNcredito,
                                                               [
                                                                 'prompt' => Yii::t('app','Select'),
                                                                 'class' => 'form-control',

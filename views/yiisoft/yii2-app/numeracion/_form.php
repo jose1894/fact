@@ -63,9 +63,7 @@ use yii\web\View ;
 <?php
 
 $js = <<< JS
-$( '#numeracion-serie_num' ).on( 'blur', function(){
-  $( this ). val( $( this ).val().padStart(2,'0') );
-})
+
 $( '#numeracion-numero_num' ).on( 'blur', function(){
   $( this ). val( $( this ).val().padStart(10,'0') );
 })

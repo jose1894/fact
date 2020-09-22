@@ -114,6 +114,14 @@ return [
                 'motivo_traslado' => 'motivoTraslado.php',
             ],
         ],
+		'motivo_ncredito' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+                'motivo_ncredito' => 'motivoNcredito.php',
+            ],
+        ],
         'lista_precios' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',

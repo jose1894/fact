@@ -136,6 +136,14 @@ class Documento extends \yii\db\ActiveRecord
     {
         return $this->hasOne(MotivoTraslado::className(), ['id_motivo' => 'motivo_doc']);
     }
+	
+	/**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMotivoNcredito()
+    {
+        return $this->hasOne(MotivoNcredito::className(), ['cod_motivo' => 'motivosunat_doc']);
+    }
 
     public function getDetalles()
     {
@@ -159,7 +167,7 @@ class Documento extends \yii\db\ActiveRecord
 			->where([
 				'id_doc' => $this->docref_doc,
 				'status_doc' => Documento::DOCUMENTO_GENERADO
-			])
+			]);
 	}
 
     public function getNumeracion()

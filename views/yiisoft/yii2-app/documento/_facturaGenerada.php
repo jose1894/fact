@@ -139,7 +139,10 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                                     ]) ;
                         },
                         'sunat' =>  function ($url, $model) {
-                            return ($model->statussunat_doc < 0 && $model->status_doc == $model::DOCUMENTO_GENERADO) ? Html::a('<button class="btn btn-flat btn-success"><i class="fa fa-upload"></i></button>',
+							$return = "";							
+							if ($model->statussunat_doc < 0 && $model->status_doc == $model::DOCUMENTO_GENERADO){
+							
+								$return = Html::a('<button class="btn btn-flat btn-success"><i class="fa fa-upload"></i></button>',
                                 $url,
                                 [
                                     'title' => Yii::t('app', 'Send'). ' SUNAT',
@@ -147,16 +150,24 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                                     'data' => [
                                         'id' => $model->id_doc,
                                     ]
-                                ]) : (($model->statussunat_doc === 0) ? Html::a('<button class="btn btn-flat btn-success"><i class="fa fa-check"></i></button>',
-                                '#',
-                                [
-                                    'title' => Yii::t('app', 'Sended'). ' SUNAT',
-                                ]) : Html::a('<button class="btn btn-flat btn-danger"><i class="fa fa-ban"></i></button>',
+								]);
+							} else {
+								if ($model->statussunat_doc === 0){
+									$return = Html::a('<button class="btn btn-flat btn-success"><i class="fa fa-check"></i></button>',
+									'#',
+									[
+										'title' => Yii::t('app', 'Sended'). ' SUNAT',
+									]);
+								} else {
+									$return = Html::a('<button class="btn btn-flat btn-danger"><i class="fa fa-ban"></i></button>',
                                     "",
                                     [
                                         'title' => Yii::t('app', 'CANCELED'),
                                         'class' => 'pjax-canceled',
-                                    ]));
+                                    ]);
+								}								
+							}
+                            return  $return;
                         },
                     ],
                     'urlCreator' => function ($action, $model) {
@@ -173,8 +184,12 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                         }
 
                         if ($action === 'sunat') {
-                            $url = Url::to(['documento/ajax-gen-fact-xml','id' => $model->id_doc]);
-                            return $url;
+							if ($model->tipo_doc === Documento::TIPODOC_FACTURA || $model->tipo_doc === Documento::TIPODOC_BOLETA) {
+								return Url::to(['documento/ajax-gen-fact-xml','id' => $model->id_doc]);
+							}
+							if ($model->tipo_doc === Documento::TIPODOC_NCREDITO ) {
+								return Url::to(['documento/ajax-gen-note-xml','id' => $model->id_doc]);
+							}
                         }
                     }
                 ],
