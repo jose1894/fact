@@ -706,7 +706,7 @@ $js = '
             }
 
 			window.open(
-			  "'.Url::to(['nota-credito/nota-rpt']).'?id=" + data.id,
+			  "'.Url::to(['nota-credito/nota-rpt']).'/" + data.id,
 			  "'. Yii::t('documento','Credit note').'",
 			  "toolbar=no," +
 			  "location=no," +

@@ -80,7 +80,9 @@ class NotaCredito extends \yii\db\ActiveRecord
             'transp_doc' => Yii::t('transportista', 'Carrier'),
             'utransp_doc' => Yii::t('unidad_transporte', 'Transport unit'),
             'almacen_doc' => Yii::t('almacen', 'Warehouse'),
+            'docref_doc' => Yii::t('documento','Referencing document'),
             'motivo_doc' => Yii::t('motivo_traslado', 'Transfer reason'),
+            'condpago_doc' => Yii::t('condicionp', 'Payment condition'),
             'status_doc' => Yii::t('documento', 'Status'),
             'sucursal_doc' => Yii::t('documento', 'Sucursal '),
         ];
@@ -133,4 +135,18 @@ class NotaCredito extends \yii\db\ActiveRecord
     {
        return $this->hasOne(Numeracion::className(), ['id_num' => 'numeracion_doc']);
     }
+
+    public function getCondPago()
+    {
+        return $this->hasOne(CondPago::className(),['id_condp' => 'condpago_doc']);
+    }
+
+    public function getDocAfectado()
+	{
+		return Documento::find()
+			->where([
+				'id_doc' => $this->docref_doc,
+				'status_doc' => Documento::DOCUMENTO_GENERADO
+			]);
+	}
 }

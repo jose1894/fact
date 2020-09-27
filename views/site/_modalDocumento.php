@@ -51,7 +51,7 @@ $js = '
               $( $form ).trigger( "reset" );
             }
 
-            window.open("'.Url::to(['documento/documento-rpt']).'?id=" + data.id,"_blank");
+            window.open("'.Url::to(['documento/documento-rpt']).'/" + data.id,"_blank");
 
             swal(data.title, data.message, data.type);
             $( ".close-btn" ).trigger( "click" );

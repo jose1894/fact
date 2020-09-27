@@ -805,7 +805,7 @@ JS
             .then((willIssue) => {
               if (willIssue) {
                 window.open(
-                  '".Url::to(['pedido/pedido-rpt'])."?id=' + data.id,
+                  '".Url::to(['pedido/pedido-rpt'])."/' + data.id,
                   '". Yii::t('pedido','Order')."',
                   'toolbar=no,' +
                   'location=no,' +

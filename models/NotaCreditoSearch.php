@@ -43,12 +43,12 @@ class NotaCreditoSearch extends NotaCredito
      */
     public function search($params)
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = NotaCredito::find()
             ->where([
                 'sucursal_doc' => $sucursal,
-                'tipo_doc' => [NotaCredito::TIPO_NCREDITO],
-                'status_doc' =>[NotaCredito::DOCUMENTO_GENERADO, documento::DOCUMENTO_ANULADO]
+                'tipo_doc' => NotaCredito::TIPODOC_NCREDITO,
+                //'status_doc' =>[NotaCredito::DOCUMENTO_GENERADO, documento::DOCUMENTO_ANULADO]
             ]);
 
         // add conditions that should always apply here

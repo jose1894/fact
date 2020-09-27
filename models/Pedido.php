@@ -77,7 +77,7 @@ class Pedido extends \yii\db\ActiveRecord
             'condp_pedido' => Yii::t('condicionp', 'Payment condition'),
             'tipo_pedido' => Yii::t('pedido', 'Type'),
             'usuario_pedido' => Yii::t('pedido', 'Usuario Pedido'),
-            'estatus_pedido' => Yii::t('pedido', 'Estatus Pedido'),
+            'estatus_pedido' => Yii::t('pedido', 'Status'),
             'sucursal_pedido' => Yii::t('pedido', 'Sucursal Pedido'),
         ];
     }

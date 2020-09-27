@@ -174,4 +174,9 @@ class Documento extends \yii\db\ActiveRecord
     {
        return $this->hasOne(Numeracion::className(), ['id_num' => 'numeracion_doc']);
     }
+
+    public function getCondPago()
+    {
+        return $this->hasOne(CondPago::className(),['id_condp' => 'condpago_doc']);
+    }
 }

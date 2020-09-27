@@ -114,10 +114,9 @@ class NotaCreditoController extends Controller
           if ( $documentoAnt === null ) {
                 throw new NotFoundHttpException(Yii::t('documento', 'The requested page does not exist.'));
           }
-
           try{
-                $transaction = \Yii::$app->db->beginTransaction();
-                $sucursal               = SiteController::getSucursal();
+            $transaction = \Yii::$app->db->beginTransaction();
+            $sucursal               = SiteController::getSucursal();
                 $model->pedido_doc      = $documentoAnt->pedidoDoc->id_pedido;
                 $model->docref_doc      = $documentoAnt->id_doc;
                 $model->fecha_doc       = date("Y") . "-" . date("m") . "-" . date("d");
@@ -127,6 +126,7 @@ class NotaCreditoController extends Controller
                 $model->motivosunat_doc = $post['NotaCredito']['motivo_doc'];
                 $model->tipo_doc        = $post['NotaCredito']['tipod_doc'];
                 $model->almacen_doc     = $post['NotaCredito']['almacen_doc'];
+                $model->condpago_doc     = $post['NotaCredito']['condpago_doc'];
                 $model->tipocambio_doc  = TipoCambio::getTipoCambio()->valorf_tipoc;
                 $model->sucursal_doc    = $documentoAnt->sucursal_doc;
                 $numDoc                 = Numeracion::getNumeracionById( $model->tipo_doc );
@@ -141,9 +141,9 @@ class NotaCreditoController extends Controller
                 $codigoDoc       = (int) $numDoc->numero_num + 1;
                 $id_num          = $numDoc->id_num;
                 $model->tipo_doc = $numDoc->tipo_num;
-
+                
                 $codigoDoc             = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
-
+                
                 if ( $documentoAnt->pedidoDoc->cltePedido->tipoIdentificacion->cod_tipoi == TipoIdentificacion::TIPO_RUC ){
                   $tipoDocClte         = TipoIdentificacion::TIPO_RUC;
                   $docClte             = $documentoAnt->pedidoDoc->cltePedido->ruc_clte;
@@ -151,22 +151,22 @@ class NotaCreditoController extends Controller
                   $tipoDocClte         = TipoIdentificacion::TIPO_DNI;
                   $docClte             = $documentoAnt->pedidoDoc->cltePedido->dni_clte;
                 }
-
+                
                 $model->cod_doc        = $codigoDoc;
                 $model->numeracion_doc = $id_num;
                 $model->sucursal_doc   = $sucursal;
                 $model->status_doc     = Documento::DOCUMENTO_GENERADO;
-
+                
                 if ( !($flag = $model->save()) ) {
-                    $transaction->rollBack();
-                    throw new \Exception("Error Processing Request", 1);
+                  $transaction->rollBack();
+                  throw new \Exception("Error Processing Request", 1);
                 }
-
+                
                 $tipoDoc               = $model->numeracion->tipoDocumento->tipodsunat_tipod;
-
+                
                 $model->valorr_doc     = SiteController::getEmpresa()->ruc_empresa ."|". $tipoDoc ."|".$model->tipoDoc->abrv_tipod . $model->numeracion->serie_num . "|";
                 $model->valorr_doc     .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ;
-
+                
                 if ( $post['NotaCredito']['tipom_doc'] == $model::REPONER_STOCK ){
                   $modelNotaIngreso                 = new NotaIngreso();
                   $modelNotaIngreso->sucursal_trans = $sucursal;
@@ -184,12 +184,12 @@ class NotaCreditoController extends Controller
                   $modelNotaIngreso->status_trans   = $modelNotaIngreso::STATUS_APPROVED;
                   $flag = $modelNotaIngreso->save() && $flag;
                 }
-
+                
                 if ( $flag ) {
                   foreach ($post['NotaCredito-Detalle'] as $key => $value) {
                     // code...
                     if ( isset($value['check_ddetalle']) && $value['check_ddetalle'] === "on" ) {
-					            $modelsDetalles   				          = new DocumentoDetalle();
+                      $modelsDetalles   				          = new DocumentoDetalle();
                       $modelsDetalles->prod_ddetalle      = $value['prod_ddetalle'];
                       $modelsDetalles->cant_ddetalle      = $value['cant_ddetalle'];
                       $modelsDetalles->precio_ddetalle    = $value['precio_ddetalle'];
@@ -199,61 +199,63 @@ class NotaCreditoController extends Controller
                       $modelsDetalles->documento_ddetalle = $model['id_doc'];
                       $modelsDetalles->plista_ddetalle    = $value['plista_ddetalle'];
                       $modelsDetalles->total_ddetalle     = $value['total_ddetalle'];
-
+                      
                       if ( !($flag = $modelsDetalles->save()) ) {
-                          $transaction->rollBack();
-                          throw new \Exception("Error Processing Request", 1);
-                          break;
+                        $transaction->rollBack();
+                        throw new \Exception("Error Processing Request", 1);
+                        break;
                       }
-
+                      
                       if ( $post['NotaCredito']['tipom_doc'] == $model::REPONER_STOCK ) {
                         $modelNotaIngresoDetalle = new NotaIngresoDetalle();
                         $modelNotaIngresoDetalle->trans_detalle = $modelNotaIngreso->id_trans;
                         $modelNotaIngresoDetalle->prod_detalle = $value['prod_ddetalle'];
                         $modelNotaIngresoDetalle->cant_detalle = $value['cant_ddetalle'];
-
+                        
                         if ( !($flag = $modelNotaIngresoDetalle->save()) ) {
-                            $transaction->rollBack();
-                            throw new \Exception("Error Processing Request", 1);
-                            break;
+                          $transaction->rollBack();
+                          throw new \Exception("Error Processing Request", 1);
+                          break;
                         }
-
+                        
                         $producto = Producto::findOne(['id_prod' => $value['prod_ddetalle']]);
                         $producto->stock_prod += $value['cant_ddetalle'];
-
+                        
                         if (! ($flag = $producto->save(false))) {
-                            $transaction->rollBack();
-                            throw new \Exception("Error Processing Request", 1);
-                            break;
+                          $transaction->rollBack();
+                          throw new \Exception("Error Processing Request", 1);
+                          break;
                         }
                       }
                     }
                   }
                 }
-
-                $numeracion = Numeracion::findOne($num[0]['id_num']);
-                $numeracion->numero_num = $codigo;
-                $flag = $numeracion->save() && $flag;
-
-                $numeracion = Numeracion::findOne($id_num);
-                $numeracion->numero_num = $codigoDoc;
-                $flag = $numeracion->save() && $flag;
-
-                if ( $flag ) {
-				          $model->save();
-                  $transaction->commit();
-                  Yii::$app->response->format = Response::FORMAT_JSON;
-                  $return = [
-                    'success' => true,
-                    'title' => Yii::t('documento', 'Document'),
-                    'id' => $model->id_doc,
-                    'message' => Yii::t('app','Record has been saved successfully!'),
-                    'type' => 'success'
-                  ];
-                  return $return;
-                }
-
-
+                
+              $numeracion = Numeracion::findOne($num[0]['id_num']);
+              $numeracion->scenario = 'numerar';
+              $numeracion->numero_num = $codigo;
+              //print_r($numeracion->save());exit();
+              $flag = $numeracion->save() && $flag;
+              
+              $numeracion = Numeracion::findOne($id_num);
+              $numeracion->numero_num = $codigoDoc;
+              $flag = $numeracion->save() && $flag;
+              
+              if ( $flag ) {
+                $model->save();
+                $transaction->commit();
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $return = [
+                  'success' => true,
+                  'title' => Yii::t('documento', 'Document'),
+                  'id' => $model->id_doc,
+                  'message' => Yii::t('app','Record has been saved successfully!'),
+                  'type' => 'success'
+                ];
+                return $return;
+              }
+              
+              
           } catch ( Exception $e) {
                 $transaction->rollBack();
                 Yii::$app->response->format = Response::FORMAT_JSON;
@@ -405,15 +407,18 @@ class NotaCreditoController extends Controller
       <table class="datos_documento" border="1">
         <tr>
           <td align="center" width="25%" style="font-weight:bold">'.Yii::t('documento','Emission date').'</td>
-          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('pedido','Order').'</td>
           <td align="center" width="25%" style="font-weight:bold">'.Yii::t('condicionp','Payment condition').'</td>
-          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('documento','Referral guide').'</td>
+          <td colspan="2" align="center" width="25%" style="font-weight:bold">'.Yii::t('documento','Referencing document').'</td>
         </tr>
         <tr>
           <td align="center">'.$date.'</td>
-          <td align="center">'.$modelNotaCredito->pedidoDoc->nrodoc_pedido.'</td>
-          <td align="center">'.$modelNotaCredito->pedidoDoc->condpPedido->desc_condp.'</td>
-          <td align="center"></td>
+          <td align="center">'.$modelNotaCredito->condPago->desc_condp.'</td>
+          <td colspan="2" align="center">'.
+              Yii::$app->formatter->asDate($modelNotaCredito->fecha_doc, 'dd/MM/yyyy').' - '.
+              $modelNotaCredito->docAfectado->numeracion->tipoDocumento->abrv_tipod.
+              $modelNotaCredito->docAfectado->numeracion->serie_num.'-'.
+              $modelNotaCredito->cod_doc.
+              '</td>
         </tr>
       </table>';
 
@@ -428,6 +433,6 @@ class NotaCreditoController extends Controller
       $titulo =  $nroComprobante .'-'.$modelNotaCredito->pedidoDoc->cltePedido->nombre_clte.'.pdf';
 
       $mpdf->SetTitle($titulo);
-      $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
+      return $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
     }
 }

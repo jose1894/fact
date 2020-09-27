@@ -56,7 +56,7 @@ $js = '
               }
             }
 
-            window.open("'.Url::to(['documento/guia-rpt']).'?id=" + data.id,"_blank");
+            window.open("'.Url::to(['documento/guia-rpt']).'/" + data.id,"_blank");
 
             swal(data.title, data.message, data.type);
             $( ".close-btn" ).trigger( "click" );

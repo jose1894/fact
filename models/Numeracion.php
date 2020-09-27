@@ -28,6 +28,13 @@ class Numeracion extends \yii\db\ActiveRecord
         return 'numeracion';
     }
 
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios['numerar'] = ['numero_num'];
+        return $scenarios;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -38,6 +45,8 @@ class Numeracion extends \yii\db\ActiveRecord
             [['tipo_num','serie_num','numero_num', 'status_num'], 'required'],
             [['numero_num'], 'string', 'max' => 10],
             [['serie_num'], 'string', 'max' => 2],
+            [['tipo_num','serie_num'], 'unique'],
+            [['numero_num'], 'required', 'on' => 'numerar'],
             [['tipo_num'], 'exist', 'skipOnError' => true, 'targetClass' => TipoDocumento::className(), 'targetAttribute' => ['tipo_num' => 'id_tipod']],
         ];
     }

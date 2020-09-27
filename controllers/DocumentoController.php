@@ -585,7 +585,8 @@ class DocumentoController extends Controller
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
     }
 
-    public function actionDocumentoRpt( $id ) {
+    public function actionDocumentoRpt($id) {
+		
       Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
       $modelDocumento = Documento::find()
                                    ->where('id_doc = :id',[':id' => $id])
@@ -603,7 +604,6 @@ class DocumentoController extends Controller
           'rucEmpresa' => SiteController::getEmpresa()->ruc_empresa,
       ]);
 
-
       $pdf = Yii::$app->pdf; // or new Pdf();
       // $pdf->cssFile = "@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css";
       $mpdf = $pdf->api; // fetches mpdf api
@@ -617,83 +617,84 @@ class DocumentoController extends Controller
 
       $nroComprobante = $modelDocumento->tipoDoc->abrv_tipod . $modelDocumento->numeracion->serie_num . "-" . substr($modelDocumento->cod_doc,-8);
 	  
-	  $datoCliente = "";
-	  $labelDato = "";
-	  
-	  if ($modelDocumento->tipo_doc === Documento::TIPODOC_FACTURA) {	  
-		 $datoCliente = $modelDocumento->pedidoDoc->cltePedido->ruc_clte;
-		 $labelDato = Yii::t('cliente','R.U.C.');
-	  } else {
-		 $datoCliente = $modelDocumento->pedidoDoc->cltePedido->dni_clte; 
-		 $labelDato = Yii::t('cliente','D.N.I');
-	  }
-
-      $header = '
-      <table class="documento_enc" style="border-collapse: collapse;">
-          <tr>
-              <td width="25%">
-                <div class="rounded"> <img src="'.Url::to('img/logo.jpg').'" width="180px"/> </div>
-              </td>
-              <td width="50%" align="center" >
-                <div class="titulo-emp" style="font-size:20px;font-weight:bold;">' . SiteController::getEmpresa()->nombre_empresa . '</div><br>
-                <div class="datos-emp">' . SiteController::getEmpresa()->direcc_empresa . '</div>
-                <div class="datos-emp">' . SiteController::getEmpresa()->tlf_empresa . '</div>
-                <div class="datos-emp">' . SiteController::getEmpresa()->movil_empresa . '</div>
-                <div class="datos-emp">' . SiteController::getEmpresa()->correo_empresa . '</div>
-              </td>
-              <td width="25%" style="border:1px solid black;text-align:center;font-weight:bold;">
-                <div style="margin: 70px auto;"> R.U.C. ' . SiteController::getEmpresa()->ruc_empresa . '</div><br>
-                <div style="font-size:18px"> ' . $modelDocumento->tipoDoc->des_tipod. ' </div><br>
-                <div style="margin: 70px auto;"> N° ' . $nroComprobante . '</div>
-              </td>
-          </tr>
-      </table>
-      <br>
-      <table class="datos_documento" border="1">
-        <tr>
-          <td width="20%" align="right" style="font-weight:bold;">'.Yii::t('cliente','Customer').'</td>
-          <td> &nbsp;' . $modelDocumento->pedidoDoc->cltePedido->nombre_clte . '</td>
-        </tr>
-        <tr>
-          <td align="right" style="font-weight:bold;">'.$labelDato.'</td>
-          <td> &nbsp;' . $datoCliente . '</td>
-        </tr>
-        <tr>
-          <td align="right" style="font-weight:bold;border:1px solid black">'.Yii::t('cliente','Address').'</td>
-          <td> &nbsp;' . $modelDocumento->pedidoDoc->cltePedido->direcc_clte . '</td>
-        </tr>
-      </table>
-      <table class="datos_documento" border="1">
-        <tr>
-          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('documento','Emission date').'</td>
-          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('pedido','Order').'</td>
-          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('condicionp','Payment condition').'</td>
-          <td align="center" width="25%" style="font-weight:bold">'.Yii::t('documento','Referral guide').'</td>
-        </tr>
-        <tr>
-          <td align="center">'.$date.'</td>
-          <td align="center">'.$modelDocumento->pedidoDoc->nrodoc_pedido.'</td>
-          <td align="center">'.$modelDocumento->pedidoDoc->condpPedido->desc_condp.'</td>
-          <td align="center">'.$modelDocumento->guiaRem->tipoDoc->abrv_tipod . $modelDocumento->guiaRem->numeracion->serie_num .'-'.substr($modelDocumento->guiaRem->cod_doc,-8).'</td>
-        </tr>
-      </table>';
-
-      $sheet = file_get_contents( Yii::getAlias( '@rptcss' ).'/rptCss.css' );
-      $mpdf->WriteHTML( $sheet, 1 );
-      $mpdf->charset_in = 'UTF-8';
-
-      $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
-      $mpdf->AddPage('P','','','','',10,10,80,10,10,5);
-      $mpdf->WriteHtml( $content ); // call mpdf write html
-      if ( $modelDocumento->status_doc === Documento::DOCUMENTO_ANULADO ) {
-          $mpdf->showWatermarkText = true;
-          $mpdf->WriteHTML('<watermarktext style="color:red" content="' . Yii::t('app','CANCELED') . '" alpha="0.4" />');
+      $datoCliente = "";
+      $labelDato = "";
+      
+      if ($modelDocumento->tipo_doc === Documento::TIPODOC_FACTURA) {	  
+      $datoCliente = $modelDocumento->pedidoDoc->cltePedido->ruc_clte;
+      $labelDato = Yii::t('cliente','R.U.C.');
+      } else {
+      $datoCliente = $modelDocumento->pedidoDoc->cltePedido->dni_clte; 
+      $labelDato = Yii::t('cliente','D.N.I');
       }
 
-      $titulo =  $nroComprobante .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
+        $header = '
+        <table class="documento_enc" style="border-collapse: collapse;">
+            <tr>
+                <td width="25%">
+                  <div class="rounded"> <img src="'.Url::to('img/logo.jpg').'" width="180px"/> </div>
+                </td>
+                <td width="50%" align="center" >
+                  <div class="titulo-emp" style="font-size:20px;font-weight:bold;">' . SiteController::getEmpresa()->nombre_empresa . '</div><br>
+                  <div class="datos-emp">' . SiteController::getEmpresa()->direcc_empresa . '</div>
+                  <div class="datos-emp">' . SiteController::getEmpresa()->tlf_empresa . '</div>
+                  <div class="datos-emp">' . SiteController::getEmpresa()->movil_empresa . '</div>
+                  <div class="datos-emp">' . SiteController::getEmpresa()->correo_empresa . '</div>
+                </td>
+                <td width="25%" style="border:1px solid black;text-align:center;font-weight:bold;">
+                  <div style="margin: 70px auto;"> R.U.C. ' . SiteController::getEmpresa()->ruc_empresa . '</div><br>
+                  <div style="font-size:18px"> ' . $modelDocumento->tipoDoc->des_tipod. ' </div><br>
+                  <div style="margin: 70px auto;"> N° ' . $nroComprobante . '</div>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table class="datos_documento" border="1">
+          <tr>
+            <td width="20%" align="right" style="font-weight:bold;">'.Yii::t('cliente','Customer').'</td>
+            <td> &nbsp;' . $modelDocumento->pedidoDoc->cltePedido->nombre_clte . '</td>
+          </tr>
+          <tr>
+            <td align="right" style="font-weight:bold;">'.$labelDato.'</td>
+            <td> &nbsp;' . $datoCliente . '</td>
+          </tr>
+          <tr>
+            <td align="right" style="font-weight:bold;border:1px solid black">'.Yii::t('cliente','Address').'</td>
+            <td> &nbsp;' . $modelDocumento->pedidoDoc->cltePedido->direcc_clte . '</td>
+          </tr>
+        </table>
+        <table class="datos_documento" border="1">
+          <tr>
+            <td align="center" width="25%" style="font-weight:bold">'.Yii::t('documento','Emission date').'</td>
+            <td align="center" width="25%" style="font-weight:bold">'.Yii::t('pedido','Order').'</td>
+            <td align="center" width="25%" style="font-weight:bold">'.Yii::t('condicionp','Payment condition').'</td>
+            <td align="center" width="25%" style="font-weight:bold">'.Yii::t('documento','Referral guide').'</td>
+          </tr>
+          <tr>
+            <td align="center">'.$date.'</td>
+            <td align="center">'.$modelDocumento->pedidoDoc->nrodoc_pedido.'</td>
+            <td align="center">'.$modelDocumento->pedidoDoc->condpPedido->desc_condp.'</td>
+            <td align="center">'.$modelDocumento->guiaRem->tipoDoc->abrv_tipod . $modelDocumento->guiaRem->numeracion->serie_num .'-'.substr($modelDocumento->guiaRem->cod_doc,-8).'</td>
+          </tr>
+        </table>';
 
-      $mpdf->SetTitle($titulo);
-      $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
+        $sheet = file_get_contents( Yii::getAlias( '@rptcss' ).'/rptCss.css' );
+        $mpdf->WriteHTML( $sheet, 1 );
+        $mpdf->charset_in = 'UTF-8';
+
+        $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
+        $mpdf->AddPage('P','','','','',10,10,80,10,10,5);
+        $mpdf->WriteHtml( $content ); // call mpdf write html
+        if ( $modelDocumento->status_doc === Documento::DOCUMENTO_ANULADO ) {
+            $mpdf->showWatermarkText = true;
+            $mpdf->WriteHTML('<watermarktext style="color:red" content="' . Yii::t('app','CANCELED') . '" alpha="0.4" />');
+        }
+
+        $titulo =  $nroComprobante .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
+
+        $mpdf->SetTitle($titulo);
+        return $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
+        
     }
 
     function actionAjaxGenFactXml( $id ){
@@ -941,8 +942,8 @@ class DocumentoController extends Controller
       // Guardar XML
       file_put_contents(Yii::getAlias('@app') . '/xml/sent/' . $note->getName().'.xml',
                         $see->getFactory()->getLastXml());
-	  //print_r($result);exit();
-      //$model->statussunat_doc = $result->getCdrResponse()->getCode();
+	    print_r($result);exit();
+      $model->statussunat_doc = $result->getCdrResponse()->getCode();
       $model->save();
 
       $return = [

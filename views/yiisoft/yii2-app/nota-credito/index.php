@@ -7,7 +7,8 @@ use yii\web\View;
 use kartik\grid\GridView;
 use yii\web\JqueryAsset;
 use app\models\Cliente;
-use app\models\Pedido;
+use app\models\Documento;
+use app\models\NotaCredito;
 use app\models\Vendedor;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
@@ -33,56 +34,87 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
-            'columns' => [
-                [
-                    'attribute'=>'tipo_pedido',
+            'columns' => [                
+                  [
+                      'attribute' => 'cod_doc',
+                      'hAlign' => 'center',
+                      'vAlign' => 'middle',
+                      'width' => '5%'
+                  ],
+                  [
+                    'width' => '5%',
                     'value' => function($data){
-                        return $data->tipo_pedido !== $data::PEDIDO  ? $data->tipo_pedido === Pedido::PROFORMA ? 'PROFORMA' : 'COTIZACION' : 'PEDIDO' ;
+                         return Yii::$app->formatter->asDate($data->fecha_doc, 'dd/MM/yyyy');
                     },
-                    'width' => '12%'
+                    'attribute' => 'fecha_doc',
+                    'hAlign' => 'center',
+                    'vAlign' => 'middle',
                 ],
-                [
-                    'attribute'=>'cod_pedido',
-                    'width' => '7%'
-                ],
-                [
-                    'attribute'=>'fecha_pedido',
-                    'value' => function($data){
-                        return Yii::$app->formatter->asDate($data->fecha_pedido, 'dd/MM/yyyy');
+                  [
+                      'attribute' => 'cliente',
+                      'label' => Yii::t('cliente','Customer'),
+                      'value' => 'pedidoDoc.cltePedido.nombre_clte',
+                      'width' => '25%',
+                      'hAlign' => 'left',
+                      'vAlign' => 'middle',
+  
+                  ],
+                  [
+                      'attribute' => 'tipoDocumento',
+                      'label' => Yii::t('tipo_documento','Document type'),
+                      'value' => 'tipoDoc.des_tipod',
+                      'hAlign' => 'left',
+                      'vAlign' => 'middle',
+                      'width' => '15%',
+                      // 'group' => true,  // enable grouping
+                      // 'subGroupOf' => 1 // supplier column index is the parent group
+                  ],
+                  [
+                      'attribute' => 'status_doc',
+                      //'filter' => $status,
+                      'value' => function($data){
+                          $status = [ Documento::GUIA_GENERADA => 'GUIA GENERADA', Documento::DOCUMENTO_GENERADO => 'GENERADO', Documento::DOCUMENTO_ANULADO => 'ANULADO'];
+                          return $status[$data->status_doc];
+                      },
+                      'hAlign' => 'left',
+                      'vAlign' => 'middle',
+                      'width' => '5%',
+                      'pageSummary' => Yii::t('app','Page Summary'),
+                      'pageSummaryOptions' => ['class' => 'text-right'],
+                  ],
+                  [
+                    'attribute' => 'totalimp_doc',
+                    'value' => function($data) {
+                            $return = 0;
+
+                            if ($data->tipo_doc === NotaCredito::TIPODOC_NCREDITO) {
+                                $return = -1 * $data->totalimp_doc;
+                            } 
+
+                            return $return;
                     },
-                    'width' => '8%'
-                ],
-                //'estatus_pedido',
-                [
-                    'attribute'=>'clte_pedido',
-                    'value' => function($data){
-                        return $data->cltePedido->nombre_clte;
-                    },
-                    'filter'=>Cliente::getClienteList(),
-                    'filterType' => GridView::FILTER_SELECT2,
-                    'filterWidgetOptions' => [
-                        'language' => Yii::$app->language,
-                        'theme' => Select2::THEME_DEFAULT,
-                        'pluginOptions' => ['allowClear' => true],
-                        'pluginEvents' =>[],
-                        'options' => ['prompt' => ''],
-                    ],
-                    'width' => '50%'
-                ],
-                [
-                    'attribute'=>'total_pedido',
-                    'value' => function($data){
-                        $total = Yii::$app->formatter->asDecimal($data->sumChildTotal());
-                        return $total;
-                    },
-                    'width' => '20%'
-                ],
+                    'hAlign' => 'center',
+                    'width' => '10%',
+                    'format' => ['decimal', 2],
+                    'pageSummary' => true
+                  ],
+                  [
+                    'attribute' => 'total_doc',
+                    /*'value' => function($data) {
+                      return ($data->status_doc !== Documento::DOCUMENTO_ANULADO) ? ($data->tipo_doc === NotaCredito::TIPODOC_NCREDITO ? -1 * $data->total_doc : $data->total_doc) : '0';
+                    },*/
+                    'hAlign' => 'center',
+                    'width' => '10%',
+                    'pageSummary' => true,
+                    'format' => ['decimal', 2],
+                  ],
+                
                 [
                     'class' => '\kartik\grid\ActionColumn',
                     'headerOptions' => ['style' => 'color:#337ab7'],
                     'template' => ' {guia}&nbsp;&nbsp;{factura}&nbsp;&nbsp;{print} ',
                     'buttons' => [
-                        'guia' =>  function ($url, $model) {
+                        /*'guia' =>  function ($url, $model) {
                             return ( $model->estatus_pedido === $model::STATUS_INACTIVO) ?
                                 Html::a(
                                     '<button class="btn btn-flat btn-success">'.Yii::t('documento','Generate guide').'&nbsp; &nbsp;<i class="fa fa-play-circle"></i></button>',
@@ -106,18 +138,18 @@ $this->params['breadcrumbs'][] = $this->title;
                                             'id' => $model->id_pedido,
                                         ]
                                     ]) : '' ;
-                        },
+                        },*/
                     ],
                     'urlCreator' => function ($action, $model, $key, $index) {
-                        if ($action === 'factura') {
+                        /*if ($action === 'factura') {
                             $url = Url::to(['documento/factura-create','id' => $model->id_pedido]);
                             return $url;
                         }
 
                         if ($action === 'guia') {
-                            $url = Url::to(['documento/guia-create','id' => $model->id_pedido]);
-                            return $url;
-                        }
+                            //$url = Url::to(['documento/guia-create','id' => $model->id_pedido]);
+                            //return $url;
+                        }*/
                     }
                 ],
             ],
