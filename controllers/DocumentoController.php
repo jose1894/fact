@@ -318,7 +318,7 @@ class DocumentoController extends Controller
                       $modelNotaSalidaDetalle = new NotaSalidaDetalle();
                       $modelNotaSalidaDetalle->trans_detalle = $modelNotaSalida->id_trans;
                       $modelNotaSalidaDetalle->prod_detalle = $notaSalidaDetalle[$i]['prod_detalle'];
-                      $modelNotaSalidaDetalle->cant_detalle = $notaSalidaDetalle[$i]['cant_detalle'];				  
+                      $modelNotaSalidaDetalle->cant_detalle = $notaSalidaDetalle[$i]['cant_detalle'];
 
                       if ( !($flag = $modelNotaSalidaDetalle->save()) ) {
                           $transaction->rollBack();
@@ -586,7 +586,7 @@ class DocumentoController extends Controller
     }
 
     public function actionDocumentoRpt($id) {
-		
+
       Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
       $modelDocumento = Documento::find()
                                    ->where('id_doc = :id',[':id' => $id])
@@ -616,15 +616,15 @@ class DocumentoController extends Controller
       $date = $f->asDate($modelDocumento->fecha_doc, 'php:d/m/Y');
 
       $nroComprobante = $modelDocumento->tipoDoc->abrv_tipod . $modelDocumento->numeracion->serie_num . "-" . substr($modelDocumento->cod_doc,-8);
-	  
+
       $datoCliente = "";
       $labelDato = "";
-      
-      if ($modelDocumento->tipo_doc === Documento::TIPODOC_FACTURA) {	  
+
+      if ($modelDocumento->tipo_doc === Documento::TIPODOC_FACTURA) {
       $datoCliente = $modelDocumento->pedidoDoc->cltePedido->ruc_clte;
       $labelDato = Yii::t('cliente','R.U.C.');
       } else {
-      $datoCliente = $modelDocumento->pedidoDoc->cltePedido->dni_clte; 
+      $datoCliente = $modelDocumento->pedidoDoc->cltePedido->dni_clte;
       $labelDato = Yii::t('cliente','D.N.I');
       }
 
@@ -694,19 +694,21 @@ class DocumentoController extends Controller
 
         $mpdf->SetTitle($titulo);
         return $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
-        
+
     }
 
     function actionAjaxGenFactXml( $id ){
       $sunatUser = "20604954241MODDATOS";
       $sunatPass = "moddatos";
+      $endPoint  = SunatEndpoints::FE_BETA;
 
-		/*
-      if (YII_ENV_DEV) {
+
+      if (YII_ENV === "prod") {
         $sunatUser = '20604954241LEOPHARD';
         $sunatPass = 'Leophard0';
-      }*/
-		
+        $endPoint  = SunatEndpoints::FE_PRODUCCION;
+      }
+
       $model = Documento::find()
                            ->where('id_doc = :id',[':id' => $id])
                            ->andWhere(['tipo_doc' => [
@@ -717,13 +719,13 @@ class DocumentoController extends Controller
                            ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
                            ->one();
 
-		
+
       $empresa = SiteController::getEmpresa();
       $IMPUESTO = SiteController::getImpuesto();
-	  
+
 
       $see = new See();
-      $see->setService(SunatEndpoints::FE_BETA);
+      $see->setService($endPoint);
       $see->setCertificate(file_get_contents('../C19110619915.pem'));
       $see->setCredentials($sunatUser, $sunatPass);
 
@@ -752,8 +754,8 @@ class DocumentoController extends Controller
       $subtotal = floatval(number_format( $subtotal,2,'.',''));
       $impuesto = $model->total_doc - $subtotal;
       $impuesto = floatval(number_format( $impuesto,2,'.',''));
-	  
-	  
+
+
       // Venta
       $invoice = (new Invoice())
           ->setUblVersion('2.1')
@@ -780,10 +782,10 @@ class DocumentoController extends Controller
         $precioUnitarioSIGV = $value->precio_pdetalle /(1 + ($value->impuesto_pdetalle / 100 )); //Precio unitario sin IGV por item
         $cantidad = number_format($value->cant_pdetalle, 3, '.', '');
 		$descuento = $value->descu_pdetalle / 100;
-		
+
 		//var_dump($totalSIGV);exit();
-		
-		
+
+
         $item[] = (new SaleDetail())
             ->setCodProducto(trim($value->productoPdetalle->cod_prod))
             ->setUnidad($value->productoPdetalle->umedProd->sunatm_und)
@@ -811,8 +813,8 @@ class DocumentoController extends Controller
       // Guardar XML
       file_put_contents(Yii::getAlias('@app') . '/xml/sent/' . $invoice->getName().'.xml',
                         $see->getFactory()->getLastXml());
-	  //print_r($result);exit();
-      //$model->statussunat_doc = $result->getCdrResponse()->getCode();
+	    //print_r($result);exit();
+      $model->statussunat_doc = $result->getCdrResponse()->getCode();
       $model->save();
 
       $return = [
@@ -828,18 +830,19 @@ class DocumentoController extends Controller
       // Guardar CDR
       file_put_contents(Yii::getAlias('@app') . '/xml/response/' . 'R-'.$invoice->getName().'.zip', $result->getCdrZip());
     }
-	
+
 	function actionAjaxGenNoteXml( $id ){
       $sunatUser = "20604954241MODDATOS";
       $sunatPass = "moddatos";
+      $endPoint  = SunatEndpoints::FE_BETA;
 
-		/*
-      if (YII_ENV_DEV) {
+      if (YII_ENV === "prod") {
         $sunatUser = '20604954241LEOPHARD';
         $sunatPass = 'Leophard0';
-      }*/
-	  
-		
+        $endPoint  = SunatEndpoints::FE_PRODUCCION;
+      }
+
+
       $model = Documento::find()
                            ->where('id_doc = :id',[':id' => $id])
                            ->andWhere(['tipo_doc' => [
@@ -848,13 +851,13 @@ class DocumentoController extends Controller
                            ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
                            ->one();
 
-		
+
       $empresa = SiteController::getEmpresa();
       $IMPUESTO = SiteController::getImpuesto();
-	  
+
 
       $see = new See();
-      $see->setService(SunatEndpoints::FE_BETA);
+      $see->setService($endPoint);
       $see->setCertificate(file_get_contents('../C19110619915.pem'));
       $see->setCredentials($sunatUser, $sunatPass);
 
@@ -883,7 +886,7 @@ class DocumentoController extends Controller
       $subtotal = floatval(number_format( $subtotal,2,'.',''));
       $impuesto = $model->total_doc - $subtotal;
       $impuesto = floatval(number_format( $impuesto,2,'.',''));
-	  
+
 	  //print_r($model->tipoDoc->abrv_tipod.$model->numeracion->serie_num);exit();
       // Venta
       $note = (new Note())
@@ -911,10 +914,10 @@ class DocumentoController extends Controller
         $precioUnitarioSIGV = $value->precio_pdetalle /(1 + ($value->impuesto_pdetalle / 100 )); //Precio unitario sin IGV por item
         $cantidad = number_format($value->cant_pdetalle, 3, '.', '');
 		$descuento = $value->descu_pdetalle / 100;
-		
+
 		//var_dump($totalSIGV);exit();
-		
-		
+
+
         $item[] = (new SaleDetail())
             ->setCodProducto(trim($value->productoPdetalle->cod_prod))
             ->setUnidad($value->productoPdetalle->umedProd->sunatm_und)
@@ -942,7 +945,7 @@ class DocumentoController extends Controller
       // Guardar XML
       file_put_contents(Yii::getAlias('@app') . '/xml/sent/' . $note->getName().'.xml',
                         $see->getFactory()->getLastXml());
-	    print_r($result);exit();
+	    //print_r($result);exit();
       $model->statussunat_doc = $result->getCdrResponse()->getCode();
       $model->save();
 

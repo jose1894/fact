@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 01-09-2020 a las 21:41:23
--- Versión del servidor: 10.4.10-MariaDB
--- Versión de PHP: 7.0.33
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 26-09-2020 a las 19:58:54
+-- Versión del servidor: 10.1.36-MariaDB
+-- Versión de PHP: 7.2.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,11 +19,11 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `leophard_dev`
+-- Base de datos: `leophard_fact`
 --
-DROP DATABASE IF EXISTS `leophard_dev`;
-CREATE DATABASE IF NOT EXISTS `leophard_dev` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `leophard_dev`;
+DROP DATABASE IF EXISTS `leophard_fact`;
+CREATE DATABASE IF NOT EXISTS `leophard_fact` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `leophard_fact`;
 
 -- --------------------------------------------------------
 
@@ -32,14 +32,12 @@ USE `leophard_dev`;
 --
 
 DROP TABLE IF EXISTS `almacen`;
-CREATE TABLE IF NOT EXISTS `almacen` (
-  `id_almacen` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `almacen` (
+  `id_almacen` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_almacen` varchar(50) NOT NULL COMMENT 'DESCRIPCION ALMACEN',
   `status_almacen` int(11) NOT NULL COMMENT 'ESTATUS ALMACEN',
-  `sucursal_almacen` int(11) NOT NULL COMMENT 'SUCURSAL ALMACEN',
-  PRIMARY KEY (`id_almacen`),
-  KEY `sucursal_almacen` (`sucursal_almacen`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT=' GUARDA DATOS DE ALMACENES';
+  `sucursal_almacen` int(11) NOT NULL COMMENT 'SUCURSAL ALMACEN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT=' GUARDA DATOS DE ALMACENES';
 
 --
 -- Volcado de datos para la tabla `almacen`
@@ -55,12 +53,10 @@ INSERT INTO `almacen` (`id_almacen`, `des_almacen`, `status_almacen`, `sucursal_
 --
 
 DROP TABLE IF EXISTS `auth_assignment`;
-CREATE TABLE IF NOT EXISTS `auth_assignment` (
+CREATE TABLE `auth_assignment` (
   `item_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `user_id` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` int(11) DEFAULT NULL,
-  PRIMARY KEY (`item_name`,`user_id`),
-  KEY `idx-auth_assignment-user_id` (`user_id`)
+  `created_at` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -78,17 +74,14 @@ INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
 --
 
 DROP TABLE IF EXISTS `auth_item`;
-CREATE TABLE IF NOT EXISTS `auth_item` (
+CREATE TABLE `auth_item` (
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `type` smallint(6) NOT NULL,
-  `description` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
   `rule_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `data` blob DEFAULT NULL,
+  `data` blob,
   `created_at` int(11) DEFAULT NULL,
-  `updated_at` int(11) DEFAULT NULL,
-  PRIMARY KEY (`name`),
-  KEY `rule_name` (`rule_name`),
-  KEY `idx-auth_item-type` (`type`)
+  `updated_at` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -414,11 +407,9 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 --
 
 DROP TABLE IF EXISTS `auth_item_child`;
-CREATE TABLE IF NOT EXISTS `auth_item_child` (
+CREATE TABLE `auth_item_child` (
   `parent` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `child` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`parent`,`child`),
-  KEY `child` (`child`)
+  `child` varchar(64) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -837,12 +828,11 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 --
 
 DROP TABLE IF EXISTS `auth_rule`;
-CREATE TABLE IF NOT EXISTS `auth_rule` (
+CREATE TABLE `auth_rule` (
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `data` blob DEFAULT NULL,
+  `data` blob,
   `created_at` int(11) DEFAULT NULL,
-  `updated_at` int(11) DEFAULT NULL,
-  PRIMARY KEY (`name`)
+  `updated_at` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -852,34 +842,25 @@ CREATE TABLE IF NOT EXISTS `auth_rule` (
 --
 
 DROP TABLE IF EXISTS `cliente`;
-CREATE TABLE IF NOT EXISTS `cliente` (
-  `id_clte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `cliente` (
+  `id_clte` int(11) NOT NULL COMMENT 'ID UNICO',
   `dni_clte` varchar(20) NOT NULL COMMENT 'DNI CLIENTE',
   `ruc_clte` varchar(20) NOT NULL COMMENT 'RUC CLIENTE',
   `nombre_clte` varchar(150) NOT NULL COMMENT 'NOMBRE CLIENTE',
   `direcc_clte` text NOT NULL COMMENT 'DIRECCION CLIENTE',
-  `pais_cte` int(11) NOT NULL COMMENT 'PAIS CLIENTE',
-  `depto_cte` int(11) NOT NULL COMMENT 'DEPARTAMENTO CLIENTE',
-  `provi_cte` int(11) NOT NULL COMMENT 'PROVINCIA CLIENTE',
-  `dtto_clte` int(11) NOT NULL COMMENT 'DISTRITO CLIENTE',
+  `pais_cte` int(11) DEFAULT NULL COMMENT 'PAIS CLIENTE',
+  `depto_cte` int(11) DEFAULT NULL COMMENT 'DEPARTAMENTO CLIENTE',
+  `provi_cte` int(11) DEFAULT NULL COMMENT 'PROVINCIA CLIENTE',
+  `dtto_clte` int(11) DEFAULT NULL COMMENT 'DISTRITO CLIENTE',
   `tlf_ctle` varchar(100) NOT NULL COMMENT 'TELEFONO CLIENTE',
   `email_clte` varchar(200) DEFAULT NULL COMMENT 'EMAIL CLIENTE',
   `vendedor_clte` int(11) NOT NULL COMMENT 'VENDEDOR CLIENTE',
   `estatus_ctle` int(11) NOT NULL COMMENT 'ESTATUS CLIENTE',
   `condp_clte` int(11) NOT NULL COMMENT 'CONDICION DE PAGO',
   `sucursal_clte` int(11) NOT NULL,
-  `lista_clte` int(11) NOT NULL DEFAULT 0 COMMENT 'LISTA DE PRECIOS CLIENTE',
-  `tipoid_clte` int(11) NOT NULL DEFAULT 6 COMMENT 'TIPO DE IDENTIFICACION CLIENTE',
-  PRIMARY KEY (`id_clte`),
-  KEY `sucursal_clte` (`sucursal_clte`),
-  KEY `cliente_ibfk_1` (`vendedor_clte`),
-  KEY `pais_cte` (`pais_cte`),
-  KEY `provi_cte` (`provi_cte`),
-  KEY `depto_cte` (`depto_cte`),
-  KEY `dtto_cte` (`dtto_clte`),
-  KEY `lista_clte` (`lista_clte`),
-  KEY `tipoid_clte` (`tipoid_clte`)
-) ENGINE=InnoDB AUTO_INCREMENT=783 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE CLIENTES';
+  `lista_clte` int(11) NOT NULL DEFAULT '0' COMMENT 'LISTA DE PRECIOS CLIENTE',
+  `tipoid_clte` int(11) NOT NULL DEFAULT '6' COMMENT 'TIPO DE IDENTIFICACION CLIENTE'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE CLIENTES';
 
 --
 -- Volcado de datos para la tabla `cliente`
@@ -1669,7 +1650,15 @@ INSERT INTO `cliente` (`id_clte`, `dni_clte`, `ruc_clte`, `nombre_clte`, `direcc
 (779, '', '20494693497', 'LA CASA DE MICA´S S.R.L.', 'CAL. JOSE DE LA TORRE UGARTE NRO. 830 - ICA ICA ICA ', 241, 100, 11, 100, '', NULL, 6, 1, 3, 1, 1, 4),
 (780, '', '', 'ALEX JAHUIRA CHOQUE', 'AV. AVIACION 941', 241, 135, 15, 135, '', NULL, 4, 1, 1, 1, 1, 1),
 (781, '', '', 'AUTOPARTES JAVIER', 'AV. PROCERES SJL', 241, 135, 15, 135, '', NULL, 4, 1, 1, 1, 1, 1),
-(782, '', '10414626241', 'SAIRE ALVAREZ LIZBET KARINA', 'AV. MANCO CAPAC 330', 241, 135, 15, 135, '', NULL, 1, 1, 1, 1, 1, 4);
+(782, '', '10414626241', 'SAIRE ALVAREZ LIZBET KARINA', 'AV. MANCO CAPAC 330', 241, 135, 15, 135, '', NULL, 1, 1, 1, 1, 1, 4),
+(783, '', '', 'DANY', 'SJL', 241, 135, 15, 135, '', NULL, 4, 1, 1, 1, 1, 1),
+(784, '', '20605766197', 'REPRESENTACIONES RONALD & ANDREA S.R.L', 'CAL. LOS TALLERES INT. 17 LT. 16 MZ. E - LIMA LIMA INDEPENDE', 241, 135, 15, 135, '', NULL, 2, 1, 1, 1, 1, 4),
+(785, '', '10453327472 ', 'CHOCCA FLORES ALEX EMERSON', 'AV. JC MARIATEGUI 322 INT 3 HUANUCO', 241, 107, 12, 107, '', NULL, 6, 1, 1, 1, 1, 4),
+(786, '', '', 'Jose 2', 'SJL', 241, 135, 15, 135, '', NULL, 1, 1, 1, 1, 1, 1),
+(787, '', '', 'SR CARLOS', 'S-J-L', 241, 135, 15, 135, '', NULL, 1, 1, 1, 1, 1, 1),
+(788, '', '10446228086', 'MEDINA AMPUERO JESUS ALAN', 'ST.6 - GP10 -MZ1 -LT21 - VILLA EL SALVADOR', 241, 135, 15, 135, '', NULL, 1, 1, 1, 1, 1, 4),
+(789, '', '10446228086', 'Jesus Alan Medina Ampuero.', ' St 6 - Gp 10 - Mz i - Lt 21-  villa el Salvador.', 241, 135, 15, 135, '', NULL, 1, 1, 1, 1, 1, 4),
+(790, '', '', 'MICAS ÑOL', 'AV.  WIESSE 3566 S.J.L', 241, 135, 15, 135, '', NULL, 4, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1678,29 +1667,21 @@ INSERT INTO `cliente` (`id_clte`, `dni_clte`, `ruc_clte`, `nombre_clte`, `direcc
 --
 
 DROP TABLE IF EXISTS `compra`;
-CREATE TABLE IF NOT EXISTS `compra` (
-  `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `compra` (
+  `id_compra` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_compra` varchar(10) NOT NULL COMMENT 'CODIGO COMPRA',
   `fecha_compra` date NOT NULL COMMENT 'FECHA COMPRA',
   `provee_compra` int(11) NOT NULL COMMENT 'PROVEEDOR COMPRA',
   `moneda_compra` int(11) NOT NULL COMMENT 'MONEDA COMPRA',
   `condp_compra` int(11) NOT NULL COMMENT 'CONDICION PAGO COMPRA',
   `usuario_compra` int(11) NOT NULL COMMENT 'USUARIO COMPRA',
-  `estatus_compra` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS COMPRA',
+  `estatus_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS COMPRA',
   `edicion_compra` varchar(1) DEFAULT 'N' COMMENT 'EDICION COMPRA',
-  `excento_compra` int(11) NOT NULL DEFAULT 1 COMMENT 'EXCENTO DE IMPUESTO 1=EXCENTO, 0=APLICA IMPUESTO',
-  `afectaalm_compra` int(11) NOT NULL DEFAULT 0 COMMENT 'AFECTA ALMACEN COMPRA',
+  `excento_compra` int(11) NOT NULL DEFAULT '1' COMMENT 'EXCENTO DE IMPUESTO 1=EXCENTO, 0=APLICA IMPUESTO',
+  `afectaalm_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'AFECTA ALMACEN COMPRA',
   `nrodoc_compra` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO COMPRA',
-  `sucursal_compra` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL COMPRA',
-  PRIMARY KEY (`id_compra`),
-  UNIQUE KEY `cod_compra` (`cod_compra`),
-  KEY `fecha_compra` (`fecha_compra`),
-  KEY `provee_compra` (`provee_compra`),
-  KEY `moneda_compra` (`moneda_compra`),
-  KEY `usuario_compra` (`usuario_compra`),
-  KEY `sucursal_compra` (`sucursal_compra`),
-  KEY `condp_compra` (`condp_compra`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=latin1 COMMENT='GUARDA ORDEN DE COMPRAS';
+  `sucursal_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL COMPRA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA ORDEN DE COMPRAS';
 
 --
 -- Volcado de datos para la tabla `compra`
@@ -1757,7 +1738,14 @@ INSERT INTO `compra` (`id_compra`, `cod_compra`, `fecha_compra`, `provee_compra`
 (49, '0000000048', '2020-06-18', 1, 1, 1, 2, 2, 'N', 0, 1, 'FE01-0002200', 1),
 (50, '0000000049', '2020-06-25', 1, 1, 1, 2, 2, 'N', 0, 1, 'FE01-0002239', 1),
 (51, '0000000050', '2020-06-25', 1, 1, 1, 2, 2, 'N', 0, 1, 'FE01-0002240', 1),
-(52, '0000000051', '2020-07-07', 1, 1, 3, 2, 2, 'N', 0, 1, '', 1);
+(52, '0000000051', '2020-07-03', 1, 1, 3, 2, 2, 'N', 0, 1, 'FE01-0002256', 1),
+(53, '0000000052', '2020-07-10', 1, 1, 1, 2, 2, 'N', 0, 1, 'FE01-0002281', 1),
+(54, '0000000053', '2020-07-17', 1, 1, 1, 2, 2, 'N', 0, 1, 'FE01-0002306', 1),
+(55, '0000000054', '2020-08-18', 1, 1, 3, 2, 2, 'N', 0, 1, 'FE01-0002379', 1),
+(56, '0000000055', '2020-08-24', 1, 1, 3, 2, 2, 'N', 0, 1, 'FE01-0002399', 1),
+(57, '0000000056', '2020-09-03', 1, 1, 3, 2, 2, 'N', 0, 1, 'FE01-0002451', 1),
+(58, '0000000057', '2020-09-23', 1, 1, 1, 2, 2, 'N', 0, 1, 'FE01-0002524', 1),
+(59, '0000000058', '2020-09-25', 1, 1, 2, 2, 2, 'N', 0, 1, '', 1);
 
 -- --------------------------------------------------------
 
@@ -1766,22 +1754,19 @@ INSERT INTO `compra` (`id_compra`, `cod_compra`, `fecha_compra`, `provee_compra`
 --
 
 DROP TABLE IF EXISTS `compra_detalle`;
-CREATE TABLE IF NOT EXISTS `compra_detalle` (
-  `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `compra_detalle` (
+  `id_cdetalle` int(11) NOT NULL COMMENT 'ID UNICO',
   `prod_cdetalle` int(11) NOT NULL COMMENT 'PRODUCTO COMPRA DETALLE',
-  `cant_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'CANTIDAD COMPRA DETALLE',
-  `precio_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO COMPRA DETALLE',
-  `descu_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'DESCUENTO % COMPRA DETALLE',
-  `impuestouni_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'IMPUESTO UNITARIO COMPRA DETALLE',
-  `status_cdetalle` int(11) NOT NULL DEFAULT 1 COMMENT 'ESTATUS COMPRA DETALLE',
-  `compra_cdetalle` int(11) NOT NULL DEFAULT 0,
-  `plista_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO LISTA COMPRA DETALLE',
-  `total_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'TOTAL COMPRA DETALLE',
-  `impuestototal_cdetalle` decimal(18,2) UNSIGNED NOT NULL DEFAULT 0.00 COMMENT 'IMPUESTO TOTAL COMPRA DETALLE',
-  PRIMARY KEY (`id_cdetalle`),
-  KEY `prod_cdetalle` (`prod_cdetalle`),
-  KEY `compra_cdetalle` (`compra_cdetalle`)
-) ENGINE=InnoDB AUTO_INCREMENT=903 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE COMPRAS';
+  `cant_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'CANTIDAD COMPRA DETALLE',
+  `precio_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO COMPRA DETALLE',
+  `descu_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'DESCUENTO % COMPRA DETALLE',
+  `impuestouni_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'IMPUESTO UNITARIO COMPRA DETALLE',
+  `status_cdetalle` int(11) NOT NULL DEFAULT '1' COMMENT 'ESTATUS COMPRA DETALLE',
+  `compra_cdetalle` int(11) NOT NULL DEFAULT '0',
+  `plista_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA COMPRA DETALLE',
+  `total_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL COMPRA DETALLE',
+  `impuestototal_cdetalle` decimal(18,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT 'IMPUESTO TOTAL COMPRA DETALLE'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE COMPRAS';
 
 --
 -- Volcado de datos para la tabla `compra_detalle`
@@ -2679,7 +2664,66 @@ INSERT INTO `compra_detalle` (`id_cdetalle`, `prod_cdetalle`, `cant_cdetalle`, `
 (899, 106, '20.00', '56.00', '0.00', '0.00', 1, 51, '0.00', '1120.00', '0.00'),
 (900, 635, '20.00', '10.40', '0.00', '0.00', 1, 51, '0.00', '208.00', '0.00'),
 (901, 636, '20.00', '10.40', '0.00', '0.00', 1, 51, '0.00', '208.00', '0.00'),
-(902, 916, '5.00', '50.00', '0.00', '0.00', 1, 52, '0.00', '250.00', '0.00');
+(902, 581, '20.00', '37.20', '0.00', '0.00', 1, 52, '0.00', '744.00', '0.00'),
+(903, 9, '20.00', '112.00', '0.00', '0.00', 1, 52, '0.00', '2240.00', '0.00'),
+(904, 712, '10.00', '16.00', '0.00', '0.00', 1, 52, '0.00', '160.00', '0.00'),
+(905, 690, '20.00', '28.80', '0.00', '0.00', 1, 52, '0.00', '576.00', '0.00'),
+(906, 1, '7.00', '56.00', '0.00', '0.00', 1, 53, '0.00', '392.00', '0.00'),
+(907, 2, '5.00', '48.00', '0.00', '0.00', 1, 53, '0.00', '240.00', '0.00'),
+(908, 4, '5.00', '41.60', '0.00', '0.00', 1, 53, '0.00', '208.00', '0.00'),
+(909, 7, '9.00', '46.40', '0.00', '0.00', 1, 53, '0.00', '417.60', '0.00'),
+(910, 47, '20.00', '44.00', '0.00', '0.00', 1, 53, '0.00', '880.00', '0.00'),
+(911, 57, '4.00', '38.40', '0.00', '0.00', 1, 53, '0.00', '153.60', '0.00'),
+(912, 82, '10.00', '48.00', '0.00', '0.00', 1, 53, '0.00', '480.00', '0.00'),
+(913, 86, '9.00', '56.64', '0.00', '0.00', 1, 53, '0.00', '509.76', '0.00'),
+(914, 98, '4.00', '87.36', '0.00', '0.00', 1, 53, '0.00', '349.44', '0.00'),
+(915, 99, '20.00', '38.00', '0.00', '0.00', 1, 53, '0.00', '760.00', '0.00'),
+(916, 1209, '20.00', '73.60', '0.00', '0.00', 1, 54, '0.00', '1472.00', '0.00'),
+(917, 35, '10.00', '40.00', '0.00', '0.00', 1, 54, '0.00', '400.00', '0.00'),
+(918, 38, '10.00', '56.00', '0.00', '0.00', 1, 54, '0.00', '560.00', '0.00'),
+(919, 39, '4.00', '72.00', '0.00', '0.00', 1, 54, '0.00', '288.00', '0.00'),
+(920, 42, '5.00', '23.20', '0.00', '0.00', 1, 54, '0.00', '116.00', '0.00'),
+(921, 72, '15.00', '120.00', '0.00', '0.00', 1, 54, '0.00', '1800.00', '0.00'),
+(922, 451, '20.00', '8.00', '0.00', '0.00', 1, 54, '0.00', '160.00', '0.00'),
+(923, 663, '5.00', '20.00', '0.00', '0.00', 1, 54, '0.00', '100.00', '0.00'),
+(924, 646, '30.00', '17.60', '0.00', '0.00', 1, 54, '0.00', '528.00', '0.00'),
+(925, 647, '30.00', '17.60', '0.00', '0.00', 1, 54, '0.00', '528.00', '0.00'),
+(926, 155, '10.00', '40.00', '0.00', '0.00', 1, 55, '0.00', '400.00', '0.00'),
+(927, 156, '10.00', '40.00', '0.00', '0.00', 1, 55, '0.00', '400.00', '0.00'),
+(928, 29, '4.00', '32.00', '0.00', '0.00', 1, 55, '0.00', '128.00', '0.00'),
+(929, 1028, '15.00', '32.00', '0.00', '0.00', 1, 55, '0.00', '480.00', '0.00'),
+(930, 125, '7.00', '28.80', '0.00', '0.00', 1, 55, '0.00', '201.60', '0.00'),
+(931, 87, '9.00', '111.04', '0.00', '0.00', 1, 55, '0.00', '999.36', '0.00'),
+(932, 18, '10.00', '63.68', '0.00', '0.00', 1, 55, '0.00', '636.80', '0.00'),
+(933, 73, '6.00', '46.40', '0.00', '0.00', 1, 55, '0.00', '278.40', '0.00'),
+(934, 89, '7.00', '99.76', '0.00', '0.00', 1, 55, '0.00', '698.32', '0.00'),
+(935, 55, '5.00', '52.00', '0.00', '0.00', 1, 55, '0.00', '260.00', '0.00'),
+(936, 141, '5.00', '32.00', '0.00', '0.00', 1, 55, '0.00', '160.00', '0.00'),
+(937, 1220, '4.00', '70.00', '0.00', '0.00', 1, 55, '0.00', '280.00', '0.00'),
+(938, 148, '9.00', '36.80', '0.00', '0.00', 1, 55, '0.00', '331.20', '0.00'),
+(939, 479, '5.00', '42.00', '0.00', '0.00', 1, 56, '0.00', '210.00', '0.00'),
+(940, 480, '5.00', '42.00', '0.00', '0.00', 1, 56, '0.00', '210.00', '0.00'),
+(941, 864, '10.00', '17.60', '0.00', '0.00', 1, 56, '0.00', '176.00', '0.00'),
+(942, 872, '7.00', '25.60', '0.00', '0.00', 1, 56, '0.00', '179.20', '0.00'),
+(943, 873, '7.00', '25.60', '0.00', '0.00', 1, 56, '0.00', '179.20', '0.00'),
+(944, 806, '10.00', '11.84', '0.00', '0.00', 1, 56, '0.00', '118.40', '0.00'),
+(945, 807, '10.00', '11.84', '0.00', '0.00', 1, 56, '0.00', '118.40', '0.00'),
+(946, 617, '10.00', '20.00', '0.00', '0.00', 1, 56, '0.00', '200.00', '0.00'),
+(947, 618, '10.00', '20.00', '0.00', '0.00', 1, 56, '0.00', '200.00', '0.00'),
+(948, 619, '10.00', '20.00', '0.00', '0.00', 1, 56, '0.00', '200.00', '0.00'),
+(949, 620, '10.00', '20.00', '0.00', '0.00', 1, 56, '0.00', '200.00', '0.00'),
+(950, 765, '7.00', '40.00', '0.00', '0.00', 1, 56, '0.00', '280.00', '0.00'),
+(951, 764, '7.00', '40.00', '0.00', '0.00', 1, 56, '0.00', '280.00', '0.00'),
+(952, 729, '10.00', '4.80', '0.00', '0.00', 1, 56, '0.00', '48.00', '0.00'),
+(953, 730, '10.00', '4.80', '0.00', '0.00', 1, 56, '0.00', '48.00', '0.00'),
+(954, 1221, '25.00', '25.60', '0.00', '0.00', 1, 57, '0.00', '640.00', '0.00'),
+(955, 22, '15.00', '25.60', '0.00', '0.00', 1, 57, '0.00', '384.00', '0.00'),
+(956, 443, '50.00', '4.80', '0.00', '0.00', 1, 58, '0.00', '240.00', '0.00'),
+(957, 444, '50.00', '4.80', '0.00', '0.00', 1, 58, '0.00', '240.00', '0.00'),
+(958, 803, '50.00', '6.40', '0.00', '0.00', 1, 58, '0.00', '320.00', '0.00'),
+(959, 520, '42.00', '22.40', '0.00', '0.00', 1, 59, '0.00', '940.80', '0.00'),
+(960, 739, '9.00', '12.00', '0.00', '0.00', 1, 59, '0.00', '108.00', '0.00'),
+(961, 740, '9.00', '12.00', '0.00', '0.00', 1, 59, '0.00', '108.00', '0.00');
 
 -- --------------------------------------------------------
 
@@ -2688,14 +2732,12 @@ INSERT INTO `compra_detalle` (`id_cdetalle`, `prod_cdetalle`, `cant_cdetalle`, `
 --
 
 DROP TABLE IF EXISTS `cond_pago`;
-CREATE TABLE IF NOT EXISTS `cond_pago` (
-  `id_condp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `cond_pago` (
+  `id_condp` int(11) NOT NULL COMMENT 'ID UNICO',
   `desc_condp` varchar(100) NOT NULL COMMENT 'DESCRIP COND PAGO',
   `status_condp` int(11) NOT NULL COMMENT 'ESTATUS CONDICION PAGO',
-  `sucursal_condp` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL COND PAGO',
-  PRIMARY KEY (`id_condp`),
-  KEY `sucursal_condp` (`sucursal_condp`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='GUARDA LAS CONDICIONES DE PAGO';
+  `sucursal_condp` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL COND PAGO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA LAS CONDICIONES DE PAGO';
 
 --
 -- Volcado de datos para la tabla `cond_pago`
@@ -2714,17 +2756,14 @@ INSERT INTO `cond_pago` (`id_condp`, `desc_condp`, `status_condp`, `sucursal_con
 --
 
 DROP TABLE IF EXISTS `departamento`;
-CREATE TABLE IF NOT EXISTS `departamento` (
-  `id_depto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `departamento` (
+  `id_depto` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_depto` varchar(30) NOT NULL COMMENT 'DESCRIPCION DEPARTAMENTO',
   `prov_depto` int(11) NOT NULL COMMENT 'PROVINCIA DEPARTAMENTO',
   `pais_depto` int(11) NOT NULL,
   `status_depto` int(11) NOT NULL COMMENT 'ESTATUS DEPARTAMENTO',
-  `sucursal_depto` int(11) NOT NULL COMMENT 'SUCURSAL DEPARTAMENTO',
-  PRIMARY KEY (`id_depto`),
-  KEY `sucursal_depto` (`sucursal_depto`),
-  KEY `prov_depto` (`prov_depto`)
-) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE DEPARTAMENTOS';
+  `sucursal_depto` int(11) NOT NULL COMMENT 'SUCURSAL DEPARTAMENTO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE DEPARTAMENTOS';
 
 --
 -- Volcado de datos para la tabla `departamento`
@@ -2937,7 +2976,7 @@ INSERT INTO `departamento` (`id_depto`, `des_depto`, `prov_depto`, `pais_depto`,
 --
 
 DROP TABLE IF EXISTS `depts`;
-CREATE TABLE IF NOT EXISTS `depts` (
+CREATE TABLE `depts` (
   `provincia` varchar(100) DEFAULT NULL,
   `depart` varchar(100) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
   `dtto` varchar(100) DEFAULT NULL
@@ -3152,20 +3191,15 @@ INSERT INTO `depts` (`provincia`, `depart`, `dtto`) VALUES
 --
 
 DROP TABLE IF EXISTS `distrito`;
-CREATE TABLE IF NOT EXISTS `distrito` (
-  `id_dtto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `distrito` (
+  `id_dtto` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_dtto` varchar(30) NOT NULL COMMENT 'DESCRIPCION DISTRITO',
   `pais_dtto` int(11) NOT NULL,
   `prov_dtto` int(11) NOT NULL,
   `depto_dtto` int(11) NOT NULL COMMENT 'DEPARTAMENTO DISTRITO',
   `status_dtto` int(11) NOT NULL COMMENT 'ESTATUS DISTRITO',
-  `sucursal_dtto` int(11) NOT NULL COMMENT 'SUCURSAL DISTRITO',
-  PRIMARY KEY (`id_dtto`),
-  KEY `sucursal_dtto` (`sucursal_dtto`),
-  KEY `depto_dtto` (`depto_dtto`),
-  KEY `pais_dtto` (`pais_dtto`),
-  KEY `prov_dtto` (`prov_dtto`)
-) ENGINE=InnoDB AUTO_INCREMENT=218 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE DISTRITOS';
+  `sucursal_dtto` int(11) NOT NULL COMMENT 'SUCURSAL DISTRITO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE DISTRITOS';
 
 --
 -- Volcado de datos para la tabla `distrito`
@@ -3381,42 +3415,30 @@ INSERT INTO `distrito` (`id_dtto`, `des_dtto`, `pais_dtto`, `prov_dtto`, `depto_
 --
 
 DROP TABLE IF EXISTS `documento`;
-CREATE TABLE IF NOT EXISTS `documento` (
-  `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `documento` (
+  `id_doc` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_doc` varchar(10) DEFAULT '0000000000' COMMENT 'CODIGO DEL DOCUMENTO',
-  `tipo_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO DE DOCUMENTO: FACTURA, NOTA DE CREDITO, NOTA DE DEBITO, GUIA DE REMISION',
+  `tipo_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO DE DOCUMENTO: FACTURA, NOTA DE CREDITO, NOTA DE DEBITO, GUIA DE REMISION',
   `numeracion_doc` int(10) NOT NULL COMMENT 'SERIE DOCUMENTO',
-  `pedido_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'PEDIDO DEL DOCUMENTO',
+  `pedido_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'PEDIDO DEL DOCUMENTO',
   `fecha_doc` date DEFAULT NULL COMMENT 'FECHA DEL DOCUMENTO',
-  `obsv_doc` text DEFAULT NULL COMMENT 'OBSERVACIONES DEL DOCUMENTO',
-  `totalimp_doc` decimal(18,2) DEFAULT 0.00 COMMENT 'TOTAL IMPUESTO DEL DOCUMENTO',
-  `totaldsc_doc` decimal(18,2) DEFAULT 0.00 COMMENT 'TOTAL DESCUENTO DEL DOCUMENTO',
-  `total_doc` decimal(18,2) DEFAULT 0.00 COMMENT 'TOTAL DEL DOCUMENTO',
+  `obsv_doc` text COMMENT 'OBSERVACIONES DEL DOCUMENTO',
+  `totalimp_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL IMPUESTO DEL DOCUMENTO',
+  `totaldsc_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL DESCUENTO DEL DOCUMENTO',
+  `total_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL DEL DOCUMENTO',
   `transp_doc` int(11) DEFAULT NULL COMMENT 'TRANSPORTISTA DOCUMENTO',
   `utransp_doc` int(11) DEFAULT NULL COMMENT 'UNIDAD DE TRANSPORTE DOCUMENTO',
   `almacen_doc` int(11) NOT NULL COMMENT 'ALMACEN DOCUMENTO',
-  `motivo_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'MOTIVO TRASLADO, PARA LAS GUIAS DE REMISION',
-  `tipocambio_doc` decimal(18,3) NOT NULL DEFAULT 0.000 COMMENT 'TIPO DE CAMBIO DE DOCUMENTO',
+  `motivo_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'MOTIVO TRASLADO, PARA LAS GUIAS DE REMISION',
+  `tipocambio_doc` decimal(18,3) NOT NULL DEFAULT '0.000' COMMENT 'TIPO DE CAMBIO DE DOCUMENTO',
   `hash_doc` varchar(255) DEFAULT NULL COMMENT 'CODIGO HASH DEL DOCUMENTO',
   `valorr_doc` varchar(255) DEFAULT NULL COMMENT 'VALOR RESUMEN DEL DOCUMENTO ELECTRONICO',
-  `statussunat_doc` int(11) NOT NULL DEFAULT -1 COMMENT 'ESTATUS SUNAT',
+  `statussunat_doc` int(11) NOT NULL DEFAULT '-1' COMMENT 'ESTATUS SUNAT',
   `docref_doc` int(11) DEFAULT NULL COMMENT 'REFERENCIA A UN DOCUMENTO ANTERIOR  EN EL CASO DE NOTAS DE CREDITO O DEBITO',
   `motivosunat_doc` varchar(2) DEFAULT NULL COMMENT 'MOTIVO SUNAT PARA NOTAS DE CREDITO',
-  `status_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTADO DEL DOCUMENTO: 0 = SIN GENERAR, 1 = GUIA GENERADA, 2 = DOCUMENTO GENERADO, 3 = DOCUMENTO ANULADO',
-  `sucursal_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL DEL DOCUMENTO',
-  PRIMARY KEY (`id_doc`),
-  KEY `cod_doc` (`cod_doc`),
-  KEY `tipo_doc` (`tipo_doc`),
-  KEY `pedido_doc` (`pedido_doc`),
-  KEY `fecha_doc` (`fecha_doc`),
-  KEY `status_doc` (`status_doc`),
-  KEY `sucursal_doc` (`sucursal_doc`),
-  KEY `transp_doc` (`transp_doc`),
-  KEY `utransp_doc` (`utransp_doc`),
-  KEY `almacen_doc` (`almacen_doc`),
-  KEY `almacen_doc_2` (`almacen_doc`),
-  KEY `serie_doc` (`numeracion_doc`)
-) ENGINE=InnoDB AUTO_INCREMENT=233 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE LOS DOCUMENTOS: FACTURAS, GUIAS DE REMISION, NOTAS DE CREDITO, NOTAS DE DEBITO';
+  `status_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTADO DEL DOCUMENTO: 0 = SIN GENERAR, 1 = GUIA GENERADA, 2 = DOCUMENTO GENERADO, 3 = DOCUMENTO ANULADO',
+  `sucursal_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL DEL DOCUMENTO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE LOS DOCUMENTOS: FACTURAS, GUIAS DE REMISION, NOTAS DE CREDITO, NOTAS DE DEBITO';
 
 --
 -- Volcado de datos para la tabla `documento`
@@ -3630,27 +3652,118 @@ INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `ped
 (209, '0000000101', 2, 7, 164, '2020-06-26', '', '593.10', '0.00', '3888.08', NULL, NULL, 1, 0, '3.513', NULL, '20604954241|3|FE01|00000101|593.10|3888.08|2020-06-26|6|10485178401|', 0, NULL, NULL, 2, 1),
 (210, '0000000200', 3, 9, 173, '2020-06-26', '', '0.00', '0.00', '0.00', 2, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
 (211, '0000000102', 2, 7, 173, '2020-06-26', '', '103.38', '0.00', '677.71', NULL, NULL, 1, 0, '3.513', NULL, '20604954241|3|FE01|00000102|103.38|677.71|2020-06-26|6|20132111678|', 0, NULL, NULL, 2, 1),
-(212, '0000000201', 3, 9, 165, '2020-07-01', '', '0.00', '0.00', '0.00', 2, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 3, 1),
-(213, '0000000103', 2, 7, 165, '2020-07-01', '', '146.25', '0.00', '958.77', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000103|146.25|958.77|2020-07-01|6|20482431934', -1, NULL, NULL, 3, 1),
+(212, '0000000201', 3, 9, 165, '2020-07-01', '', '0.00', '0.00', '0.00', 2, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(213, '0000000103', 2, 7, 165, '2020-07-01', '', '146.25', '0.00', '958.77', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000103|146.25|958.77|2020-07-01|6|20482431934', 0, NULL, NULL, 2, 1),
 (214, '0000000202', 3, 9, 166, '2020-07-01', '', '0.00', '0.00', '0.00', 2, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
-(215, '0000000104', 2, 7, 166, '2020-07-01', '', '240.93', '0.00', '1579.40', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000104|240.93|1579.40|2020-07-01|6|20482431934', -1, NULL, NULL, 2, 1),
+(215, '0000000104', 2, 7, 166, '2020-07-01', '', '240.93', '0.00', '1579.40', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000104|240.93|1579.40|2020-07-01|6|20482431934', 0, NULL, NULL, 2, 1),
 (216, '0000000203', 3, 9, 167, '2020-07-01', '', '0.00', '0.00', '0.00', 2, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
-(217, '0000000105', 2, 7, 167, '2020-07-01', '', '147.79', '0.00', '968.84', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000105|147.79|968.84|2020-07-01|6|20482431934', -1, NULL, NULL, 2, 1),
+(217, '0000000105', 2, 7, 167, '2020-07-01', '', '147.79', '0.00', '968.84', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000105|147.79|968.84|2020-07-01|6|20482431934', 0, NULL, NULL, 2, 1),
 (218, '0000000204', 3, 9, 168, '2020-07-01', '', '0.00', '0.00', '0.00', 2, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
-(219, '0000000106', 2, 7, 168, '2020-07-01', '', '334.59', '0.00', '2193.44', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000106|334.59|2193.44|2020-07-01|6|20482431934', -1, NULL, NULL, 2, 1),
+(219, '0000000106', 2, 7, 168, '2020-07-01', '', '334.59', '0.00', '2193.44', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000106|334.59|2193.44|2020-07-01|6|20482431934', 0, NULL, NULL, 2, 1),
 (220, '0000000205', 3, 9, 169, '2020-07-01', '', '0.00', '0.00', '0.00', 2, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
-(221, '0000000107', 2, 7, 169, '2020-07-01', '', '100.90', '0.00', '661.44', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000107|100.90|661.44|2020-07-01|6|20482431934', -1, NULL, NULL, 2, 1),
+(221, '0000000107', 2, 7, 169, '2020-07-01', '', '100.90', '0.00', '661.44', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000107|100.90|661.44|2020-07-01|6|20482431934', 0, NULL, NULL, 2, 1),
 (222, '0000000206', 3, 9, 170, '2020-07-01', '', '0.00', '0.00', '0.00', 2, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
-(223, '0000000108', 2, 7, 170, '2020-07-01', '', '322.10', '0.00', '2111.52', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000108|322.10|2111.52|2020-07-01|6|20482431934', -1, NULL, NULL, 2, 1),
+(223, '0000000108', 2, 7, 170, '2020-07-01', '', '322.10', '0.00', '2111.52', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000108|322.10|2111.52|2020-07-01|6|20482431934', 0, NULL, NULL, 2, 1),
 (224, '0000000207', 3, 9, 171, '2020-07-01', '', '0.00', '0.00', '0.00', 2, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
-(225, '0000000109', 2, 7, 171, '2020-07-01', '', '340.85', '0.00', '2234.48', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000109|340.85|2234.48|2020-07-01|6|20482431934', -1, NULL, NULL, 2, 1),
-(226, '0000000001', 10, 10, 18, '2020-07-06', NULL, '593.10', '0.00', '3888.08', NULL, NULL, 1, 0, '3.541', NULL, '20604954241|7|NC01|00000001|593.10|3888.08|2020-07-06|6|20600807391', -1, 1, '03', 2, 1),
-(227, '0000000002', 10, 10, 18, '2020-07-06', NULL, '103.38', '30.25', '677.71', NULL, NULL, 1, 0, '3.541', NULL, '20604954241|7|NC01|00000002|103.38|677.71|2020-07-06|6|20600807391', -1, 1, '03', 2, 1),
-(228, '0000000003', 10, 10, 18, '2020-07-06', NULL, '240.93', '0.00', '1579.40', NULL, NULL, 1, 0, '3.541', NULL, '20604954241|7|NC01|00000003|240.93|1579.40|2020-07-06|6|20600807391', -1, 1, '01', 2, 1),
-(229, '0000000208', 3, 9, 176, '2020-07-06', '', '0.00', '0.00', '0.00', 5, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
-(230, '0000000110', 2, 7, 176, '2020-07-06', '', '79.23', '0.00', '519.40', NULL, NULL, 1, 0, '3.541', NULL, '20604954241|1|FE01|00000110|79.23|519.40|2020-07-06|6|10414626241', -1, NULL, NULL, 2, 1),
-(231, '0000000209', 3, 9, 60, '2020-07-08', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
-(232, '0000000111', 2, 7, 60, '2020-07-08', '', '94.00', '0.00', '616.20', NULL, NULL, 1, 0, '3.541', NULL, '20604954241|1|FE01|00000111|94.00|616.20|2020-07-08|6|10401808235', -1, NULL, NULL, 2, 1);
+(225, '0000000109', 2, 7, 171, '2020-07-01', '', '340.85', '0.00', '2234.48', NULL, NULL, 1, 0, '3.541', NULL, '20604954241||FE01|00000109|340.85|2234.48|2020-07-01|6|20482431934', 0, NULL, NULL, 2, 1),
+(226, '0000000208', 3, 9, 175, '2020-07-02', '', '0.00', '0.00', '0.00', 5, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(227, '0000000110', 2, 7, 175, '2020-07-02', '', '222.89', '0.00', '1461.16', NULL, NULL, 1, 0, '3.537', NULL, '20604954241||FE01|00000110|222.89|1461.16|2020-07-02|6|10024449594', 0, NULL, NULL, 2, 1),
+(228, '0000000209', 3, 9, 180, '2020-07-03', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(229, '0000000111', 2, 7, 180, '2020-07-03', '', '103.28', '0.00', '677.04', NULL, NULL, 1, 0, '3.537', NULL, '20604954241||FE01|00000111|103.28|677.04|2020-07-03|6|10422587565', 0, NULL, NULL, 2, 1),
+(230, '0000000210', 3, 9, 184, '2020-07-07', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(231, '0000000112', 2, 7, 184, '2020-07-07', '', '218.19', '0.00', '1430.33', NULL, NULL, 1, 0, '3.549', NULL, '20604954241||FE01|00000112|218.19|1430.33|2020-07-07|6|20493905997', 0, NULL, NULL, 2, 1),
+(232, '0000000211', 3, 9, 181, '2020-07-08', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(233, '0000000113', 2, 7, 181, '2020-07-08', '', '449.52', '0.00', '2946.84', NULL, NULL, 1, 0, '3.547', NULL, '20604954241||FE01|00000113|449.52|2946.84|2020-07-08|6|10215512105', 0, NULL, NULL, 2, 1),
+(234, '0000000212', 3, 9, 182, '2020-07-08', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(235, '0000000114', 2, 7, 182, '2020-07-08', '', '306.90', '0.00', '2011.90', NULL, NULL, 1, 0, '3.547', NULL, '20604954241||FE01|00000114|306.90|2011.90|2020-07-08|6|10215512105', 0, NULL, NULL, 2, 1),
+(236, '0000000213', 3, 9, 183, '2020-07-08', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(237, '0000000115', 2, 7, 183, '2020-07-08', '', '56.54', '0.00', '370.64', NULL, NULL, 1, 0, '3.547', NULL, '20604954241||FE01|00000115|56.54|370.64|2020-07-08|6|10215512105', 0, NULL, NULL, 2, 1),
+(238, '0000000214', 3, 9, 178, '2020-07-11', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(239, '0000000116', 2, 7, 178, '2020-07-11', '', '211.15', '0.00', '1384.21', NULL, NULL, 1, 0, '3.524', NULL, '20604954241||FE01|00000116|211.15|1384.21|2020-07-11|6|20571384834', 0, NULL, NULL, 2, 1),
+(240, '0000000215', 3, 9, 179, '2020-07-11', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(241, '0000000117', 2, 7, 179, '2020-07-11', '', '418.23', '0.00', '2741.74', NULL, NULL, 1, 0, '3.524', NULL, '20604954241||FE01|00000117|418.23|2741.74|2020-07-11|6|20571384834', 0, NULL, NULL, 2, 1),
+(242, '0000000216', 3, 9, 185, '2020-07-14', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(243, '0000000118', 2, 7, 185, '2020-07-14', '', '46.89', '0.00', '307.40', NULL, NULL, 1, 0, '3.500', NULL, '20604954241||FE01|00000118|46.89|307.40|2020-07-14|6|10436772900', 0, NULL, NULL, 2, 1),
+(244, '0000000217', 3, 9, 204, '2020-07-30', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(245, '0000000119', 2, 7, 204, '2020-07-30', '', '24.45', '0.00', '160.28', NULL, NULL, 1, 0, '3.529', NULL, '20604954241||FE01|00000119|24.45|160.28|2020-07-30|6|10704204723', 0, NULL, NULL, 2, 1),
+(246, '0000000218', 3, 9, 199, '2020-07-31', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(247, '0000000120', 2, 7, 199, '2020-07-31', '', '287.26', '0.00', '1883.12', NULL, NULL, 1, 0, '3.510', NULL, '20604954241||FE01|00000120|287.26|1883.12|2020-07-31|6|20525713599', 0, NULL, NULL, 2, 1),
+(248, '0000000219', 3, 9, 210, '2020-08-05', '', '0.00', '0.00', '0.00', 5, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(249, '0000000121', 2, 7, 210, '2020-08-05', '', '26.74', '0.00', '175.31', NULL, NULL, 1, 0, '3.550', NULL, '20604954241||FE01|00000121|26.74|175.31|2020-08-05|6|10434166859', 0, NULL, NULL, 2, 1),
+(250, '0000000220', 3, 9, 205, '2020-08-05', '', '0.00', '0.00', '0.00', 5, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(251, '0000000122', 2, 7, 205, '2020-08-05', '', '271.86', '0.00', '1782.20', NULL, NULL, 1, 0, '3.550', NULL, '20604954241||FE01|00000122|271.86|1782.20|2020-08-05|6|10456164698', 0, NULL, NULL, 2, 1),
+(252, '0000000221', 3, 9, 207, '2020-08-11', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(253, '0000000123', 2, 7, 207, '2020-08-11', '', '67.23', '0.00', '440.75', NULL, NULL, 1, 0, '3.548', NULL, '20604954241||FE01|00000123|67.23|440.75|2020-08-11|6|20603547978', 0, NULL, NULL, 2, 1),
+(254, '0000000222', 3, 9, 217, '2020-08-11', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(255, '0000000124', 2, 7, 217, '2020-08-11', '', '190.46', '0.00', '1248.58', NULL, NULL, 1, 0, '3.548', NULL, '20604954241||FE01|00000124|190.46|1248.58|2020-08-11|6|20602587771', 0, NULL, NULL, 2, 1),
+(256, '0000000223', 3, 9, 215, '2020-08-11', '', '0.00', '0.00', '0.00', 3, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 3, 1),
+(257, '0000000125', 2, 7, 215, '2020-08-11', '', '300.51', '0.00', '1970.04', NULL, NULL, 1, 0, '3.548', NULL, '20604954241||FE01|00000125|300.51|1970.04|2020-08-11|6|10772754243', 2108, NULL, NULL, 3, 1),
+(258, '0000000224', 3, 9, 216, '2020-08-11', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 3, 1),
+(259, '0000000126', 2, 7, 216, '2020-08-11', '', '100.85', '0.00', '661.13', NULL, NULL, 1, 0, '3.548', NULL, '20604954241||FE01|00000126|100.85|661.13|2020-08-11|6|10772754243', 2108, NULL, NULL, 3, 1),
+(260, '0000000225', 3, 9, 222, '2020-08-13', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(261, '0000000127', 2, 7, 222, '2020-08-13', '', '189.50', '0.00', '1242.30', NULL, NULL, 1, 0, '3.548', NULL, '20604954241||FE01|00000127|189.50|1242.30|2020-08-13|6|20548255954', 0, NULL, NULL, 2, 1),
+(262, '0000000226', 3, 9, 214, '2020-08-14', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(263, '0000000128', 2, 7, 214, '2020-08-14', '', '532.06', '0.00', '3487.92', NULL, NULL, 1, 0, '3.573', NULL, '20604954241||FE01|00000128|532.06|3487.92|2020-08-14|6|10101436310', 0, NULL, NULL, 2, 1),
+(264, '0000000227', 3, 9, 223, '2020-08-17', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(265, '0000000129', 2, 7, 223, '2020-08-17', '', '30.56', '0.00', '200.34', NULL, NULL, 1, 0, '3.573', NULL, '20604954241||FE01|00000129|30.56|200.34|2020-08-17|6|20481753091', 0, NULL, NULL, 2, 1),
+(266, '0000000228', 3, 9, 226, '2020-08-20', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(267, '0000000130', 2, 7, 226, '2020-08-20', '', '769.91', '0.00', '5047.19', NULL, NULL, 1, 0, '3.564', NULL, '20604954241||FE01|00000130|769.91|5047.19|2020-08-20|6|10414618737', 0, NULL, NULL, 2, 1),
+(268, '0000000229', 3, 9, 227, '2020-08-20', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(269, '0000000131', 2, 7, 227, '2020-08-20', '', '118.02', '0.00', '773.70', NULL, NULL, 1, 0, '3.564', NULL, '20604954241||FE01|00000131|118.02|773.70|2020-08-20|6|10414618737', 0, NULL, NULL, 2, 1),
+(270, '0000000231', 3, 9, 206, '2020-08-21', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(271, '0000000132', 2, 7, 206, '2020-08-21', '', '58.68', '0.00', '384.65', NULL, NULL, 1, 0, '3.564', NULL, '20604954241||FE01|00000132|58.68|384.65|2020-08-21|6|20600838386', 0, NULL, NULL, 2, 1),
+(272, '0000000232', 3, 9, 228, '2020-08-21', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(273, '0000000133', 2, 7, 228, '2020-08-21', '', '164.57', '0.00', '1078.83', NULL, NULL, 1, 0, '3.564', NULL, '20604954241||FE01|00000133|164.57|1078.83|2020-08-21|6|20493905997', 0, NULL, NULL, 2, 1),
+(274, '0000000233', 3, 9, 239, '2020-09-03', '', '0.00', '0.00', '0.00', 10, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(275, '0000000134', 2, 7, 239, '2020-09-03', '', '145.90', '0.00', '956.43', NULL, NULL, 1, 0, '3.533', NULL, '20604954241||FE01|00000134|145.90|956.43|2020-09-03|6|10414618737', 0, NULL, NULL, 2, 1),
+(276, '0000000234', 3, 9, 238, '2020-09-04', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(277, '0000000135', 2, 7, 238, '2020-09-04', '', '119.09', '0.00', '780.67', NULL, NULL, 1, 0, '3.542', NULL, '20604954241||FE01|00000135|119.09|780.67|2020-09-04|6|10453327472', 0, NULL, NULL, 2, 1),
+(278, '0000000235', 3, 9, 230, '2020-09-04', '', '0.00', '0.00', '0.00', 7, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(279, '0000000136', 2, 7, 230, '2020-09-04', '', '27.05', '0.00', '177.30', NULL, NULL, 1, 0, '3.542', NULL, '20604954241||FE01|00000136|27.05|177.30|2020-09-04|6|10454538817', 0, NULL, NULL, 2, 1),
+(280, '0000000236', 3, 9, 225, '2020-09-05', '', '0.00', '0.00', '0.00', 5, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(281, '0000000137', 2, 7, 225, '2020-09-05', '', '183.36', '0.00', '1202.04', NULL, NULL, 1, 0, '3.542', NULL, '20604954241||FE01|00000137|183.36|1202.04|2020-09-05|6|10456164698', 0, NULL, NULL, 2, 1),
+(282, '0000000237', 3, 9, 232, '2020-09-07', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(283, '0000000138', 2, 7, 232, '2020-09-07', '', '127.28', '0.00', '834.42', NULL, NULL, 1, 0, '3.542', NULL, '20604954241||FE01|00000138|127.28|834.42|2020-09-07|6|10101436310', 0, NULL, NULL, 2, 1),
+(284, '0000000238', 3, 9, 240, '2020-09-07', '', '0.00', '0.00', '0.00', 2, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(285, '0000000139', 2, 7, 240, '2020-09-07', '', '62.75', '0.00', '411.38', NULL, NULL, 1, 0, '3.542', NULL, '20604954241||FE01|00000139|62.75|411.38|2020-09-07|6|20481609136', 0, NULL, NULL, 2, 1),
+(286, '0000000239', 3, 9, 236, '2020-09-07', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 3, 1),
+(287, '0000000239', 3, 9, 236, '2020-09-07', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(288, '0000000140', 2, 7, 236, '2020-09-07', '', '92.87', '0.00', '608.80', NULL, NULL, 1, 0, '3.542', NULL, '20604954241||FE01|00000140|92.87|608.80|2020-09-07|6|10414917491', 0, NULL, NULL, 2, 1),
+(289, '0000000240', 3, 9, 246, '2020-09-08', '', '0.00', '0.00', '0.00', 10, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(290, '0000000141', 2, 7, 246, '2020-09-08', '', '55.49', '0.00', '363.80', NULL, NULL, 1, 0, '3.554', NULL, '20604954241||FE01|00000141|55.49|363.80|2020-09-08|6|10414618737', 0, NULL, NULL, 2, 1),
+(291, '0000000241', 3, 9, 247, '2020-09-08', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(292, '0000000142', 2, 7, 247, '2020-09-08', '', '111.36', '0.00', '730.00', NULL, NULL, 1, 0, '3.554', NULL, '20604954241||FE01|00000142|111.36|730.00|2020-09-08|6|20600803680', 0, NULL, NULL, 2, 1),
+(293, '0000000242', 3, 9, 243, '2020-09-08', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(294, '0000000143', 2, 7, 243, '2020-09-08', '', '67.79', '0.00', '444.40', NULL, NULL, 1, 0, '3.554', NULL, '20604954241||FE01|00000143|67.79|444.40|2020-09-08|6|20493905997', 0, NULL, NULL, 2, 1),
+(295, '0000000243', 3, 9, 241, '2020-09-09', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(296, '0000000144', 2, 7, 241, '2020-09-09', '', '36.23', '0.00', '237.54', NULL, NULL, 1, 0, '3.545', NULL, '20604954241||FE01|00000144|36.23|237.54|2020-09-09|6|10238466810', 0, NULL, NULL, 2, 1),
+(297, '0000000244', 3, 9, 251, '2020-09-09', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(298, '0000000145', 2, 7, 251, '2020-09-09', '', '70.93', '0.00', '465.00', NULL, NULL, 1, 0, '3.545', NULL, '20604954241||FE01|00000145|70.93|465.00|2020-09-09|6|10032324229', 0, NULL, NULL, 2, 1),
+(299, '0000000245', 3, 9, 252, '2020-09-09', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(300, '0000000146', 2, 7, 252, '2020-09-09', '', '36.23', '0.00', '237.54', NULL, NULL, 1, 0, '3.545', NULL, '20604954241||FE01|00000146|36.23|237.54|2020-09-09|6|10414917491', 0, NULL, NULL, 2, 1),
+(301, '0000000246', 3, 9, 248, '2020-09-10', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(302, '0000000147', 2, 7, 248, '2020-09-10', '', '20.89', '0.00', '136.96', NULL, NULL, 1, 0, '3.537', NULL, '20604954241||FE01|00000147|20.89|136.96|2020-09-10|6|10225304535', 0, NULL, NULL, 2, 1),
+(303, '0000000247', 3, 9, 249, '2020-09-10', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(304, '0000000148', 2, 7, 249, '2020-09-10', '', '100.85', '0.00', '661.13', NULL, NULL, 1, 0, '3.537', NULL, '20604954241||FE01|00000148|100.85|661.13|2020-09-10|6|10772754243', 0, NULL, NULL, 2, 1),
+(305, '0000000248', 3, 9, 250, '2020-09-10', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(306, '0000000149', 2, 7, 250, '2020-09-10', '', '300.51', '0.00', '1970.04', NULL, NULL, 1, 0, '3.537', NULL, '20604954241||FE01|00000149|300.51|1970.04|2020-09-10|6|10772754243', 0, NULL, NULL, 2, 1),
+(307, '0000000249', 3, 9, 259, '2020-09-14', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(308, '0000000150', 2, 7, 259, '2020-09-14', '', '7.18', '0.00', '47.10', NULL, NULL, 1, 0, '3.570', NULL, '20604954241||FE01|00000150|7.18|47.10|2020-09-14|6|20561102679', 0, NULL, NULL, 2, 1),
+(309, '0000000250', 3, 9, 253, '2020-09-14', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1);
+INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `pedido_doc`, `fecha_doc`, `obsv_doc`, `totalimp_doc`, `totaldsc_doc`, `total_doc`, `transp_doc`, `utransp_doc`, `almacen_doc`, `motivo_doc`, `tipocambio_doc`, `hash_doc`, `valorr_doc`, `statussunat_doc`, `docref_doc`, `motivosunat_doc`, `status_doc`, `sucursal_doc`) VALUES
+(310, '0000000151', 2, 7, 253, '2020-09-14', '', '5.88', '0.00', '38.52', NULL, NULL, 1, 0, '3.570', NULL, '20604954241||FE01|00000151|5.88|38.52|2020-09-14|6|10411179180', 0, NULL, NULL, 2, 1),
+(311, '0000000251', 3, 9, 234, '2020-09-14', '', '0.00', '0.00', '0.00', 10, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(312, '0000000152', 2, 7, 234, '2020-09-14', '', '135.41', '0.00', '887.69', NULL, NULL, 1, 0, '3.570', NULL, '20604954241||FE01|00000152|135.41|887.69|2020-09-14|6|10436772900', 0, NULL, NULL, 2, 1),
+(313, '0000000252', 3, 9, 235, '2020-09-14', '', '0.00', '0.00', '0.00', 10, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(314, '0000000153', 2, 7, 235, '2020-09-14', '', '97.12', '0.00', '636.65', NULL, NULL, 1, 0, '3.570', NULL, '20604954241||FE01|00000153|97.12|636.65|2020-09-14|6|10436772900', 0, NULL, NULL, 2, 1),
+(315, '0000000253', 3, 9, 261, '2020-09-16', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(316, '0000000154', 2, 7, 261, '2020-09-16', '', '171.59', '0.00', '1124.90', NULL, NULL, 1, 0, '3.569', NULL, '20604954241||FE01|00000154|171.59|1124.90|2020-09-16|6|', 0, NULL, NULL, 2, 1),
+(317, '0000000254', 3, 9, 262, '2020-09-19', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(318, '0000000155', 2, 7, 262, '2020-09-19', '', '18.03', '0.00', '118.17', NULL, NULL, 1, 0, '3.538', NULL, '20604954241||FE01|00000155|18.03|118.17|2020-09-19|6|', 0, NULL, NULL, 2, 1),
+(319, '0000000255', 3, 9, 269, '2020-09-23', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(320, '0000000156', 2, 7, 269, '2020-09-23', '', '572.09', '0.00', '3750.40', NULL, NULL, 1, 0, '3.555', NULL, '20604954241||FE01|00000156|572.09|3750.40|2020-09-23|6|20494693497', 0, NULL, NULL, 2, 1),
+(321, '0000000256', 3, 9, 274, '2020-09-25', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, 1, 1),
+(322, '0000000157', 2, 7, 274, '2020-09-25', '', '32.34', '0.00', '212.00', NULL, NULL, 1, 0, '3.580', NULL, '20604954241||FE01|00000157|32.34|212.00|2020-09-25|6|20548255954', 0, NULL, NULL, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -3659,21 +3772,18 @@ INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `ped
 --
 
 DROP TABLE IF EXISTS `documento_detalle`;
-CREATE TABLE IF NOT EXISTS `documento_detalle` (
-  `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `documento_detalle` (
+  `id_ddetalle` int(11) NOT NULL COMMENT 'ID UNICO',
   `prod_ddetalle` int(11) NOT NULL COMMENT 'PRODUCTO DOCUMENTO DETALLE',
-  `cant_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'CANTIDAD DOCUMENTO DETALLE',
-  `precio_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO DOCUMENTO DETALLE',
-  `descu_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'DESCUENTO % DOCUMENTO DETALLE',
-  `impuesto_ddetalle` decimal(18,0) NOT NULL DEFAULT 0 COMMENT 'IMPUESTO DOCUMENTO DETALLE',
-  `status_ddetalle` int(11) NOT NULL DEFAULT 1 COMMENT 'ESTATUS DOCUMENTO DETALLE',
-  `documento_ddetalle` int(11) NOT NULL DEFAULT 0 COMMENT 'DOCUMENTO DETALLE',
-  `plista_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO LISTA DOCUMENTO DETALLE',
-  `total_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'TOTAL DOCUMENTO DETALLE',
-  PRIMARY KEY (`id_ddetalle`),
-  KEY `prod_pdetalle` (`prod_ddetalle`),
-  KEY `pedido_pdetalle` (`documento_ddetalle`)
-) ENGINE=InnoDB AUTO_INCREMENT=1417 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE DOCUMENTOS, PRINCIPALMENTE PENSADO PARA GUARDAR LAS CANTIDADES DE LAS GUIAS DE REMISION';
+  `cant_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'CANTIDAD DOCUMENTO DETALLE',
+  `precio_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO DOCUMENTO DETALLE',
+  `descu_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'DESCUENTO % DOCUMENTO DETALLE',
+  `impuesto_ddetalle` decimal(18,0) NOT NULL DEFAULT '0' COMMENT 'IMPUESTO DOCUMENTO DETALLE',
+  `status_ddetalle` int(11) NOT NULL DEFAULT '1' COMMENT 'ESTATUS DOCUMENTO DETALLE',
+  `documento_ddetalle` int(11) NOT NULL DEFAULT '0' COMMENT 'DOCUMENTO DETALLE',
+  `plista_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA DOCUMENTO DETALLE',
+  `total_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL DOCUMENTO DETALLE'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE DOCUMENTOS, PRINCIPALMENTE PENSADO PARA GUARDAR LAS CANTIDADES DE LAS GUIAS DE REMISION';
 
 --
 -- Volcado de datos para la tabla `documento_detalle`
@@ -5044,59 +5154,432 @@ INSERT INTO `documento_detalle` (`id_ddetalle`, `prod_ddetalle`, `cant_ddetalle`
 (1361, 147, '1.00', '0.00', '0.00', '0', 1, 224, '0.00', '0.00'),
 (1362, 1204, '1.00', '0.00', '0.00', '0', 1, 224, '0.00', '0.00'),
 (1363, 170, '1.00', '0.00', '0.00', '0', 1, 224, '0.00', '0.00'),
-(1364, 984, '10.00', '47.70', '0.00', '18', 1, 226, '47.70', '477.00'),
-(1365, 633, '50.00', '4.24', '0.00', '18', 1, 226, '4.24', '212.00'),
-(1366, 634, '50.00', '4.24', '0.00', '18', 1, 226, '4.24', '212.00'),
-(1367, 635, '10.00', '13.78', '0.00', '18', 1, 226, '13.78', '137.80'),
-(1368, 636, '10.00', '13.78', '0.00', '18', 1, 226, '13.78', '137.80'),
-(1369, 638, '10.00', '13.78', '0.00', '18', 1, 226, '13.78', '137.80'),
-(1370, 953, '5.00', '21.20', '0.00', '18', 1, 226, '21.20', '106.00'),
-(1371, 954, '5.00', '21.20', '0.00', '18', 1, 226, '21.20', '106.00'),
-(1372, 646, '4.00', '23.32', '0.00', '18', 1, 226, '23.32', '93.28'),
-(1373, 647, '4.00', '23.32', '0.00', '18', 1, 226, '23.32', '93.28'),
-(1374, 957, '4.00', '23.32', '0.00', '18', 1, 226, '23.32', '93.28'),
-(1375, 649, '5.00', '8.48', '0.00', '18', 1, 226, '8.48', '42.40'),
-(1376, 648, '5.00', '8.48', '0.00', '18', 1, 226, '8.48', '42.40'),
-(1377, 986, '40.00', '20.14', '0.00', '18', 1, 226, '20.14', '805.60'),
-(1378, 939, '10.00', '13.78', '0.00', '18', 1, 226, '13.78', '137.80'),
-(1379, 653, '4.00', '13.78', '0.00', '18', 1, 226, '13.78', '55.12'),
-(1380, 940, '4.00', '13.78', '0.00', '18', 1, 226, '13.78', '55.12'),
-(1381, 656, '10.00', '16.43', '0.00', '18', 1, 226, '16.43', '164.30'),
-(1382, 657, '10.00', '16.43', '0.00', '18', 1, 226, '16.43', '164.30'),
-(1383, 1018, '10.00', '30.74', '0.00', '18', 1, 226, '30.74', '307.40'),
-(1384, 1019, '10.00', '30.74', '0.00', '18', 1, 226, '30.74', '307.40'),
-(1385, 995, '25.00', '23.16', '5.00', '18', 1, 227, '24.38', '579.02'),
-(1386, 1186, '1.00', '98.69', '5.00', '18', 1, 227, '103.88', '98.69'),
-(1387, 506, '2.00', '9.54', '0.00', '18', 1, 228, '9.54', '19.08'),
-(1388, 507, '2.00', '9.54', '0.00', '18', 1, 228, '9.54', '19.08'),
-(1389, 755, '2.00', '16.96', '0.00', '18', 1, 228, '16.96', '33.92'),
-(1390, 756, '2.00', '16.96', '0.00', '18', 1, 228, '16.96', '33.92'),
-(1391, 757, '2.00', '16.96', '0.00', '18', 1, 228, '16.96', '33.92'),
-(1392, 758, '2.00', '16.96', '0.00', '18', 1, 228, '16.96', '33.92'),
-(1393, 512, '3.00', '31.80', '0.00', '18', 1, 228, '31.80', '95.40'),
-(1394, 764, '2.00', '53.00', '0.00', '18', 1, 228, '53.00', '106.00'),
-(1395, 766, '2.00', '53.00', '0.00', '18', 1, 228, '53.00', '106.00'),
-(1396, 761, '2.00', '53.00', '0.00', '18', 1, 228, '53.00', '106.00'),
-(1397, 762, '2.00', '53.00', '0.00', '18', 1, 228, '53.00', '106.00'),
-(1398, 759, '2.00', '53.00', '0.00', '18', 1, 228, '53.00', '106.00'),
-(1399, 760, '2.00', '53.00', '0.00', '18', 1, 228, '53.00', '106.00'),
-(1400, 525, '3.00', '26.50', '0.00', '18', 1, 228, '26.50', '79.50'),
-(1401, 1024, '3.00', '26.50', '0.00', '18', 1, 228, '26.50', '79.50'),
-(1402, 782, '3.00', '21.20', '0.00', '18', 1, 228, '21.20', '63.60'),
-(1403, 783, '3.00', '21.20', '0.00', '18', 1, 228, '21.20', '63.60'),
-(1404, 793, '3.00', '26.50', '0.00', '18', 1, 228, '26.50', '79.50'),
-(1405, 794, '3.00', '26.50', '0.00', '18', 1, 228, '26.50', '79.50'),
-(1406, 784, '3.00', '38.16', '0.00', '18', 1, 228, '38.16', '114.48'),
-(1407, 785, '3.00', '38.16', '0.00', '18', 1, 228, '38.16', '114.48'),
-(1408, 150, '1.00', '0.00', '0.00', '0', 1, 229, '0.00', '0.00'),
-(1409, 127, '2.00', '0.00', '0.00', '0', 1, 229, '0.00', '0.00'),
-(1410, 148, '3.00', '0.00', '0.00', '0', 1, 229, '0.00', '0.00'),
-(1411, 464, '3.00', '0.00', '0.00', '0', 1, 229, '0.00', '0.00'),
-(1412, 633, '3.00', '0.00', '0.00', '0', 1, 229, '0.00', '0.00'),
-(1413, 634, '3.00', '0.00', '0.00', '0', 1, 229, '0.00', '0.00'),
-(1414, 689, '3.00', '0.00', '0.00', '0', 1, 231, '0.00', '0.00'),
-(1415, 133, '1.00', '0.00', '0.00', '0', 1, 231, '0.00', '0.00'),
-(1416, 690, '5.00', '0.00', '0.00', '0', 1, 231, '0.00', '0.00');
+(1364, 1196, '4.00', '0.00', '0.00', '0', 1, 226, '0.00', '0.00'),
+(1365, 96, '1.00', '0.00', '0.00', '0', 1, 226, '0.00', '0.00'),
+(1366, 147, '2.00', '0.00', '0.00', '0', 1, 226, '0.00', '0.00'),
+(1367, 1204, '1.00', '0.00', '0.00', '0', 1, 226, '0.00', '0.00'),
+(1368, 151, '3.00', '0.00', '0.00', '0', 1, 226, '0.00', '0.00'),
+(1369, 152, '3.00', '0.00', '0.00', '0', 1, 226, '0.00', '0.00'),
+(1370, 158, '2.00', '0.00', '0.00', '0', 1, 226, '0.00', '0.00'),
+(1371, 161, '1.00', '0.00', '0.00', '0', 1, 226, '0.00', '0.00'),
+(1372, 163, '1.00', '0.00', '0.00', '0', 1, 226, '0.00', '0.00'),
+(1373, 1028, '10.00', '0.00', '0.00', '0', 1, 228, '0.00', '0.00'),
+(1374, 1196, '2.00', '0.00', '0.00', '0', 1, 228, '0.00', '0.00'),
+(1375, 690, '2.00', '0.00', '0.00', '0', 1, 228, '0.00', '0.00'),
+(1376, 148, '5.00', '0.00', '0.00', '0', 1, 230, '0.00', '0.00'),
+(1377, 132, '3.00', '0.00', '0.00', '0', 1, 230, '0.00', '0.00'),
+(1378, 128, '3.00', '0.00', '0.00', '0', 1, 230, '0.00', '0.00'),
+(1379, 1205, '3.00', '0.00', '0.00', '0', 1, 230, '0.00', '0.00'),
+(1380, 147, '2.00', '0.00', '0.00', '0', 1, 230, '0.00', '0.00'),
+(1381, 774, '5.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1382, 695, '20.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1383, 775, '5.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1384, 776, '5.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1385, 777, '5.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1386, 443, '20.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1387, 452, '5.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1388, 729, '15.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1389, 730, '15.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1390, 459, '20.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1391, 460, '20.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1392, 751, '20.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1393, 752, '20.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1394, 767, '3.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1395, 790, '3.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1396, 791, '3.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1397, 806, '5.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1398, 807, '5.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1399, 870, '2.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1400, 871, '2.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1401, 877, '20.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1402, 919, '3.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1403, 920, '3.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1404, 627, '30.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1405, 628, '20.00', '0.00', '0.00', '0', 1, 232, '0.00', '0.00'),
+(1406, 1020, '15.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1407, 927, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1408, 928, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1409, 929, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1410, 930, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1411, 967, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1412, 968, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1413, 966, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1414, 639, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1415, 644, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1416, 645, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1417, 953, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1418, 954, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1419, 1021, '15.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1420, 642, '20.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1421, 643, '20.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1422, 939, '3.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1423, 652, '3.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1424, 653, '3.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1425, 940, '3.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1426, 666, '15.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1427, 667, '15.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1428, 944, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1429, 945, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1430, 946, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1431, 947, '5.00', '0.00', '0.00', '0', 1, 234, '0.00', '0.00'),
+(1432, 676, '5.00', '0.00', '0.00', '0', 1, 236, '0.00', '0.00'),
+(1433, 677, '5.00', '0.00', '0.00', '0', 1, 236, '0.00', '0.00'),
+(1434, 678, '5.00', '0.00', '0.00', '0', 1, 236, '0.00', '0.00'),
+(1435, 679, '5.00', '0.00', '0.00', '0', 1, 236, '0.00', '0.00'),
+(1436, 582, '1.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1437, 836, '2.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1438, 841, '4.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1439, 842, '4.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1440, 844, '2.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1441, 857, '2.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1442, 915, '4.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1443, 914, '4.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1444, 634, '24.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1445, 633, '12.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1446, 638, '6.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1447, 1020, '12.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1448, 927, '10.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1449, 928, '10.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1450, 967, '4.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1451, 968, '4.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1452, 957, '3.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1453, 642, '12.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1454, 643, '12.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1455, 969, '3.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1456, 970, '3.00', '0.00', '0.00', '0', 1, 238, '0.00', '0.00'),
+(1457, 971, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1458, 972, '4.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1459, 975, '3.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1460, 671, '3.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1461, 933, '3.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1462, 1186, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1463, 8, '1.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1464, 56, '1.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1465, 93, '1.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1466, 98, '1.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1467, 1198, '1.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1468, 1201, '1.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1469, 123, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1470, 1209, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1471, 127, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1472, 1206, '1.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1473, 1205, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1474, 706, '4.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1475, 707, '4.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1476, 754, '6.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1477, 739, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1478, 740, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1479, 513, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1480, 771, '10.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1481, 806, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1482, 807, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1483, 797, '10.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1484, 803, '6.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1485, 809, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1486, 810, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1487, 804, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1488, 805, '2.00', '0.00', '0.00', '0', 1, 240, '0.00', '0.00'),
+(1489, 42, '5.00', '0.00', '0.00', '0', 1, 242, '0.00', '0.00'),
+(1490, 43, '5.00', '0.00', '0.00', '0', 1, 242, '0.00', '0.00'),
+(1491, 634, '20.00', '0.00', '0.00', '0', 1, 244, '0.00', '0.00'),
+(1492, 633, '20.00', '0.00', '0.00', '0', 1, 244, '0.00', '0.00'),
+(1493, 635, '10.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1494, 636, '10.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1495, 634, '25.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1496, 633, '25.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1497, 917, '25.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1498, 624, '25.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1499, 820, '25.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1500, 1007, '10.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1501, 1006, '10.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1502, 1020, '10.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1503, 957, '10.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1504, 647, '10.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1505, 646, '10.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1506, 649, '10.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1507, 648, '10.00', '0.00', '0.00', '0', 1, 246, '0.00', '0.00'),
+(1508, 162, '1.00', '0.00', '0.00', '0', 1, 248, '0.00', '0.00'),
+(1509, 103, '2.00', '0.00', '0.00', '0', 1, 248, '0.00', '0.00'),
+(1510, 104, '2.00', '0.00', '0.00', '0', 1, 248, '0.00', '0.00'),
+(1511, 166, '1.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1512, 167, '1.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1513, 1203, '1.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1514, 147, '2.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1515, 1204, '1.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1516, 152, '3.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1517, 151, '3.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1518, 127, '1.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1519, 1206, '1.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1520, 101, '1.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1521, 56, '1.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1522, 58, '2.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1523, 44, '2.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1524, 122, '1.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1525, 1209, '1.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1526, 126, '1.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1527, 112, '2.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1528, 172, '2.00', '0.00', '0.00', '0', 1, 250, '0.00', '0.00'),
+(1529, 957, '20.00', '0.00', '0.00', '0', 1, 252, '0.00', '0.00'),
+(1530, 1221, '10.00', '0.00', '0.00', '0', 1, 254, '0.00', '0.00'),
+(1531, 123, '4.00', '0.00', '0.00', '0', 1, 254, '0.00', '0.00'),
+(1532, 1187, '2.00', '0.00', '0.00', '0', 1, 254, '0.00', '0.00'),
+(1533, 1201, '1.00', '0.00', '0.00', '0', 1, 254, '0.00', '0.00'),
+(1534, 1209, '1.00', '0.00', '0.00', '0', 1, 254, '0.00', '0.00'),
+(1535, 1204, '1.00', '0.00', '0.00', '0', 1, 254, '0.00', '0.00'),
+(1536, 699, '2.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1537, 700, '2.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1538, 701, '3.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1539, 702, '10.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1540, 447, '10.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1541, 729, '10.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1542, 730, '10.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1543, 768, '2.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1544, 769, '2.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1545, 754, '4.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1546, 486, '10.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1547, 487, '10.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1548, 739, '5.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1549, 503, '10.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1550, 603, '1.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1551, 604, '1.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1552, 866, '6.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1553, 867, '4.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1554, 615, '10.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1555, 616, '10.00', '0.00', '0.00', '0', 1, 256, '0.00', '0.00'),
+(1556, 628, '10.00', '0.00', '0.00', '0', 1, 258, '0.00', '0.00'),
+(1557, 633, '10.00', '0.00', '0.00', '0', 1, 258, '0.00', '0.00'),
+(1558, 634, '10.00', '0.00', '0.00', '0', 1, 258, '0.00', '0.00'),
+(1559, 939, '5.00', '0.00', '0.00', '0', 1, 258, '0.00', '0.00'),
+(1560, 652, '5.00', '0.00', '0.00', '0', 1, 258, '0.00', '0.00'),
+(1561, 653, '5.00', '0.00', '0.00', '0', 1, 258, '0.00', '0.00'),
+(1562, 940, '5.00', '0.00', '0.00', '0', 1, 258, '0.00', '0.00'),
+(1563, 945, '5.00', '0.00', '0.00', '0', 1, 258, '0.00', '0.00'),
+(1564, 459, '5.00', '0.00', '0.00', '0', 1, 258, '0.00', '0.00'),
+(1565, 460, '5.00', '0.00', '0.00', '0', 1, 258, '0.00', '0.00'),
+(1566, 752, '5.00', '0.00', '0.00', '0', 1, 258, '0.00', '0.00'),
+(1567, 122, '2.00', '0.00', '0.00', '0', 1, 260, '0.00', '0.00'),
+(1568, 1221, '4.00', '0.00', '0.00', '0', 1, 260, '0.00', '0.00'),
+(1569, 864, '5.00', '0.00', '0.00', '0', 1, 260, '0.00', '0.00'),
+(1570, 994, '5.00', '0.00', '0.00', '0', 1, 260, '0.00', '0.00'),
+(1571, 88, '2.00', '0.00', '0.00', '0', 1, 260, '0.00', '0.00'),
+(1572, 117, '3.00', '0.00', '0.00', '0', 1, 260, '0.00', '0.00'),
+(1573, 1181, '4.00', '0.00', '0.00', '0', 1, 260, '0.00', '0.00'),
+(1574, 1207, '6.00', '0.00', '0.00', '0', 1, 262, '0.00', '0.00');
+INSERT INTO `documento_detalle` (`id_ddetalle`, `prod_ddetalle`, `cant_ddetalle`, `precio_ddetalle`, `descu_ddetalle`, `impuesto_ddetalle`, `status_ddetalle`, `documento_ddetalle`, `plista_ddetalle`, `total_ddetalle`) VALUES
+(1575, 1205, '6.00', '0.00', '0.00', '0', 1, 262, '0.00', '0.00'),
+(1576, 147, '6.00', '0.00', '0.00', '0', 1, 262, '0.00', '0.00'),
+(1577, 1186, '6.00', '0.00', '0.00', '0', 1, 262, '0.00', '0.00'),
+(1578, 123, '5.00', '0.00', '0.00', '0', 1, 262, '0.00', '0.00'),
+(1579, 96, '6.00', '0.00', '0.00', '0', 1, 262, '0.00', '0.00'),
+(1580, 1187, '2.00', '0.00', '0.00', '0', 1, 262, '0.00', '0.00'),
+(1581, 56, '5.00', '0.00', '0.00', '0', 1, 264, '0.00', '0.00'),
+(1582, 127, '4.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1583, 129, '3.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1584, 132, '1.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1585, 142, '1.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1586, 1208, '1.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1587, 147, '5.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1588, 1205, '6.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1589, 149, '6.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1590, 1204, '2.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1591, 152, '2.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1592, 151, '2.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1593, 1213, '2.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1594, 1215, '2.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1595, 1221, '8.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1596, 30, '1.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1597, 42, '3.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1598, 56, '4.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1599, 58, '1.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1600, 68, '2.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1601, 87, '1.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1602, 88, '1.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1603, 93, '1.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1604, 1196, '2.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1605, 103, '10.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1606, 104, '10.00', '0.00', '0.00', '0', 1, 266, '0.00', '0.00'),
+(1607, 110, '1.00', '0.00', '0.00', '0', 1, 268, '0.00', '0.00'),
+(1608, 111, '2.00', '0.00', '0.00', '0', 1, 268, '0.00', '0.00'),
+(1609, 451, '6.00', '0.00', '0.00', '0', 1, 268, '0.00', '0.00'),
+(1610, 452, '4.00', '0.00', '0.00', '0', 1, 268, '0.00', '0.00'),
+(1611, 461, '2.00', '0.00', '0.00', '0', 1, 268, '0.00', '0.00'),
+(1612, 535, '2.00', '0.00', '0.00', '0', 1, 268, '0.00', '0.00'),
+(1613, 755, '1.00', '0.00', '0.00', '0', 1, 268, '0.00', '0.00'),
+(1614, 803, '8.00', '0.00', '0.00', '0', 1, 268, '0.00', '0.00'),
+(1615, 884, '2.00', '0.00', '0.00', '0', 1, 268, '0.00', '0.00'),
+(1616, 885, '2.00', '0.00', '0.00', '0', 1, 268, '0.00', '0.00'),
+(1617, 616, '6.00', '0.00', '0.00', '0', 1, 268, '0.00', '0.00'),
+(1618, 615, '8.00', '0.00', '0.00', '0', 1, 268, '0.00', '0.00'),
+(1619, 22, '12.00', '0.00', '0.00', '0', 1, 270, '0.00', '0.00'),
+(1620, 111, '1.00', '0.00', '0.00', '0', 1, 272, '0.00', '0.00'),
+(1621, 129, '3.00', '0.00', '0.00', '0', 1, 272, '0.00', '0.00'),
+(1622, 147, '4.00', '0.00', '0.00', '0', 1, 272, '0.00', '0.00'),
+(1623, 1205, '4.00', '0.00', '0.00', '0', 1, 272, '0.00', '0.00'),
+(1624, 132, '3.00', '0.00', '0.00', '0', 1, 274, '0.00', '0.00'),
+(1625, 148, '3.00', '0.00', '0.00', '0', 1, 274, '0.00', '0.00'),
+(1626, 1209, '3.00', '0.00', '0.00', '0', 1, 274, '0.00', '0.00'),
+(1627, 22, '3.00', '0.00', '0.00', '0', 1, 274, '0.00', '0.00'),
+(1628, 26, '9.00', '0.00', '0.00', '0', 1, 276, '0.00', '0.00'),
+(1629, 140, '2.00', '0.00', '0.00', '0', 1, 276, '0.00', '0.00'),
+(1630, 151, '2.00', '0.00', '0.00', '0', 1, 276, '0.00', '0.00'),
+(1631, 152, '2.00', '0.00', '0.00', '0', 1, 276, '0.00', '0.00'),
+(1632, 136, '5.00', '0.00', '0.00', '0', 1, 276, '0.00', '0.00'),
+(1633, 136, '2.00', '0.00', '0.00', '0', 1, 278, '0.00', '0.00'),
+(1634, 1205, '1.00', '0.00', '0.00', '0', 1, 278, '0.00', '0.00'),
+(1635, 56, '20.00', '0.00', '0.00', '0', 1, 280, '0.00', '0.00'),
+(1636, 1028, '10.00', '0.00', '0.00', '0', 1, 280, '0.00', '0.00'),
+(1637, 917, '9.00', '0.00', '0.00', '0', 1, 282, '0.00', '0.00'),
+(1638, 624, '6.00', '0.00', '0.00', '0', 1, 282, '0.00', '0.00'),
+(1639, 987, '2.00', '0.00', '0.00', '0', 1, 282, '0.00', '0.00'),
+(1640, 451, '1.00', '0.00', '0.00', '0', 1, 282, '0.00', '0.00'),
+(1641, 634, '60.00', '0.00', '0.00', '0', 1, 282, '0.00', '0.00'),
+(1642, 633, '60.00', '0.00', '0.00', '0', 1, 282, '0.00', '0.00'),
+(1643, 636, '21.00', '0.00', '0.00', '0', 1, 282, '0.00', '0.00'),
+(1644, 1007, '6.00', '0.00', '0.00', '0', 1, 284, '0.00', '0.00'),
+(1645, 1006, '6.00', '0.00', '0.00', '0', 1, 284, '0.00', '0.00'),
+(1646, 1013, '4.00', '0.00', '0.00', '0', 1, 284, '0.00', '0.00'),
+(1647, 1012, '4.00', '0.00', '0.00', '0', 1, 284, '0.00', '0.00'),
+(1648, 104, '5.00', '0.00', '0.00', '0', 1, 286, '0.00', '0.00'),
+(1649, 103, '5.00', '0.00', '0.00', '0', 1, 286, '0.00', '0.00'),
+(1650, 1217, '1.00', '0.00', '0.00', '0', 1, 286, '0.00', '0.00'),
+(1651, 129, '2.00', '0.00', '0.00', '0', 1, 286, '0.00', '0.00'),
+(1652, 11, '2.00', '0.00', '0.00', '0', 1, 286, '0.00', '0.00'),
+(1653, 104, '5.00', '0.00', '0.00', '0', 1, 287, '0.00', '0.00'),
+(1654, 103, '5.00', '0.00', '0.00', '0', 1, 287, '0.00', '0.00'),
+(1655, 1217, '1.00', '0.00', '0.00', '0', 1, 287, '0.00', '0.00'),
+(1656, 129, '2.00', '0.00', '0.00', '0', 1, 287, '0.00', '0.00'),
+(1657, 11, '2.00', '0.00', '0.00', '0', 1, 287, '0.00', '0.00'),
+(1658, 12, '2.00', '0.00', '0.00', '0', 1, 287, '0.00', '0.00'),
+(1659, 131, '4.00', '0.00', '0.00', '0', 1, 289, '0.00', '0.00'),
+(1660, 664, '50.00', '0.00', '0.00', '0', 1, 291, '0.00', '0.00'),
+(1661, 667, '50.00', '0.00', '0.00', '0', 1, 291, '0.00', '0.00'),
+(1662, 1210, '2.00', '0.00', '0.00', '0', 1, 293, '0.00', '0.00'),
+(1663, 127, '3.00', '0.00', '0.00', '0', 1, 293, '0.00', '0.00'),
+(1664, 616, '10.00', '0.00', '0.00', '0', 1, 295, '0.00', '0.00'),
+(1665, 633, '10.00', '0.00', '0.00', '0', 1, 295, '0.00', '0.00'),
+(1666, 634, '10.00', '0.00', '0.00', '0', 1, 295, '0.00', '0.00'),
+(1667, 635, '2.00', '0.00', '0.00', '0', 1, 295, '0.00', '0.00'),
+(1668, 636, '2.00', '0.00', '0.00', '0', 1, 295, '0.00', '0.00'),
+(1669, 615, '50.00', '0.00', '0.00', '0', 1, 297, '0.00', '0.00'),
+(1670, 96, '2.00', '0.00', '0.00', '0', 1, 299, '0.00', '0.00'),
+(1671, 22, '4.00', '0.00', '0.00', '0', 1, 301, '0.00', '0.00'),
+(1672, 628, '10.00', '0.00', '0.00', '0', 1, 303, '0.00', '0.00'),
+(1673, 633, '10.00', '0.00', '0.00', '0', 1, 303, '0.00', '0.00'),
+(1674, 634, '10.00', '0.00', '0.00', '0', 1, 303, '0.00', '0.00'),
+(1675, 939, '5.00', '0.00', '0.00', '0', 1, 303, '0.00', '0.00'),
+(1676, 652, '5.00', '0.00', '0.00', '0', 1, 303, '0.00', '0.00'),
+(1677, 653, '5.00', '0.00', '0.00', '0', 1, 303, '0.00', '0.00'),
+(1678, 940, '5.00', '0.00', '0.00', '0', 1, 303, '0.00', '0.00'),
+(1679, 945, '5.00', '0.00', '0.00', '0', 1, 303, '0.00', '0.00'),
+(1680, 459, '5.00', '0.00', '0.00', '0', 1, 303, '0.00', '0.00'),
+(1681, 460, '5.00', '0.00', '0.00', '0', 1, 303, '0.00', '0.00'),
+(1682, 752, '5.00', '0.00', '0.00', '0', 1, 303, '0.00', '0.00'),
+(1683, 699, '2.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1684, 700, '2.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1685, 701, '3.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1686, 702, '10.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1687, 447, '10.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1688, 729, '10.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1689, 730, '10.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1690, 768, '2.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1691, 769, '2.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1692, 754, '4.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1693, 486, '10.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1694, 487, '10.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1695, 739, '5.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1696, 503, '10.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1697, 603, '1.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1698, 604, '1.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1699, 866, '6.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1700, 867, '4.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1701, 615, '10.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1702, 616, '10.00', '0.00', '0.00', '0', 1, 305, '0.00', '0.00'),
+(1703, 957, '2.00', '0.00', '0.00', '0', 1, 307, '0.00', '0.00'),
+(1704, 125, '1.00', '0.00', '0.00', '0', 1, 309, '0.00', '0.00'),
+(1705, 693, '2.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1706, 694, '2.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1707, 439, '2.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1708, 440, '2.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1709, 442, '2.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1710, 441, '2.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1711, 521, '2.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1712, 499, '1.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1713, 498, '1.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1714, 746, '4.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1715, 797, '10.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1716, 800, '6.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1717, 799, '6.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1718, 798, '10.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1719, 600, '3.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1720, 599, '3.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1721, 594, '4.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1722, 593, '4.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1723, 838, '1.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1724, 837, '1.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1725, 840, '1.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1726, 839, '1.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1727, 902, '5.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1728, 901, '5.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1729, 658, '3.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1730, 943, '3.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1731, 938, '2.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1732, 686, '4.00', '0.00', '0.00', '0', 1, 311, '0.00', '0.00'),
+(1733, 1181, '2.00', '0.00', '0.00', '0', 1, 313, '0.00', '0.00'),
+(1734, 152, '5.00', '0.00', '0.00', '0', 1, 313, '0.00', '0.00'),
+(1735, 151, '5.00', '0.00', '0.00', '0', 1, 313, '0.00', '0.00'),
+(1736, 907, '6.00', '0.00', '0.00', '0', 1, 313, '0.00', '0.00'),
+(1737, 786, '5.00', '0.00', '0.00', '0', 1, 313, '0.00', '0.00'),
+(1738, 791, '2.00', '0.00', '0.00', '0', 1, 313, '0.00', '0.00'),
+(1739, 1221, '4.00', '0.00', '0.00', '0', 1, 313, '0.00', '0.00'),
+(1740, 463, '2.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1741, 464, '4.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1742, 468, '6.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1743, 467, '4.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1744, 521, '3.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1745, 633, '5.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1746, 634, '5.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1747, 625, '3.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1748, 626, '3.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1749, 486, '1.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1750, 59, '1.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1751, 795, '2.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1752, 796, '3.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1753, 54, '1.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1754, 91, '1.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1755, 739, '2.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1756, 740, '2.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1757, 520, '1.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1758, 753, '2.00', '0.00', '0.00', '0', 1, 315, '0.00', '0.00'),
+(1759, 491, '1.00', '0.00', '0.00', '0', 1, 317, '0.00', '0.00'),
+(1760, 487, '1.00', '0.00', '0.00', '0', 1, 317, '0.00', '0.00'),
+(1761, 929, '5.00', '0.00', '0.00', '0', 1, 317, '0.00', '0.00'),
+(1762, 930, '5.00', '0.00', '0.00', '0', 1, 317, '0.00', '0.00'),
+(1763, 879, '5.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1764, 881, '5.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1765, 448, '10.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1766, 753, '5.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1767, 767, '5.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1768, 766, '1.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1769, 791, '5.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1770, 822, '50.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1771, 832, '20.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1772, 622, '10.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1773, 966, '10.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1774, 967, '10.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1775, 968, '5.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1776, 989, '5.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1777, 1018, '10.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1778, 992, '5.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1779, 668, '1.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1780, 995, '10.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1781, 940, '5.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1782, 459, '10.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1783, 751, '10.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1784, 449, '5.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1785, 803, '20.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1786, 443, '20.00', '0.00', '0.00', '0', 1, 319, '0.00', '0.00'),
+(1787, 103, '4.00', '0.00', '0.00', '0', 1, 321, '0.00', '0.00'),
+(1788, 104, '4.00', '0.00', '0.00', '0', 1, 321, '0.00', '0.00');
 
 -- --------------------------------------------------------
 
@@ -5105,8 +5588,8 @@ INSERT INTO `documento_detalle` (`id_ddetalle`, `prod_ddetalle`, `cant_ddetalle`
 --
 
 DROP TABLE IF EXISTS `empresa`;
-CREATE TABLE IF NOT EXISTS `empresa` (
-  `id_empresa` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `empresa` (
+  `id_empresa` int(11) NOT NULL COMMENT 'ID UNICO',
   `nombre_empresa` varchar(150) NOT NULL COMMENT 'NOMBRE EMPRESA',
   `estatus_empresa` int(11) NOT NULL COMMENT 'ESTATUS EMPRESA',
   `dni_empresa` varchar(20) NOT NULL COMMENT 'DNI EMPRESA',
@@ -5115,9 +5598,8 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `tlf_empresa` varchar(150) NOT NULL COMMENT 'TELEFONO EMPRESA',
   `movil_empresa` varchar(150) DEFAULT NULL COMMENT 'TELEFONO MOVIL EMPRESA',
   `correo_empresa` varchar(70) DEFAULT NULL COMMENT 'CORREO EMPRESA',
-  `direcc_empresa` text NOT NULL COMMENT 'DIRECCION EMPRESA',
-  PRIMARY KEY (`id_empresa`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `direcc_empresa` text NOT NULL COMMENT 'DIRECCION EMPRESA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `empresa`
@@ -5133,7 +5615,7 @@ INSERT INTO `empresa` (`id_empresa`, `nombre_empresa`, `estatus_empresa`, `dni_e
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `entradas_ajustes`;
-CREATE TABLE IF NOT EXISTS `entradas_ajustes` (
+CREATE TABLE `entradas_ajustes` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -5162,7 +5644,7 @@ CREATE TABLE IF NOT EXISTS `entradas_ajustes` (
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `entradas_compras`;
-CREATE TABLE IF NOT EXISTS `entradas_compras` (
+CREATE TABLE `entradas_compras` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -5191,7 +5673,7 @@ CREATE TABLE IF NOT EXISTS `entradas_compras` (
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `entradas_documentos`;
-CREATE TABLE IF NOT EXISTS `entradas_documentos` (
+CREATE TABLE `entradas_documentos` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -5220,17 +5702,15 @@ CREATE TABLE IF NOT EXISTS `entradas_documentos` (
 --
 
 DROP TABLE IF EXISTS `inventario`;
-CREATE TABLE IF NOT EXISTS `inventario` (
-  `id_inv` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
-  `tipotrans_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO TRANSACCION INVENTARIO',
+CREATE TABLE `inventario` (
+  `id_inv` int(11) NOT NULL COMMENT 'ID UNICO',
+  `tipotrans_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO TRANSACCION INVENTARIO',
   `fecha_inv` date NOT NULL COMMENT 'FECHA DE CREACION INVENTARIO',
   `fecham_inv` date NOT NULL COMMENT 'FECHA DE MODIFICACION INVENTARIO',
-  `prod_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO INVENTARIO',
-  `cantidad_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'CANTIDAD INVENTARIO',
-  `orden_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'NUMERO DE ORDEN PEDIDO / COMPRA INVENTARIO',
-  `sucursal_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL INVENTARIO',
-  PRIMARY KEY (`id_inv`),
-  KEY `sucursal_inv` (`sucursal_inv`)
+  `prod_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO INVENTARIO',
+  `cantidad_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'CANTIDAD INVENTARIO',
+  `orden_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'NUMERO DE ORDEN PEDIDO / COMPRA INVENTARIO',
+  `sucursal_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL INVENTARIO'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA MOVIMIENTOS DE ALMACEN';
 
 -- --------------------------------------------------------
@@ -5240,22 +5720,17 @@ CREATE TABLE IF NOT EXISTS `inventario` (
 --
 
 DROP TABLE IF EXISTS `lista_precios`;
-CREATE TABLE IF NOT EXISTS `lista_precios` (
-  `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
-  `tipo_lista` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO DE LISTA DE PRECIO',
-  `prod_lista` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO LISTA',
-  `precio_lista` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO LISTA',
-  `sucursal_lista` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL LISTA',
-  `preciod_lista` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO DIVISAS LISTA',
-  `preciom_lista` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO MONEDA LOCAL LISTA',
-  `utilidad1_lista` decimal(5,2) NOT NULL DEFAULT 0.00 COMMENT 'UTILIDAD 1 LISTA',
-  `utilidad2_lista` decimal(5,2) NOT NULL DEFAULT 0.00 COMMENT 'UTILIDAD 2 LISTA',
-  PRIMARY KEY (`id_lista`),
-  UNIQUE KEY `lista` (`prod_lista`,`tipo_lista`),
-  KEY `tipo_lista` (`tipo_lista`),
-  KEY `prod_lista` (`prod_lista`),
-  KEY `sucursal_lista` (`sucursal_lista`)
-) ENGINE=InnoDB AUTO_INCREMENT=809 DEFAULT CHARSET=latin1 COMMENT='GUARDA LISTAS DE PRECIOS';
+CREATE TABLE `lista_precios` (
+  `id_lista` int(11) NOT NULL COMMENT 'ID UNICO',
+  `tipo_lista` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO DE LISTA DE PRECIO',
+  `prod_lista` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO LISTA',
+  `precio_lista` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA',
+  `sucursal_lista` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL LISTA',
+  `preciod_lista` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO DIVISAS LISTA',
+  `preciom_lista` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO MONEDA LOCAL LISTA',
+  `utilidad1_lista` decimal(5,2) NOT NULL DEFAULT '0.00' COMMENT 'UTILIDAD 1 LISTA',
+  `utilidad2_lista` decimal(5,2) NOT NULL DEFAULT '0.00' COMMENT 'UTILIDAD 2 LISTA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA LISTAS DE PRECIOS';
 
 --
 -- Volcado de datos para la tabla `lista_precios`
@@ -5272,7 +5747,7 @@ INSERT INTO `lista_precios` (`id_lista`, `tipo_lista`, `prod_lista`, `precio_lis
 (9, 1, 8, '42.40', 1, '0.00', '0.00', '0.00', '0.00'),
 (10, 1, 9, '148.40', 1, '0.00', '0.00', '0.00', '0.00'),
 (11, 1, 10, '40.00', 1, '0.00', '0.00', '0.00', '0.00'),
-(12, 1, 11, '53.00', 1, '0.00', '0.00', '0.00', '0.00'),
+(12, 1, 11, '25.00', 1, '0.00', '0.00', '0.00', '0.00'),
 (13, 1, 12, '25.00', 1, '0.00', '0.00', '0.00', '0.00'),
 (14, 1, 13, '41.70', 1, '0.00', '0.00', '0.00', '0.00'),
 (15, 1, 14, '47.70', 1, '0.00', '0.00', '0.00', '0.00'),
@@ -5355,7 +5830,7 @@ INSERT INTO `lista_precios` (`id_lista`, `tipo_lista`, `prod_lista`, `precio_lis
 (92, 1, 94, '111.94', 1, '0.00', '0.00', '0.00', '0.00'),
 (93, 1, 95, '137.80', 1, '0.00', '0.00', '0.00', '0.00'),
 (94, 1, 96, '117.66', 1, '0.00', '0.00', '0.00', '0.00'),
-(95, 1, 97, '35.00', 1, '0.00', '0.00', '0.00', '0.00'),
+(95, 1, 97, '70.00', 1, '0.00', '0.00', '0.00', '0.00'),
 (96, 1, 98, '115.75', 1, '0.00', '0.00', '0.00', '0.00'),
 (97, 1, 99, '50.35', 1, '0.00', '0.00', '0.00', '0.00'),
 (98, 1, 100, '115.75', 1, '0.00', '0.00', '0.00', '0.00'),
@@ -6068,7 +6543,9 @@ INSERT INTO `lista_precios` (`id_lista`, `tipo_lista`, `prod_lista`, `precio_lis
 (805, 1, 1199, '97.52', 1, '0.00', '0.00', '0.00', '0.00'),
 (806, 1, 1206, '114.48', 1, '0.00', '0.00', '0.00', '0.00'),
 (807, 1, 1217, '63.60', 0, '0.00', '0.00', '0.00', '0.00'),
-(808, 1, 1218, '108.78', 0, '0.00', '0.00', '0.00', '0.00');
+(808, 1, 1218, '108.78', 0, '0.00', '0.00', '0.00', '0.00'),
+(809, 1, 1220, '74.20', 0, '0.00', '0.00', '0.00', '0.00'),
+(810, 1, 1221, '32.00', 0, '0.00', '0.00', '0.00', '0.00');
 
 -- --------------------------------------------------------
 
@@ -6077,15 +6554,13 @@ INSERT INTO `lista_precios` (`id_lista`, `tipo_lista`, `prod_lista`, `precio_lis
 --
 
 DROP TABLE IF EXISTS `menu`;
-CREATE TABLE IF NOT EXISTS `menu` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `menu` (
+  `id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
   `parent` int(11) DEFAULT NULL,
   `route` varchar(255) DEFAULT NULL,
   `order` int(11) DEFAULT NULL,
-  `data` blob DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `parent` (`parent`)
+  `data` blob
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -6095,10 +6570,9 @@ CREATE TABLE IF NOT EXISTS `menu` (
 --
 
 DROP TABLE IF EXISTS `migration`;
-CREATE TABLE IF NOT EXISTS `migration` (
+CREATE TABLE `migration` (
   `version` varchar(180) NOT NULL,
-  `apply_time` int(11) DEFAULT NULL,
-  PRIMARY KEY (`version`)
+  `apply_time` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -6119,16 +6593,14 @@ INSERT INTO `migration` (`version`, `apply_time`) VALUES
 --
 
 DROP TABLE IF EXISTS `moneda`;
-CREATE TABLE IF NOT EXISTS `moneda` (
-  `id_moneda` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `moneda` (
+  `id_moneda` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_moneda` varchar(50) NOT NULL COMMENT 'DESCRIPCION MONEDA',
   `tipo_moneda` varchar(1) NOT NULL DEFAULT 'N' COMMENT 'TIPO MONEDA',
   `sunatm_moneda` varchar(10) DEFAULT NULL COMMENT 'ABREVIACION DE MONEDA SEGUN SUNAT',
   `status_moneda` int(11) NOT NULL COMMENT 'ESTATUS MONEDA',
-  `sucursal_moneda` int(11) NOT NULL COMMENT 'SUCURSAL MONEDA',
-  PRIMARY KEY (`id_moneda`),
-  KEY `sucursal_moneda` (`sucursal_moneda`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT=' GUARDA DATOS DE MONEDAS';
+  `sucursal_moneda` int(11) NOT NULL COMMENT 'SUCURSAL MONEDA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT=' GUARDA DATOS DE MONEDAS';
 
 --
 -- Volcado de datos para la tabla `moneda`
@@ -6145,13 +6617,12 @@ INSERT INTO `moneda` (`id_moneda`, `des_moneda`, `tipo_moneda`, `sunatm_moneda`,
 --
 
 DROP TABLE IF EXISTS `motivo_traslado`;
-CREATE TABLE IF NOT EXISTS `motivo_traslado` (
-  `id_motivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `motivo_traslado` (
+  `id_motivo` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_motivo` varchar(100) NOT NULL COMMENT 'DESCRIPCION MOTIVO',
-  `status_motivo` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS MOTIVO',
-  `sucursal_motivo` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL MOTIVO',
-  PRIMARY KEY (`id_motivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE MOTIVOS DE TRASLADO';
+  `status_motivo` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS MOTIVO',
+  `sucursal_motivo` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL MOTIVO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE MOTIVOS DE TRASLADO';
 
 --
 -- Volcado de datos para la tabla `motivo_traslado`
@@ -6176,66 +6647,34 @@ INSERT INTO `motivo_traslado` (`id_motivo`, `des_motivo`, `status_motivo`, `sucu
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `movimiento_producto`
--- (Véase abajo para la vista actual)
---
-DROP VIEW IF EXISTS `movimiento_producto`;
-CREATE TABLE IF NOT EXISTS `movimiento_producto` (
-`id_prod` int(11)
-,`cod_prod` varchar(25)
-,`des_prod` text
-,`fecha_trans` date
-,`docref_trans` varchar(150)
-,`codigo_trans` varchar(14)
-,`ope_trans` varchar(7)
-,`id_tipom` int(11)
-,`des_tipom` varchar(60)
-,`id_tipod` int(11)
-,`des_tipod` varchar(100)
-,`ingreso_unidades` char(11)
-,`moneda` varchar(50)
-,`precio_compra_ext` char(24)
-,`precio_compra_soles` char(20)
-,`ingreso_valorizados` char(38)
-,`salidas_unidades` char(11)
-,`tipo` varchar(2)
-,`sucursal_trans` int(11)
-);
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `numeracion`
 --
 
 DROP TABLE IF EXISTS `numeracion`;
-CREATE TABLE IF NOT EXISTS `numeracion` (
-  `id_num` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
-  `tipo_num` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO NUMERACION',
+CREATE TABLE `numeracion` (
+  `id_num` int(11) NOT NULL COMMENT 'ID UNICO',
+  `tipo_num` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO NUMERACION',
   `numero_num` varchar(10) NOT NULL DEFAULT '0000000000' COMMENT 'NUMERO NUMERACION',
-  `sucursal_num` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL NUMERACION',
+  `sucursal_num` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL NUMERACION',
   `serie_num` varchar(2) NOT NULL COMMENT 'SERIE NUMERACION',
-  `status_num` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS NUMERACION',
-  PRIMARY KEY (`id_num`),
-  KEY `sucursal_num` (`sucursal_num`),
-  KEY `tipo_num` (`tipo_num`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='GUARDA NUMERACION DE DOCUMENTOS';
+  `status_num` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS NUMERACION'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA NUMERACION DE DOCUMENTOS';
 
 --
 -- Volcado de datos para la tabla `numeracion`
 --
 
 INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `serie_num`, `status_num`) VALUES
-(1, 1, '0000000120', 1, '00', 1),
-(2, 7, '0000000040', 1, '00', 1),
-(3, 8, '0000000000', 1, '00', 1),
-(4, 6, '0000000051', 1, '00', 1),
-(5, 4, '0000000064', 1, '00', 1),
-(6, 5, '0000000128', 1, '00', 1),
-(7, 2, '0000000111', 1, '01', 1),
+(1, 1, '0000000176', 1, '00', 1),
+(2, 7, '0000000083', 1, '00', 1),
+(3, 8, '0000000001', 1, '00', 1),
+(4, 6, '0000000058', 1, '00', 1),
+(5, 4, '0000000072', 1, '00', 1),
+(6, 5, '0000000198', 1, '00', 1),
+(7, 2, '0000000157', 1, '01', 1),
 (8, 9, '0000000000', 1, '01', 1),
-(9, 3, '0000000209', 1, '01', 1),
-(10, 10, '0000000003', 1, '01', 1);
+(9, 3, '0000000256', 1, '01', 1),
+(10, 10, '0000000000', 1, '01', 1);
 
 -- --------------------------------------------------------
 
@@ -6244,14 +6683,13 @@ INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `s
 --
 
 DROP TABLE IF EXISTS `pais`;
-CREATE TABLE IF NOT EXISTS `pais` (
-  `id_pais` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `pais` (
+  `id_pais` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_pais` varchar(3) NOT NULL COMMENT 'CODIGO PAIS',
   `des_pais` varchar(100) NOT NULL COMMENT 'DESCIPCION DE PAIS',
-  `status_pais` int(11) NOT NULL DEFAULT 1 COMMENT 'ESTATUS PAIS',
-  `sucursal_pais` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL PAIS',
-  PRIMARY KEY (`id_pais`)
-) ENGINE=InnoDB AUTO_INCREMENT=243 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PAISES';
+  `status_pais` int(11) NOT NULL DEFAULT '1' COMMENT 'ESTATUS PAIS',
+  `sucursal_pais` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL PAIS'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PAISES';
 
 --
 -- Volcado de datos para la tabla `pais`
@@ -6507,8 +6945,8 @@ INSERT INTO `pais` (`id_pais`, `cod_pais`, `des_pais`, `status_pais`, `sucursal_
 --
 
 DROP TABLE IF EXISTS `pedido`;
-CREATE TABLE IF NOT EXISTS `pedido` (
-  `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `pedido` (
+  `id_pedido` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_pedido` varchar(10) NOT NULL COMMENT 'CODIGO PEDIDO',
   `fecha_pedido` date NOT NULL COMMENT 'FECHA PEDIDO',
   `clte_pedido` int(11) NOT NULL COMMENT 'CLIENTE PEDIDO',
@@ -6516,24 +6954,13 @@ CREATE TABLE IF NOT EXISTS `pedido` (
   `moneda_pedido` int(11) NOT NULL COMMENT 'MONEDA PEDIDO',
   `almacen_pedido` int(11) NOT NULL COMMENT 'ALMACEN PEDIDO',
   `usuario_pedido` int(11) NOT NULL COMMENT 'USUARIO PEDIDO',
-  `estatus_pedido` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS PEDIDO: STATUS_INACTIVO=0;GUIA_GENERADA = 1; DOCUMENTO_GENERADO = 2; PEDIDO_FINALIZADO = 3; PEDIDO_ANULADO = 4;',
-  `sucursal_pedido` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL PEDIDO',
-  `condp_pedido` int(11) NOT NULL DEFAULT 0 COMMENT 'CONDICION PAGO PEDIDO',
+  `estatus_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS PEDIDO: STATUS_INACTIVO=0;GUIA_GENERADA = 1; DOCUMENTO_GENERADO = 2; PEDIDO_FINALIZADO = 3; PEDIDO_ANULADO = 4;',
+  `sucursal_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL PEDIDO',
+  `condp_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'CONDICION PAGO PEDIDO',
   `tipo_pedido` varchar(2) NOT NULL COMMENT 'TIPO DE PEDIDO NP = PEDIDO, PR = PROFORMA, CT = COTIZACION  ',
   `edicion_pedido` varchar(1) DEFAULT 'N' COMMENT 'EDICION PEDIDO',
-  `nrodoc_pedido` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO PEDIDO',
-  PRIMARY KEY (`id_pedido`,`cod_pedido`,`tipo_pedido`),
-  UNIQUE KEY `cod_pedido` (`cod_pedido`,`tipo_pedido`),
-  KEY `fecha_pedido` (`fecha_pedido`),
-  KEY `clte_pedido` (`clte_pedido`),
-  KEY `vend_pedido` (`vend_pedido`),
-  KEY `moneda_pedido` (`moneda_pedido`),
-  KEY `almacen_pedido` (`almacen_pedido`),
-  KEY `usuario_pedido` (`usuario_pedido`),
-  KEY `sucursal_pedido` (`sucursal_pedido`),
-  KEY `condp_pedido` (`condp_pedido`),
-  KEY `tipo_pedido` (`tipo_pedido`)
-) ENGINE=InnoDB AUTO_INCREMENT=177 DEFAULT CHARSET=latin1 COMMENT='GUARDA PEDIDOS';
+  `nrodoc_pedido` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO PEDIDO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA PEDIDOS';
 
 --
 -- Volcado de datos para la tabla `pedido`
@@ -6557,8 +6984,8 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (32, '0000000015', '2019-12-19', 301, 3, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
 (33, '0000000001', '2020-01-21', 420, 4, 1, 1, 2, 3, 1, 3, 'PR', 'N', ''),
 (34, '0000000002', '2020-01-23', 751, 2, 1, 1, 2, 3, 1, 1, 'PR', 'N', '33'),
-(35, '0000000003', '2020-01-24', 753, 2, 1, 1, 2, 3, 1, 4, 'PR', 'N', '000027'),
-(36, '0000000004', '2020-01-24', 754, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', '000031'),
+(35, '0000000003', '2020-01-24', 753, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', '000027'),
+(36, '0000000004', '2020-01-24', 754, 2, 1, 1, 2, 3, 1, 4, 'PR', 'N', '000031'),
 (37, '0000000016', '2020-01-24', 755, 6, 1, 1, 2, 2, 1, 3, 'NP', 'N', '27675'),
 (38, '0000000017', '2020-01-24', 755, 6, 1, 1, 2, 2, 1, 1, 'NP', 'N', '27676'),
 (39, '0000000018', '2020-01-24', 756, 6, 1, 1, 2, 2, 1, 3, 'NP', 'N', '27674'),
@@ -6574,7 +7001,7 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (49, '0000000028', '2020-01-30', 761, 6, 1, 1, 2, 4, 1, 2, 'NP', 'N', ''),
 (50, '0000000029', '2020-01-30', 762, 3, 1, 1, 2, 2, 1, 4, 'NP', 'N', '000078'),
 (51, '0000000005', '2020-01-31', 15, 2, 1, 1, 2, 3, 1, 1, 'PR', 'N', '000044'),
-(52, '0000000006', '2020-01-31', 233, 1, 1, 1, 2, 0, 1, 4, 'PR', 'N', '000037'),
+(52, '0000000006', '2020-01-31', 233, 1, 1, 1, 2, 3, 1, 4, 'PR', 'N', '000037'),
 (53, '0000000007', '2020-01-31', 763, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', '000047'),
 (54, '0000000030', '2020-01-31', 764, 3, 1, 1, 2, 2, 1, 3, 'NP', 'N', '003469'),
 (55, '0000000031', '2020-01-31', 387, 1, 1, 1, 2, 2, 1, 4, 'NP', 'N', ''),
@@ -6582,10 +7009,10 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (57, '0000000033', '2020-02-01', 765, 2, 1, 1, 2, 2, 1, 1, 'NP', 'N', '000045'),
 (58, '0000000034', '2020-02-01', 765, 2, 1, 1, 2, 2, 1, 1, 'NP', 'N', '000045'),
 (59, '0000000035', '2020-02-01', 765, 2, 1, 1, 2, 2, 1, 1, 'NP', 'N', '000046'),
-(60, '0000000036', '2020-02-03', 231, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(60, '0000000036', '2020-02-03', 231, 3, 1, 1, 2, 0, 1, 1, 'NP', 'N', ''),
 (61, '0000000037', '2020-02-04', 766, 6, 1, 1, 2, 2, 1, 3, 'NP', 'N', '27696'),
 (62, '0000000038', '2020-02-04', 767, 6, 1, 1, 2, 2, 1, 3, 'NP', 'N', '27697'),
-(63, '0000000008', '2020-02-04', 767, 6, 1, 1, 2, 0, 1, 3, 'PR', 'N', '27697'),
+(63, '0000000008', '2020-02-04', 767, 6, 1, 1, 2, 3, 1, 3, 'PR', 'N', '27697'),
 (64, '0000000009', '2020-02-04', 120, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', '36'),
 (65, '0000000039', '2020-02-05', 497, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', '000035'),
 (66, '0000000040', '2020-02-06', 768, 3, 1, 1, 2, 0, 1, 1, 'NP', 'N', '000076'),
@@ -6611,14 +7038,14 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (86, '0000000055', '2020-02-17', 609, 3, 1, 1, 2, 2, 1, 4, 'NP', 'N', ''),
 (87, '0000000056', '2020-02-18', 775, 2, 1, 1, 2, 2, 1, 1, 'NP', 'N', '269'),
 (88, '0000000057', '2020-02-19', 737, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', '000158'),
-(89, '0000000015', '2020-02-19', 751, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', '001007'),
-(90, '0000000016', '2020-02-19', 116, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', '001005'),
+(89, '0000000015', '2020-02-19', 751, 2, 1, 1, 2, 3, 1, 1, 'PR', 'N', '001007'),
+(90, '0000000016', '2020-02-19', 116, 2, 1, 1, 2, 4, 1, 4, 'PR', 'N', '001005'),
 (91, '0000000017', '2020-02-19', 184, 2, 1, 1, 2, 3, 1, 1, 'PR', 'N', '000273'),
 (92, '0000000058', '2020-02-19', 764, 3, 1, 1, 2, 2, 1, 3, 'NP', 'N', '000157'),
-(93, '0000000018', '2020-02-19', 754, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', '001010'),
+(93, '0000000018', '2020-02-19', 754, 2, 1, 1, 2, 3, 1, 4, 'PR', 'N', '001010'),
 (94, '0000000019', '2020-02-20', 419, 4, 1, 1, 2, 3, 1, 3, 'PR', 'N', ''),
 (95, '0000000020', '2020-02-21', 754, 2, 1, 1, 2, 3, 1, 4, 'PR', 'N', ''),
-(96, '0000000021', '2020-02-21', 323, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', ''),
+(96, '0000000021', '2020-02-21', 323, 2, 1, 1, 2, 3, 1, 4, 'PR', 'N', ''),
 (97, '0000000022', '2020-02-21', 774, 4, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
 (98, '0000000023', '2020-02-21', 761, 6, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
 (99, '0000000059', '2020-02-22', 520, 2, 1, 1, 2, 2, 1, 4, 'NP', 'N', '000276'),
@@ -6633,7 +7060,7 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (108, '0000000068', '2020-02-25', 778, 3, 1, 1, 2, 2, 1, 4, 'NP', 'N', '000166'),
 (109, '0000000069', '2020-02-25', 778, 3, 1, 1, 2, 2, 1, 4, 'NP', 'N', '000167'),
 (110, '0000000024', '2020-02-25', 420, 4, 1, 1, 2, 3, 1, 3, 'PR', 'N', ''),
-(111, '0000000025', '2020-02-26', 420, 4, 1, 1, 2, 0, 1, 3, 'PR', 'N', ''),
+(111, '0000000025', '2020-02-26', 420, 4, 1, 1, 2, 3, 1, 3, 'PR', 'N', ''),
 (112, '0000000070', '2020-02-27', 757, 6, 1, 1, 2, 2, 1, 3, 'NP', 'N', '001155'),
 (113, '0000000071', '2020-02-28', 59, 2, 1, 1, 2, 2, 1, 4, 'NP', 'N', '001014'),
 (114, '0000000072', '2020-02-29', 586, 3, 1, 1, 2, 2, 1, 3, 'NP', 'N', '000187'),
@@ -6642,7 +7069,7 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (117, '0000000075', '2020-02-29', 341, 3, 1, 1, 2, 2, 1, 4, 'NP', 'N', '000185'),
 (118, '0000000076', '2020-02-29', 341, 3, 1, 1, 2, 2, 1, 4, 'NP', 'N', '000186'),
 (119, '0000000077', '2020-02-29', 329, 3, 1, 1, 2, 0, 1, 4, 'NP', 'N', ''),
-(120, '0000000026', '2020-02-29', 489, 1, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(120, '0000000026', '2020-02-29', 489, 1, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
 (121, '0000000027', '2020-03-02', 761, 6, 1, 1, 2, 0, 1, 2, 'PR', 'N', ''),
 (122, '0000000078', '2020-03-02', 730, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
 (123, '0000000028', '2020-03-03', 753, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', ''),
@@ -6650,8 +7077,8 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (125, '0000000079', '2020-03-04', 460, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
 (126, '0000000080', '2020-03-04', 460, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
 (127, '0000000081', '2020-03-04', 332, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
-(128, '0000000030', '2020-03-04', 420, 4, 1, 1, 2, 0, 1, 3, 'PR', 'N', ''),
-(129, '0000000031', '2020-03-06', 754, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', ''),
+(128, '0000000030', '2020-03-04', 420, 4, 1, 1, 2, 3, 1, 3, 'PR', 'N', ''),
+(129, '0000000031', '2020-03-06', 754, 2, 1, 1, 2, 3, 1, 4, 'PR', 'N', ''),
 (130, '0000000082', '2020-03-07', 779, 6, 1, 1, 2, 2, 1, 3, 'NP', 'N', '001158'),
 (131, '0000000083', '2020-03-07', 779, 6, 1, 1, 2, 2, 1, 3, 'NP', 'N', '001159'),
 (132, '0000000084', '2020-03-10', 482, 2, 1, 1, 2, 2, 1, 4, 'NP', 'N', '001027'),
@@ -6662,13 +7089,13 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (137, '0000000089', '2020-03-11', 752, 3, 1, 1, 2, 2, 1, 4, 'NP', 'N', '000170'),
 (138, '0000000090', '2020-03-11', 651, 3, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
 (139, '0000000091', '2020-03-11', 250, 1, 1, 1, 2, 2, 1, 3, 'NP', 'N', '001031'),
-(140, '0000000032', '2020-03-11', 420, 4, 1, 1, 2, 0, 1, 3, 'PR', 'N', ''),
+(140, '0000000032', '2020-03-11', 420, 4, 1, 1, 2, 3, 1, 3, 'PR', 'N', ''),
 (141, '0000000092', '2020-03-11', 297, 1, 1, 1, 2, 0, 1, 1, 'NP', 'N', '000104'),
 (142, '0000000093', '2020-03-11', 772, 6, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
 (143, '0000000033', '2020-03-13', 455, 4, 1, 1, 2, 0, 1, 3, 'PR', 'N', ''),
 (144, '0000000094', '2020-03-14', 56, 1, 1, 1, 2, 0, 1, 3, 'NP', 'N', '001028'),
 (145, '0000000095', '2020-03-14', 48, 2, 1, 1, 2, 0, 1, 3, 'NP', 'N', ''),
-(146, '0000000034', '2020-06-08', 751, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', '2211'),
+(146, '0000000034', '2020-06-08', 751, 2, 1, 1, 2, 3, 1, 1, 'PR', 'N', '2211'),
 (147, '0000000035', '2020-06-08', 705, 1, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
 (148, '0000000096', '2020-06-09', 497, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
 (149, '0000000037', '2020-06-10', 46, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', ''),
@@ -6687,7 +7114,7 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (162, '0000000107', '2020-06-22', 240, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
 (163, '0000000108', '2020-06-23', 102, 3, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
 (164, '0000000109', '2020-06-25', 22, 3, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
-(165, '0000000110', '2020-06-25', 504, 2, 1, 1, 2, 4, 1, 4, 'NP', 'N', ''),
+(165, '0000000110', '2020-06-25', 504, 2, 1, 1, 2, 2, 1, 4, 'NP', 'N', ''),
 (166, '0000000111', '2020-06-25', 504, 2, 1, 1, 2, 2, 1, 4, 'NP', 'N', ''),
 (167, '0000000112', '2020-06-25', 504, 2, 1, 1, 2, 2, 1, 4, 'NP', 'N', ''),
 (168, '0000000113', '2020-06-25', 504, 2, 1, 1, 2, 2, 1, 4, 'NP', 'N', ''),
@@ -6696,9 +7123,105 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (171, '0000000116', '2020-06-25', 504, 2, 1, 1, 2, 2, 1, 4, 'NP', 'N', ''),
 (172, '0000000117', '2020-06-25', 69, 2, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
 (173, '0000000118', '2020-06-25', 497, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
-(174, '0000000040', '2020-06-25', 751, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
-(175, '0000000119', '2020-06-30', 454, 3, 1, 1, 2, 0, 1, 3, 'NP', 'N', ''),
-(176, '0000000120', '2020-07-01', 782, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', '');
+(174, '0000000040', '2020-06-25', 751, 2, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
+(175, '0000000119', '2020-06-30', 454, 3, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(176, '0000000120', '2020-07-01', 782, 1, 1, 1, 2, 0, 1, 1, 'NP', 'N', ''),
+(177, '0000000041', '2020-07-02', 201, 4, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
+(178, '0000000121', '2020-07-02', 469, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(179, '0000000122', '2020-07-02', 469, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(180, '0000000123', '2020-07-03', 586, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(181, '0000000124', '2020-07-03', 772, 6, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(182, '0000000125', '2020-07-03', 772, 6, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(183, '0000000126', '2020-07-03', 772, 6, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(184, '0000000127', '2020-07-04', 332, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(185, '0000000128', '2020-07-07', 387, 1, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(186, '0000000042', '2020-07-07', 130, 4, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
+(187, '0000000129', '2020-07-08', 229, 3, 1, 1, 2, 0, 1, 1, 'NP', 'N', ''),
+(188, '0000000043', '2020-07-08', 123, 2, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
+(189, '0000000130', '2020-07-08', 768, 3, 1, 1, 2, 0, 1, 1, 'NP', 'N', ''),
+(190, '0000000044', '2020-07-09', 751, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(191, '0000000045', '2020-07-09', 116, 2, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
+(192, '0000000046', '2020-07-13', 751, 2, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
+(193, '0000000047', '2020-07-13', 321, 2, 1, 1, 2, 3, 1, 4, 'PR', 'N', ''),
+(194, '0000000048', '2020-07-14', 783, 4, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
+(195, '0000000049', '2020-07-14', 147, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', ''),
+(196, '0000000050', '2020-07-14', 323, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', ''),
+(197, '0000000051', '2020-07-14', 682, 1, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(198, '0000000052', '2020-07-15', 147, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', ''),
+(199, '0000000131', '2020-07-17', 512, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', '1130'),
+(200, '0000000053', '2020-07-20', 754, 2, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
+(201, '0000000054', '2020-07-20', 46, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', ''),
+(202, '0000000055', '2020-07-21', 120, 2, 1, 1, 2, 0, 1, 4, 'PR', 'N', ''),
+(203, '0000000056', '2020-07-21', 367, 1, 1, 1, 2, 0, 1, 4, 'PR', 'N', ''),
+(204, '0000000132', '2020-07-24', 759, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(205, '0000000133', '2020-07-28', 703, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(206, '0000000134', '2020-07-28', 434, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(207, '0000000135', '2020-07-28', 677, 2, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(208, '0000000057', '2020-07-28', 147, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(209, '0000000058', '2020-07-28', 751, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(210, '0000000136', '2020-07-28', 471, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(211, '0000000137', '2020-08-03', 760, 6, 1, 1, 2, 0, 1, 2, 'NP', 'N', ''),
+(212, '0000000138', '2020-08-03', 760, 6, 1, 1, 2, 0, 1, 2, 'NP', 'N', ''),
+(213, '0000000059', '2020-08-05', 321, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(214, '0000000139', '2020-08-07', 694, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(215, '0000000140', '2020-08-07', 755, 6, 1, 1, 2, 4, 1, 3, 'NP', 'N', ''),
+(216, '0000000141', '2020-08-07', 755, 6, 1, 1, 2, 4, 1, 3, 'NP', 'N', ''),
+(217, '0000000142', '2020-08-10', 572, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(218, '0000000060', '2020-08-10', 46, 2, 1, 1, 2, 0, 1, 3, 'PR', 'N', ''),
+(219, '0000000061', '2020-08-10', 784, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(220, '0000000062', '2020-08-10', 751, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(221, '0000000143', '2020-08-10', 240, 2, 1, 1, 2, 0, 1, 3, 'NP', 'N', ''),
+(222, '0000000144', '2020-08-10', 330, 2, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(223, '0000000145', '2020-08-12', 335, 1, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(224, '0000000063', '2020-08-17', 751, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(225, '0000000146', '2020-08-18', 703, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(226, '0000000147', '2020-08-19', 235, 3, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(227, '0000000148', '2020-08-19', 235, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(228, '0000000149', '2020-08-20', 332, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(229, '0000000064', '2020-08-21', 751, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(230, '0000000150', '2020-08-22', 76, 3, 1, 1, 2, 2, 1, 4, 'NP', 'N', ''),
+(231, '0000000065', '2020-08-24', 754, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(232, '0000000151', '2020-08-27', 694, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(233, '0000000066', '2020-08-28', 98, 1, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(234, '0000000152', '2020-08-29', 387, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(235, '0000000153', '2020-08-29', 387, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(236, '0000000154', '2020-09-02', 234, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(237, '0000000067', '2020-09-03', 323, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(238, '0000000155', '2020-09-03', 718, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(239, '0000000156', '2020-09-03', 235, 3, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(240, '0000000157', '2020-09-03', 71, 2, 1, 1, 2, 2, 1, 4, 'NP', 'N', ''),
+(241, '0000000158', '2020-09-04', 721, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', 'FE01'),
+(242, '0000000068', '2020-09-04', 786, 1, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(243, '0000000159', '2020-09-07', 332, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', 'FE01'),
+(244, '0000000069', '2020-09-07', 751, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(245, '0000000070', '2020-09-07', 158, 1, 1, 1, 2, 4, 1, 1, 'PR', 'N', ''),
+(246, '0000000160', '2020-09-07', 235, 3, 1, 1, 2, 2, 1, 3, 'NP', 'N', 'FE01'),
+(247, '0000000161', '2020-09-08', 158, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(248, '0000000162', '2020-09-08', 5, 3, 1, 1, 2, 2, 1, 1, 'NP', 'N', 'FE01'),
+(249, '0000000163', '2020-09-08', 755, 6, 1, 1, 2, 2, 1, 1, 'NP', 'N', 'FE01'),
+(250, '0000000164', '2020-09-08', 755, 6, 1, 1, 2, 2, 1, 3, 'NP', 'N', 'FE01'),
+(251, '0000000165', '2020-09-09', 757, 6, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(252, '0000000166', '2020-09-09', 234, 3, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(253, '0000000167', '2020-09-10', 484, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', 'FE01'),
+(255, '0000000071', '2020-09-10', 751, 2, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
+(256, '0000000072', '2020-09-10', 184, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(259, '0000000169', '2020-09-14', 21, 2, 1, 1, 2, 2, 1, 3, 'NP', 'N', ''),
+(260, '0000000074', '2020-09-14', 786, 1, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(261, '0000000170', '2020-09-14', 788, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', 'FE01'),
+(262, '0000000171', '2020-09-16', 788, 1, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(263, '0000000172', '2020-09-17', 703, 3, 1, 1, 2, 0, 1, 1, 'NP', 'N', 'FE01'),
+(264, '0000000075', '2020-09-17', 420, 4, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(265, '0000000076', '2020-09-17', 751, 2, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
+(266, '0000000077', '2020-09-18', 420, 4, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(267, '0000000078', '2020-09-19', 420, 4, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
+(268, '0000000173', '2020-09-21', 721, 3, 1, 1, 2, 0, 1, 1, 'NP', 'N', ''),
+(269, '0000000174', '2020-09-21', 779, 6, 1, 1, 2, 2, 1, 3, 'NP', 'N', 'FE01'),
+(271, '0000000079', '2020-09-22', 779, 6, 1, 1, 2, 0, 1, 3, 'PR', 'N', ''),
+(272, '0000000080', '2020-09-23', 790, 4, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(273, '0000000081', '2020-09-23', 419, 4, 1, 1, 2, 3, 1, 1, 'PR', 'N', ''),
+(274, '0000000176', '2020-09-25', 330, 2, 1, 1, 2, 2, 1, 1, 'NP', 'N', ''),
+(275, '0000000082', '2020-09-25', 751, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', ''),
+(276, '0000000083', '2020-09-25', 753, 2, 1, 1, 2, 0, 1, 1, 'PR', 'N', '');
 
 -- --------------------------------------------------------
 
@@ -6707,21 +7230,18 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 --
 
 DROP TABLE IF EXISTS `pedido_detalle`;
-CREATE TABLE IF NOT EXISTS `pedido_detalle` (
-  `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `pedido_detalle` (
+  `id_pdetalle` int(11) NOT NULL COMMENT 'ID UNICO',
   `prod_pdetalle` int(11) NOT NULL COMMENT 'PRODUCTO PEDIDO DETALLE',
-  `cant_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'CANTIDAD PEDIDO DETALLE',
-  `precio_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO PEDIDO DETALLE',
-  `descu_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'DESCUENTO % PEDIDO DETALLE',
-  `impuesto_pdetalle` decimal(18,0) NOT NULL DEFAULT 0 COMMENT 'IMPUESTO PEDIDO DETALLE',
-  `status_pdetalle` int(11) NOT NULL DEFAULT 1 COMMENT 'ESTATUS PEDIDO DETALLE',
-  `pedido_pdetalle` int(11) NOT NULL DEFAULT 0,
-  `plista_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO LISTA PEDIDO DETALLE',
-  `total_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'TOTAL PEDIDO DETALLE',
-  PRIMARY KEY (`id_pdetalle`),
-  KEY `prod_pdetalle` (`prod_pdetalle`),
-  KEY `pedido_pdetalle` (`pedido_pdetalle`)
-) ENGINE=InnoDB AUTO_INCREMENT=2213 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE PEDIDOS';
+  `cant_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'CANTIDAD PEDIDO DETALLE',
+  `precio_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO PEDIDO DETALLE',
+  `descu_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'DESCUENTO % PEDIDO DETALLE',
+  `impuesto_pdetalle` decimal(18,0) NOT NULL DEFAULT '0' COMMENT 'IMPUESTO PEDIDO DETALLE',
+  `status_pdetalle` int(11) NOT NULL DEFAULT '1' COMMENT 'ESTATUS PEDIDO DETALLE',
+  `pedido_pdetalle` int(11) NOT NULL DEFAULT '0',
+  `plista_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA PEDIDO DETALLE',
+  `total_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL PEDIDO DETALLE'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE PEDIDOS';
 
 --
 -- Volcado de datos para la tabla `pedido_detalle`
@@ -8762,7 +9282,897 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 (2209, 148, '3.00', '48.76', '0.00', '18', 1, 176, '48.76', '146.28'),
 (2210, 464, '3.00', '15.90', '0.00', '18', 1, 176, '15.90', '47.70'),
 (2211, 633, '3.00', '4.24', '0.00', '18', 1, 176, '4.24', '12.72'),
-(2212, 634, '3.00', '4.24', '0.00', '18', 1, 176, '4.24', '12.72');
+(2212, 634, '3.00', '4.24', '0.00', '18', 1, 176, '4.24', '12.72'),
+(2213, 1195, '1.00', '140.02', '5.65', '18', 1, 177, '148.40', '140.02'),
+(2214, 582, '1.00', '80.20', '3.00', '18', 1, 178, '82.68', '80.20'),
+(2216, 836, '2.00', '17.48', '3.00', '18', 1, 178, '18.02', '34.96'),
+(2217, 841, '4.00', '8.23', '3.00', '18', 1, 178, '8.48', '32.90'),
+(2218, 842, '4.00', '8.23', '3.00', '18', 1, 178, '8.48', '32.90'),
+(2219, 844, '2.00', '25.70', '3.00', '18', 1, 178, '26.50', '51.41'),
+(2220, 857, '2.00', '82.26', '3.00', '18', 1, 178, '84.80', '164.51'),
+(2221, 915, '4.00', '10.28', '3.00', '18', 1, 178, '10.60', '41.13'),
+(2222, 914, '4.00', '10.28', '3.00', '18', 1, 178, '10.60', '41.13'),
+(2223, 634, '24.00', '4.11', '3.00', '18', 1, 178, '4.24', '98.71'),
+(2224, 633, '12.00', '4.11', '3.00', '18', 1, 178, '4.24', '49.35'),
+(2225, 638, '6.00', '13.37', '3.00', '18', 1, 178, '13.78', '80.20'),
+(2226, 1020, '12.00', '8.23', '3.00', '18', 1, 178, '8.48', '98.71'),
+(2227, 927, '10.00', '6.17', '3.00', '18', 1, 178, '6.36', '61.69'),
+(2228, 928, '10.00', '6.17', '3.00', '18', 1, 178, '6.36', '61.69'),
+(2229, 967, '4.00', '18.02', '0.00', '18', 1, 178, '18.02', '72.08'),
+(2230, 968, '4.00', '18.02', '0.00', '18', 1, 178, '18.02', '72.08'),
+(2231, 957, '3.00', '23.32', '0.00', '18', 1, 178, '23.32', '69.96'),
+(2232, 642, '12.00', '6.17', '3.00', '18', 1, 178, '6.36', '74.03'),
+(2233, 643, '12.00', '6.17', '3.00', '18', 1, 178, '6.36', '74.03'),
+(2234, 969, '3.00', '15.42', '3.00', '18', 1, 178, '15.90', '46.27'),
+(2235, 970, '3.00', '15.42', '3.00', '18', 1, 178, '15.90', '46.27'),
+(2236, 971, '2.00', '16.45', '3.00', '18', 1, 179, '16.96', '32.90'),
+(2237, 972, '4.00', '16.45', '3.00', '18', 1, 179, '16.96', '65.80'),
+(2238, 975, '3.00', '25.70', '3.00', '18', 1, 179, '26.50', '77.11'),
+(2239, 671, '3.00', '30.85', '3.00', '18', 1, 179, '31.80', '92.54'),
+(2240, 933, '3.00', '30.85', '3.00', '18', 1, 179, '31.80', '92.54'),
+(2241, 1186, '2.00', '100.76', '3.00', '18', 1, 179, '103.88', '201.53'),
+(2242, 8, '1.00', '41.13', '3.00', '18', 1, 179, '42.40', '41.13'),
+(2243, 56, '1.00', '41.13', '3.00', '18', 1, 179, '42.40', '41.13'),
+(2244, 93, '1.00', '82.26', '3.00', '18', 1, 179, '84.80', '82.26'),
+(2245, 98, '1.00', '112.28', '3.00', '18', 1, 179, '115.75', '112.28'),
+(2246, 1198, '1.00', '133.67', '3.00', '18', 1, 179, '137.80', '133.67'),
+(2247, 1201, '1.00', '143.95', '3.00', '18', 1, 179, '148.40', '143.95'),
+(2248, 123, '2.00', '61.69', '3.00', '18', 1, 179, '63.60', '123.38'),
+(2249, 1209, '2.00', '94.59', '3.00', '18', 1, 179, '97.52', '189.19'),
+(2251, 127, '2.00', '87.40', '3.00', '18', 1, 179, '90.10', '174.79'),
+(2252, 1206, '1.00', '111.05', '3.00', '18', 1, 179, '114.48', '111.05'),
+(2253, 1205, '2.00', '87.40', '3.00', '18', 1, 179, '90.10', '174.79'),
+(2254, 706, '4.00', '20.56', '3.00', '18', 1, 179, '21.20', '82.26'),
+(2255, 707, '4.00', '20.56', '3.00', '18', 1, 179, '21.20', '82.26'),
+(2256, 754, '6.00', '40.00', '0.00', '18', 1, 179, '40.00', '240.00'),
+(2257, 739, '2.00', '15.42', '3.00', '18', 1, 179, '15.90', '30.85'),
+(2258, 740, '2.00', '15.42', '3.00', '18', 1, 179, '15.90', '30.85'),
+(2259, 513, '2.00', '20.56', '3.00', '18', 1, 179, '21.20', '41.13'),
+(2260, 771, '10.00', '4.11', '3.00', '18', 1, 179, '4.24', '41.13'),
+(2261, 806, '2.00', '15.22', '3.00', '18', 1, 179, '15.69', '30.44'),
+(2262, 807, '2.00', '15.22', '3.00', '18', 1, 179, '15.69', '30.44'),
+(2264, 797, '10.00', '2.57', '3.00', '18', 1, 179, '2.65', '25.70'),
+(2265, 803, '6.00', '8.00', '0.00', '18', 1, 179, '8.00', '48.00'),
+(2266, 809, '2.00', '29.82', '3.00', '18', 1, 179, '30.74', '59.64'),
+(2267, 810, '2.00', '29.82', '3.00', '18', 1, 179, '30.74', '59.64'),
+(2268, 804, '2.00', '12.34', '3.00', '18', 1, 179, '12.72', '24.68'),
+(2269, 805, '2.00', '12.34', '3.00', '18', 1, 179, '12.72', '24.68'),
+(2270, 1028, '10.00', '40.07', '5.50', '18', 1, 180, '42.40', '400.68'),
+(2271, 1196, '2.00', '105.18', '5.50', '18', 1, 180, '111.30', '210.36'),
+(2272, 690, '2.00', '33.00', '5.50', '18', 1, 180, '38.16', '66.00'),
+(2273, 774, '5.00', '15.03', '5.50', '18', 1, 181, '15.90', '75.13'),
+(2274, 695, '20.00', '6.01', '5.50', '18', 1, 181, '6.36', '120.20'),
+(2275, 775, '5.00', '15.03', '5.50', '18', 1, 181, '15.90', '75.13'),
+(2276, 776, '5.00', '15.03', '5.50', '18', 1, 181, '15.90', '75.13'),
+(2277, 777, '5.00', '15.03', '5.50', '18', 1, 181, '15.90', '75.13'),
+(2278, 443, '20.00', '6.01', '5.50', '18', 1, 181, '6.36', '120.20'),
+(2279, 452, '5.00', '10.02', '5.50', '18', 1, 181, '10.60', '50.08'),
+(2280, 729, '15.00', '6.01', '5.50', '18', 1, 181, '6.36', '90.15'),
+(2281, 730, '15.00', '6.01', '5.50', '18', 1, 181, '6.36', '90.15'),
+(2282, 459, '20.00', '14.02', '5.50', '18', 1, 181, '14.84', '280.48'),
+(2283, 460, '20.00', '14.02', '5.50', '18', 1, 181, '14.84', '280.48'),
+(2284, 751, '20.00', '14.02', '5.50', '18', 1, 181, '14.84', '280.48'),
+(2285, 752, '20.00', '14.02', '5.50', '18', 1, 181, '14.84', '280.48'),
+(2286, 767, '3.00', '50.09', '5.50', '18', 1, 181, '53.00', '150.25'),
+(2287, 790, '3.00', '30.00', '0.00', '18', 1, 181, '30.00', '90.00'),
+(2288, 791, '3.00', '30.05', '5.50', '18', 1, 181, '31.80', '90.15'),
+(2289, 806, '5.00', '14.83', '5.50', '18', 1, 181, '15.69', '74.14'),
+(2290, 807, '5.00', '14.83', '5.50', '18', 1, 181, '15.69', '74.14'),
+(2291, 870, '2.00', '27.05', '5.50', '18', 1, 181, '28.62', '54.09'),
+(2292, 871, '2.00', '27.05', '5.50', '18', 1, 181, '28.62', '54.09'),
+(2293, 877, '20.00', '8.21', '5.50', '18', 1, 181, '8.69', '164.24'),
+(2294, 919, '3.00', '17.03', '5.50', '18', 1, 181, '18.02', '51.09'),
+(2295, 920, '3.00', '17.03', '5.50', '18', 1, 181, '18.02', '51.09'),
+(2296, 627, '30.00', '4.01', '5.50', '18', 1, 181, '4.24', '120.20'),
+(2297, 628, '20.00', '4.01', '5.50', '18', 1, 181, '4.24', '80.14'),
+(2298, 1020, '15.00', '8.01', '5.50', '18', 1, 182, '8.48', '120.20'),
+(2299, 927, '5.00', '6.01', '5.50', '18', 1, 182, '6.36', '30.05'),
+(2300, 928, '5.00', '6.01', '5.50', '18', 1, 182, '6.36', '30.05'),
+(2301, 929, '5.00', '6.01', '5.50', '18', 1, 182, '6.36', '30.05'),
+(2302, 930, '5.00', '6.01', '5.50', '18', 1, 182, '6.36', '30.05'),
+(2303, 967, '5.00', '17.03', '5.50', '18', 1, 182, '18.02', '85.14'),
+(2304, 968, '5.00', '17.03', '5.50', '18', 1, 182, '18.02', '85.14'),
+(2305, 966, '5.00', '17.03', '5.50', '18', 1, 182, '18.02', '85.14'),
+(2306, 639, '5.00', '17.03', '5.50', '18', 1, 182, '18.02', '85.14'),
+(2307, 644, '5.00', '20.03', '5.50', '18', 1, 182, '21.20', '100.17'),
+(2308, 645, '5.00', '20.03', '5.50', '18', 1, 182, '21.20', '100.17'),
+(2309, 953, '5.00', '20.03', '5.50', '18', 1, 182, '21.20', '100.17'),
+(2310, 954, '5.00', '20.03', '5.50', '18', 1, 182, '21.20', '100.17'),
+(2311, 1021, '15.00', '8.51', '5.50', '18', 1, 182, '9.01', '127.72'),
+(2312, 642, '20.00', '6.01', '5.50', '18', 1, 182, '6.36', '120.20'),
+(2313, 643, '20.00', '6.01', '5.50', '18', 1, 182, '6.36', '120.20'),
+(2314, 939, '3.00', '13.02', '5.50', '18', 1, 182, '13.78', '39.07'),
+(2315, 652, '3.00', '13.02', '5.50', '18', 1, 182, '13.78', '39.07'),
+(2316, 653, '3.00', '13.02', '5.50', '18', 1, 182, '13.78', '39.07'),
+(2317, 940, '3.00', '13.02', '5.50', '18', 1, 182, '13.78', '39.07'),
+(2318, 666, '15.00', '7.51', '5.50', '18', 1, 182, '7.95', '112.69'),
+(2319, 667, '15.00', '7.51', '5.50', '18', 1, 182, '7.95', '112.69'),
+(2320, 944, '5.00', '14.02', '5.50', '18', 1, 182, '14.84', '70.12'),
+(2321, 945, '5.00', '14.02', '5.50', '18', 1, 182, '14.84', '70.12'),
+(2322, 946, '5.00', '14.02', '5.50', '18', 1, 182, '14.84', '70.12'),
+(2323, 947, '5.00', '14.02', '5.50', '18', 1, 182, '14.84', '70.12'),
+(2326, 676, '5.00', '18.53', '5.50', '18', 1, 183, '19.61', '92.66'),
+(2327, 677, '5.00', '18.53', '5.50', '18', 1, 183, '19.61', '92.66'),
+(2328, 678, '5.00', '18.53', '5.50', '18', 1, 183, '19.61', '92.66'),
+(2329, 679, '5.00', '18.53', '5.50', '18', 1, 183, '19.61', '92.66'),
+(2330, 148, '5.00', '46.08', '5.50', '18', 1, 184, '48.76', '230.39'),
+(2332, 132, '3.00', '134.03', '5.50', '18', 1, 184, '141.83', '402.09'),
+(2333, 128, '3.00', '118.70', '5.50', '18', 1, 184, '125.61', '356.10'),
+(2334, 1205, '3.00', '85.14', '5.50', '18', 1, 184, '90.10', '255.43'),
+(2335, 147, '2.00', '93.16', '5.50', '18', 1, 184, '98.58', '186.32'),
+(2336, 42, '5.00', '30.74', '0.00', '18', 1, 185, '30.74', '153.70'),
+(2337, 43, '5.00', '30.74', '0.00', '18', 1, 185, '30.74', '153.70'),
+(2338, 664, '8.00', '7.51', '5.50', '18', 1, 186, '7.95', '60.10'),
+(2339, 665, '6.00', '7.51', '5.50', '18', 1, 186, '7.95', '45.08'),
+(2340, 633, '20.00', '4.01', '5.50', '18', 1, 186, '4.24', '80.14'),
+(2341, 634, '15.00', '4.01', '5.50', '18', 1, 186, '4.24', '60.10'),
+(2342, 666, '8.00', '7.51', '5.50', '18', 1, 186, '7.95', '60.10'),
+(2343, 667, '6.00', '7.51', '5.50', '18', 1, 186, '7.95', '45.08'),
+(2344, 624, '4.00', '2.00', '5.50', '18', 1, 186, '2.12', '8.01'),
+(2345, 22, '3.00', '32.05', '5.50', '18', 1, 187, '33.92', '96.16'),
+(2346, 123, '2.00', '60.10', '5.50', '18', 1, 187, '63.60', '120.20'),
+(2347, 690, '4.00', '36.06', '5.50', '18', 1, 187, '38.16', '144.24'),
+(2348, 148, '2.00', '46.08', '5.50', '18', 1, 187, '48.76', '92.16'),
+(2349, 152, '3.00', '13.02', '5.50', '18', 1, 187, '13.78', '39.07'),
+(2350, 151, '3.00', '13.02', '5.50', '18', 1, 187, '13.78', '39.07'),
+(2351, 165, '1.00', '63.11', '5.50', '18', 1, 187, '66.78', '63.11'),
+(2352, 166, '2.00', '21.26', '5.50', '18', 1, 187, '22.50', '42.52'),
+(2353, 167, '2.00', '21.26', '5.50', '18', 1, 187, '22.50', '42.52'),
+(2354, 162, '1.00', '75.13', '5.50', '18', 1, 187, '79.50', '75.13'),
+(2355, 147, '1.00', '93.16', '5.50', '18', 1, 187, '98.58', '93.16'),
+(2356, 137, '2.00', '56.00', '0.00', '18', 1, 187, '56.00', '112.00'),
+(2357, 136, '2.00', '46.08', '5.50', '18', 1, 187, '48.76', '92.16'),
+(2358, 47, '2.00', '55.09', '5.50', '18', 1, 187, '58.30', '110.19'),
+(2359, 151, '3.00', '13.02', '5.50', '18', 1, 188, '13.78', '39.07'),
+(2360, 152, '3.00', '13.02', '5.50', '18', 1, 188, '13.78', '39.07'),
+(2361, 129, '2.00', '85.14', '5.50', '18', 1, 188, '90.10', '170.29'),
+(2362, 1195, '1.00', '140.24', '5.50', '18', 1, 189, '148.40', '140.24'),
+(2363, 1198, '1.00', '130.22', '5.50', '18', 1, 189, '137.80', '130.22'),
+(2364, 1205, '2.00', '85.14', '5.50', '18', 1, 189, '90.10', '170.29'),
+(2365, 150, '2.00', '113.19', '5.50', '18', 1, 189, '119.78', '226.38'),
+(2366, 1208, '1.00', '80.14', '5.50', '18', 1, 189, '84.80', '80.14'),
+(2367, 1181, '2.00', '85.14', '5.50', '18', 1, 189, '90.10', '170.29'),
+(2369, 1217, '1.00', '57.24', '10.00', '18', 1, 190, '63.60', '57.24'),
+(2370, 17, '1.00', '53.42', '10.00', '18', 1, 190, '59.36', '53.42'),
+(2371, 18, '1.00', '75.94', '10.00', '18', 1, 190, '84.38', '75.94'),
+(2372, 1214, '1.00', '141.19', '10.00', '18', 1, 190, '156.88', '141.19'),
+(2373, 28, '1.00', '47.70', '10.00', '18', 1, 190, '53.00', '47.70'),
+(2374, 53, '1.00', '81.09', '10.00', '18', 1, 190, '90.10', '81.09'),
+(2376, 88, '1.00', '94.92', '10.00', '18', 1, 190, '105.47', '94.92'),
+(2377, 1199, '1.00', '87.77', '10.00', '18', 1, 190, '97.52', '87.77'),
+(2378, 1200, '1.00', '87.77', '10.00', '18', 1, 190, '97.52', '87.77'),
+(2379, 1028, '2.00', '38.16', '10.00', '18', 1, 190, '42.40', '76.32'),
+(2380, 120, '1.00', '112.76', '10.00', '18', 1, 190, '125.29', '112.76'),
+(2381, 122, '1.00', '81.09', '10.00', '18', 1, 190, '90.10', '81.09'),
+(2382, 123, '1.00', '57.24', '10.00', '18', 1, 190, '63.60', '57.24'),
+(2383, 1209, '1.00', '87.77', '10.00', '18', 1, 190, '97.52', '87.77'),
+(2384, 127, '3.00', '81.09', '10.00', '18', 1, 190, '90.10', '243.27'),
+(2385, 140, '1.00', '41.58', '5.50', '18', 1, 190, '44.00', '41.58'),
+(2386, 136, '1.00', '43.88', '10.00', '18', 1, 190, '48.76', '43.88'),
+(2387, 1027, '2.00', '38.16', '10.00', '18', 1, 190, '42.40', '76.32'),
+(2388, 152, '1.00', '12.40', '10.00', '18', 1, 190, '13.78', '12.40'),
+(2389, 151, '1.00', '12.40', '10.00', '18', 1, 190, '13.78', '12.40'),
+(2390, 172, '1.00', '38.16', '10.00', '18', 1, 190, '42.40', '38.16'),
+(2391, 42, '1.00', '27.67', '10.00', '18', 1, 190, '30.74', '27.67'),
+(2392, 1028, '4.00', '38.16', '10.00', '18', 1, 191, '42.40', '152.64'),
+(2393, 56, '2.00', '38.16', '10.00', '18', 1, 191, '42.40', '76.32'),
+(2396, 621, '4.00', '4.01', '5.50', '18', 1, 186, '4.24', '16.03');
+INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `precio_pdetalle`, `descu_pdetalle`, `impuesto_pdetalle`, `status_pdetalle`, `pedido_pdetalle`, `plista_pdetalle`, `total_pdetalle`) VALUES
+(2397, 18, '3.00', '75.52', '10.50', '18', 1, 192, '84.38', '226.56'),
+(2398, 127, '3.00', '80.64', '10.50', '18', 1, 192, '90.10', '241.92'),
+(2399, 129, '3.00', '80.64', '10.50', '18', 1, 192, '90.10', '241.92'),
+(2400, 122, '2.00', '80.64', '10.50', '18', 1, 192, '90.10', '161.28'),
+(2401, 1209, '2.00', '87.77', '10.00', '18', 1, 192, '97.52', '175.54'),
+(2402, 17, '1.00', '53.13', '10.50', '18', 1, 192, '59.36', '53.13'),
+(2403, 37, '1.00', '37.95', '10.50', '18', 1, 192, '42.40', '37.95'),
+(2404, 30, '1.00', '104.36', '10.50', '18', 1, 192, '116.60', '104.36'),
+(2405, 36, '1.00', '39.85', '10.50', '18', 1, 192, '44.52', '39.85'),
+(2406, 57, '1.00', '45.54', '10.50', '18', 1, 192, '50.88', '45.54'),
+(2407, 689, '1.00', '102.46', '10.50', '18', 1, 192, '114.48', '102.46'),
+(2408, 98, '1.00', '103.60', '10.50', '18', 1, 192, '115.75', '103.60'),
+(2409, 123, '2.00', '56.92', '10.50', '18', 1, 192, '63.60', '113.84'),
+(2410, 140, '1.00', '41.80', '5.00', '18', 1, 192, '44.00', '41.80'),
+(2411, 136, '1.00', '43.64', '10.50', '18', 1, 192, '48.76', '43.64'),
+(2412, 1212, '1.00', '99.61', '10.50', '18', 1, 192, '111.30', '99.61'),
+(2413, 6, '1.00', '33.20', '10.50', '18', 1, 193, '37.10', '33.20'),
+(2414, 1181, '3.00', '80.64', '10.50', '18', 1, 193, '90.10', '241.92'),
+(2415, 22, '2.00', '30.36', '10.50', '18', 1, 193, '33.92', '60.72'),
+(2416, 36, '1.00', '39.85', '10.50', '18', 1, 193, '44.52', '39.85'),
+(2417, 42, '2.00', '27.51', '10.50', '18', 1, 193, '30.74', '55.02'),
+(2418, 45, '2.00', '59.77', '10.50', '18', 1, 193, '66.78', '119.54'),
+(2419, 69, '2.00', '123.33', '10.50', '18', 1, 193, '137.80', '246.66'),
+(2421, 93, '3.00', '75.90', '10.50', '18', 1, 193, '84.80', '227.69'),
+(2422, 1196, '2.00', '99.61', '10.50', '18', 1, 193, '111.30', '199.23'),
+(2423, 97, '3.00', '62.65', '10.50', '18', 1, 193, '70.00', '187.95'),
+(2424, 98, '2.00', '103.60', '10.50', '18', 1, 193, '115.75', '207.19'),
+(2425, 1201, '2.00', '132.82', '10.50', '18', 1, 193, '148.40', '265.64'),
+(2426, 110, '2.00', '93.49', '10.00', '18', 1, 193, '103.88', '186.98'),
+(2427, 111, '2.00', '104.94', '10.00', '18', 1, 193, '116.60', '209.88'),
+(2428, 1028, '5.00', '38.16', '10.00', '18', 1, 193, '42.40', '190.80'),
+(2429, 120, '1.00', '112.13', '10.50', '18', 1, 193, '125.29', '112.13'),
+(2430, 1209, '3.00', '87.77', '10.00', '18', 1, 193, '97.52', '263.30'),
+(2431, 123, '1.00', '57.24', '10.00', '18', 1, 193, '63.60', '57.24'),
+(2433, 127, '3.00', '81.09', '10.00', '18', 1, 193, '90.10', '243.27'),
+(2434, 129, '3.00', '81.09', '10.00', '18', 1, 193, '90.10', '243.27'),
+(2435, 140, '1.00', '40.48', '8.00', '18', 1, 193, '44.00', '40.48'),
+(2436, 136, '1.00', '43.88', '10.00', '18', 1, 193, '48.76', '43.88'),
+(2437, 142, '2.00', '76.32', '10.00', '18', 1, 193, '84.80', '152.64'),
+(2438, 1207, '2.00', '85.38', '10.50', '18', 1, 193, '95.40', '170.77'),
+(2439, 1205, '2.00', '80.64', '10.50', '18', 1, 193, '90.10', '161.28'),
+(2440, 1204, '1.00', '128.79', '10.00', '18', 1, 193, '143.10', '128.79'),
+(2441, 152, '5.00', '12.40', '10.00', '18', 1, 193, '13.78', '62.01'),
+(2442, 151, '5.00', '12.40', '10.00', '18', 1, 193, '13.78', '62.01'),
+(2443, 1212, '2.00', '100.17', '10.00', '18', 1, 193, '111.30', '200.34'),
+(2444, 162, '4.00', '71.55', '10.00', '18', 1, 193, '79.50', '286.20'),
+(2445, 163, '1.00', '114.48', '10.00', '18', 1, 193, '127.20', '114.48'),
+(2446, 1213, '1.00', '109.71', '10.00', '18', 1, 193, '121.90', '109.71'),
+(2447, 1209, '2.00', '92.16', '5.50', '18', 1, 194, '97.52', '184.31'),
+(2448, 42, '2.00', '27.51', '10.50', '18', 1, 195, '30.74', '55.02'),
+(2449, 1186, '3.00', '93.49', '10.00', '18', 1, 195, '103.88', '280.48'),
+(2450, 46, '1.00', '87.77', '10.00', '18', 1, 195, '97.52', '87.77'),
+(2451, 1184, '3.00', '103.03', '10.00', '18', 1, 195, '114.48', '309.10'),
+(2452, 1183, '1.00', '202.25', '10.00', '18', 1, 195, '224.72', '202.25'),
+(2453, 1190, '2.00', '128.79', '10.00', '18', 1, 195, '143.10', '257.58'),
+(2454, 1188, '1.00', '181.26', '10.00', '18', 1, 195, '201.40', '181.26'),
+(2455, 689, '2.00', '103.03', '10.00', '18', 1, 195, '114.48', '206.06'),
+(2456, 1193, '3.00', '128.79', '10.00', '18', 1, 195, '143.10', '386.37'),
+(2457, 74, '1.00', '70.12', '10.00', '18', 1, 195, '77.91', '70.12'),
+(2458, 1195, '2.00', '133.56', '10.00', '18', 1, 195, '148.40', '267.12'),
+(2459, 1194, '1.00', '143.10', '10.00', '18', 1, 195, '159.00', '143.10'),
+(2460, 94, '1.00', '100.75', '10.00', '18', 1, 195, '111.94', '100.75'),
+(2461, 1196, '1.00', '100.17', '10.00', '18', 1, 195, '111.30', '100.17'),
+(2462, 96, '2.00', '105.89', '10.00', '18', 1, 195, '117.66', '211.79'),
+(2463, 97, '3.00', '66.50', '5.00', '18', 1, 195, '70.00', '199.50'),
+(2464, 1198, '1.00', '124.02', '10.00', '18', 1, 195, '137.80', '124.02'),
+(2465, 1201, '3.00', '133.56', '10.00', '18', 1, 195, '148.40', '400.68'),
+(2466, 1200, '1.00', '87.77', '10.00', '18', 1, 195, '97.52', '87.77'),
+(2467, 1199, '3.00', '87.77', '10.00', '18', 1, 195, '97.52', '263.30'),
+(2468, 111, '3.00', '104.94', '10.00', '18', 1, 195, '116.60', '314.82'),
+(2469, 120, '1.00', '112.76', '10.00', '18', 1, 195, '125.29', '112.76'),
+(2470, 127, '2.00', '81.09', '10.00', '18', 1, 195, '90.10', '162.18'),
+(2471, 129, '3.00', '81.09', '10.00', '18', 1, 195, '90.10', '243.27'),
+(2472, 142, '2.00', '76.32', '10.00', '18', 1, 195, '84.80', '152.64'),
+(2473, 1207, '2.00', '85.86', '10.00', '18', 1, 195, '95.40', '171.72'),
+(2474, 147, '2.00', '88.72', '10.00', '18', 1, 195, '98.58', '177.44'),
+(2475, 149, '1.00', '100.17', '10.00', '18', 1, 195, '111.30', '100.17'),
+(2476, 1204, '1.00', '128.79', '10.00', '18', 1, 195, '143.10', '128.79'),
+(2477, 152, '3.00', '12.40', '10.00', '18', 1, 195, '13.78', '37.21'),
+(2478, 151, '3.00', '12.40', '10.00', '18', 1, 195, '13.78', '37.21'),
+(2479, 1212, '1.00', '100.17', '10.00', '18', 1, 195, '111.30', '100.17'),
+(2480, 158, '1.00', '106.85', '10.00', '18', 1, 195, '118.72', '106.85'),
+(2481, 161, '2.00', '104.94', '10.00', '18', 1, 195, '116.60', '209.88'),
+(2482, 168, '2.00', '138.52', '10.00', '18', 1, 195, '153.91', '277.04'),
+(2483, 4, '1.00', '49.61', '10.00', '18', 1, 196, '55.12', '49.61'),
+(2484, 1217, '1.00', '57.24', '10.00', '18', 1, 196, '63.60', '57.24'),
+(2485, 1214, '1.00', '141.19', '10.00', '18', 1, 196, '156.88', '141.19'),
+(2486, 36, '1.00', '40.07', '10.00', '18', 1, 196, '44.52', '40.07'),
+(2487, 37, '1.00', '38.16', '10.00', '18', 1, 196, '42.40', '38.16'),
+(2489, 43, '1.00', '27.67', '10.00', '18', 1, 196, '30.74', '27.67'),
+(2490, 1186, '2.00', '93.49', '10.00', '18', 1, 196, '103.88', '186.98'),
+(2491, 46, '1.00', '87.77', '10.00', '18', 1, 196, '97.52', '87.77'),
+(2492, 1183, '1.00', '202.25', '10.00', '18', 1, 196, '224.72', '202.25'),
+(2493, 51, '1.00', '36.25', '10.00', '18', 1, 196, '40.28', '36.25'),
+(2494, 50, '1.00', '36.25', '10.00', '18', 1, 196, '40.28', '36.25'),
+(2495, 1189, '1.00', '114.48', '10.00', '18', 1, 196, '127.20', '114.48'),
+(2496, 54, '5.00', '66.78', '10.00', '18', 1, 196, '74.20', '333.90'),
+(2497, 1190, '1.00', '128.79', '10.00', '18', 1, 196, '143.10', '128.79'),
+(2498, 56, '1.00', '38.16', '10.00', '18', 1, 196, '42.40', '38.16'),
+(2499, 58, '1.00', '91.58', '10.00', '18', 1, 196, '101.76', '91.58'),
+(2500, 62, '2.00', '28.62', '10.00', '18', 1, 196, '31.80', '57.24'),
+(2501, 61, '2.00', '28.62', '10.00', '18', 1, 196, '31.80', '57.24'),
+(2502, 1193, '3.00', '128.79', '10.00', '18', 1, 196, '143.10', '386.37'),
+(2503, 1195, '1.00', '133.56', '10.00', '18', 1, 196, '148.40', '133.56'),
+(2505, 1192, '1.00', '166.95', '10.00', '18', 1, 196, '185.50', '166.95'),
+(2506, 98, '2.00', '104.17', '10.00', '18', 1, 196, '115.75', '208.35'),
+(2507, 1198, '1.00', '124.02', '10.00', '18', 1, 196, '137.80', '124.02'),
+(2508, 1200, '1.00', '87.77', '10.00', '18', 1, 196, '97.52', '87.77'),
+(2509, 1199, '4.00', '87.77', '10.00', '18', 1, 196, '97.52', '351.07'),
+(2510, 111, '2.00', '104.94', '10.00', '18', 1, 196, '116.60', '209.88'),
+(2511, 110, '1.00', '91.41', '12.00', '18', 1, 196, '103.88', '91.41'),
+(2512, 127, '7.00', '81.09', '10.00', '18', 1, 196, '90.10', '567.63'),
+(2513, 129, '7.00', '81.09', '10.00', '18', 1, 196, '90.10', '567.63'),
+(2514, 1206, '2.00', '103.03', '10.00', '18', 1, 196, '114.48', '206.06'),
+(2515, 140, '3.00', '40.92', '7.00', '18', 1, 196, '44.00', '122.76'),
+(2516, 136, '1.00', '43.88', '10.00', '18', 1, 196, '48.76', '43.88'),
+(2517, 1208, '2.00', '76.32', '10.00', '18', 1, 196, '84.80', '152.64'),
+(2518, 141, '1.00', '83.95', '10.00', '18', 1, 196, '93.28', '83.95'),
+(2519, 142, '2.00', '76.32', '10.00', '18', 1, 196, '84.80', '152.64'),
+(2520, 1205, '4.00', '81.09', '10.00', '18', 1, 196, '90.10', '324.36'),
+(2521, 147, '2.00', '88.72', '10.00', '18', 1, 196, '98.58', '177.44'),
+(2522, 168, '1.00', '138.52', '10.00', '18', 1, 196, '153.91', '138.52'),
+(2523, 170, '1.00', '131.65', '10.00', '18', 1, 196, '146.28', '131.65'),
+(2524, 1213, '1.00', '109.71', '10.00', '18', 1, 196, '121.90', '109.71'),
+(2525, 634, '1.00', '4.50', '0.00', '18', 1, 197, '4.24', '4.50'),
+(2526, 633, '2.00', '4.50', '0.00', '18', 1, 197, '4.24', '9.00'),
+(2527, 1206, '2.00', '102.46', '10.50', '18', 1, 198, '114.48', '204.92'),
+(2528, 635, '10.00', '13.02', '5.50', '18', 1, 199, '13.78', '130.22'),
+(2529, 636, '10.00', '13.02', '5.50', '18', 1, 199, '13.78', '130.22'),
+(2530, 634, '25.00', '4.01', '5.50', '18', 1, 199, '4.24', '100.17'),
+(2531, 633, '25.00', '4.01', '5.50', '18', 1, 199, '4.24', '100.17'),
+(2532, 917, '25.00', '2.00', '5.50', '18', 1, 199, '2.12', '50.09'),
+(2533, 624, '25.00', '2.00', '5.50', '18', 1, 199, '2.12', '50.09'),
+(2534, 820, '25.00', '2.40', '5.50', '18', 1, 199, '2.54', '60.01'),
+(2535, 1007, '10.00', '18.03', '5.50', '18', 1, 199, '19.08', '180.31'),
+(2536, 1006, '10.00', '18.03', '5.50', '18', 1, 199, '19.08', '180.31'),
+(2537, 1020, '10.00', '8.01', '5.50', '18', 1, 199, '8.48', '80.14'),
+(2538, 957, '10.00', '22.04', '5.50', '18', 1, 199, '23.32', '220.37'),
+(2539, 647, '10.00', '22.04', '5.50', '18', 1, 199, '23.32', '220.37'),
+(2540, 646, '10.00', '22.04', '5.50', '18', 1, 199, '23.32', '220.37'),
+(2541, 649, '10.00', '8.01', '5.50', '18', 1, 199, '8.48', '80.14'),
+(2542, 648, '10.00', '8.01', '5.50', '18', 1, 199, '8.48', '80.14'),
+(2543, 771, '20.00', '3.79', '10.50', '18', 1, 200, '4.24', '75.90'),
+(2544, 756, '6.00', '15.18', '10.50', '18', 1, 200, '16.96', '91.08'),
+(2545, 507, '10.00', '8.54', '10.50', '18', 1, 200, '9.54', '85.38'),
+(2546, 505, '3.00', '19.45', '10.50', '18', 1, 200, '21.73', '58.35'),
+(2547, 504, '3.00', '19.45', '10.50', '18', 1, 200, '21.73', '58.35'),
+(2550, 729, '5.00', '5.69', '10.50', '18', 1, 200, '6.36', '28.46'),
+(2551, 730, '5.00', '5.69', '10.50', '18', 1, 200, '6.36', '28.46'),
+(2552, 752, '6.00', '13.28', '10.50', '18', 1, 200, '14.84', '79.69'),
+(2553, 751, '5.00', '13.28', '10.50', '18', 1, 200, '14.84', '66.41'),
+(2554, 517, '3.00', '14.23', '10.50', '18', 1, 200, '15.90', '42.69'),
+(2555, 516, '4.00', '14.23', '10.50', '18', 1, 200, '15.90', '56.92'),
+(2556, 468, '6.00', '14.23', '10.50', '18', 1, 200, '15.90', '85.38'),
+(2557, 521, '5.00', '26.56', '10.50', '18', 1, 200, '29.68', '132.82'),
+(2558, 522, '5.00', '26.56', '10.50', '18', 1, 200, '29.68', '132.82'),
+(2559, 753, '5.00', '26.56', '10.50', '18', 1, 200, '29.68', '132.82'),
+(2560, 520, '5.00', '26.56', '10.50', '18', 1, 200, '29.68', '132.82'),
+(2561, 478, '2.00', '49.81', '10.50', '18', 1, 200, '55.65', '99.61'),
+(2562, 477, '2.00', '49.81', '10.50', '18', 1, 200, '55.65', '99.61'),
+(2563, 487, '6.00', '11.38', '10.50', '18', 1, 200, '12.72', '68.31'),
+(2564, 790, '3.00', '26.85', '10.50', '18', 1, 200, '30.00', '80.55'),
+(2565, 536, '2.00', '26.56', '10.50', '18', 1, 200, '29.68', '53.13'),
+(2566, 535, '2.00', '26.56', '10.50', '18', 1, 200, '29.68', '53.13'),
+(2567, 788, '2.00', '25.61', '10.50', '18', 1, 200, '28.62', '51.23'),
+(2568, 806, '4.00', '14.04', '10.50', '18', 1, 200, '15.69', '56.17'),
+(2569, 822, '10.00', '6.64', '10.50', '18', 1, 200, '7.42', '66.41'),
+(2570, 865, '4.00', '20.87', '10.50', '18', 1, 200, '23.32', '83.49'),
+(2571, 836, '4.00', '16.13', '10.50', '18', 1, 200, '18.02', '64.51'),
+(2572, 864, '4.00', '20.87', '10.50', '18', 1, 200, '23.32', '83.49'),
+(2573, 603, '6.00', '7.59', '10.50', '18', 1, 200, '8.48', '45.54'),
+(2574, 604, '4.00', '7.59', '10.50', '18', 1, 200, '8.48', '30.36'),
+(2575, 862, '2.00', '25.61', '10.50', '18', 1, 200, '28.62', '51.23'),
+(2576, 861, '2.00', '25.61', '10.50', '18', 1, 200, '28.62', '51.23'),
+(2577, 843, '2.00', '34.15', '10.50', '18', 1, 200, '38.16', '68.31'),
+(2578, 850, '4.00', '36.05', '10.50', '18', 1, 200, '40.28', '144.20'),
+(2579, 614, '4.00', '17.08', '10.50', '18', 1, 200, '19.08', '68.31'),
+(2580, 613, '4.00', '17.08', '10.50', '18', 1, 200, '19.08', '68.31'),
+(2581, 692, '6.00', '18.97', '10.50', '18', 1, 200, '21.20', '113.84'),
+(2582, 691, '4.00', '18.97', '10.50', '18', 1, 200, '21.20', '75.90'),
+(2583, 994, '4.00', '22.77', '10.50', '18', 1, 200, '25.44', '91.08'),
+(2584, 635, '5.00', '12.33', '10.50', '18', 1, 200, '13.78', '61.67'),
+(2585, 1020, '10.00', '7.59', '10.50', '18', 1, 200, '8.48', '75.90'),
+(2586, 980, '2.00', '47.44', '10.50', '18', 1, 200, '53.00', '94.87'),
+(2587, 957, '6.00', '20.87', '10.50', '18', 1, 200, '23.32', '125.23'),
+(2588, 648, '5.00', '7.59', '10.50', '18', 1, 200, '8.48', '37.95'),
+(2589, 649, '5.00', '7.59', '10.50', '18', 1, 200, '8.48', '37.95'),
+(2592, 970, '5.00', '14.23', '10.50', '18', 1, 200, '15.90', '71.15'),
+(2593, 969, '5.00', '14.23', '10.50', '18', 1, 200, '15.90', '71.15'),
+(2594, 996, '4.00', '33.20', '10.50', '18', 1, 200, '37.10', '132.82'),
+(2595, 621, '10.00', '3.79', '10.50', '18', 1, 200, '4.24', '37.95'),
+(2596, 974, '2.00', '23.72', '10.50', '18', 1, 200, '26.50', '47.44'),
+(2597, 944, '4.00', '13.28', '10.50', '18', 1, 200, '14.84', '53.13'),
+(2598, 945, '4.00', '13.28', '10.50', '18', 1, 200, '14.84', '53.13'),
+(2599, 991, '4.00', '23.72', '10.50', '18', 1, 200, '26.50', '94.87'),
+(2600, 679, '4.00', '17.55', '10.50', '18', 1, 200, '19.61', '70.20'),
+(2601, 678, '4.00', '17.55', '10.50', '18', 1, 200, '19.61', '70.20'),
+(2602, 163, '5.00', '113.84', '10.50', '18', 1, 201, '127.20', '569.22'),
+(2603, 161, '5.00', '104.36', '10.50', '18', 1, 201, '116.60', '521.78'),
+(2604, 172, '1.00', '37.95', '10.50', '18', 1, 201, '42.40', '37.95'),
+(2605, 1205, '2.00', '80.64', '10.50', '18', 1, 201, '90.10', '161.28'),
+(2606, 1186, '2.00', '92.97', '10.50', '18', 1, 201, '103.88', '185.95'),
+(2607, 1193, '1.00', '128.07', '10.50', '18', 1, 201, '143.10', '128.07'),
+(2608, 1184, '2.00', '102.46', '10.50', '18', 1, 201, '114.48', '204.92'),
+(2609, 111, '2.00', '104.36', '10.50', '18', 1, 201, '116.60', '208.71'),
+(2610, 1185, '1.00', '94.87', '10.50', '18', 1, 201, '106.00', '94.87'),
+(2611, 151, '2.00', '12.33', '10.50', '18', 1, 201, '13.78', '24.67'),
+(2612, 152, '2.00', '12.33', '10.50', '18', 1, 201, '13.78', '24.67'),
+(2613, 6, '2.00', '35.06', '5.50', '18', 1, 202, '37.10', '70.12'),
+(2614, 1186, '2.00', '98.17', '5.50', '18', 1, 202, '103.88', '196.33'),
+(2615, 1209, '2.00', '92.16', '5.50', '18', 1, 202, '97.52', '184.31'),
+(2616, 54, '1.00', '70.12', '5.50', '18', 1, 202, '74.20', '70.12'),
+(2617, 1190, '1.00', '135.23', '5.50', '18', 1, 202, '143.10', '135.23'),
+(2618, 61, '1.00', '30.05', '5.50', '18', 1, 202, '31.80', '30.05'),
+(2619, 62, '1.00', '30.05', '5.50', '18', 1, 202, '31.80', '30.05'),
+(2620, 93, '3.00', '80.14', '5.50', '18', 1, 202, '84.80', '240.41'),
+(2621, 1201, '2.00', '140.24', '5.50', '18', 1, 202, '148.40', '280.48'),
+(2622, 1206, '1.00', '108.18', '5.50', '18', 1, 202, '114.48', '108.18'),
+(2623, 136, '1.00', '46.08', '5.50', '18', 1, 202, '48.76', '46.08'),
+(2624, 820, '50.00', '2.40', '5.50', '18', 1, 203, '2.54', '120.02'),
+(2625, 634, '40.00', '4.01', '5.50', '18', 1, 203, '4.24', '160.27'),
+(2626, 633, '10.00', '4.01', '5.50', '18', 1, 203, '4.24', '40.07'),
+(2627, 127, '3.00', '85.14', '5.50', '18', 1, 203, '90.10', '255.43'),
+(2628, 129, '3.00', '85.14', '5.50', '18', 1, 203, '90.10', '255.43'),
+(2629, 634, '20.00', '4.01', '5.50', '18', 1, 204, '4.24', '80.14'),
+(2630, 633, '20.00', '4.01', '5.50', '18', 1, 204, '4.24', '80.14'),
+(2632, 166, '1.00', '21.26', '5.50', '18', 1, 205, '22.50', '21.26'),
+(2633, 167, '1.00', '21.26', '5.50', '18', 1, 205, '22.50', '21.26'),
+(2634, 1203, '1.00', '100.17', '5.50', '18', 1, 205, '106.00', '100.17'),
+(2635, 147, '2.00', '93.16', '5.50', '18', 1, 205, '98.58', '186.32'),
+(2636, 1204, '1.00', '135.23', '5.50', '18', 1, 205, '143.10', '135.23'),
+(2637, 152, '3.00', '13.02', '5.50', '18', 1, 205, '13.78', '39.07'),
+(2638, 151, '3.00', '13.02', '5.50', '18', 1, 205, '13.78', '39.07'),
+(2639, 127, '1.00', '85.14', '5.50', '18', 1, 205, '90.10', '85.14'),
+(2640, 1206, '1.00', '108.18', '5.50', '18', 1, 205, '114.48', '108.18'),
+(2641, 101, '1.00', '126.72', '5.50', '18', 1, 205, '134.09', '126.72'),
+(2643, 56, '1.00', '40.07', '5.50', '18', 1, 205, '42.40', '40.07'),
+(2644, 58, '2.00', '96.16', '5.50', '18', 1, 205, '101.76', '192.33'),
+(2645, 44, '2.00', '118.70', '5.50', '18', 1, 205, '125.61', '237.40'),
+(2646, 122, '1.00', '85.14', '5.50', '18', 1, 205, '90.10', '85.14'),
+(2647, 1209, '1.00', '92.16', '5.50', '18', 1, 205, '97.52', '92.16'),
+(2648, 126, '1.00', '75.13', '5.50', '18', 1, 205, '79.50', '75.13'),
+(2649, 112, '2.00', '58.70', '5.50', '18', 1, 205, '62.12', '117.41'),
+(2650, 172, '2.00', '40.07', '5.50', '18', 1, 205, '42.40', '80.14'),
+(2651, 22, '12.00', '32.05', '5.50', '18', 1, 206, '33.92', '384.65'),
+(2652, 957, '20.00', '22.04', '5.50', '18', 1, 207, '23.32', '440.75'),
+(2653, 1186, '2.00', '92.97', '10.50', '18', 1, 208, '103.88', '185.95'),
+(2654, 1199, '3.00', '87.28', '10.50', '18', 1, 208, '97.52', '261.84'),
+(2655, 4, '1.00', '49.33', '10.50', '18', 1, 209, '55.12', '49.33'),
+(2656, 88, '1.00', '94.40', '10.50', '18', 1, 209, '105.47', '94.40'),
+(2657, 107, '1.00', '98.09', '10.50', '18', 1, 209, '109.60', '98.09'),
+(2658, 1199, '1.00', '87.28', '10.50', '18', 1, 209, '97.52', '87.28'),
+(2659, 111, '3.00', '104.36', '10.50', '18', 1, 209, '116.60', '313.07'),
+(2660, 127, '2.00', '80.64', '10.50', '18', 1, 209, '90.10', '161.28'),
+(2661, 129, '2.00', '80.64', '10.50', '18', 1, 209, '90.10', '161.28'),
+(2662, 141, '1.00', '83.49', '10.50', '18', 1, 209, '93.28', '83.49'),
+(2663, 162, '1.00', '75.13', '5.50', '18', 1, 210, '79.50', '75.13'),
+(2665, 103, '2.00', '25.04', '5.50', '18', 1, 210, '26.50', '50.09'),
+(2666, 104, '2.00', '25.04', '5.50', '18', 1, 210, '26.50', '50.09'),
+(2667, 944, '6.00', '14.02', '5.50', '18', 1, 211, '14.84', '84.14'),
+(2668, 975, '6.00', '25.04', '5.50', '18', 1, 211, '26.50', '150.25'),
+(2669, 706, '6.00', '20.03', '5.50', '18', 1, 211, '21.20', '120.20'),
+(2670, 707, '6.00', '20.03', '5.50', '18', 1, 211, '21.20', '120.20'),
+(2671, 468, '6.00', '15.03', '5.50', '18', 1, 211, '15.90', '90.15'),
+(2672, 729, '6.00', '6.01', '5.50', '18', 1, 211, '6.36', '36.06'),
+(2673, 730, '6.00', '6.01', '5.50', '18', 1, 211, '6.36', '36.06'),
+(2674, 753, '6.00', '28.05', '5.50', '18', 1, 211, '29.68', '168.29'),
+(2675, 520, '6.00', '28.05', '5.50', '18', 1, 211, '29.68', '168.29'),
+(2676, 754, '6.00', '37.80', '5.50', '18', 1, 211, '40.00', '226.80'),
+(2677, 477, '6.00', '52.59', '5.50', '18', 1, 211, '55.65', '315.54'),
+(2678, 480, '6.00', '52.59', '5.50', '18', 1, 211, '55.65', '315.54'),
+(2679, 492, '6.00', '78.13', '5.50', '18', 1, 211, '82.68', '468.80'),
+(2680, 740, '6.00', '15.03', '5.50', '18', 1, 211, '15.90', '90.15'),
+(2681, 512, '6.00', '30.05', '5.50', '18', 1, 211, '31.80', '180.31'),
+(2682, 767, '6.00', '50.09', '5.50', '18', 1, 211, '53.00', '300.51'),
+(2683, 513, '6.00', '20.03', '5.50', '18', 1, 211, '21.20', '120.20'),
+(2684, 530, '6.00', '18.03', '5.50', '18', 1, 211, '19.08', '108.18'),
+(2685, 535, '6.00', '28.05', '5.50', '18', 1, 211, '29.68', '168.29'),
+(2686, 789, '6.00', '27.05', '5.50', '18', 1, 211, '28.62', '162.28'),
+(2687, 784, '6.00', '36.06', '5.50', '18', 1, 211, '38.16', '216.37'),
+(2688, 816, '6.00', '42.07', '5.50', '18', 1, 211, '44.52', '252.43'),
+(2689, 836, '6.00', '17.03', '5.50', '18', 1, 211, '18.02', '102.17'),
+(2690, 833, '6.00', '16.03', '5.50', '18', 1, 211, '16.96', '96.16'),
+(2691, 859, '6.00', '110.19', '5.50', '18', 1, 211, '116.60', '661.12'),
+(2692, 843, '6.00', '36.06', '5.50', '18', 1, 211, '38.16', '216.37'),
+(2693, 850, '6.00', '38.06', '5.50', '18', 1, 211, '40.28', '228.39'),
+(2694, 890, '6.00', '50.09', '5.50', '18', 1, 211, '53.00', '300.51'),
+(2695, 623, '6.00', '3.01', '5.50', '18', 1, 211, '3.18', '18.03'),
+(2696, 622, '6.00', '3.01', '5.50', '18', 1, 211, '3.18', '18.03'),
+(2697, 984, '6.00', '45.08', '5.50', '18', 1, 212, '47.70', '270.46'),
+(2698, 635, '6.00', '13.02', '5.50', '18', 1, 212, '13.78', '78.13'),
+(2699, 966, '6.00', '17.03', '5.50', '18', 1, 212, '18.02', '102.17'),
+(2700, 980, '6.00', '50.09', '5.50', '18', 1, 212, '53.00', '300.51'),
+(2701, 982, '6.00', '60.10', '5.50', '18', 1, 212, '63.60', '360.61'),
+(2702, 662, '6.00', '25.04', '5.50', '18', 1, 212, '26.50', '150.25'),
+(2703, 665, '6.00', '7.51', '5.50', '18', 1, 212, '7.95', '45.08'),
+(2704, 941, '6.00', '9.52', '5.50', '18', 1, 212, '10.07', '57.10'),
+(2705, 969, '6.00', '15.03', '5.50', '18', 1, 212, '15.90', '90.15'),
+(2706, 975, '6.00', '25.04', '5.50', '18', 1, 212, '26.50', '150.25'),
+(2707, 946, '6.00', '14.02', '5.50', '18', 1, 212, '14.84', '84.14'),
+(2708, 676, '6.00', '18.53', '5.50', '18', 1, 212, '19.61', '111.19'),
+(2709, 166, '1.00', '21.26', '5.50', '18', 1, 213, '22.50', '21.26'),
+(2710, 167, '1.00', '21.26', '5.50', '18', 1, 213, '22.50', '21.26'),
+(2712, 1208, '1.00', '75.47', '11.00', '18', 1, 213, '84.80', '75.47'),
+(2713, 127, '2.00', '80.19', '11.00', '18', 1, 213, '90.10', '160.38'),
+(2715, 1207, '6.00', '90.15', '5.50', '18', 1, 214, '95.40', '540.92'),
+(2716, 1205, '6.00', '85.14', '5.50', '18', 1, 214, '90.10', '510.87'),
+(2717, 147, '6.00', '93.16', '5.50', '18', 1, 214, '98.58', '558.95'),
+(2719, 1186, '6.00', '98.17', '5.50', '18', 1, 214, '103.88', '589.00'),
+(2720, 123, '5.00', '60.10', '5.50', '18', 1, 214, '63.60', '300.51'),
+(2722, 96, '6.00', '111.19', '5.50', '18', 1, 214, '117.66', '667.13'),
+(2725, 1187, '2.00', '160.27', '5.50', '18', 1, 214, '169.60', '320.54'),
+(2726, 699, '2.00', '13.02', '5.50', '18', 1, 215, '13.78', '26.04'),
+(2727, 700, '2.00', '13.02', '5.50', '18', 1, 215, '13.78', '26.04'),
+(2728, 701, '3.00', '13.02', '5.50', '18', 1, 215, '13.78', '39.07'),
+(2729, 702, '10.00', '13.02', '5.50', '18', 1, 215, '13.78', '130.22'),
+(2730, 447, '10.00', '15.03', '5.50', '18', 1, 215, '15.90', '150.25'),
+(2731, 729, '10.00', '6.01', '5.50', '18', 1, 215, '6.36', '60.10'),
+(2732, 730, '10.00', '6.01', '5.50', '18', 1, 215, '6.36', '60.10'),
+(2733, 768, '2.00', '50.09', '5.50', '18', 1, 215, '53.00', '100.17'),
+(2734, 769, '2.00', '50.09', '5.50', '18', 1, 215, '53.00', '100.17'),
+(2735, 754, '4.00', '40.00', '0.00', '18', 1, 215, '40.00', '160.00'),
+(2736, 486, '10.00', '12.02', '5.50', '18', 1, 215, '12.72', '120.20'),
+(2737, 487, '10.00', '12.02', '5.50', '18', 1, 215, '12.72', '120.20'),
+(2738, 739, '5.00', '15.03', '5.50', '18', 1, 215, '15.90', '75.13'),
+(2740, 503, '10.00', '15.53', '5.50', '18', 1, 215, '16.43', '155.26'),
+(2741, 603, '1.00', '8.01', '5.50', '18', 1, 215, '8.48', '8.01'),
+(2742, 604, '1.00', '8.01', '5.50', '18', 1, 215, '8.48', '8.01'),
+(2743, 866, '6.00', '45.08', '5.50', '18', 1, 215, '47.70', '270.46'),
+(2744, 867, '4.00', '45.08', '5.50', '18', 1, 215, '47.70', '180.31'),
+(2745, 615, '10.00', '9.02', '5.50', '18', 1, 215, '9.54', '90.15'),
+(2746, 616, '10.00', '9.02', '5.50', '18', 1, 215, '9.54', '90.15'),
+(2747, 628, '10.00', '4.01', '5.50', '18', 1, 216, '4.24', '40.07'),
+(2748, 633, '10.00', '4.01', '5.50', '18', 1, 216, '4.24', '40.07'),
+(2749, 634, '10.00', '4.01', '5.50', '18', 1, 216, '4.24', '40.07'),
+(2750, 939, '5.00', '13.02', '5.50', '18', 1, 216, '13.78', '65.11'),
+(2751, 652, '5.00', '13.02', '5.50', '18', 1, 216, '13.78', '65.11'),
+(2752, 653, '5.00', '13.02', '5.50', '18', 1, 216, '13.78', '65.11'),
+(2753, 940, '5.00', '13.02', '5.50', '18', 1, 216, '13.78', '65.11'),
+(2754, 945, '5.00', '14.02', '5.50', '18', 1, 216, '14.84', '70.12'),
+(2755, 459, '5.00', '14.02', '5.50', '18', 1, 216, '14.84', '70.12'),
+(2756, 460, '5.00', '14.02', '5.50', '18', 1, 216, '14.84', '70.12'),
+(2757, 752, '5.00', '14.02', '5.50', '18', 1, 216, '14.84', '70.12'),
+(2758, 1221, '10.00', '32.00', '0.00', '18', 1, 217, '32.00', '320.00'),
+(2759, 123, '4.00', '60.10', '5.50', '18', 1, 217, '63.60', '240.41'),
+(2760, 1187, '2.00', '160.27', '5.50', '18', 1, 217, '169.60', '320.54'),
+(2761, 1201, '1.00', '140.24', '5.50', '18', 1, 217, '148.40', '140.24'),
+(2762, 1209, '1.00', '92.16', '5.50', '18', 1, 217, '97.52', '92.16'),
+(2763, 1204, '1.00', '135.23', '5.50', '18', 1, 217, '143.10', '135.23'),
+(2766, 633, '10.00', '3.88', '8.50', '18', 1, 218, '4.24', '38.80'),
+(2767, 634, '10.00', '3.88', '8.50', '18', 1, 218, '4.24', '38.80'),
+(2768, 670, '1.00', '23.72', '10.50', '18', 1, 218, '26.50', '23.72'),
+(2769, 974, '1.00', '23.72', '10.50', '18', 1, 218, '26.50', '23.72'),
+(2770, 6, '1.00', '33.58', '9.50', '18', 1, 218, '37.10', '33.58'),
+(2771, 8, '1.00', '37.95', '10.50', '18', 1, 218, '42.40', '37.95'),
+(2772, 18, '1.00', '75.52', '10.50', '18', 1, 218, '84.38', '75.52'),
+(2773, 30, '1.00', '104.36', '10.50', '18', 1, 218, '116.60', '104.36'),
+(2774, 35, '1.00', '47.44', '10.50', '18', 1, 218, '53.00', '47.44'),
+(2776, 1199, '2.00', '87.28', '10.50', '18', 1, 218, '97.52', '174.56'),
+(2777, 111, '2.00', '104.36', '10.50', '18', 1, 218, '116.60', '208.71'),
+(2778, 117, '1.00', '66.41', '10.50', '18', 1, 218, '74.20', '66.41'),
+(2779, 127, '2.00', '80.64', '10.50', '18', 1, 218, '90.10', '161.28'),
+(2780, 129, '1.00', '80.64', '10.50', '18', 1, 218, '90.10', '80.64'),
+(2781, 140, '1.00', '41.58', '5.50', '18', 1, 218, '44.00', '41.58'),
+(2782, 8, '2.00', '37.95', '10.50', '18', 1, 219, '42.40', '75.90'),
+(2783, 30, '2.00', '104.36', '10.50', '18', 1, 219, '116.60', '208.71'),
+(2784, 58, '1.00', '91.08', '10.50', '18', 1, 219, '101.76', '91.08'),
+(2785, 689, '1.00', '102.46', '10.50', '18', 1, 219, '114.48', '102.46'),
+(2786, 1193, '4.00', '128.07', '10.50', '18', 1, 219, '143.10', '512.30'),
+(2787, 1200, '1.00', '87.28', '10.50', '18', 1, 219, '97.52', '87.28'),
+(2788, 111, '4.00', '104.36', '10.50', '18', 1, 219, '116.60', '417.43'),
+(2790, 1209, '2.00', '87.28', '10.50', '18', 1, 219, '97.52', '174.56'),
+(2791, 140, '1.00', '41.58', '5.50', '18', 1, 219, '44.00', '41.58'),
+(2792, 142, '2.00', '75.90', '10.50', '18', 1, 219, '84.80', '151.79'),
+(2793, 97, '2.00', '66.15', '5.50', '18', 1, 220, '70.00', '132.30'),
+(2794, 107, '1.00', '98.09', '10.50', '18', 1, 220, '109.60', '98.09'),
+(2795, 1200, '1.00', '87.28', '10.50', '18', 1, 220, '97.52', '87.28'),
+(2796, 123, '2.00', '56.92', '10.50', '18', 1, 220, '63.60', '113.84'),
+(2797, 1210, '1.00', '75.90', '10.50', '18', 1, 220, '84.80', '75.90'),
+(2799, 132, '1.00', '127.65', '10.00', '18', 1, 220, '141.83', '127.65'),
+(2800, 133, '1.00', '85.38', '10.50', '18', 1, 220, '95.40', '85.38'),
+(2801, 1205, '1.00', '81.09', '10.00', '18', 1, 220, '90.10', '81.09'),
+(2802, 167, '3.00', '21.26', '5.50', '18', 1, 220, '22.50', '63.79'),
+(2803, 166, '3.00', '21.26', '5.50', '18', 1, 220, '22.50', '63.79'),
+(2804, 7, '1.00', '55.02', '10.50', '18', 1, 220, '61.48', '55.02'),
+(2805, 47, '1.00', '52.18', '10.50', '18', 1, 220, '58.30', '52.18'),
+(2806, 50, '1.00', '36.05', '10.50', '18', 1, 220, '40.28', '36.05'),
+(2807, 51, '1.00', '36.05', '10.50', '18', 1, 220, '40.28', '36.05'),
+(2808, 1193, '1.00', '128.07', '10.50', '18', 1, 220, '143.10', '128.07'),
+(2809, 86, '1.00', '67.17', '10.50', '18', 1, 220, '75.05', '67.17'),
+(2810, 90, '1.00', '124.09', '10.50', '18', 1, 220, '138.65', '124.09'),
+(2812, 82, '1.00', '60.10', '5.50', '18', 1, 221, '63.60', '60.10'),
+(2813, 122, '2.00', '82.44', '8.50', '18', 1, 222, '90.10', '164.88'),
+(2814, 1221, '4.00', '31.36', '2.00', '18', 1, 222, '32.00', '125.44'),
+(2815, 864, '5.00', '21.57', '7.50', '18', 1, 222, '23.32', '107.86'),
+(2816, 994, '5.00', '23.53', '7.50', '18', 1, 222, '25.44', '117.66'),
+(2817, 88, '2.00', '96.51', '8.50', '18', 1, 222, '105.47', '193.01'),
+(2818, 117, '3.00', '67.89', '8.50', '18', 1, 222, '74.20', '203.68'),
+(2819, 56, '5.00', '40.07', '5.50', '18', 1, 223, '42.40', '200.34'),
+(2820, 1181, '4.00', '82.44', '8.50', '18', 1, 222, '90.10', '329.77'),
+(2821, 111, '2.00', '104.36', '10.50', '18', 1, 224, '116.60', '208.71'),
+(2823, 1026, '3.00', '45.54', '10.50', '18', 1, 224, '50.88', '136.61'),
+(2824, 118, '3.00', '45.54', '10.50', '18', 1, 224, '50.88', '136.61'),
+(2825, 1209, '1.00', '87.28', '10.50', '18', 1, 224, '97.52', '87.28'),
+(2826, 1221, '3.00', '30.24', '5.50', '18', 1, 224, '32.00', '90.72'),
+(2827, 140, '2.00', '41.58', '5.50', '18', 1, 224, '44.00', '83.16'),
+(2828, 1205, '1.00', '80.64', '10.50', '18', 1, 224, '90.10', '80.64'),
+(2829, 1212, '1.00', '99.61', '10.50', '18', 1, 224, '111.30', '99.61'),
+(2830, 56, '20.00', '40.07', '5.50', '18', 1, 225, '42.40', '801.36'),
+(2831, 1028, '10.00', '40.07', '5.50', '18', 1, 225, '42.40', '400.68'),
+(2832, 127, '4.00', '85.14', '5.50', '18', 1, 226, '90.10', '340.58'),
+(2833, 129, '3.00', '85.14', '5.50', '18', 1, 226, '90.10', '255.43'),
+(2834, 132, '1.00', '134.03', '5.50', '18', 1, 226, '141.83', '134.03'),
+(2835, 142, '1.00', '80.14', '5.50', '18', 1, 226, '84.80', '80.14'),
+(2836, 1208, '1.00', '80.14', '5.50', '18', 1, 226, '84.80', '80.14'),
+(2837, 147, '5.00', '93.16', '5.50', '18', 1, 226, '98.58', '465.79'),
+(2838, 1205, '6.00', '85.14', '5.50', '18', 1, 226, '90.10', '510.87'),
+(2839, 149, '6.00', '105.18', '5.50', '18', 1, 226, '111.30', '631.07'),
+(2840, 1204, '2.00', '135.23', '5.50', '18', 1, 226, '143.10', '270.46'),
+(2841, 152, '2.00', '13.02', '5.50', '18', 1, 226, '13.78', '26.04'),
+(2842, 151, '2.00', '13.02', '5.50', '18', 1, 226, '13.78', '26.04'),
+(2843, 1213, '2.00', '115.20', '5.50', '18', 1, 226, '121.90', '230.39'),
+(2844, 1215, '2.00', '75.13', '5.50', '18', 1, 226, '79.50', '150.25'),
+(2845, 1221, '8.00', '30.24', '5.50', '18', 1, 226, '32.00', '241.92'),
+(2846, 30, '1.00', '110.19', '5.50', '18', 1, 226, '116.60', '110.19'),
+(2847, 42, '3.00', '29.05', '5.50', '18', 1, 226, '30.74', '87.15'),
+(2848, 56, '4.00', '40.07', '5.50', '18', 1, 226, '42.40', '160.27'),
+(2849, 58, '1.00', '96.16', '5.50', '18', 1, 226, '101.76', '96.16'),
+(2850, 68, '2.00', '60.10', '5.50', '18', 1, 226, '63.60', '120.20'),
+(2852, 87, '1.00', '139.04', '5.50', '18', 1, 226, '147.13', '139.04'),
+(2853, 88, '1.00', '99.67', '5.50', '18', 1, 226, '105.47', '99.67'),
+(2854, 93, '1.00', '80.14', '5.50', '18', 1, 226, '84.80', '80.14'),
+(2855, 1196, '2.00', '105.18', '5.50', '18', 1, 226, '111.30', '210.36'),
+(2856, 103, '10.00', '25.04', '5.50', '18', 1, 226, '26.50', '250.43'),
+(2857, 104, '10.00', '25.04', '5.50', '18', 1, 226, '26.50', '250.43'),
+(2862, 110, '1.00', '98.17', '5.50', '18', 1, 227, '103.88', '98.17'),
+(2863, 111, '2.00', '110.19', '5.50', '18', 1, 227, '116.60', '220.37'),
+(2864, 451, '6.00', '10.02', '5.50', '18', 1, 227, '10.60', '60.10'),
+(2865, 452, '4.00', '10.02', '5.50', '18', 1, 227, '10.60', '40.07'),
+(2866, 461, '2.00', '8.01', '5.50', '18', 1, 227, '8.48', '16.03'),
+(2867, 535, '2.00', '28.05', '5.50', '18', 1, 227, '29.68', '56.10'),
+(2868, 755, '1.00', '16.03', '5.50', '18', 1, 227, '16.96', '16.03'),
+(2869, 803, '8.00', '7.56', '5.50', '18', 1, 227, '8.00', '60.48'),
+(2870, 884, '2.00', '20.03', '5.50', '18', 1, 227, '21.20', '40.07'),
+(2871, 885, '2.00', '20.03', '5.50', '18', 1, 227, '21.20', '40.07'),
+(2872, 616, '6.00', '9.02', '5.50', '18', 1, 227, '9.54', '54.09'),
+(2873, 615, '8.00', '9.02', '5.50', '18', 1, 227, '9.54', '72.12'),
+(2874, 111, '1.00', '110.19', '5.50', '18', 1, 228, '116.60', '110.19'),
+(2875, 129, '3.00', '85.14', '5.50', '18', 1, 228, '90.10', '255.43'),
+(2876, 147, '4.00', '93.16', '5.50', '18', 1, 228, '98.58', '372.63'),
+(2877, 1205, '4.00', '85.14', '5.50', '18', 1, 228, '90.10', '340.58'),
+(2878, 8, '2.00', '37.95', '10.50', '18', 1, 229, '42.40', '75.90'),
+(2879, 29, '2.00', '37.95', '10.50', '18', 1, 229, '42.40', '75.90'),
+(2880, 1186, '1.00', '93.49', '10.00', '18', 1, 229, '103.88', '93.49'),
+(2881, 689, '1.00', '102.46', '10.50', '18', 1, 229, '114.48', '102.46'),
+(2882, 97, '3.00', '62.65', '10.50', '18', 1, 229, '70.00', '187.95'),
+(2885, 127, '4.00', '80.64', '10.50', '18', 1, 229, '90.10', '322.56'),
+(2886, 129, '4.00', '80.64', '10.50', '18', 1, 229, '90.10', '322.56'),
+(2887, 147, '1.00', '88.23', '10.50', '18', 1, 229, '98.58', '88.23'),
+(2888, 18, '3.00', '75.52', '10.50', '18', 1, 229, '84.38', '226.56'),
+(2889, 136, '2.00', '46.08', '5.50', '18', 1, 230, '48.76', '92.16'),
+(2890, 1205, '1.00', '85.14', '5.50', '18', 1, 230, '90.10', '85.14'),
+(2891, 693, '3.00', '14.70', '10.50', '18', 1, 231, '16.43', '44.11'),
+(2892, 694, '3.00', '14.70', '10.50', '18', 1, 231, '16.43', '44.11'),
+(2893, 772, '4.00', '6.64', '10.50', '18', 1, 231, '7.42', '26.56'),
+(2894, 773, '4.00', '6.64', '10.50', '18', 1, 231, '7.42', '26.56'),
+(2895, 718, '10.00', '7.40', '10.50', '18', 1, 231, '8.27', '74.02'),
+(2896, 521, '5.00', '26.56', '10.50', '18', 1, 231, '29.68', '132.82'),
+(2897, 522, '5.00', '26.56', '10.50', '18', 1, 231, '29.68', '132.82'),
+(2898, 764, '2.00', '47.44', '10.50', '18', 1, 231, '53.00', '94.87'),
+(2899, 714, '1.00', '24.67', '10.50', '18', 1, 231, '27.56', '24.67'),
+(2900, 715, '1.00', '24.67', '10.50', '18', 1, 231, '27.56', '24.67'),
+(2901, 1024, '3.00', '23.72', '10.50', '18', 1, 231, '26.50', '71.15'),
+(2902, 539, '3.00', '21.82', '10.50', '18', 1, 231, '24.38', '65.46'),
+(2903, 923, '2.00', '24.67', '10.50', '18', 1, 231, '27.56', '49.33'),
+(2904, 924, '2.00', '24.67', '10.50', '18', 1, 231, '27.56', '49.33'),
+(2907, 925, '5.00', '6.64', '10.50', '18', 1, 231, '7.42', '33.20'),
+(2908, 926, '5.00', '6.64', '10.50', '18', 1, 231, '7.42', '33.20'),
+(2909, 927, '5.00', '5.69', '10.50', '18', 1, 231, '6.36', '28.46'),
+(2910, 928, '5.00', '5.69', '10.50', '18', 1, 231, '6.36', '28.46'),
+(2918, 480, '3.00', '49.81', '10.50', '18', 1, 231, '55.65', '149.42'),
+(2919, 864, '6.00', '20.87', '10.50', '18', 1, 231, '23.32', '125.23'),
+(2920, 765, '2.00', '47.44', '10.50', '18', 1, 231, '53.00', '94.87'),
+(2921, 872, '1.00', '30.36', '10.50', '18', 1, 231, '33.92', '30.36'),
+(2922, 807, '4.00', '14.04', '10.50', '18', 1, 231, '15.69', '56.17'),
+(2923, 620, '2.00', '23.72', '10.50', '18', 1, 231, '26.50', '47.44'),
+(2924, 730, '10.00', '5.69', '10.50', '18', 1, 231, '6.36', '56.92'),
+(2925, 917, '9.00', '2.00', '5.50', '18', 1, 232, '2.12', '18.03'),
+(2926, 624, '6.00', '2.00', '5.50', '18', 1, 232, '2.12', '12.02'),
+(2927, 987, '2.00', '20.03', '5.50', '18', 1, 232, '21.20', '40.07'),
+(2928, 451, '1.00', '10.02', '5.50', '18', 1, 232, '10.60', '10.02'),
+(2929, 634, '60.00', '4.01', '5.50', '18', 1, 232, '4.24', '240.41'),
+(2930, 633, '60.00', '4.01', '5.50', '18', 1, 232, '4.24', '240.41'),
+(2932, 636, '21.00', '13.02', '5.50', '18', 1, 232, '13.78', '273.46'),
+(2933, 633, '20.00', '4.50', '0.00', '18', 1, 233, '4.24', '90.00'),
+(2934, 634, '20.00', '4.50', '0.00', '18', 1, 233, '4.24', '90.00'),
+(2935, 693, '2.00', '16.59', '0.00', '18', 1, 234, '16.43', '33.18'),
+(2936, 694, '2.00', '16.59', '0.00', '18', 1, 234, '16.43', '33.18'),
+(2937, 439, '2.00', '3.21', '0.00', '18', 1, 234, '3.18', '6.42'),
+(2938, 440, '2.00', '3.21', '0.00', '18', 1, 234, '3.18', '6.42'),
+(2939, 442, '2.00', '3.21', '0.00', '18', 1, 234, '3.18', '6.42'),
+(2940, 441, '2.00', '3.18', '0.00', '18', 1, 234, '3.18', '6.36'),
+(2941, 521, '2.00', '29.96', '0.00', '18', 1, 234, '29.68', '59.92'),
+(2942, 499, '1.00', '12.84', '0.00', '18', 1, 234, '12.72', '12.84'),
+(2943, 498, '1.00', '12.84', '0.00', '18', 1, 234, '12.72', '12.84'),
+(2944, 746, '4.00', '11.77', '0.00', '18', 1, 234, '11.66', '47.08'),
+(2947, 797, '10.00', '2.68', '0.00', '18', 1, 234, '2.65', '26.80'),
+(2948, 800, '6.00', '4.82', '0.00', '18', 1, 234, '4.77', '28.92'),
+(2949, 799, '6.00', '2.68', '0.00', '18', 1, 234, '2.65', '16.08'),
+(2950, 798, '10.00', '3.21', '0.00', '18', 1, 234, '3.18', '32.10'),
+(2951, 600, '3.00', '14.98', '0.00', '18', 1, 234, '14.84', '44.94'),
+(2952, 599, '3.00', '14.98', '0.00', '18', 1, 234, '14.84', '44.94'),
+(2953, 594, '4.00', '13.38', '0.00', '18', 1, 234, '13.25', '53.52'),
+(2954, 593, '4.00', '13.38', '0.00', '18', 1, 234, '13.25', '53.52'),
+(2955, 838, '1.00', '35.31', '0.00', '18', 1, 234, '34.98', '35.31'),
+(2956, 837, '1.00', '35.31', '0.00', '18', 1, 234, '34.98', '35.31'),
+(2957, 840, '1.00', '35.31', '0.00', '18', 1, 234, '34.98', '35.31'),
+(2958, 839, '1.00', '35.31', '0.00', '18', 1, 234, '34.98', '35.31'),
+(2959, 902, '5.00', '8.56', '0.00', '18', 1, 234, '8.48', '42.80'),
+(2960, 901, '5.00', '8.56', '0.00', '18', 1, 234, '8.48', '42.80'),
+(2961, 658, '3.00', '13.91', '0.00', '18', 1, 234, '13.78', '41.73'),
+(2962, 943, '3.00', '13.38', '0.00', '18', 1, 234, '13.25', '40.14'),
+(2973, 1181, '2.00', '90.95', '0.00', '18', 1, 235, '90.10', '181.90'),
+(2975, 152, '5.00', '13.91', '0.00', '18', 1, 235, '13.78', '69.55'),
+(2976, 151, '5.00', '13.91', '0.00', '18', 1, 235, '13.78', '69.55'),
+(2979, 938, '2.00', '18.19', '0.00', '18', 1, 234, '18.02', '36.38'),
+(2980, 686, '4.00', '4.28', '0.00', '18', 1, 234, '4.24', '17.12'),
+(2993, 907, '6.00', '12.84', '0.00', '18', 1, 235, '12.72', '77.04'),
+(2994, 786, '5.00', '7.49', '0.00', '18', 1, 235, '7.42', '37.45'),
+(2995, 791, '2.00', '32.10', '0.00', '18', 1, 235, '31.80', '64.20'),
+(2996, 104, '5.00', '26.50', '0.00', '18', 1, 236, '26.50', '132.50'),
+(2997, 103, '5.00', '26.50', '0.00', '18', 1, 236, '26.50', '132.50'),
+(2998, 1217, '1.00', '63.60', '0.00', '18', 1, 236, '63.60', '63.60'),
+(2999, 129, '2.00', '90.10', '0.00', '18', 1, 236, '90.10', '180.20'),
+(3000, 1206, '4.00', '108.00', '5.66', '18', 1, 237, '114.48', '432.00'),
+(3001, 26, '9.00', '45.58', '5.50', '18', 1, 238, '48.23', '410.20'),
+(3002, 140, '2.00', '44.00', '0.00', '18', 1, 238, '44.00', '88.00'),
+(3003, 151, '2.00', '13.02', '5.50', '18', 1, 238, '13.78', '26.04'),
+(3004, 152, '2.00', '13.02', '5.50', '18', 1, 238, '13.78', '26.04'),
+(3005, 136, '5.00', '46.08', '5.50', '18', 1, 238, '48.76', '230.39'),
+(3006, 132, '3.00', '140.41', '1.00', '18', 1, 239, '141.83', '421.24'),
+(3007, 148, '3.00', '48.27', '1.00', '18', 1, 239, '48.76', '144.82'),
+(3008, 1209, '3.00', '96.54', '1.00', '18', 1, 239, '97.52', '289.63'),
+(3009, 1007, '6.00', '18.89', '1.00', '18', 1, 240, '19.08', '113.34'),
+(3010, 1006, '6.00', '18.89', '1.00', '18', 1, 240, '19.08', '113.34'),
+(3011, 1013, '4.00', '23.09', '1.00', '18', 1, 240, '23.32', '92.35'),
+(3012, 1012, '4.00', '23.09', '1.00', '18', 1, 240, '23.32', '92.35'),
+(3013, 1221, '4.00', '34.24', '0.00', '18', 1, 235, '32.00', '136.96'),
+(3014, 22, '3.00', '33.58', '1.00', '18', 1, 239, '33.92', '100.74'),
+(3015, 616, '10.00', '9.63', '0.00', '18', 1, 241, '9.54', '96.30'),
+(3016, 633, '10.00', '4.28', '0.00', '18', 1, 241, '4.24', '42.80'),
+(3017, 634, '10.00', '4.28', '0.00', '18', 1, 241, '4.24', '42.80'),
+(3019, 635, '2.00', '13.91', '0.00', '18', 1, 241, '13.78', '27.82'),
+(3020, 636, '2.00', '13.91', '0.00', '18', 1, 241, '13.78', '27.82'),
+(3021, 1189, '1.00', '122.11', '4.00', '18', 1, 242, '127.20', '122.11'),
+(3024, 1210, '2.00', '85.70', '0.00', '18', 1, 243, '0.00', '171.40'),
+(3025, 127, '3.00', '91.00', '0.00', '18', 1, 243, '0.00', '273.00'),
+(3028, 11, '2.00', '25.00', '0.00', '18', 1, 236, '25.00', '50.00'),
+(3029, 12, '2.00', '25.00', '0.00', '18', 1, 236, '25.00', '50.00'),
+(3030, 1193, '1.00', '137.38', '4.00', '18', 1, 244, '143.10', '137.38'),
+(3031, 112, '1.00', '59.64', '4.00', '18', 1, 244, '62.12', '59.64'),
+(3033, 1209, '2.00', '93.62', '4.00', '18', 1, 244, '97.52', '187.24'),
+(3034, 162, '1.00', '76.32', '4.00', '18', 1, 244, '79.50', '76.32'),
+(3036, 1203, '1.00', '101.76', '4.00', '18', 1, 244, '106.00', '101.76'),
+(3037, 664, '50.00', '7.30', '8.00', '18', 1, 245, '7.95', '365.00'),
+(3038, 667, '50.00', '7.30', '8.00', '18', 1, 245, '7.95', '365.00'),
+(3039, 131, '4.00', '90.95', '0.00', '18', 1, 246, '90.10', '363.80'),
+(3040, 664, '50.00', '7.30', '8.00', '18', 1, 247, '7.95', '365.00'),
+(3041, 667, '50.00', '7.30', '8.00', '18', 1, 247, '7.95', '365.00'),
+(3042, 22, '4.00', '34.24', '0.00', '18', 1, 248, '33.92', '136.96'),
+(3043, 628, '10.00', '4.01', '5.50', '18', 1, 249, '4.24', '40.07'),
+(3044, 633, '10.00', '4.01', '5.50', '18', 1, 249, '4.24', '40.07'),
+(3045, 634, '10.00', '4.01', '5.50', '18', 1, 249, '4.24', '40.07'),
+(3046, 939, '5.00', '13.02', '5.50', '18', 1, 249, '13.78', '65.11'),
+(3047, 652, '5.00', '13.02', '5.50', '18', 1, 249, '13.78', '65.11'),
+(3048, 653, '5.00', '13.02', '5.50', '18', 1, 249, '13.78', '65.11'),
+(3049, 940, '5.00', '13.02', '5.50', '18', 1, 249, '13.78', '65.11'),
+(3050, 945, '5.00', '14.02', '5.50', '18', 1, 249, '14.84', '70.12'),
+(3051, 459, '5.00', '14.02', '5.50', '18', 1, 249, '14.84', '70.12'),
+(3052, 460, '5.00', '14.02', '5.50', '18', 1, 249, '14.84', '70.12'),
+(3053, 752, '5.00', '14.02', '5.50', '18', 1, 249, '14.84', '70.12'),
+(3054, 699, '2.00', '13.02', '5.50', '18', 1, 250, '13.78', '26.04'),
+(3055, 700, '2.00', '13.02', '5.50', '18', 1, 250, '13.78', '26.04'),
+(3056, 701, '3.00', '13.02', '5.50', '18', 1, 250, '13.78', '39.07'),
+(3057, 702, '10.00', '13.02', '5.50', '18', 1, 250, '13.78', '130.22'),
+(3058, 447, '10.00', '15.03', '5.50', '18', 1, 250, '15.90', '150.25'),
+(3059, 729, '10.00', '6.01', '5.50', '18', 1, 250, '6.36', '60.10'),
+(3060, 730, '10.00', '6.01', '5.50', '18', 1, 250, '6.36', '60.10'),
+(3061, 768, '2.00', '50.09', '5.50', '18', 1, 250, '53.00', '100.17'),
+(3062, 769, '2.00', '50.09', '5.50', '18', 1, 250, '53.00', '100.17'),
+(3063, 754, '4.00', '40.00', '0.00', '18', 1, 250, '40.00', '160.00'),
+(3064, 486, '10.00', '12.02', '5.50', '18', 1, 250, '12.72', '120.20'),
+(3065, 487, '10.00', '12.02', '5.50', '18', 1, 250, '12.72', '120.20'),
+(3066, 739, '5.00', '15.03', '5.50', '18', 1, 250, '15.90', '75.13'),
+(3067, 503, '10.00', '15.53', '5.50', '18', 1, 250, '16.43', '155.26'),
+(3068, 603, '1.00', '8.01', '5.50', '18', 1, 250, '8.48', '8.01'),
+(3069, 604, '1.00', '8.01', '5.50', '18', 1, 250, '8.48', '8.01'),
+(3070, 866, '6.00', '45.08', '5.50', '18', 1, 250, '47.70', '270.46'),
+(3071, 867, '4.00', '45.08', '5.50', '18', 1, 250, '47.70', '180.31'),
+(3072, 615, '10.00', '9.02', '5.50', '18', 1, 250, '9.54', '90.15'),
+(3073, 616, '10.00', '9.02', '5.50', '18', 1, 250, '9.54', '90.15'),
+(3074, 615, '50.00', '9.30', '0.00', '18', 1, 251, '9.54', '465.00'),
+(3075, 96, '2.00', '118.77', '0.00', '18', 1, 252, '117.66', '237.54'),
+(3076, 125, '1.00', '38.52', '0.00', '18', 1, 253, '38.16', '38.52'),
+(3086, 42, '2.00', '29.51', '4.00', '18', 1, 255, '30.74', '59.02'),
+(3087, 62, '2.00', '30.53', '4.00', '18', 1, 255, '31.80', '61.06'),
+(3088, 61, '2.00', '30.53', '4.00', '18', 1, 255, '31.80', '61.06'),
+(3089, 82, '1.00', '61.06', '4.00', '18', 1, 255, '63.60', '61.06'),
+(3090, 1199, '1.00', '93.62', '4.00', '18', 1, 255, '97.52', '93.62'),
+(3091, 129, '2.00', '86.50', '4.00', '18', 1, 255, '90.10', '172.99'),
+(3092, 152, '2.00', '13.78', '0.00', '18', 1, 255, '13.78', '27.56'),
+(3093, 151, '2.00', '13.78', '0.00', '18', 1, 255, '13.78', '27.56'),
+(3095, 633, '4.00', '4.28', '0.00', '18', 1, 256, '4.24', '17.12'),
+(3096, 634, '4.00', '4.28', '0.00', '18', 1, 256, '4.24', '17.12'),
+(3097, 1020, '3.00', '8.56', '0.00', '18', 1, 256, '8.48', '25.68'),
+(3135, 957, '2.00', '23.55', '0.00', '18', 1, 259, '23.32', '47.10'),
+(3136, 1189, '1.00', '122.00', '0.00', '18', 1, 260, '127.20', '122.00'),
+(3137, 463, '2.00', '15.00', '0.00', '18', 1, 261, '15.90', '30.00'),
+(3138, 464, '4.00', '16.00', '0.00', '18', 1, 261, '15.90', '64.00'),
+(3139, 468, '6.00', '16.00', '0.00', '18', 1, 261, '15.90', '96.00'),
+(3140, 467, '4.00', '16.00', '0.00', '18', 1, 261, '15.90', '64.00'),
+(3141, 521, '3.00', '30.00', '0.00', '18', 1, 261, '29.68', '90.00'),
+(3142, 633, '5.00', '4.08', '0.00', '18', 1, 261, '4.24', '20.40'),
+(3143, 634, '5.00', '4.08', '0.00', '18', 1, 261, '4.24', '20.40'),
+(3144, 625, '3.00', '24.60', '0.00', '18', 1, 261, '23.00', '73.80'),
+(3145, 626, '3.00', '24.60', '0.00', '18', 1, 261, '24.38', '73.80'),
+(3146, 486, '1.00', '12.80', '0.00', '18', 1, 261, '12.72', '12.80'),
+(3147, 59, '1.00', '109.00', '0.00', '18', 1, 261, '108.12', '109.00'),
+(3148, 795, '2.00', '28.60', '0.00', '18', 1, 261, '28.00', '57.20'),
+(3149, 796, '3.00', '28.60', '0.00', '18', 1, 261, '28.00', '85.80'),
+(3168, 54, '1.00', '74.90', '0.00', '18', 1, 261, '74.20', '74.90'),
+(3169, 91, '1.00', '98.88', '0.00', '18', 1, 261, '92.01', '98.80'),
+(3170, 739, '2.00', '16.05', '0.00', '18', 1, 261, '15.90', '32.00'),
+(3171, 740, '2.00', '16.05', '0.00', '18', 1, 261, '15.90', '32.00'),
+(3172, 520, '1.00', '30.00', '0.00', '18', 1, 261, '29.68', '30.00'),
+(3173, 753, '2.00', '30.00', '0.00', '18', 1, 261, '29.68', '60.00'),
+(3174, 491, '1.00', '41.73', '0.00', '18', 1, 262, '41.34', '41.73'),
+(3175, 487, '1.00', '12.84', '0.00', '18', 1, 262, '12.72', '12.84'),
+(3176, 929, '5.00', '6.42', '0.00', '18', 1, 262, '6.36', '31.80'),
+(3177, 930, '5.00', '6.42', '0.00', '18', 1, 262, '6.36', '31.80'),
+(3178, 1195, '2.00', '149.80', '0.00', '18', 1, 263, '148.40', '299.60'),
+(3179, 1194, '2.00', '160.50', '0.00', '18', 1, 263, '159.00', '321.00'),
+(3180, 690, '1.00', '38.54', '0.00', '18', 1, 264, '38.16', '38.54'),
+(3183, 1221, '5.00', '30.56', '4.50', '18', 1, 265, '32.00', '152.80'),
+(3184, 690, '1.00', '38.24', '0.00', '18', 1, 266, '38.16', '38.24'),
+(3185, 127, '1.00', '90.95', '0.00', '18', 1, 267, '90.10', '90.95'),
+(3186, 615, '20.00', '9.63', '0.00', '18', 1, 268, '9.54', '192.60'),
+(3187, 879, '5.00', '13.38', '0.00', '18', 1, 269, '13.25', '66.90'),
+(3188, 881, '5.00', '13.38', '0.00', '18', 1, 269, '13.25', '66.90'),
+(3189, 448, '10.00', '16.05', '0.00', '18', 1, 269, '15.90', '160.50'),
+(3191, 753, '5.00', '29.96', '0.00', '18', 1, 269, '29.68', '149.80'),
+(3197, 880, '5.00', '13.38', '0.00', '18', 1, 271, '13.25', '66.90'),
+(3198, 882, '5.00', '13.38', '0.00', '18', 1, 271, '13.25', '66.90'),
+(3199, 448, '10.00', '16.05', '0.00', '18', 1, 271, '15.90', '160.50'),
+(3200, 753, '5.00', '29.96', '0.00', '18', 1, 271, '29.68', '149.80'),
+(3201, 767, '5.00', '53.50', '0.00', '18', 1, 271, '53.00', '267.50'),
+(3202, 766, '1.00', '53.50', '0.00', '18', 1, 271, '53.00', '53.50'),
+(3203, 791, '5.00', '32.10', '0.00', '18', 1, 271, '31.80', '160.50'),
+(3204, 822, '50.00', '7.49', '0.00', '18', 1, 271, '7.42', '374.50'),
+(3205, 833, '20.00', '17.12', '0.00', '18', 1, 271, '16.96', '342.40'),
+(3206, 623, '10.00', '3.21', '0.00', '18', 1, 271, '3.18', '32.10'),
+(3207, 966, '10.00', '18.19', '0.00', '18', 1, 271, '18.02', '181.90'),
+(3208, 967, '10.00', '18.19', '0.00', '18', 1, 271, '18.02', '181.90'),
+(3209, 968, '5.00', '18.19', '0.00', '18', 1, 271, '18.02', '90.95'),
+(3210, 989, '5.00', '24.61', '0.00', '18', 1, 271, '24.38', '123.05'),
+(3211, 1019, '10.00', '31.03', '0.00', '18', 1, 271, '30.74', '310.30'),
+(3212, 992, '5.00', '34.24', '0.00', '18', 1, 271, '33.92', '171.20'),
+(3213, 668, '1.00', '64.20', '0.00', '18', 1, 271, '63.60', '64.20'),
+(3214, 995, '10.00', '24.61', '0.00', '18', 1, 271, '24.38', '246.10'),
+(3215, 657, '3.00', '16.59', '0.00', '18', 1, 271, '16.43', '49.77'),
+(3216, 940, '5.00', '13.91', '0.00', '18', 1, 271, '13.78', '69.55'),
+(3217, 460, '10.00', '14.98', '0.00', '18', 1, 271, '14.84', '149.80'),
+(3218, 752, '10.00', '14.98', '0.00', '18', 1, 271, '14.84', '149.80'),
+(3219, 450, '10.00', '9.63', '0.00', '18', 1, 271, '9.54', '96.30'),
+(3220, 767, '5.00', '53.50', '0.00', '18', 1, 269, '53.00', '267.50'),
+(3221, 766, '1.00', '53.50', '0.00', '18', 1, 269, '53.00', '53.00'),
+(3222, 791, '5.00', '32.10', '0.00', '18', 1, 269, '31.80', '159.00'),
+(3223, 822, '50.00', '7.49', '0.00', '18', 1, 269, '7.42', '371.00'),
+(3224, 832, '20.00', '17.12', '0.00', '18', 1, 269, '16.96', '339.20'),
+(3225, 622, '10.00', '3.21', '0.00', '18', 1, 269, '3.18', '31.80'),
+(3226, 966, '10.00', '18.19', '0.00', '18', 1, 269, '18.02', '180.20'),
+(3227, 967, '10.00', '18.19', '0.00', '18', 1, 269, '18.02', '181.90'),
+(3228, 968, '5.00', '18.19', '0.00', '18', 1, 269, '18.02', '90.95'),
+(3229, 989, '5.00', '24.61', '0.00', '18', 1, 269, '24.38', '123.05'),
+(3230, 1018, '10.00', '31.03', '0.00', '18', 1, 269, '30.74', '310.30'),
+(3231, 992, '5.00', '34.24', '0.00', '18', 1, 269, '33.92', '171.20'),
+(3232, 668, '1.00', '64.20', '0.00', '18', 1, 269, '63.60', '64.20'),
+(3233, 995, '10.00', '24.61', '0.00', '18', 1, 269, '24.38', '246.10'),
+(3235, 940, '5.00', '13.91', '0.00', '18', 1, 269, '13.78', '69.55'),
+(3236, 459, '10.00', '14.98', '0.00', '18', 1, 269, '14.84', '149.80'),
+(3237, 751, '10.00', '14.98', '0.00', '18', 1, 269, '14.84', '149.80'),
+(3238, 449, '5.00', '9.63', '0.00', '18', 1, 269, '9.54', '48.15'),
+(3239, 129, '1.00', '91.00', '0.00', '18', 1, 272, '90.10', '91.00'),
+(3248, 1221, '1.00', '34.24', '0.00', '18', 1, 273, '32.00', '34.24'),
+(3249, 803, '20.00', '8.56', '0.00', '18', 1, 271, '8.00', '171.20'),
+(3250, 444, '20.00', '6.42', '0.00', '18', 1, 271, '6.36', '128.40'),
+(3251, 803, '20.00', '8.56', '0.00', '18', 1, 269, '8.00', '171.20'),
+(3252, 443, '20.00', '6.42', '0.00', '18', 1, 269, '6.36', '128.40'),
+(3253, 103, '4.00', '26.52', '0.00', '18', 1, 274, '26.50', '106.00'),
+(3254, 104, '4.00', '26.52', '0.00', '18', 1, 274, '26.50', '106.00'),
+(3255, 30, '1.00', '111.80', '0.00', '18', 1, 275, '116.60', '111.80'),
+(3256, 47, '1.00', '55.90', '0.00', '18', 1, 275, '58.30', '55.90'),
+(3257, 1221, '5.00', '32.50', '0.00', '18', 1, 275, '32.00', '162.50'),
+(3258, 125, '2.00', '36.60', '0.00', '18', 1, 275, '38.16', '73.20'),
+(3259, 129, '2.00', '86.40', '0.00', '18', 1, 275, '90.10', '172.80'),
+(3260, 753, '2.00', '28.50', '0.00', '18', 1, 276, '29.68', '57.00'),
+(3261, 521, '2.00', '28.50', '0.00', '18', 1, 276, '29.68', '57.00'),
+(3262, 522, '2.00', '28.50', '0.00', '18', 1, 276, '29.68', '57.00'),
+(3263, 727, '5.00', '6.10', '0.00', '18', 1, 276, '6.36', '30.50'),
+(3264, 728, '5.00', '6.10', '0.00', '18', 1, 276, '6.36', '30.50'),
+(3266, 503, '5.00', '15.20', '0.00', '18', 1, 276, '16.43', '76.00'),
+(3267, 864, '4.00', '22.40', '0.00', '18', 1, 276, '23.32', '89.60'),
+(3271, 520, '2.00', '28.50', '0.00', '18', 1, 276, '29.68', '57.00'),
+(3272, 740, '5.00', '15.80', '0.00', '18', 1, 276, '15.90', '79.00'),
+(3273, 739, '5.00', '15.80', '0.00', '18', 1, 276, '15.90', '79.00');
 
 -- --------------------------------------------------------
 
@@ -8771,10 +10181,9 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 --
 
 DROP TABLE IF EXISTS `precios`;
-CREATE TABLE IF NOT EXISTS `precios` (
+CREATE TABLE `precios` (
   `codigo` varchar(20) NOT NULL,
-  `precio` decimal(18,2) DEFAULT NULL,
-  PRIMARY KEY (`codigo`)
+  `precio` decimal(18,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -9560,8 +10969,8 @@ INSERT INTO `precios` (`codigo`, `precio`) VALUES
 --
 
 DROP TABLE IF EXISTS `producto`;
-CREATE TABLE IF NOT EXISTS `producto` (
-  `id_prod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `producto` (
+  `id_prod` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_prod` varchar(25) NOT NULL COMMENT 'CODIGO PRODUCTO',
   `codfab_prod` varchar(45) DEFAULT NULL,
   `des_prod` text NOT NULL COMMENT 'DESCRIPCION PRODUCTO',
@@ -9569,99 +10978,94 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `umed_prod` int(11) NOT NULL COMMENT 'UNIDAD DE MEDIDA PRODUCTO',
   `contenido_prod` int(11) NOT NULL COMMENT 'CONTENIDO PRODUCTO',
   `exctoigv_prod` int(11) NOT NULL COMMENT 'EXCENTO IGV (IVA) PRODUCTO',
-  `compra_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO PARA COMPRA',
-  `venta_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO PARA VENTA',
-  `stockini_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'STOCK INICIAL PRODUCTO',
-  `stockmax_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'STOCK MAXIMO PRODUCTO',
-  `stockmin_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'STOCK MINIMO PRODUCTO',
-  `stock_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'STOCK PRODUCTO',
+  `compra_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO PARA COMPRA',
+  `venta_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO PARA VENTA',
+  `stockini_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'STOCK INICIAL PRODUCTO',
+  `stockmax_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'STOCK MAXIMO PRODUCTO',
+  `stockmin_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'STOCK MINIMO PRODUCTO',
+  `stock_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'STOCK PRODUCTO',
   `status_prod` int(11) NOT NULL COMMENT 'ESTATUS PRODUCTO',
-  `sucursal_prod` int(11) NOT NULL COMMENT 'SUCURSAL PRODUCTO',
-  PRIMARY KEY (`id_prod`),
-  UNIQUE KEY `cod_prod` (`cod_prod`),
-  KEY `tipo_prod` (`tipo_prod`),
-  KEY `sucursal_prod` (`sucursal_prod`),
-  KEY `umed_prod` (`umed_prod`)
-) ENGINE=InnoDB AUTO_INCREMENT=1219 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS PRODUCTOS';
+  `sucursal_prod` int(11) NOT NULL COMMENT 'SUCURSAL PRODUCTO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS PRODUCTOS';
 
 --
 -- Volcado de datos para la tabla `producto`
 --
 
 INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_prod`, `umed_prod`, `contenido_prod`, `exctoigv_prod`, `compra_prod`, `venta_prod`, `stockini_prod`, `stockmax_prod`, `stockmin_prod`, `stock_prod`, `status_prod`, `sucursal_prod`) VALUES
-(1, 'LP-BC2', 'CM13-BC02', 'FARO NEBLINERO BAIC ANTIGUO (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(2, 'LP-BH2', 'CM-WHG2', 'FARO NEBLINERO BAOJUN HONGGUANG V(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(1, 'LP-BC2', 'CM13-BC02', 'FARO NEBLINERO BAIC ANTIGUO (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(2, 'LP-BH2', 'CM-WHG2', 'FARO NEBLINERO BAOJUN HONGGUANG V(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
 (3, 'LP-F32', 'CM3-BYD2', 'FARO NEBLINERO BYD F3 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(4, 'LP-F62', 'CM6-BYD2', 'FARO NEBLINERO BYD F6 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(4, 'LP-F62', 'CM6-BYD2', 'FARO NEBLINERO BYD F6 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
 (5, 'LP-CG2', 'CM12-CHG2', 'FARO NEBLINERO CHANGHAN 2012 (SET X 2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(6, 'LP-CF2', 'CM-CH02', 'FARO NEBLINERO MINIVAN CHANGHE FREEDOM(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(7, 'LP-A12', 'CM-A102', 'FARO NEBLINERO CHERRY A1 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(8, 'LP-AV2C', 'CM07-AV4', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
-(9, 'LP-AV2', 'CM-9416', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)NEGRO         ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(6, 'LP-CF2', 'CM-CH02', 'FARO NEBLINERO MINIVAN CHANGHE FREEDOM(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
+(7, 'LP-A12', 'CM-A102', 'FARO NEBLINERO CHERRY A1 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(8, 'LP-AV2C', 'CM07-AV4', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
+(9, 'LP-AV2', 'CM-9416', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)NEGRO         ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (10, 'LP-N32', 'CM-N3004  ', 'FARO NEBLI.CHEV. N300 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(11, 'LP-N22L', 'CM-N2004L', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(12, 'LP-N22R', 'CM-N2004R', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(11, 'LP-N22L', 'CM-N2004L', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(12, 'LP-N22R', 'CM-N2004R', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
 (13, 'LP-SA2', 'CM10-SAL5', 'FARO NEBLI.CHEV. SAIL 2010 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (14, 'LP-SP2', 'CM5-SPK04', 'FARO NEBLI.CHEV. SPARK 2005 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (15, 'LP-SP2A', 'CM5-SPK8', 'FARO NEBLI.CHEV. SPARK 2005 POST RED', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (16, 'LP-SP2B', 'CM5-SPK5', 'FARO NEBLI.CHEV. SPARK 2005 POST.BLANCO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(17, 'LP-SP4', 'CM9-SPK02', 'FARO NEBLI.CHEV. SPARK 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(18, 'LP-OP2', 'CM-9342', 'FARO NEBLI.CHEV. OPTRA 2003-2008(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(17, 'LP-SP4', 'CM9-SPK02', 'FARO NEBLI.CHEV. SPARK 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(18, 'LP-OP2', 'CM-9342', 'FARO NEBLI.CHEV. OPTRA 2003-2008(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (19, 'LP-ES2L', 'CM92-DE4L', 'FARO NEBLI.DAEWOO ESPERO 92....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (20, 'LP-ES2R', 'CM92-DE4R', 'FARO NEBLI.DAEWOO ESPERO 92....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (21, 'LP-ES4', 'CM96-DE4A', 'FARO NEBLI.DAEWOO ESPERO 96(SET)  ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(22, 'LP-CI2', 'CM94-DC4A', 'FARO NEBLI.DAEWOO CIELO NEGRO 94-96 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(22, 'LP-CI2', 'CM94-DC4A', 'FARO NEBLI.DAEWOO CIELO NEGRO 94-96 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
 (23, 'LP-CI2CL', 'CM94-DC4L', 'FARO NEBLI.DAEWOO CIELO CRISTAL 94-96', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (24, 'LP-CI2CR', 'CM94-DC4R', 'FARO NEBLI.DAEWOO CIELO CRISTAL 94-96', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (25, 'LP-LA2', 'CM-LN04', 'FARO NEBLI.DAEWOO LANOS (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(26, 'LP-LA2C', 'CM-LN04C', 'FARO NEBLI.DAEWOO LANOS CRYSTAL(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(26, 'LP-LA2C', 'CM-LN04C', 'FARO NEBLI.DAEWOO LANOS CRYSTAL(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, -3, 1, 1),
 (27, 'LP-NB2', 'CM97-DN04', 'FARO NEBLI.DAEWOO NUBIRA 1997 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
 (28, 'LP-NB4', 'CM00-DN2', 'FARO NEBLI.DAEWOO NUBIRA 2000 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
-(29, 'LP-XI2', 'CM15-DX02', 'FARO NEBLI.DONGFENG XIAOKANG(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(30, 'LP-C372', 'CM37-DF02', 'FARO NEBLI.DONGFEND C37 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
-(31, 'LP-RA4', 'CM-9296', 'FARO NEBLI.FORD RANGER 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
+(29, 'LP-XI2', 'CM15-DX02', 'FARO NEBLI.DONGFENG XIAOKANG(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(30, 'LP-C372', 'CM37-DF02', 'FARO NEBLI.DONGFEND C37 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(31, 'LP-RA4', 'CM-9296', 'FARO NEBLI.FORD RANGER 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1),
 (32, 'LP-FL4', 'CM16-FLD2', 'FARO NEBLI.FORLAND 2016(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (33, 'LP-FT2L', 'CM06-FT02L', 'FARO NEBLI.FOTON 2007.....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (34, 'LP-FT2R', 'CM06-FT02R', 'FARO NEBLI.FOTON 2007.....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(35, 'LP-CK2', 'CM12-GY02', 'FARO NEBLI.GEELLY CK1 2012(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(36, 'LP-GY2', 'CM07-GY2', 'FARO NEBLI.GEELY 2012 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(37, 'LP-MK4', 'CM14-GY02', 'FARO NEBLI.GEELLY MK CROSS 2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
-(38, 'LP-GO4', 'CM14-GW02', 'FARO NEBLI.GONOW 2014(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(39, 'LP-FJ2', 'CM5-WIN2', 'FARO NEBLI.GREATWALL FENG JUN 5(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(35, 'LP-CK2', 'CM12-GY02', 'FARO NEBLI.GEELLY CK1 2012(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(36, 'LP-GY2', 'CM07-GY2', 'FARO NEBLI.GEELY 2012 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(37, 'LP-MK4', 'CM14-GY02', 'FARO NEBLI.GEELLY MK CROSS 2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1),
+(38, 'LP-GO4', 'CM14-GW02', 'FARO NEBLI.GONOW 2014(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(39, 'LP-FJ2', 'CM5-WIN2', 'FARO NEBLI.GREATWALL FENG JUN 5(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
 (40, 'LP-GH2', 'CM5-GH02', 'FARO NEBLI.GREATWALL HOVER(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
 (41, 'LP-ST4', 'CM05-SX2', 'FARO NEBLI.PARACH. HY.STAREX 2005(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(43, 'LP-AC2B', 'CM98-AC4', 'FARO NEBLI.PARACH. HY ACCENT BLANCO 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(44, 'LP-AC4', 'CM-9172', 'FARO NEBLI.PARACH. HY ACCENT 2006...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 44, 1, 1),
-(45, 'LP-AC4B', 'CM10-AC04', 'FARO NEBLI.PARACH. HY ACCENT 2011-2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
+(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
+(43, 'LP-AC2B', 'CM98-AC4', 'FARO NEBLI.PARACH. HY ACCENT BLANCO 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1),
+(44, 'LP-AC4', 'CM-9172', 'FARO NEBLI.PARACH. HY ACCENT 2006...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 42, 1, 1),
+(45, 'LP-AC4B', 'CM10-AC04', 'FARO NEBLI.PARACH. HY ACCENT 2011-2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1),
 (46, 'LP-EL2', 'CM-9071', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
-(47, 'LP-EL2C', 'CM07-EL02', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(47, 'LP-EL2C', 'CM07-EL02', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
 (48, 'LP-EL4', 'CM11-EL5  ', 'FARO NEBLI.PARACH. HY ELANTRA 2011(SETX2)CHINO ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
 (49, 'LP-EL4B', 'CM13-EL4', 'FARO NEBLI.PARACH. HY ELANTRA 2013-2014 (SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
-(50, 'LP-I104L', 'CM12-I104L', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
-(51, 'LP-I104R', 'CM12-I104R', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
+(50, 'LP-I104L', 'CM12-I104L', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 2, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
+(51, 'LP-I104R', 'CM12-I104R', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 2, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
 (52, 'LP-I104A', 'CM14-I102', 'FARO NEBLI.PARACH. HY I10 2014 (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (53, 'LP-I104B', 'CM14-I102A', 'FARO NEBLI.PARACH. HY I10 2014FULL (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1),
 (54, 'LP-H12', 'CMH1-002', 'FARO NEBLI.PARACH. HY H1(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
-(55, 'LP-HD2', 'CM65-HD04', 'FARO NEBLI.PARACH. HY.HD 65 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(56, 'LP-HD4', 'CM75-HD05', 'FARO NEBLI.PARACH. HY.HD 75 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 67, 1, 1),
-(57, 'LP-H1004', 'CM96-HP4', 'FARO NEBLI.PARACH. H100 PANEL VAN GRACE (SET2) 96', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(58, 'LP-PO4', 'CM13-PRT2', 'FARO NEBLI.PARACH. HY PORTER II 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
-(59, 'LP-SF2', 'CM09-SF2', 'FARO NEBLI.PARACH. HY SANTA FE 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
+(55, 'LP-HD2', 'CM65-HD04', 'FARO NEBLI.PARACH. HY.HD 65 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
+(56, 'LP-HD4', 'CM75-HD05', 'FARO NEBLI.PARACH. HY.HD 75 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1),
+(57, 'LP-H1004', 'CM96-HP4', 'FARO NEBLI.PARACH. H100 PANEL VAN GRACE (SET2) 96', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(58, 'LP-PO4', 'CM13-PRT2', 'FARO NEBLI.PARACH. HY PORTER II 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(59, 'LP-SF2', 'CM09-SF2', 'FARO NEBLI.PARACH. HY SANTA FE 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (60, 'LP-MA2', 'CM07-MX2', 'FARO NEBLI.PARACH. HY MATRIX 2005(SET X 2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(61, 'LP-SO2L', 'CM03-SON4L', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(62, 'LP-SO2R', 'CM03-SON4R', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(63, 'LP-SO4', 'CM08-SON2', 'FARO NEBLI.PARACH.HY SONATA 2008(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
+(61, 'LP-SO2L', 'CM03-SON4L', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(62, 'LP-SO2R', 'CM03-SON4R', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(63, 'LP-SO4', 'CM08-SON2', 'FARO NEBLI.PARACH.HY SONATA 2008(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
 (64, 'LP-TU2', 'CM03-TS2', 'FARO NEBLI.PARACH.HY TUCSON 2003 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (65, 'LP-EO4', 'CM11-EON4', 'FARO NEBLI.PARACH.HY EON 2011-2013 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (66, 'LP-JR2', 'CM-JRF02', 'FARO NEBLI.JAC REFINE(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 41, 1, 1),
 (67, 'LP-JS4', 'CM13-JS02', 'FARO NEBLI.JAC STAR SEDAN 2013 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(68, 'LP-JM2', 'CM02-JB06', 'FARO NEBLI.JINBEI 2002 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(69, 'LP-K27004', 'CM12-BN02', 'FARO NEBLI.KIA K2700 2012-2013(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(68, 'LP-JM2', 'CM02-JB06', 'FARO NEBLI.JINBEI 2002 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(69, 'LP-K27004', 'CM12-BN02', 'FARO NEBLI.KIA K2700 2012-2013(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
 (71, 'LP-CE4', 'CM13-KC2', 'FARO NEBLI.KIA CERATO  2013 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(72, 'LP-CE4B', 'CM17-CR2', 'FARO NEBLI.KIA CERATO 2018(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(73, 'LP-PI2C', 'CM08-PI02', 'FARO NEBLI.KIA PICANTO 2008(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(74, 'LP-PI2', 'CM-9226', 'FARO NEBLI.KIA PICANTO 2008...(SET2)        ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(72, 'LP-CE4B', 'CM17-CR2', 'FARO NEBLI.KIA CERATO 2018(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(73, 'LP-PI2C', 'CM08-PI02', 'FARO NEBLI.KIA PICANTO 2008(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(74, 'LP-PI2', 'CM-9226', 'FARO NEBLI.KIA PICANTO 2008...(SET2)        ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
 (75, 'LP-PI4', 'CM12-PI02', 'FARO NEBLI.KIA PICANTO 2011-2013(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (76, 'LP-PI4C', 'CM14-PI02', 'FARO NEBLI.KIA PICANTO 2014 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (77, 'LP-PI4D', 'CM16-PI2A', 'FARO NEBLI.KIA PICANTO 2016  (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
@@ -9669,95 +11073,95 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (79, 'LP-RI2', 'CM10-KR02', 'FARO NEBLI.KIA RIO 2010 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (80, 'LP-RI4', 'CM11-KR02', 'FARO NEBLI.KIA RIO SEDAN 2011(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (81, 'LP-RI4D', 'CM16-KR4A', 'FARO NEBLI.KIA RIO 2016(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
-(82, 'LP-SG2', 'CM05-SP2', 'FARO NEBLI.KIA SPORTAGE 2005 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(82, 'LP-SG2', 'CM05-SP2', 'FARO NEBLI.KIA SPORTAGE 2005 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (83, 'LP-SG4', 'CM11-SP02', 'FARO NEBLI.KIA SPORTAGE 2011 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (84, 'LP-SG4A', 'CM11-SP2N', 'FARO NEBLI.KIA SPORTAGE 2011 (SETX2)(NEGRO)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (85, 'LP-LI2', 'CM-LF02', 'FARO NEBLI.LIFAN 520 SET X2', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(86, 'LP-LI4', 'CM-LF02B', 'FARO NEBLI.LIFAN 620 SET X 2', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(87, 'LP-MZ4', 'CM-9403', 'FARO NEBLI.PARACH MAZDA CX5 2013-2016(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(88, 'LP-MZ2', 'CM-9101', 'FARO NEBLI.PARACH MAZDA 3 2008(SET2)NEGRO              ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
-(89, 'LP-BT2', 'CM-9289', 'FARO NEBLI.PARACH.MAZDA BT-50 2008(SET2)NEGRO      ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(86, 'LP-LI4', 'CM-LF02B', 'FARO NEBLI.LIFAN 620 SET X 2', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(87, 'LP-MZ4', 'CM-9403', 'FARO NEBLI.PARACH MAZDA CX5 2013-2016(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(88, 'LP-MZ2', 'CM-9101', 'FARO NEBLI.PARACH MAZDA 3 2008(SET2)NEGRO              ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
+(89, 'LP-BT2', 'CM-9289', 'FARO NEBLI.PARACH.MAZDA BT-50 2008(SET2)NEGRO      ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
 (90, 'LP-BT4', 'CM-9295', 'FARO NEBLI.PARACH.MAZDA BT-50 2015 (SET2)CROMO       ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
 (91, 'LP-AM2', 'CM-9483', 'FARO NEBLI.AMAROK-JETTA III-GOLF V 2001-2016(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (92, 'LP-FU2', 'CM86-MF4', 'FARO NEBLI.PARACH.MITSUB.FUSO 1986(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(93, 'LP-RO2', 'CM-MR04', 'FARO NEBLI.PARACH MITSUB.ROSA(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(93, 'LP-RO2', 'CM-MR04', 'FARO NEBLI.PARACH MITSUB.ROSA(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
 (94, 'LP-TR2', 'CM-9236', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2008...(SET2)CROMADO     ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
 (95, 'LP-TR2S', 'CM-9242', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2008 S/TAPA..(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
-(96, 'LP-TR4', 'CM-9417', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2016...(SET2)CROMO     ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 63, 1, 1),
-(97, 'LP-AD2', 'CM00-AD4L', 'FARO NEBLI.NISSAN AD WAGON WINGROAD 1998-2005', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
+(96, 'LP-TR4', 'CM-9417', 'FARO NEBLI.PARACH.MITSUB.TRITON L200 2016...(SET2)CROMO     ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 54, 1, 1),
+(97, 'LP-AD2', 'CM00-AD4L', 'FARO NEBLI.NISSAN AD WAGON WINGROAD 1998-2005', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
 (98, 'LP-FR2', 'CM-9097', 'FARO NEBLI.NISS FRONTIER 01-04(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(99, 'LP-NA2', 'CM-9150', 'FARO NEBLI.NISS.NAVARA 2005/X-TERRA 05-09(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(99, 'LP-NA2', 'CM-9150', 'FARO NEBLI.NISS.NAVARA 2005/X-TERRA 05-09(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (100, 'LP-NA4', 'CM-9406', 'FARO NEBLI.NISS.NAVARA 2009(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(101, 'LP-NA4B', 'CM-9449', 'FARO NEBLI.NISS.NAVARA 2010-2015(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(102, 'LP-UR4', 'CM25-UC5', 'FARO NEBLI.NISS.CARAVAN E25 2005(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(103, 'LP-UR4AL', 'CM26-UC5L', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1),
-(104, 'LP-UR4AR', 'CM26-UC5R', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1),
+(101, 'LP-NA4B', 'CM-9449', 'FARO NEBLI.NISS.NAVARA 2010-2015(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(102, 'LP-UR4', 'CM25-UC5', 'FARO NEBLI.NISS.CARAVAN E25 2005(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(103, 'LP-UR4AL', 'CM26-UC5L', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(104, 'LP-UR4AR', 'CM26-UC5R', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
 (105, 'LP-UR4CL', 'CM26-UC5AL', 'FARO NEBLI.NISS.URVAN NV350 C/LED AZUL 2013', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (106, 'LP-UR4CR', 'CM26-UC5AR', 'FARO NEBLI.NISS.URVAN NV350 C/LED AZUL 2013', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(107, 'LP-AL2', 'CM-9141', 'FARO NEBLI.NISS.ALMERA 2000-2007(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(107, 'LP-AL2', 'CM-9141', 'FARO NEBLI.NISS.ALMERA 2000-2007(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
 (108, 'LP-AL2Q', 'CM-9281', 'FARO NEBLI.NISS.ALMERA 2007-QASHQAI(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
 (109, 'LP-VE4C', 'CM-9304', 'FARO NEBLI.NISS.VERSA 2011-2013(SET2)CROMAD', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
-(110, 'LP-VE4', 'CM-9290', 'FARO NEBLI.NISS.VERSA 2011-2013(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(111, 'LP-VE4K', 'CM-9454', 'FARO NEBLI.NISS.VERSA 2014...(SET2)CROMO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 39, 1, 1),
-(112, 'LP-TI2', 'CM-9381', 'FARO NEBLI.NISS NOTE/MURANO 07-TIIDA/X-TRAIL 2007(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(110, 'LP-VE4', 'CM-9290', 'FARO NEBLI.NISS.VERSA 2011-2013(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
+(111, 'LP-VE4K', 'CM-9454', 'FARO NEBLI.NISS.VERSA 2014...(SET2)CROMO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1),
+(112, 'LP-TI2', 'CM-9381', 'FARO NEBLI.NISS NOTE/MURANO 07-TIIDA/X-TRAIL 2007(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
 (113, 'LP-TI4', 'CM-9565', 'FARO NEBLI.NISS.TIIDA 2008-2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
 (114, 'LP-JU4', 'CM-9456', 'FARO NEBLI.NISS.JUKE 2015(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (115, 'LP-MH2', 'CM-9255', 'FARO NEBLI.NISS.MARCH 2010 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (116, 'LP-NE2', 'CM-9374', 'FARO NEBLI.NISS.NEO 2004 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(117, 'LP-SW2', 'CM4-SW02', 'FARO NEBLI.SUZ.SWIFT SX4 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
+(117, 'LP-SW2', 'CM4-SW02', 'FARO NEBLI.SUZ.SWIFT SX4 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1),
 (118, 'LP-SW4', 'CM-9197', 'FARO NEBLI.SUZ.SWIFT05-10/SX4 06-13/ALTO 09/CELERIO14/(SET2)UNIVERSAL', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
-(120, 'LP-SW4N', 'CM-9310', 'FARO NEBLI.SUZ.SWIFT 2012....(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
-(122, 'LP-AE2', 'CM03-AE02     ', 'FARO NEBLI.SUZ.AERIO 2003 (SET2)               ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
-(123, 'LP-AZ4', 'CM-9262', 'FARO NEBLI.TY AVANZA 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1),
+(120, 'LP-SW4N', 'CM-9310', 'FARO NEBLI.SUZ.SWIFT 2012....(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(122, 'LP-AE2', 'CM03-AE02     ', 'FARO NEBLI.SUZ.AERIO 2003 (SET2)               ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1),
+(123, 'LP-AZ4', 'CM-9262', 'FARO NEBLI.TY AVANZA 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (124, 'LP-DI2L', 'CM99-DN4L', 'FARO NEBLI.TY DINA 1999-2008', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(125, 'LP-DI2T', 'CM99-DN4R', 'FARO NEBLI.TY DINA 1999-2008', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(126, 'LP-CA2', 'CM98-CA4', 'FARO NEBLI.TY CALDINA AVENSIS(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
-(127, 'LP-YS2', 'CM-9225', 'FARO NEBLI.TY YARIS SEDAN 2007...NEGRO (SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 72, 1, 1),
-(128, 'LP-YS2C', 'CM-9235', 'FARO NEBLI.TY YARIS SEDAN 2007...CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
-(129, 'LP-YS4', 'CM-9333', 'FARO NEBLI.TY YARIS SEDAN 2013-2016 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 78, 1, 1),
+(125, 'LP-DI2T', 'CM99-DN4R', 'FARO NEBLI.TY DINA 1999-2008', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(126, 'LP-CA2', 'CM98-CA4', 'FARO NEBLI.TY CALDINA AVENSIS(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(127, 'LP-YS2', 'CM-9225', 'FARO NEBLI.TY YARIS SEDAN 2007...NEGRO (SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 54, 1, 1),
+(128, 'LP-YS2C', 'CM-9235', 'FARO NEBLI.TY YARIS SEDAN 2007...CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(129, 'LP-YS4', 'CM-9333', 'FARO NEBLI.TY YARIS SEDAN 2013-2016 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 58, 1, 1),
 (130, 'LP-YS4C', 'CM-9336', 'FARO NEBLI.TY YARIS SEDAN 2013-2016 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(131, 'LP-YH2', 'CM-9241', 'FARO NEBLI.TY YARIS HASHBACH 2009...NEGRO(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
-(132, 'LP-YH4', 'CM-9352', 'FARO NEBLI.TY.YARIS HASHBACK 2014-2017 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
-(133, 'LP-YP2', 'CM-9107', 'FARO NEBLI.TY.YARIS PLAST(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(131, 'LP-YH2', 'CM-9241', 'FARO NEBLI.TY YARIS HASHBACH 2009...NEGRO(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1),
+(132, 'LP-YH4', 'CM-9352', 'FARO NEBLI.TY.YARIS HASHBACK 2014-2017 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
+(133, 'LP-YP2', 'CM-9107', 'FARO NEBLI.TY.YARIS PLAST(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
 (134, 'LP-AT2D', 'CM-9128', 'FARO NEBLI.TY.ALTIS 2001-2006 DOBLE PUNTA(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1),
 (135, 'LP-AT2', 'CM-9282', 'FARO NEBLI.TY.ALTIS 2001-2006 UNA PUNTA(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
-(136, 'LP-AT2C', 'CM01-TA5', 'FARO NEBLI.TY ALTIS 2001-2006 UNA PUNTA(CHINO)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 62, 1, 1),
+(136, 'LP-AT2C', 'CM01-TA5', 'FARO NEBLI.TY ALTIS 2001-2006 DOBLE PUNTA(CHINO)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 53, 1, 1),
 (137, 'LP-AT2B', 'CM01-TA5C', 'FARO NEBLI.TY ALTIS 2001-2006 UNA PUNTA CRYSTAL CHINO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
 (138, 'LP-AT4C', 'CM-9228', 'FARO NEBLI.TY.ALTIS 2011-2013 CROMADO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
 (139, 'LP-AS2', 'CM-9174', 'FARO NEBLI.TY COROLLA 2001-ASISTA..(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
-(140, 'LP-CO2', 'CM01-TC4', 'FARO NEBLI.TY COROLLA 2001..', 1, 1, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1),
-(141, 'LP-CO4', 'CM-9170', 'FARO NEBLI.TY.COROLLA 2008-2011 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 58, 1, 1),
-(142, 'LP-CO4N', 'CM-9277', 'FARO NEBLI.TY.COROLLA 2011-2013 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1),
-(143, 'LP-CO4D', 'CM-9366', ' FARO NEBLI.TY.COROLLA 2014-2016 C/NEGRO(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
+(140, 'LP-CO2', 'CM01-TC4', 'FARO NEBLI.TY COROLLA 2001..', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
+(141, 'LP-CO4', 'CM-9170', 'FARO NEBLI.TY.COROLLA 2008-2011 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 63, 1, 1),
+(142, 'LP-CO4N', 'CM-9277', 'FARO NEBLI.TY.COROLLA 2011-2013 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1),
+(143, 'LP-CO4D', 'CM-9366', ' FARO NEBLI.TY.COROLLA 2014-2016 C/NEGRO(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
 (144, 'LP-FS2', 'CM-9024', 'FARO NEBLI.TY.FIELDER SEDAN 2004 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (145, 'LP-FS2C', 'CM04-TF4', 'FARO NEBLI.TY.FIELDER 2004 (212-2031-UEH)(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
 (146, 'LP-HX2', 'CM-9129', 'FARO NEBLI.TY HILUX VIGO 04-07(SET 2 )    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(147, 'LP-HX2D', 'CM-9222', 'FARO NEBLI.TY HILUX VIGO 2008-2010 (SETX2)      ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1),
-(148, 'LP-HX4C', 'CM15-HX4', 'FARO NEBLI.TY REVO 2015-AVANZA 2016-YARIS 2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
-(149, 'LP-HX4', 'CM-9430', 'FARO NEBLI.TY.REVO 2015 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 44, 1, 1),
-(150, 'LP-HX4B', 'CM-9430C', 'FARO NEBLI.TY.REVO 2015 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
-(151, 'LP-TH2L', 'CM97-TH6L', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 89, 1, 1),
-(152, 'LP-TH2R', 'CM97-TH6R', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 89, 1, 1),
+(147, 'LP-HX2D', 'CM-9222', 'FARO NEBLI.TY HILUX VIGO 2008-2010 (SETX2)      ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(148, 'LP-HX4C', 'CM15-HX4', 'FARO NEBLI.TY REVO 2015-AVANZA 2016-YARIS 2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
+(149, 'LP-HX4', 'CM-9430', 'FARO NEBLI.TY.REVO 2015 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 38, 1, 1),
+(150, 'LP-HX4B', 'CM-9430C', 'FARO NEBLI.TY.REVO 2015 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(151, 'LP-TH2L', 'CM97-TH6L', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 64, 1, 1),
+(152, 'LP-TH2R', 'CM97-TH6R', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 64, 1, 1),
 (153, 'LP-TH2AL', 'CM04-TH9L', 'FARO NEBLI.TY HIACE 2004-2010', 1, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
 (154, 'LP-TH2AR', 'CM04-TH9R', 'FARO NEBLI.TY HIACE 2004-2010', 1, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
-(155, 'LP-TH4AL', 'CM11-TH7L ', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO CHINO        ', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(156, 'LP-TH4AR', 'CM11-TH7R ', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO CHINO        ', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(155, 'LP-TH4AL', 'CM11-TH7L ', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO CHINO        ', 1, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(156, 'LP-TH4AR', 'CM11-TH7R ', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO CHINO        ', 1, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (157, 'LP-TH4C', 'CM11-TH7-1', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO 9 FOCOS LED CHINO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(158, 'LP-TH4B', 'CM-9315', 'FARO NEBLI.TY.HIACE 2011-2013 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
+(158, 'LP-TH4B', 'CM-9315', 'FARO NEBLI.TY.HIACE 2011-2013 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
 (159, 'LP-TH4E', 'CM11-TH7C', 'FARO NEBLI.TY HIACE 2011-2013 CROMO (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (160, 'LP-TH4D', 'CM11-TH7-2', 'FARO NEBLI.TY HIACE 2011-2013 CROMO 9FOCOS (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(161, 'LP-TH6', 'CM-9415', 'FARO NEBLI.TY HIACE 2014-2015 NEGRO(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
-(162, 'LP-TH6A', 'CM14-TH4', 'FARO NEBLI.TY HIACE 2014-2015 NEGRO(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(163, 'LP-TH6C', 'CM-9415C', 'FARO NEBLI.TY HIACE 2014-2015 CROMO(SET2)   ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
+(161, 'LP-TH6', 'CM-9415', 'FARO NEBLI.TY HIACE 2014-2015 NEGRO(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(162, 'LP-TH6A', 'CM14-TH4', 'FARO NEBLI.TY HIACE 2014-2015 NEGRO(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(163, 'LP-TH6C', 'CM-9415C', 'FARO NEBLI.TY HIACE 2014-2015 CROMO(SET2)   ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
 (164, 'LP-NH2', 'CM96-TN4', 'FARO NEBLI.TY NOAH (SETX2)VIDRIO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (165, 'LP-SU2M', 'CM05-SC6M', 'FARO NEBLI.TY SUCCED MICA (SET X 2)C/BASE', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
-(166, 'LP-SU2VL', 'CM05-SC6L', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(167, 'LP-SU2VR', 'CM05-SC6R', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(166, 'LP-SU2VL', 'CM05-SC6L', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(167, 'LP-SU2VR', 'CM05-SC6R', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
 (168, 'LP-RV2C', 'CM-9431', 'FARO NEBLI.TY RAV4 2008-2012 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (169, 'LP-RV4', 'CM-9488', 'FARO NEBLI.TY RAV4 2013-2015 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
 (170, 'LP-RV6', 'CM-9455', 'FARO NEBLI.TY RAV4 2016-2017 NEGRO...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
 (171, 'LP-WR2', 'CM-WRG2', 'FARO NEBLI.WULING RONGGUANS  (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(172, 'LP-ZT2', 'CM08-ZT2', 'FARO NEBLI.ZOTYE 2008 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(172, 'LP-ZT2', 'CM08-ZT2', 'FARO NEBLI.ZOTYE 2008 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
 (428, 'LP-3004AL', NULL, 'MANIJA EXT PTA.DELANT.KIA TOWNER', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
 (429, 'LP-3004AR', NULL, 'MANIJA EXT PTA DELANT.KIA TOWNER', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
 (430, 'LP-1001G', NULL, 'MANIJA LEVANTULA DAEWOO MATIZ 98-2005 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -9769,113 +11173,113 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (436, 'LP-3301SL', NULL, 'MANIJA EXT.PTA.DELANT DAEWOO NUBIRA 98-04 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (437, 'LP-3301SR', NULL, 'MANIJA EXT.PTA.DELANT DAEWOO NUBIRA 98-04 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
 (438, 'LP-3301SRR', NULL, 'MANIJA EXT.PTA.POST DAEWOO NUBIRA 98-04 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
-(439, 'LP-3103MSFL', NULL, 'MANIJA EXT. PTA DELANT.CHEV.MAGNUS 2003-2006 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 36, 1, 1),
-(440, 'LP-3103MSFR', NULL, 'MANIJA EXT. PTA DELANT.CHEV.MAGNUS 2003-2006 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 36, 1, 1),
-(441, 'LP-3103MSRL', NULL, 'MANIJA EXT. PTA POST.CHEV.MAGNUS 2003-2006 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 85, 1, 1),
-(442, 'LP-3103MSRR', NULL, 'MANIJA EXT. PTA POST.CHEV.MAGNUS 2003-2006 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 85, 1, 1),
-(443, 'LP-2000AL', NULL, 'MANIJA INTERIOR  CHEVROLET SPARK 2005        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
-(444, 'LP-2000AR', NULL, 'MANIJA INTERIOR CHEVROLET SPARK 2005        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
+(439, 'LP-3103MSFL', NULL, 'MANIJA EXT. PTA DELANT.CHEV.MAGNUS 2003-2006 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
+(440, 'LP-3103MSFR', NULL, 'MANIJA EXT. PTA DELANT.CHEV.MAGNUS 2003-2006 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
+(441, 'LP-3103MSRL', NULL, 'MANIJA EXT. PTA POST.CHEV.MAGNUS 2003-2006 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 73, 1, 1),
+(442, 'LP-3103MSRR', NULL, 'MANIJA EXT. PTA POST.CHEV.MAGNUS 2003-2006 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 73, 1, 1),
+(443, 'LP-2000AL', NULL, 'MANIJA INTERIOR  CHEVROLET SPARK 2005        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
+(444, 'LP-2000AR', NULL, 'MANIJA INTERIOR CHEVROLET SPARK 2005        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 62, 1, 1),
 (445, 'LP-3000AL', NULL, 'MANIJA EXT.PTA DELANT CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (446, 'LP-3000AR', NULL, 'MANIJA EXT.PTA DELANT CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(447, 'LP-3000APL', NULL, 'MANIJA EXT.PTA POST CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1),
-(448, 'LP-3000APR', NULL, 'MANIJA EXT.PTA POST CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
-(449, 'LP-2001GL', '', 'MANIJA  INTERIOR HYUNDAI EXCEL 91-94 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1),
+(447, 'LP-3000APL', NULL, 'MANIJA EXT.PTA POST CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(448, 'LP-3000APR', NULL, 'MANIJA EXT.PTA POST CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(449, 'LP-2001GL', '', 'MANIJA  INTERIOR HYUNDAI EXCEL 91-94 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
 (450, 'LP-2001GR', '', 'MANIJA  INTERIOR HYUNDAI EXCEL 91-94 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1),
-(451, 'LP-3001AFL', '', 'MANIJA.EXT PTA.DELANT HYUNDAI EXCEL 90-94 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -2, 1, 1),
-(452, 'LP-3001AFR', '', 'MANIJA.EXT PTA.DELANT HYUNDAI EXCEL 90-94 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(451, 'LP-3001AFL', '', 'MANIJA.EXT PTA.DELANT HYUNDAI EXCEL 90-94 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(452, 'LP-3001AFR', '', 'MANIJA.EXT PTA.DELANT HYUNDAI EXCEL 90-94 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -1, 1, 1),
 (453, 'LP-3001ARL', '', 'MANIJA.EXT PTA.POST HYUNDAI EXCEL 90-94  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -1, 1, 1),
-(454, 'LP-3001ARR', '', 'MANIJA.EXT PTA.POST HYUNDAI EXCEL 90-94  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -2, 1, 1),
+(454, 'LP-3001ARR', '', 'MANIJA.EXT PTA.POST HYUNDAI EXCEL 90-94  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
 (455, 'LP-2110 L           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI I10 2008.....                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (456, 'LP-2110 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI I10 2008....                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (457, 'LP-3110 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI I10 2008-2013                        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (458, 'LP-3110 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI I10 2008-2013                        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
-(459, 'LP-3232 L           ', '', 'MANIJA EXT.PTA.DELANTERO HYUNDAI ACCENT 1998-2000                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 49, 1, 1),
-(460, 'LP-3232 R           ', '', 'MANIJA EXT.PTA.DELANTERO HYUNDAI ACCENT 1998-2000                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 50, 1, 1),
-(461, 'LP-2323AL          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 00-06 NEGRO              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(459, 'LP-3232 L           ', '', 'MANIJA EXT.PTA.DELANTERO HYUNDAI ACCENT 1998-2000                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(460, 'LP-3232 R           ', '', 'MANIJA EXT.PTA.DELANTERO HYUNDAI ACCENT 1998-2000                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
+(461, 'LP-2323AL          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 00-06 NEGRO              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
 (462, 'LP-2323AR          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 00-06 NEGRO              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(463, 'LP-2235AL', NULL, 'MANIJA INT.PTA DELANT.HYUNDAI ACCENT 2006-2011 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1),
-(464, 'LP-2235AR', NULL, 'MANIJA INT.PTA DELANT.HYUNDAI ACCENT 2006-2011 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1),
+(463, 'LP-2235AL', NULL, 'MANIJA INT.PTA DELANT.HYUNDAI ACCENT 2006-2011 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1),
+(464, 'LP-2235AR', NULL, 'MANIJA INT.PTA DELANT.HYUNDAI ACCENT 2006-2011 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (465, 'LP-2235EL          ', NULL, 'MANIJA INT.PTA DELANT.HYUNDAI ACCENT 2006-2011BEIS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (466, 'LP-2235ER          ', NULL, 'MANIJA INT.PTA DELANT.HYUNDAI ACCENT 2006-2011BEIS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(467, 'LP-2235ARL', NULL, 'MANIJA INT.PTA POST.HYUNDAI ACCENT 2006-2011 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1),
-(468, 'LP-2235ARR', NULL, 'MANIJA INT.PTA POST.HYUNDAI ACCENT 2006-2011 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1),
+(467, 'LP-2235ARL', NULL, 'MANIJA INT.PTA POST.HYUNDAI ACCENT 2006-2011 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1),
+(468, 'LP-2235ARR', NULL, 'MANIJA INT.PTA POST.HYUNDAI ACCENT 2006-2011 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
 (469, 'LP-2237RFL', NULL, 'MANIJA INT.PTA DELANT.HY ACCENT 2012 PLATEADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (470, 'LP-2237RFR', NULL, 'MANIJA INT.PTA DELANT.HY ACCENT 2012 PLATEADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (471, 'LP-2237RRL', NULL, 'MANIJA INT.PTA POST.HY ACCENT 2012 PLATEADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (472, 'LP-2237RRR', NULL, 'MANIJA INT.PTA POST.HY ACCENT 2012 PLATEADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
-(473, 'LP-25010L          ', NULL, 'MANIJA INT.ABRE PTA.POSTERIOR HYUNDAI SANTA FE 01-06                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
-(474, 'LP-25010R          ', NULL, 'MANIJA INT.ABRE PTA.POSTERIOR HYUNDAI SANTA FE 01-06                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(473, 'LP-25010L          ', NULL, 'MANIJA INT.ABRE PTA.POSTERIOR HYUNDAI SANTA FE 01-06                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(474, 'LP-25010R          ', NULL, 'MANIJA INT.ABRE PTA.POSTERIOR HYUNDAI SANTA FE 01-06                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
 (475, 'LP-2501GL          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI SANTA FE 01-06                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (476, 'LP-2501GR          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI SANTA FE 01-06                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(477, 'LP-3501L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
-(478, 'LP-3501R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
-(479, 'LP-35011L          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
-(480, 'LP-35011R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(477, 'LP-3501L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
+(478, 'LP-3501R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
+(479, 'LP-35011L          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(480, 'LP-35011R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (481, 'LP-2509 L           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI SANTA FE 07-10.                 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (482, 'LP-2509 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI SANTE FE 07-10                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (483, 'LP-2503 L           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI TUCSON 05-09GR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (484, 'LP-2503 R           ', '', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI TUCSON 05-09GR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (485, 'LP-35031R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI TUCSON 2005-2008                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(486, 'LP-2305AL', '', 'MANIJA INT.HY.SONATA 2003-2005(NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1),
-(487, 'LP-2305AR', '', 'MANIJA INT.HY.SONATA 2003-2005(NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 98, 1, 1),
+(486, 'LP-2305AL', '', 'MANIJA INT.HY.SONATA 2003-2005(NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1),
+(487, 'LP-2305AR', '', 'MANIJA INT.HY.SONATA 2003-2005(NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 76, 1, 1),
 (488, 'LP-3305 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SONATA 2002-2005                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (489, 'LP-3305 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SONATA 2002-2005                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (490, 'LP-33051L          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI SONATA 2002-2005                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
-(491, 'LP-33051R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI SONATA 2002-2005                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(491, 'LP-33051R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI SONATA 2002-2005                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
 (492, 'LP-3307MPL         ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SONATA 06-10                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (493, 'LP-3307MPR         ', NULL, 'MANIJA EXT.PTA DELANTERO HYUNDAI SONATA 06-10                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (494, 'LP-23070PL         ', NULL, 'MANIJA INT.ABRE PTA.POSTERIOR HYUNDAI SONATA 06-10                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (495, 'LP-23070PR         ', NULL, 'MANIJA INT.ABRE PTA.POSTERIOR HYUNDAI SONATA 06-10                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (496, 'LP-2307PL          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI SONATA 06-10                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (497, 'LP-2307PR          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI SONATA 06-10                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(498, 'LP-2512AL', '', 'MANIJA INT.HY.PORTER 2005', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
-(499, 'LP-2512AR', '', 'MANIJA INT.HY.PORTER 2005', 2, 2, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1),
+(498, 'LP-2512AL', '', 'MANIJA INT.HY.PORTER 2005', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(499, 'LP-2512AR', '', 'MANIJA INT.HY.PORTER 2005', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
 (500, 'LP-3228AFL', NULL, 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (501, 'LP-3228AFR', NULL, 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (502, 'LP-3511 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI PORTER 98-03                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
-(503, 'LP-3511 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI PORTER 98-03                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 31, 1, 1),
-(504, 'LP-3512 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI PORTER 2006                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(505, 'LP-3512 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI PORTER 2006                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(506, 'LP-2513AL', '', 'MANIJA INT.HY STAREX 98-04', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
-(507, 'LP-2513AR', '', 'MANIJA INT.HY STAREX 98-04', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
+(503, 'LP-3511 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI PORTER 98-03                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
+(504, 'LP-3512 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI PORTER 2006                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(505, 'LP-3512 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI PORTER 2006                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(506, 'LP-2513AL', '', 'MANIJA INT.HY STAREX 98-04', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1),
+(507, 'LP-2513AR', '', 'MANIJA INT.HY STAREX 98-04', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
 (508, 'LP-3513SMR      ', NULL, 'MANIJA EXT.PTA.CORREDIZA HYUNDAI STAREX H1 1995-2006                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (509, 'LP-2515 L           ', '', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI STAREX H1 2007....              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (510, 'LP-2515 R           ', '', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI STAREX H1 2007...               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(511, 'LP-3515PR          ', '', 'MANIJA EXT.PTA.DELANTERO HYUNDAI STAREX H1 2007...                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(512, 'LP-3514SMR', NULL, 'MANIJA EXT.PTA.CORREDIZA HYUNDAI H-1 STAREX 05-07 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(513, 'LP-2515A1M', NULL, 'MANIJA INTERIOR PTA CORREDIZA HYUNDAI H1 2007-2012', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
+(511, 'LP-3515PR          ', '', 'MANIJA EXT.PTA.DELANTERO HYUNDAI STAREX H1 2007...                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
+(512, 'LP-3514SMR', NULL, 'MANIJA EXT.PTA.CORREDIZA HYUNDAI H-1 STAREX 05-07 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
+(513, 'LP-2515A1M', NULL, 'MANIJA INTERIOR PTA CORREDIZA HYUNDAI H1 2007-2012', 2, 2, 1, 0, 1, 1, 0, 0, 0, 38, 1, 1),
 (514, 'LP-2611GL', NULL, 'MANIJA INT.HY.MATRIX-LAVITA 01-10 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (515, 'LP-2611GR', NULL, 'MANIJA INT.HY.MATRIX-LAVITA 01-10 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(516, 'LP-3234SFL', NULL, 'MANIJA.EXT.PTA DELANT HYUNDAI ACCENT-VERNA 00-06', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(517, 'LP-3234SFR', NULL, 'MANIJA.EXT.PTA DELANT HYUNDAI ACCENT-VERNA 00-06', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(516, 'LP-3234SFL', NULL, 'MANIJA.EXT.PTA DELANT HYUNDAI ACCENT-VERNA 00-06', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
+(517, 'LP-3234SFR', NULL, 'MANIJA.EXT.PTA DELANT HYUNDAI ACCENT-VERNA 00-06', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (518, 'LP-3234SRL', NULL, 'MANIJA.EXT.PTA POST HYUNDAI ACCENT-VERNA 00-06', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (519, 'LP-3234SRR', NULL, 'MANIJA.EXT.PTA POST HYUNDAI ACCENT-VERNA 00-06', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(520, 'LP-3236AFR', '', 'MANIJA EXT.PTA.DELANT HYUNDAI ACCENT 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
-(521, 'LP-3236ARL', '', 'MANIJA EXT.PTA POST.HYUNDAI ACCENT 2006/2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
-(522, 'LP-3236ARR', '', 'MANIJA EXT.PTA POST.HYUNDAI ACCENT 2006/2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
+(520, 'LP-3236AFR', '', 'MANIJA EXT.PTA.DELANT HYUNDAI ACCENT 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 54, 1, 1),
+(521, 'LP-3236ARL', '', 'MANIJA EXT.PTA POST.HYUNDAI ACCENT 2006/2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(522, 'LP-3236ARR', '', 'MANIJA EXT.PTA POST.HYUNDAI ACCENT 2006/2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
 (523, 'LP-3237PFLK', '', 'MANIJA EXT.PTA.POST.HY.ACCENT 2012-C ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 42, 1, 1),
-(524, 'LP-3237PFRK', '', 'MANIJA EXT. PTA. POST. HY. ACCENT 2012-C ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 113, 1, 1),
-(525, 'LP-2004AFL', '', 'MANIJA INT.PTA DELANT.KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
-(526, 'LP-2004AFR', '', 'MANIJA INT.PTA DELANT.KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(527, 'LP-2004ARR', '', 'MANIJA INT.PTA POST KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(524, 'LP-3237PFRK', '', 'MANIJA EXT. PTA. POST. HY. ACCENT 2012-C ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 104, 1, 1),
+(525, 'LP-2004AFL', '', 'MANIJA INT.PTA DELANT.KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1),
+(526, 'LP-2004AFR', '', 'MANIJA INT.PTA DELANT.KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(527, 'LP-2004ARR', '', 'MANIJA INT.PTA POST KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (528, 'LP-2009GFL', '', 'MANIJA INT.PTA DELANT KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
 (529, 'LP-2009GRL', '', 'MANIJA INT.PTA POST.KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(530, 'LP-2009GRR', '', 'MANIJA INT.PTA POST.KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(530, 'LP-2009GRR', '', 'MANIJA INT.PTA POST.KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (531, 'LP-3009PFL', NULL, 'MANIJA EXT.PTA DELANT.KIA RIO 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (532, 'LP-3009PFR', NULL, 'MANIJA EXT.PTA DELANT.KIA RIO 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (533, 'LP-3009PRL', NULL, 'MANIJA EXT.PTA POST KIA RIO 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (534, 'LP-3009PRR', NULL, 'MANIJA EXT.PTA POST KIA RIO 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(535, 'LP-3950PRL', NULL, 'MANIJA EXT.PTA POSTERIOR KIA BONGO , K-2700', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(536, 'LP-3950PRR', NULL, 'MANIJA EXT.PTA POSTERIOR KIA BONGO , K-2700', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(535, 'LP-3950PRL', NULL, 'MANIJA EXT.PTA POSTERIOR KIA BONGO , K-2700', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(536, 'LP-3950PRR', NULL, 'MANIJA EXT.PTA POSTERIOR KIA BONGO , K-2700', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
 (537, 'LP-2225E2LH', NULL, 'CUBIERTA DE MANIJA INT.MITSUB.GALANT 99-03 BEIGE', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (538, 'LP-2225E2RH', NULL, 'CUBIERTA DE MANIJA INT.MITSUB.GALANT 99-03 BEIGE', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (539, 'LP-3230MFL', NULL, 'MANIJA EXT.PTA DELANT MITSUB.LANCER MIRAGE 97-02 CROMO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
 (540, 'LP-3230MRL', NULL, 'MANIJA EXT.PTA POST MITSUB.LANCER MIRAGE 97-02  CROMO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (541, 'LP-3230MRR', NULL, 'MANIJA EXT.PTA POST MITSUB.LANCER MIRAGE 97-02  CROMO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
-(542, 'LP-3230SFL', NULL, 'MANIJA EXT.PTA DELANT.MITSUB.LANCER MIRAGE 97-02', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
-(543, 'LP-3230SFR', NULL, 'MANIJA EXT.PTA DELANT.MITSUB.LANCER MIRAGE 97-02', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
-(544, 'LP-3230SRL', NULL, 'MANIJA EXT.PTA POST MITSUB.LANCER MIRAGE 97-02 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
-(545, 'LP-3230SRR', NULL, 'MANIJA EXT.PTA POST MITSUB.LANCER MIRAGE 97-02 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -2, 1, 1),
+(542, 'LP-3230SFL', NULL, 'MANIJA EXT.PTA DELANT.MITSUB.LANCER MIRAGE 97-02', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(543, 'LP-3230SFR', NULL, 'MANIJA EXT.PTA DELANT.MITSUB.LANCER MIRAGE 97-02', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(544, 'LP-3230SRL', NULL, 'MANIJA EXT.PTA POST MITSUB.LANCER MIRAGE 97-02 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(545, 'LP-3230SRR', NULL, 'MANIJA EXT.PTA POST MITSUB.LANCER MIRAGE 97-02 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (546, 'LP-2250ML          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO MITSUB.LANCER 2002-2007                 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (547, 'LP-2250MR          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO MITSUB.LANCER 2002-2007                 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (548, 'LP-2252AL          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO MITSUB.LANCER 2008..(NEGRO)             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
@@ -9903,16 +11307,16 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (570, 'LP-2570B2R         ', NULL, 'CUBIERTA DE MANIJA MITSUBISHI STRADA L200.MONTE.96-06 MARRON          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (571, 'LP-2570G2L         ', NULL, 'CUBIERTA DE MANIJA MITSUBISHI STRADAL200 MONTE.96-06 GRIS             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (572, 'LP-2570G2R         ', NULL, 'CUBIERTA DE MANIJA MITSUBISHI STRADAL200 MONTE.96-06 GRIS             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(573, 'LP-3195 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO MITSUBISHI TRITON L200 2005..                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(574, 'LP-3195 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO MITSUBISHI TRITON L200 2005...               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(573, 'LP-3195 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO MITSUBISHI TRITON L200 2005..                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(574, 'LP-3195 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO MITSUBISHI TRITON L200 2005...               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
 (575, 'LP-3195CRL         ', '', 'MANIJA EXT.PTA.DELANTERO MITSUBISHI TRITON L200 05(CROMO)             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1),
 (576, 'LP-3195CRR         ', '', 'MANIJA EXT.PTA.DELANTERO MITSUBISHI TRITON L200 05(CROMO)             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
 (577, 'LP-31951 L          ', NULL, 'MANIJA EXT.PTA.POSTERIOR MITSUBISHI TRITON L200 2005...               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (578, 'LP-31951 R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR MITSUBISHI TRITON L200 2005...               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (579, 'LP-31951CRL        ', NULL, 'MANIJA EXT.PTA.POSTERIOR MITSUBISHI TRITON L200 05.(CROMO)            ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (580, 'LP-31951CRR        ', NULL, 'MANIJA EXT.PTA.POSTERIOR MITSUBISHI TRITON L200 05 (CROMO)            ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(581, 'LP-3195STG           ', NULL, 'MANIJA DE COMPUERTA POST.MITSUB.TRITON L200 2005...NEGRO          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(582, 'LP-31952CR          ', NULL, 'MANIJA DE COMPUERTA POST.MITSUBISHI TRITON L200 2005 CROMADO          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(581, 'LP-3195STG           ', NULL, 'MANIJA DE COMPUERTA POST.MITSUB.TRITON L200 2005...NEGRO          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(582, 'LP-31952CR          ', NULL, 'MANIJA DE COMPUERTA POST.MITSUBISHI TRITON L200 2005 CROMADO          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (583, 'LP-1104             ', NULL, 'MANIJA INT.LEVANTA LUNA NISSAN SUNNY B11 1982-1986 GRIS CLARO         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (584, 'LP-1152A', NULL, 'MANIJA LEVANTALUNA NISSAN FRONTIER 2005-2015', 2, 2, 1, 0, 1, 1, 0, 0, 0, 80, 1, 1),
 (585, 'LP-2911MGLH', NULL, 'MANIJA INT.NISSAN NAVARA D23 2015-GRIS C/CROMO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
@@ -9923,18 +11327,18 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (590, 'LP-3113 R           ', NULL, 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN SUNNY B12 87-90 NEGRO             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (591, 'LP-3113MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO Y POSTERIOR NISSAN B12 87-90 CROMO           ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (592, 'LP-3113MAR         ', NULL, 'MANIJA EXT.PTA.DELANTERO Y POSTERIOR NISSAN B12 87-90 CROMO           ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(593, 'LP-3144ALH', NULL, 'MANIJA EXT.NISSAN SUNNY SENTRA B13', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(594, 'LP-3144ARH', NULL, 'MANIJA EXT.NISSAN SUNNY SENTRA B13', 2, 2, 1, 0, 1, 1, 0, 0, 0, 65, 1, 1),
+(593, 'LP-3144ALH', NULL, 'MANIJA EXT.NISSAN SUNNY SENTRA B13', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
+(594, 'LP-3144ARH', NULL, 'MANIJA EXT.NISSAN SUNNY SENTRA B13', 2, 2, 1, 0, 1, 1, 0, 0, 0, 61, 1, 1),
 (595, 'LP-2542A L          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO NISSAN SENTRA B13 TSURU 92-13           ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (596, 'LP-2542A R          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO NISSAN SENTRA B13 TSURU 92-13           ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (597, 'LP-2541G L          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO NISSAN B14 ALMERA N15 95-99 GRIS        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (598, 'LP-2541G R          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO NISSAN B14 ALMERA N15 95-99 GRIS        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(599, 'LP-3174A L          ', NULL, 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN SENTRA B14 95-99                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 37, 1, 1),
-(600, 'LP-3174A R          ', NULL, 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN SENTRA B14 95-99                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 37, 1, 1),
+(599, 'LP-3174A L          ', NULL, 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN SENTRA B14 95-99                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1),
+(600, 'LP-3174A R          ', NULL, 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN SENTRA B14 95-99                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1),
 (601, 'LP-3233 L           ', NULL, 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN AD WAGON 1994-1997                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (602, 'LP-3233 R           ', NULL, 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN AD WAGON 1994-1997            ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(603, 'LP-3152AFL', '', 'MANIJA EXT.NISSAN FRONTIER 97-2004 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 37, 1, 1),
-(604, 'LP-3152AFR', '', 'MANIJA EXT.NISSAN FRONTIER 97-2004 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
+(603, 'LP-3152AFL', '', 'MANIJA EXT.NISSAN FRONTIER 97-2004 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
+(604, 'LP-3152AFR', '', 'MANIJA EXT.NISSAN FRONTIER 97-2004 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
 (605, 'LP-2544 L           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO NISSAN FRONTIER 98-02 GRIS              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (606, 'LP-2544 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO NISSAN FRONTIER 98-02 GRIS              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (607, 'LP-2905ML          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO NISSAN FRONTIER 05-09                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
@@ -9943,114 +11347,114 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (610, 'LP-3801L           ', NULL, 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN PATHFINDER TERRA.05..             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (611, 'LP-3801R           ', NULL, 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN PATHFINDER TERRA.05...            ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (612, 'LP-1002A', NULL, 'MANIJA LEVANTALUNA RENAULT LOGAN 2004-2012(NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(613, 'LP-2505A L          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO RENAULT MASTER 1997-2006                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(614, 'LP-2505A R          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO RENAULT MASTER 1997-2006                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(615, 'LP-3235SLH', NULL, 'MANIJA EXT.SUZUKI ALTO 2009.2014 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 120, 1, 1),
-(616, 'LP-3235SRH', '', 'MANIJA EXT.SUZUKI ALTO 2009.2014 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1),
-(617, 'LP-3700AFL', NULL, 'MANIJA EXT.PTA DELANT.MAZDA SCRUM WAGON 2004-2013', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(618, 'LP-3700AFR', NULL, 'MANIJA EXT.PTA DELANT.MAZDA SCRUM WAGON 2004-2013', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(619, 'LP-3700ARL', NULL, 'MANIJA EXT.PTA POST.MAZDA SCRUM WAGON 2004-2013', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(620, 'LP-3700ARR', NULL, 'MANIJA EXT.PTA POST.MAZDA SCRUM WAGON 2004-2013', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(621, 'LP-1002G', '', 'MANIJA LEVANTALUNA TOYOTA VIGO 05 / HIACE 5L GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 179, 1, 1),
-(622, 'LP-2003PBLH', NULL, 'MANIJA INT.TY EHO-00-005(YARIS/VTZ 99-05)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
+(613, 'LP-2505A L          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO RENAULT MASTER 1997-2006                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
+(614, 'LP-2505A R          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO RENAULT MASTER 1997-2006                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
+(615, 'LP-3235SLH', NULL, 'MANIJA EXT.SUZUKI ALTO 2009.2014 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 52, 1, 1),
+(616, 'LP-3235SRH', '', 'MANIJA EXT.SUZUKI ALTO 2009.2014 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, -3, 1, 1),
+(617, 'LP-3700AFL', NULL, 'MANIJA EXT.PTA DELANT.MAZDA SCRUM WAGON 2004-2013', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(618, 'LP-3700AFR', NULL, 'MANIJA EXT.PTA DELANT.MAZDA SCRUM WAGON 2004-2013', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(619, 'LP-3700ARL', NULL, 'MANIJA EXT.PTA POST.MAZDA SCRUM WAGON 2004-2013', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(620, 'LP-3700ARR', NULL, 'MANIJA EXT.PTA POST.MAZDA SCRUM WAGON 2004-2013', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(621, 'LP-1002G', '', 'MANIJA LEVANTALUNA TOYOTA VIGO 05 / HIACE 5L GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 165, 1, 1),
+(622, 'LP-2003PBLH', NULL, 'MANIJA INT.TY EHO-00-005(YARIS/VTZ 99-05)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (623, 'LP-2003PBRH', NULL, 'MANIJA INT.TY EHO-00-005(YARIS/VTZ 99-05)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
-(624, 'LP-1021A', NULL, 'MANIJA LEVANTALUNA TY HILUX VIGO 05-YARIS 2007-2012 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 55, 1, 1),
-(625, 'LP-2108ALH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
-(626, 'LP-2108ARH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
-(627, 'LP-2501ALH', NULL, 'MANIJA INT TOYOTA COROLLA 88-91 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
-(628, 'LP-2501ARH', NULL, 'MANIJA INT TOYOTA COROLLA 88-91 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1),
+(624, 'LP-1021A', NULL, 'MANIJA LEVANTALUNA TY HILUX VIGO 05-YARIS 2007-2012 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(625, 'LP-2108ALH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(626, 'LP-2108ARH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(627, 'LP-2501ALH', NULL, 'MANIJA INT TOYOTA COROLLA 88-91 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -8, 1, 1),
+(628, 'LP-2501ARH', NULL, 'MANIJA INT TOYOTA COROLLA 88-91 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -3, 1, 1),
 (629, 'LP-1001 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
 (630, 'LP-1001 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
 (631, 'LP-10010 L          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1),
 (632, 'LP-10010 R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1),
-(633, 'LP-2522GLH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1756, 1, 1),
-(634, 'LP-2522GRH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3561, 1, 1),
-(635, 'LP-3149AFL', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE100,101 92-01              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 69, 1, 1),
-(636, 'LP-3149AFR', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE100,101 92-01              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 80, 1, 1),
-(637, 'LP-3149ARL', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE100,101 92-01               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1),
-(638, 'LP-3149ARR', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE100,101 92-01               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 39, 1, 1),
-(639, 'LP-3197AR          ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE110 96-01                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 43, 1, 1),
+(633, 'LP-2522GLH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1372, 1, 1),
+(634, 'LP-2522GRH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3135, 1, 1),
+(635, 'LP-3149AFL', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE100,101 92-01              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
+(636, 'LP-3149AFR', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE100,101 92-01              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
+(637, 'LP-3149ARL', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE100,101 92-01               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(638, 'LP-3149ARR', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE100,101 92-01               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(639, 'LP-3197AR          ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE110 96-01                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 38, 1, 1),
 (640, 'LP-2222L           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO TOYOTA COROLLA 09-13 GRIS         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
 (641, 'LP-2222R           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO TOYOTA COROLLA 09-13 GRIS         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(642, 'LP-2545GLH', NULL, 'MANIJA INT TOYOTA TOYOTA TERCEL 91-99/HILUX 89-98', 2, 2, 1, 0, 1, 1, 0, 0, 0, 65, 1, 1),
-(643, 'LP-2545GRH', NULL, 'MANIJA INT TOYOTA TOYOTA TERCEL 91-99/HILUX 89-98', 2, 2, 1, 0, 1, 1, 0, 0, 0, 80, 1, 1),
-(644, 'LP-31800SL         ', NULL, 'MANIJA EXT.PTA.DELANT.TOYOTA H.VIGO,ALTIS YARIS,CAMRY 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(645, 'LP-31800SR         ', NULL, 'MANIJA EXT.PTA.DELANT.TOYOTA H.VIGO,ALTIS YARIS,CAMRY 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(646, 'LP-3180MFL', NULL, 'MANIJA EXT.PTA.DELANT TOYOTA CAMRY,VIGO,YARIS 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 63, 1, 1),
-(647, 'LP-3180MFRK', '', 'MANIJA EXT.PTA.DELANTERO TOYOTA CAMRY,VIGO,YARIS 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 63, 1, 1),
-(648, 'LP-2567 L           ', NULL, 'MANIJA INT.ABRE PTA.DELANT.TOY.HIACE-HILUX VIGO 2005.....             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 91, 1, 1),
-(649, 'LP-2567 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANT.TOY.HIACE-HILUX VIGO 2005.....             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 109, 1, 1),
+(642, 'LP-2545GLH', NULL, 'MANIJA INT TOYOTA TOYOTA TERCEL 91-99/HILUX 89-98', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
+(643, 'LP-2545GRH', NULL, 'MANIJA INT TOYOTA TOYOTA TERCEL 91-99/HILUX 89-98', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
+(644, 'LP-31800SL         ', NULL, 'MANIJA EXT.PTA.DELANT.TOYOTA H.VIGO,ALTIS YARIS,CAMRY 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(645, 'LP-31800SR         ', NULL, 'MANIJA EXT.PTA.DELANT.TOYOTA H.VIGO,ALTIS YARIS,CAMRY 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(646, 'LP-3180MFL', '', 'MANIJA EXT.PTA.DELANT TOYOTA CAMRY,VIGO,YARIS 06-12 (L = R)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 74, 1, 1),
+(647, 'LP-3180MFRK', '', 'MANIJA EXT.PTA.DELANTERO TOYOTA CAMRY,VIGO,YARIS 06-12 (L = R)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 74, 1, 1),
+(648, 'LP-2567 L           ', NULL, 'MANIJA INT.ABRE PTA.DELANT.TOY.HIACE-HILUX VIGO 2005.....             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 71, 1, 1),
+(649, 'LP-2567 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANT.TOY.HIACE-HILUX VIGO 2005.....             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 89, 1, 1),
 (650, 'LP-3033 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN50,55 84-88                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (651, 'LP-3033 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN50,55 84-88                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
-(652, 'LP-3105 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
-(653, 'LP-31050L         ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(652, 'LP-3105 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
+(653, 'LP-31050L         ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
 (654, 'LP-31070MAL        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
 (655, 'LP-31070MAR        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(656, 'LP-3107MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1),
-(657, 'LP-3107MAR         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1),
-(658, 'LP-3190ATG', NULL, 'MANIJA DE COMPUERTA POSTERIOR TOYOTA HILUX RN50,RN55 84-88            ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 85, 1, 1),
+(656, 'LP-3107MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(657, 'LP-3107MAR         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1),
+(658, 'LP-3190ATG', NULL, 'MANIJA DE COMPUERTA POSTERIOR TOYOTA HILUX RN50,RN55 84-88            ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 87, 1, 1),
 (659, 'LP-31620MAL        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN95 98-04 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (660, 'LP-3162MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN95 98-04 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (661, 'LP-3162MAR         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN95 98-04 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1),
 (662, 'LP-3239R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA TERCELL 1991-1994                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(663, 'LP-32390R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA TERCELL 1991-1994                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(664, 'LP-3184AFL', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 204, 1, 1),
-(665, 'LP-3184AFR', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 233, 1, 1),
-(666, 'LP-3184ARL', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 278, 1, 1),
-(667, 'LP-3184ARR', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 228, 1, 1),
-(668, 'LP-3215TG    ', NULL, 'REGLA DE COMPUERTA POSTERIOR TY HIACE COMMUTER 91-01                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
+(663, 'LP-32390R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA TERCELL 1991-1994                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
+(664, 'LP-3184AFL', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 136, 1, 1),
+(665, 'LP-3184AFR', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 217, 1, 1),
+(666, 'LP-3184ARL', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 245, 1, 1),
+(667, 'LP-3184ARR', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 147, 1, 1),
+(668, 'LP-3215TG    ', NULL, 'REGLA DE COMPUERTA POSTERIOR TY HIACE COMMUTER 91-01                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
 (669, 'LP-3217ATL', NULL, 'MANIJA DE LA REGLA DE COMPUERTA POST.TY HIACE 2005...   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 68, 1, 1),
 (670, 'LP-32171 L          ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005..                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(671, 'LP-3217MMR', NULL, 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005.(R=L) CROMO                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 54, 1, 1),
+(671, 'LP-3217MMR', NULL, 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005.(R=L) CROMO                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 51, 1, 1),
 (672, 'LP-7217FL', NULL, 'CERRADURA DE PTA DELANT.TY HIACE H200 05-C', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(673, 'LP-7217FR', NULL, 'CERRADURA DE PTA DELANT.TY HIACE H200 05-C', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(674, 'LP-3116TL           ', NULL, 'MANIJA DE LA REGLA DE COMPUERTA POSTERIOR TOYOTA HIACE 1984-1989      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1);
+(673, 'LP-7217FR', NULL, 'CERRADURA DE PTA DELANT.TY HIACE H200 05-C', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1);
 INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_prod`, `umed_prod`, `contenido_prod`, `exctoigv_prod`, `compra_prod`, `venta_prod`, `stockini_prod`, `stockmax_prod`, `stockmin_prod`, `stock_prod`, `status_prod`, `sucursal_prod`) VALUES
+(674, 'LP-3116TL           ', NULL, 'MANIJA DE LA REGLA DE COMPUERTA POSTERIOR TOYOTA HIACE 1984-1989      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (675, 'LP-B217A', NULL, 'SEGURO DE VENTANA TOY HIACE 2005', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(676, 'LP-31120L          ', '', 'MANIJA EXT.PTA.DELANTERO TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1),
-(677, 'LP-31120R          ', '', 'MANIJA EXT.PTA.DELANTERO TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 37, 1, 1),
-(678, 'LP-31121L          ', '', 'MANIJA EXT.PTA.POSTERIOR TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
-(679, 'LP-31121R          ', '', 'MANIJA EXT.PTA.POSTERIOR TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
+(676, 'LP-31120L          ', '', 'MANIJA EXT.PTA.DELANTERO TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
+(677, 'LP-31120R          ', '', 'MANIJA EXT.PTA.DELANTERO TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1),
+(678, 'LP-31121L          ', '', 'MANIJA EXT.PTA.POSTERIOR TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
+(679, 'LP-31121R          ', '', 'MANIJA EXT.PTA.POSTERIOR TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
 (680, 'LP-2576ELH', NULL, 'MANIJA INT.PTA DELANT.TOYOTA HIACE 90-94 BEIGE', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (681, 'LP-2576ERH', NULL, 'MANIJA INT.PTA DELANT.TOYOTA HIACE 90-94 BEIGE', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(682, 'LP-2222LMLH', NULL, 'MANIJA INT.TOYOTA COROLLA  2009-2013 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(683, 'LP-2222LMRH', NULL, 'MANIJA INT.TOYOTA COROLLA  2009-2013 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
+(682, 'LP-2222LMLH', NULL, 'MANIJA INT.TOYOTA COROLLA  2009-2013 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(683, 'LP-2222LMRH', NULL, 'MANIJA INT.TOYOTA COROLLA  2009-2013 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
 (684, 'LP-4180', NULL, 'BLOQUEO DE TRONCO TY.CRESSIDA 1989-1995', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
 (685, 'LP-2103A', NULL, 'AGARRADERA DE CABINA UNIVERSAL RUBBER', 2, 2, 1, 0, 1, 1, 0, 0, 0, -4, 1, 1),
-(686, 'LP-4001', NULL, 'CERRADURA DE PUERTA', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(686, 'LP-4001', NULL, 'CERRADURA DE PUERTA', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (687, 'LP-221', NULL, 'SEGURO DE VENTANA UNIVERSAL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (688, 'LP-C001', NULL, 'CERRADURA PARA CAPOT', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(689, 'LP-CE2', 'CM-9285', 'FARO NEBLI.KIA CERATO 2010...(SET2)NEGRO KIT', 1, 1, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
-(690, 'LP-TA6', 'CM08-TA4 ', 'FARO NEBLI.PARACH.TY YARIS,COROLLA ALTIS 2007 (VIDRIO)(SET2)', 1, 1, 1, 0, 1, 1, 60, 0, 0, 13, 1, 1),
-(691, 'LP-DA2003A-LH', 'LP-DA2003A', 'MANIJA INT.RENAUL DACIA DUSTER 2010-C LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
-(692, 'LP-DA2003A-RH', 'LP-DA2003B', 'MANIJA INT.RENAUL DACIA DUSTER 2010-C RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
-(693, 'LP-DH3133S-ML', 'LP-DH3133S', 'MANIJA EXT.CORREDIZA KIA TOWNER L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
-(694, 'LP-DH3133S-MR', 'LP-DH3133Z', 'MANIJA EXT.CORREDIZA KIA TOWNER R', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(695, 'LP-DW2001A-LH', 'LP-DW2001A', 'MANIJA INT.DAEWO MATIZ 98-05 LH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
+(689, 'LP-CE2', 'CM-9285', 'FARO NEBLI.KIA CERATO 2010...(SET2)NEGRO KIT', 1, 1, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
+(690, 'LP-TA6', 'CM08-TA4 ', 'FARO NEBLI.PARACH.TY YARIS,COROLLA ALTIS 2007 (VIDRIO)(SET2)', 1, 1, 1, 0, 1, 1, 60, 0, 0, 33, 1, 1),
+(691, 'LP-DA2003A-LH', 'LP-DA2003A', 'MANIJA INT.RENAUL DACIA DUSTER 2010-C LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(692, 'LP-DA2003A-RH', 'LP-DA2003B', 'MANIJA INT.RENAUL DACIA DUSTER 2010-C RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(693, 'LP-DH3133S-ML', 'LP-DH3133S', 'MANIJA EXT.CORREDIZA KIA TOWNER L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(694, 'LP-DH3133S-MR', 'LP-DH3133Z', 'MANIJA EXT.CORREDIZA KIA TOWNER R', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(695, 'LP-DW2001A-LH', 'LP-DW2001A', 'MANIJA INT.DAEWO MATIZ 98-05 LH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -3, 1, 1),
 (696, 'LP-DW2001A-RH', 'LP-DW2001B', 'MANIJA INT.DAEWO MATIZ 98-05 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, -3, 1, 1),
 (697, 'LP-DW2301M-FL', 'LP-DW2301M', 'MANIJA INT.DELANT.DAEWO NUBIRA 98-01L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (698, 'LP-DW2301M-FR', 'LP-DW2301N', 'MANIJA INT.DELANT.DAEWO NUBIRA 98-01R', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(699, 'LP-DW3001A-FL', 'LP-DW3001A', 'MANIJA EXT.DELANT DAEWO MATIZ 98-05L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
-(700, 'LP-DW3001A-FR', 'LP-DW3001B', 'MANIJA EXT.DELANT DAEWO MATIZ 98-05R', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(701, 'LP-DW3001A-RL', 'LP-DW3001P', 'MANIJA EXT.POST.DAEWO MATIZ 98-05 RL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
-(702, 'LP-DW3001A-RR', 'LP-DW3001R', 'MANIJA EXT.POST.DAEWO MATIZ 98-05 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(699, 'LP-DW3001A-FL', 'LP-DW3001A', 'MANIJA EXT.DELANT DAEWO MATIZ 98-05L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1),
+(700, 'LP-DW3001A-FR', 'LP-DW3001B', 'MANIJA EXT.DELANT DAEWO MATIZ 98-05R', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
+(701, 'LP-DW3001A-RL', 'LP-DW3001P', 'MANIJA EXT.POST.DAEWO MATIZ 98-05 RL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(702, 'LP-DW3001A-RR', 'LP-DW3001R', 'MANIJA EXT.POST.DAEWO MATIZ 98-05 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
 (703, 'LP-3301SRL', 'LP-N103PL', 'MANIJA EXT.PTA.POST DAEWOO NUBIRA 98-04 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 52, 1, 1),
-(704, 'LP-DW5300M-FL', 'LP-DW5300M', 'CREMALLERA LEVATALUNA DAEWO CIELO-RACER FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(705, 'LP-DW5300M-FR', 'LP-DW5300N', 'CREMALLERA LEVATALUNA DAEWO CIELO-RACER FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(706, 'LP-GM2003M-LH', 'LP-GM2003M', 'MANIJA INT.CHEV.AVEO CROMADO  07-11LH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
-(707, 'LP-GM2003M-RH', 'LP-GM2003N', 'MANIJA INT.CHEV.AVEO CROMADO  07-11RH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(704, 'LP-DW5300M-FL', 'LP-DW5300M', 'CREMALLERA LEVATALUNA DAEWO CIELO-RACER FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(705, 'LP-DW5300M-FR', 'LP-DW5300N', 'CREMALLERA LEVATALUNA DAEWO CIELO-RACER FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
+(706, 'LP-GM2003M-LH', 'LP-GM2003M', 'MANIJA INT.CHEV.AVEO CROMADO  07-11LH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
+(707, 'LP-GM2003M-RH', 'LP-GM2003N', 'MANIJA INT.CHEV.AVEO CROMADO  07-11RH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
 (708, 'LP-GM3001A-FL', 'LP-GM3001A', 'MANIJA EXT.DELANT.CHEVROLET AVEO 05-11FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
 (709, 'LP-GM3001A-FR', 'LP-GM3001B', 'MANIJA EXT.DELANT.CHEVROLET AVEO 05-11FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
 (710, 'LP-GM3001A-RL', 'LP-GM3001C', 'MANIJA EXT.POST.CHEVROLET AVEO 05-11 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1),
 (711, 'LP-GM3001A-RR', 'LP-GM3001D', 'MANIJA EXT.POST.CHEVROLET AVEO 05-11RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
 (712, 'LP-GM3003A-F', 'LP-GM3003A', 'MANIJA EXT.DELANT.CHEVROLET AVEO 07-11  R=L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
-(713, 'LP-GM3003A-RER', 'LP-GM3003B', 'MANIJA EXT.POSTERIOR CHEVROLET AVEO 07-11  R=L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
+(713, 'LP-GM3003A-RER', 'LP-GM3003B', 'MANIJA EXT.POSTERIOR CHEVROLET AVEO 07-11  R=L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
 (714, 'LP-GM3561A-FL', 'LP-GM3561A', 'MANIJA EXT.DELANT ISUZU D-MAX 06-12/CAMIONETA PICK-UP', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (715, 'LP-GM3561A-FR', 'LP-GM3561B', 'MANIJA EXT.DELANT ISUZU D-MAX 06-12/CAMIONETA PICK-UP', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (716, 'LP-GM3561A-RL', 'LP-GM3561C', 'MANIJA EXT.POST ISUZU D-MAX 06-12/CAMIONETA PICK-UP RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (717, 'LP-GM3561A-RR', 'LP-GM3561D', 'MANIJA EXT.POST ISUZU D-MAX 06-12/CAMIONETA PICK-UP RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
-(718, 'LP-HD2569G-FL', 'LP-HD2569G', 'MANIJA INT.HONDA CIVIC AÑO 92-95 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(719, 'LP-HD2569G-FR', 'LP-HD2569H', 'MANIJA INT.HONDA CIVIC AÑO 92-95 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(718, 'LP-HD2569G-FL', 'LP-HD2569G', 'MANIJA INT.HONDA CIVIC AÑO 92-95 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
+(719, 'LP-HD2569G-FR', 'LP-HD2569H', 'MANIJA INT.HONDA CIVIC AÑO 92-95 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
 (720, 'LP-HD3239S-FL', 'LP-HD3239S', 'MANIJA EXT.DELANT.HONDA CIVIC (PATNER)96-00 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (721, 'LP-HD3239S-FR', 'LP-HD3239Z', 'MANIJA EXT.DELANT.HONDA CIVIC (PATNER)96-00 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (722, 'LP-HD3239S-RL', 'LP-HD3239T', 'MANIJA EXT.POST.HONDA CIVIC (PATNER)96-00 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
@@ -10058,103 +11462,103 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (724, 'LP-HY1230G', 'LP-HY1230G', 'MANIJA INT.LEVANTA LUNA HYUNDAI ATOS 97-05 ELANTRA 96-98', 2, 2, 1, 0, 1, 1, 0, 0, 0, 100, 1, 1),
 (725, 'LP-HY2110A-LH', 'LP-HY2110A', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI I10 2008 LH  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (726, 'LP-HY2110A-RH', 'LP-HY2110B', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI I10 2008 RH   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
-(727, 'LP-HY2228G-LH', 'LP-HY2228G', 'MANIJA INT.HYUNDAI GRACE-PORTER 95 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 38, 1, 1),
-(728, 'LP-HY2228G-RH', 'LP-HY2228H', 'MANIJA INT.HYUNDAI GRACE-PORTER 95 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 38, 1, 1),
-(729, 'LP-HY2230G-FL', 'LP-HY2230F', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 95-99 FL         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 50, 1, 1),
-(730, 'LP-HY2230G-FR', 'LP-HY2230I', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 95-99 FR    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 50, 1, 1),
+(727, 'LP-HY2228G-LH', 'LP-HY2228G', 'MANIJA INT.HYUNDAI GRACE-PORTER 95 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
+(728, 'LP-HY2228G-RH', 'LP-HY2228H', 'MANIJA INT.HYUNDAI GRACE-PORTER 95 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
+(729, 'LP-HY2230G-FL', 'LP-HY2230F', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 95-99 FL         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
+(730, 'LP-HY2230G-FR', 'LP-HY2230I', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 95-99 FR    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
 (731, 'LP-HY2301G-LH', 'LP-HY2301G', 'MANIJA INT.HYUNDAI SONATA 95-99 NEGRO LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (732, 'LP-HY2301G-RH', 'LP-HY2301H', 'MANIJA INT.HYUNDAI SONATA 95-99 NEGRO RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (733, 'LP-HY2323A-LH', 'LP-HY2323A', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 00-06 NEGRO LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (734, 'LP-HY2323A-RH', 'LP-HY2323B', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 00-06 NEGRO RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(735, 'LP-HY2334G-LH', 'LP-HY2334G', 'MANIJA INT.HY. ELANTRA 96-00/KIA SPECTRA 2002 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
-(736, 'LP-HY2334G-RH', 'LP-HY2334H', 'MANIJA INT.HY. ELANTRA 96-00/KIA SPECTRA 2002 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(735, 'LP-HY2334G-LH', 'LP-HY2334G', 'MANIJA INT.HY. ELANTRA 96-00/KIA SPECTRA 2002 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(736, 'LP-HY2334G-RH', 'LP-HY2334H', 'MANIJA INT.HY. ELANTRA 96-00/KIA SPECTRA 2002 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (737, 'LP-HY2503G-LH', 'LP-HY2503G', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI TUCSON 05-09 LH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (738, 'LP-HY2503G-RH', 'LP-HY2503H', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI TUCSON 05-09 RH    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(739, 'LP-HY2511A-LH', 'LP-HY2511A', 'MANIJA INT.DELANT.HY PORTER 98-02 / HD 65', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
-(740, 'LP-HY2511A-RH', 'LP-HY2511B', 'MANIJA INT.DELANT.HY PORTER 98-02 / HD 65', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(739, 'LP-HY2511A-LH', 'LP-HY2511A', 'MANIJA INT.DELANT.HY PORTER 98-02 / HD 65', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(740, 'LP-HY2511A-RH', 'LP-HY2511B', 'MANIJA INT.DELANT.HY PORTER 98-02 / HD 65', 2, 2, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
 (741, 'LP-HY2513A-MR', 'LP-HY2513A', 'MANIJA INT.DE PUERTA CORREDIZA HYUNDAI STAREX H1 98-06  MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
 (742, 'LP-HY3110A-RL', 'LP-HY3110A', 'MANIJA EXT.PTA.POST.HYUNDAI I10 2008-2013 RL  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (743, 'LP-HY3110A-RR', 'LP-HY3110B', 'MANIJA EXT.PTA.POST.HYUNDAI I10 2008-2013 RR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(744, 'LP-HY3228A-FL', 'LP-HY3228A', 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(745, 'LP-HY3228A-FR', 'LP-HY3228B', 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(746, 'LP-HY3228A-MR', 'LP-HY3228M', 'MANIJA EXT.PUERTA CORREDIZA HY.PORTER/GRACE 92-97 MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
-(747, 'LP-HY3230A-FL', 'LP-HY3230A', 'MANIJA EXT.DELANT.HYUNDAI ATOS 97-05 FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
-(748, 'LP-HY3230A-FR', 'LP-HY3230B', 'MANIJA EXT.DELANT.HYUNDAI ATOS 97-05 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
+(744, 'LP-HY3228A-FL', 'LP-HY3228A', 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
+(745, 'LP-HY3228A-FR', 'LP-HY3228B', 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
+(746, 'LP-HY3228A-MR', 'LP-HY3228M', 'MANIJA EXT.PUERTA CORREDIZA HY.PORTER/GRACE 92-97 MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
+(747, 'LP-HY3230A-FL', 'LP-HY3230A', 'MANIJA EXT.DELANT.HYUNDAI ATOS 97-05 FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(748, 'LP-HY3230A-FR', 'LP-HY3230B', 'MANIJA EXT.DELANT.HYUNDAI ATOS 97-05 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
 (749, 'LP-HY3230A-RL', 'LP-HY3230C', 'MANIJA EXT.POST.HYUNDAI ATOS 97-05 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
 (750, 'LP-HY3230A-RR', 'LP-HY3230D', 'MANIJA EXT.POST.HYUNDAI ATOS 97-05 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
-(751, 'LP-HY3232A-RL', 'LP-HY3232A', 'MANIJA EXT.PTA.POST.HYUNDAI ACCENT 1998-2000 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 63, 1, 1),
-(752, 'LP-HY3232A-RR', 'LP-HY3232B', 'MANIJA EXT.PTA.POST.HYUNDAI ACCENT 1998-2000 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 63, 1, 1),
-(753, 'LP-3236AFL', 'LP-A632L', 'MANIJA EXT.PTA.DELANT HYUNDAI ACCENT 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 78, 1, 1),
-(754, 'LP-HY3237P', 'LP-HY3237P', 'MANIJA EXT.DELANT HYUNDAI ACCENT 2012-C FL=FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
-(755, 'LP-HY3513S-FL', 'LP-HY3513S', 'MANIJA EXT.DELANT.HY STAREX H1 98-04 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(756, 'LP-HY3513S-FR', 'LP-HY3513Z', 'MANIJA EXT.DELANT.HY STAREX H1 98-04 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(757, 'LP-HY3513S-ML', 'LP-HY3513M', 'MANIJA EXT.POST.HY STAREX H1 98-04 ML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(758, 'LP-HY3513S-MR ', 'LP-HY3513N', 'MANIJA EXT.POST.HY STAREX H1 98-04 MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1),
-(759, 'LP-HY3515M-FL', 'LP-HY3515M', 'MANIJA EXT.PTA.DELANT.HYUNDAI STAREX H1 2007...CROMADO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(760, 'LP-HY3515M-FR', 'LP-HY3515N', 'MANIJA EXT.PTA.DELANT.HYUNDAI STAREX H1 2007...CROMADO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(761, 'LP-HY3515M-ML', 'LP-HY3515B', 'MANIJA EXT.PTA CORREDIZA  HYUNDAI STAREX H1 2007...CROMADO ML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(762, 'LP-HY3515M-MR', 'LP-HY3515C', 'MANIJA EXT.PTA CORREDIZA  HYUNDAI STAREX H1 2007...CROMADO MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(763, 'LP-3515PL', 'LP-515EL', 'MANIJA EXT.PTA.DELANTERO HYUNDAI STAREX H1 2007...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(764, 'LP-HY3515P-ML', 'LP-HY3515P', 'MANIJA EXT.PTA CORREDIZA HYUNDAI STAREX H1 2007 PML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(765, 'LP-HY3515P-MR', 'LP-HY3515D', 'MANIJA EXT.PTA CORREDIZA HYUNDAI STAREX H1 2007 PMR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1),
-(766, 'LP-HY3516P-ML', 'LP-HY3516P', 'MANIJA EXT.PTA CORREDIZA  HY.STAREX H1 2007... C/HUECO PML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
-(767, 'LP-HY3516P-MR', 'LP-HY3516D', 'MANIJA EXT.PTA CORREDIZA  HY.STAREX H1 2007... C/HUECO PMR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
-(768, 'LP-HY5232M-FL', 'LP-HY5232M', 'CREMALLERA LEVANTALUNA HYUNDAI ACCENT DELANT 95 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(769, 'LP-HY5232M-FR', 'LP-HY5232N', 'CREMALLERA LEVANTALUNA HYUNDAI ACCENT DELANT 95 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(751, 'LP-HY3232A-RL', 'LP-HY3232A', 'MANIJA EXT.PTA.POST.HYUNDAI ACCENT 1998-2000 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
+(752, 'LP-HY3232A-RR', 'LP-HY3232B', 'MANIJA EXT.PTA.POST.HYUNDAI ACCENT 1998-2000 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1),
+(753, 'LP-3236AFL', 'LP-A632L', 'MANIJA EXT.PTA.DELANT HYUNDAI ACCENT 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 61, 1, 1),
+(754, 'LP-HY3237P', 'LP-HY3237P', 'MANIJA EXT.DELANT HYUNDAI ACCENT 2012-C FL=FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(755, 'LP-HY3513S-FL', 'LP-HY3513S', 'MANIJA EXT.DELANT.HY STAREX H1 98-04 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(756, 'LP-HY3513S-FR', 'LP-HY3513Z', 'MANIJA EXT.DELANT.HY STAREX H1 98-04 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(757, 'LP-HY3513S-ML', 'LP-HY3513M', 'MANIJA EXT.POST.HY STAREX H1 98-04 ML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(758, 'LP-HY3513S-MR ', 'LP-HY3513N', 'MANIJA EXT.POST.HY STAREX H1 98-04 MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
+(759, 'LP-HY3515M-FL', 'LP-HY3515M', 'MANIJA EXT.PTA.DELANT.HYUNDAI STAREX H1 2007...CROMADO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(760, 'LP-HY3515M-FR', 'LP-HY3515N', 'MANIJA EXT.PTA.DELANT.HYUNDAI STAREX H1 2007...CROMADO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(761, 'LP-HY3515M-ML', 'LP-HY3515B', 'MANIJA EXT.PTA CORREDIZA  HYUNDAI STAREX H1 2007...CROMADO ML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(762, 'LP-HY3515M-MR', 'LP-HY3515C', 'MANIJA EXT.PTA CORREDIZA  HYUNDAI STAREX H1 2007...CROMADO MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(763, 'LP-3515PL', 'LP-515EL', 'MANIJA EXT.PTA.DELANTERO HYUNDAI STAREX H1 2007...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
+(764, 'LP-HY3515P-ML', 'LP-HY3515P', 'MANIJA EXT.PTA CORREDIZA HYUNDAI STAREX H1 2007 PML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(765, 'LP-HY3515P-MR', 'LP-HY3515D', 'MANIJA EXT.PTA CORREDIZA HYUNDAI STAREX H1 2007 PMR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(766, 'LP-HY3516P-ML', 'LP-HY3516P', 'MANIJA EXT.PTA CORREDIZA  HY.STAREX H1 2007... C/HUECO PML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
+(767, 'LP-HY3516P-MR', 'LP-HY3516D', 'MANIJA EXT.PTA CORREDIZA  HY.STAREX H1 2007... C/HUECO PMR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
+(768, 'LP-HY5232M-FL', 'LP-HY5232M', 'CREMALLERA LEVANTALUNA HYUNDAI ACCENT DELANT 95 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(769, 'LP-HY5232M-FR', 'LP-HY5232N', 'CREMALLERA LEVANTALUNA HYUNDAI ACCENT DELANT 95 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
 (770, 'LP-HY5232M-RL', 'LP-HY5232P', 'CREMALLERA LEVANTALUNA HYUNDAI ACCENT POST 95 MRL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
-(771, 'LP-IZ1139G', 'LP-IZ1139G', 'MANIJA LEVANTALUNA ISUZU COLOR GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 61, 1, 1),
-(772, 'LP-IZ2026G-LH', 'LP-IZ2026G', 'MANIJA.INT.CHEVROLET LUV GRIS LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 70, 1, 1),
-(773, 'LP-IZ2026G-RH', 'LP-IZ2026H', 'MANIJA.INT.CHEVROLET LUV GRIS RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
-(774, 'LP-IZ3150A-FL', 'LP-IZ3150A', 'MANIJA EXT.DELANT.ISUZU LUV-CHEVROLET FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(775, 'LP-IZ3150A-FR', 'LP-IZ3150B', 'MANIJA EXT.DELANT.ISUZU LUV-CHEVROLET FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(776, 'LP-IZ3150A-RL', 'LP-IZ3150C', 'MANIJA EXT.POST.ISUZU LUV-CHEVROLET RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(777, 'LP-IZ3150A-RR', 'LP-IZ3150D', 'MANIJA EXT.POST.ISUZU LUV-CHEVROLET RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(771, 'LP-IZ1139G', 'LP-IZ1139G', 'MANIJA LEVANTALUNA ISUZU COLOR GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 41, 1, 1),
+(772, 'LP-IZ2026G-LH', 'LP-IZ2026G', 'MANIJA.INT.CHEVROLET LUV GRIS LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 63, 1, 1),
+(773, 'LP-IZ2026G-RH', 'LP-IZ2026H', 'MANIJA.INT.CHEVROLET LUV GRIS RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(774, 'LP-IZ3150A-FL', 'LP-IZ3150A', 'MANIJA EXT.DELANT.ISUZU LUV-CHEVROLET FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, -3, 1, 1),
+(775, 'LP-IZ3150A-FR', 'LP-IZ3150B', 'MANIJA EXT.DELANT.ISUZU LUV-CHEVROLET FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1),
+(776, 'LP-IZ3150A-RL', 'LP-IZ3150C', 'MANIJA EXT.POST.ISUZU LUV-CHEVROLET RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(777, 'LP-IZ3150A-RR', 'LP-IZ3150D', 'MANIJA EXT.POST.ISUZU LUV-CHEVROLET RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
 (778, 'LP-IZ3206A-LH', 'LP-IZ3206A', 'MANIJA EXT.DELANT.CAMION ISUZU ELF NPR 93 08 JACK LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (779, 'LP-IZ3206A-RH', 'LP-IZ3206B', 'MANIJA EXT.DELANT.CAMION ISUZU ELF NPR 93 08 JACK RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (780, 'LP-IZ3562A-TG', 'LP-IZ3562A', 'MANIJA COMP.POST IZUSU D MAX 06-12 ATG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
-(781, 'LP-2009GFR', 'LP-K902R', 'MANIJA INT.PTA DELANT KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 63, 1, 1),
-(782, 'LP-KA2010A-LH', 'LP-KA2010A', 'MANIJA INTERIOR KIA CERATO 09-13 LH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(783, 'LP-KA2010A-RH', 'LP-KA2010B', 'MANIJA INTERIOR KIA CERATO 09-13 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(784, 'LP-KA2013M-LH', 'LP-KA2013M', 'MANIJA INTERIOR KIA CERATO 14-C CROM. MLH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(785, 'LP-KA2013M-RH', 'LP-KA2013N', 'MANIJA INTERIOR KIA CERATO 14-C CROM. MRH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(786, 'LP-KA2500G-LH', 'LP-KA2500G', 'MANIJA DE PTA INT.KIA SPORTAGE 95-02 GLH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
-(787, 'LP-KA2500G-RH', 'LP-KA2500H', 'MANIJA DE PTA INT.KIA SPORTAGE 95-02 GRH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
-(788, 'LP-KA2900A-FL', 'LP-KA2900A', 'MANIJA INT.DELANT KIA BONGO , K-2700 AFL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(789, 'LP-KA2900A-FR', 'LP-KA2900B', 'MANIJA INT.DELANT KIA BONGO , K-2700 AFR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(790, 'LP-KA3004P-F', 'LP-KA3004P', 'MANIJA EXT.DELANT.KIA PICANTO 11-C C/H PFL=PFR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
-(791, 'LP-KA3004P-FLK', 'LP-KA3004D', 'MANIJA EXT.DELANT.KIA PICANTO 11-C S/H PFLK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(781, 'LP-2009GFR', 'LP-K902R', 'MANIJA INT.PTA DELANT KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 57, 1, 1),
+(782, 'LP-KA2010A-LH', 'LP-KA2010A', 'MANIJA INTERIOR KIA CERATO 09-13 LH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
+(783, 'LP-KA2010A-RH', 'LP-KA2010B', 'MANIJA INTERIOR KIA CERATO 09-13 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
+(784, 'LP-KA2013M-LH', 'LP-KA2013M', 'MANIJA INTERIOR KIA CERATO 14-C CROM. MLH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(785, 'LP-KA2013M-RH', 'LP-KA2013N', 'MANIJA INTERIOR KIA CERATO 14-C CROM. MRH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(786, 'LP-KA2500G-LH', 'LP-KA2500G', 'MANIJA DE PTA INT.KIA SPORTAGE 95-02 GLH', 2, 2, 1, 0, 1, 1, 0, 0, 0, -3, 1, 1),
+(787, 'LP-KA2500G-RH', 'LP-KA2500H', 'MANIJA DE PTA INT.KIA SPORTAGE 95-02 GRH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
+(788, 'LP-KA2900A-FL', 'LP-KA2900A', 'MANIJA INT.DELANT KIA BONGO , K-2700 AFL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
+(789, 'LP-KA2900A-FR', 'LP-KA2900B', 'MANIJA INT.DELANT KIA BONGO , K-2700 AFR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(790, 'LP-KA3004P-F', 'LP-KA3004P', 'MANIJA EXT.DELANT.KIA PICANTO 11-C C/H PFL=PFR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(791, 'LP-KA3004P-FLK', 'LP-KA3004D', 'MANIJA EXT.DELANT.KIA PICANTO 11-C S/H PFLK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
 (792, 'LP-KA3004P-FRK', 'LP-KA3004R', 'MANIJA EXT.DELANT.KIA PICANTO 11-C S/H PFRK ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
-(793, 'LP-KA3010P-FL', 'LP-KA3010P', 'MANIJA EXT.PTA DELANT KIA CERATO 09-13 PFL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(794, 'LP-KA3010P-FRK', 'LP-KA3010D', 'MANIJA EXT.PTA DELANT KIA CERATO 09-13 PFRK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(795, 'LP-KA3950P-FL', 'LP-KA3950P', 'MANIJA EXT.DELANT.KIA BONGO-K-2700 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(796, 'LP-KA3950P-FR', 'LP-KA3950D', 'MANIJA EXT.DELANT.KIA BONGO-K-2700 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(797, 'LP-MB1041A', 'LP-MB1041A', 'MANIJA INT.LEVANTA LUNA MITSUBISHI L300 CANTER 1987 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
-(798, 'LP-MB1105A', 'LP-MB1105A', 'MANIJA  INTERIOR LEVANTALUNA MITS.MONTERO SPORT 97-99 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
-(799, 'LP-MB1142G', 'LP-MB1142G', 'MANIJA INT.LEVANTA LUNA MITSUBISHI FUSO 2002', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
-(800, 'LP-MB1227G', 'LP-MB1227G', 'MANIJA INT.LEVANTA LUNA MITSUBISHI CANTER 2007', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(793, 'LP-KA3010P-FL', 'LP-KA3010P', 'MANIJA EXT.PTA DELANT KIA CERATO 09-13 PFL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(794, 'LP-KA3010P-FRK', 'LP-KA3010D', 'MANIJA EXT.PTA DELANT KIA CERATO 09-13 PFRK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(795, 'LP-KA3950P-FL', 'LP-KA3950P', 'MANIJA EXT.DELANT.KIA BONGO-K-2700 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(796, 'LP-KA3950P-FR', 'LP-KA3950D', 'MANIJA EXT.DELANT.KIA BONGO-K-2700 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
+(797, 'LP-MB1041A', 'LP-MB1041A', 'MANIJA INT.LEVANTA LUNA MITSUBISHI L300 CANTER 1987 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(798, 'LP-MB1105A', 'LP-MB1105A', 'MANIJA  INTERIOR LEVANTALUNA MITS.MONTERO SPORT 97-99 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
+(799, 'LP-MB1142G', 'LP-MB1142G', 'MANIJA INT.LEVANTA LUNA MITSUBISHI FUSO 2002', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
+(800, 'LP-MB1227G', 'LP-MB1227G', 'MANIJA INT.LEVANTA LUNA MITSUBISHI CANTER 2007', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (801, 'LP-MB2508M-1LH', 'LP-MB2508M', 'MANIJA INT.MITS.CANTER ROSA FE444 1986 CROMO 1-LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (802, 'LP-MB2508M-1RH', 'LP-MB2508N', 'MANIJA INT.MITS.CANTER ROSA FE444 1986 CROMO 1-RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(803, 'LP-25090', 'LP-C090', 'MANIJA INT.ABRE PTA.DELANTERO MITSUB.CANTER 86-95 GRIS OSCURO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1),
-(804, 'LP-MB3078A-FL', 'LP-MB3078A', 'MANIJA EXT.DELANT.MITSUB.DACKAR L/200 90-04 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
-(805, 'LP-MB3078A-FR', 'LP-MB3078B', 'MANIJA EXT.DELANT.MITSUB.DACKAR L/200 90-04 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
-(806, 'LP-MB3134A-FL', 'LP-MB3134A', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 80-92 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(807, 'LP-MB3134A-FR', 'LP-MB3134B', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 80-92 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(808, 'LP-31951     ', 'UNIVERSAL', 'MANIJA EXT.PTA.POSTERIOR MITSUBISHI TRITON L200 2005 L=R        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1),
-(809, 'LP-MB3227A-FL', 'LP-MB3227A', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 03...FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(810, 'LP-MB3227A-FR', 'LP-MB3227B', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 03...FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(803, 'LP-25090', 'LP-C090', 'MANIJA INT.ABRE PTA.DELANTERO MITSUB.CANTER 86-95 GRIS OSCURO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 36, 1, 1),
+(804, 'LP-MB3078A-FL', 'LP-MB3078A', 'MANIJA EXT.DELANT.MITSUB.DACKAR L/200 90-04 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1),
+(805, 'LP-MB3078A-FR', 'LP-MB3078B', 'MANIJA EXT.DELANT.MITSUB.DACKAR L/200 90-04 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1),
+(806, 'LP-MB3134A-FL', 'LP-MB3134A', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 80-92 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
+(807, 'LP-MB3134A-FR', 'LP-MB3134B', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 80-92 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(808, 'LP-31951     ', 'UNIVERSAL', 'MANIJA EXT.PTA.POSTERIOR MITSUBISHI TRITON L200 2005 L=R        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 31, 1, 1),
+(809, 'LP-MB3227A-FL', 'LP-MB3227A', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 03...FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
+(810, 'LP-MB3227A-FR', 'LP-MB3227B', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 03...FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
 (811, 'LP-MB3230A-FL', 'LP-MB3230A', 'MANIJA EXT.PTA DELANT.MITSUB.LANCER.ECLIPSE 2000-2005 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (812, 'LP-MB3230A-FR', 'LP-MB3230B', 'MANIJA EXT.PTA DELANT.MITSUB.LANCER.ECLIPSE 2000-2005 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(813, 'LP-MB3248S-ML', 'LP-MB3248S', 'MANIJA EXT.PUERTA CORREDIZA MITS.VERYCA WAGON 00 S-ML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(814, 'LP-MB3248S-MR', 'LP-MB3248Z', 'MANIJA EXT.PUERTA CORREDIZA MITSUBISHI VERYCA WAGON 00 S-MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(813, 'LP-MB3248S-ML', 'LP-MB3248S', 'MANIJA EXT.PUERTA CORREDIZA MITS.VERYCA WAGON 00 S-ML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
+(814, 'LP-MB3248S-MR', 'LP-MB3248Z', 'MANIJA EXT.PUERTA CORREDIZA MITSUBISHI VERYCA WAGON 00 S-MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
 (815, 'LP-MB3515A-TG', 'LP-MB3515A', 'MANIJA DE COMPUERTA POST.MITSUBISHI L200 2015 NEGRO TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
 (816, 'LP-MB3515M-TG', 'LP-MB3515M', 'MANIJA DE COMPUERTA POST.MITSUBISHI L200 2015 CROMO TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
 (817, 'LP-MB7068-LH', 'LP-MB7068E', 'CHAPA PTA DELANT.MITS.FUSO 84-93 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
 (818, 'LP-MB7068-RH', 'LP-MB7068C', 'CHAPA PTA DELANT.MITS.FUSO 84-93 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(819, 'LP-MB7111LH', 'LP-MB7111A', 'CHAPA DE PUERTA DELANTMITSUBISHI CANTER 86-96 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(820, 'LP-NS1091G', 'LP-NS1091G', 'MANIJA LEVANTALUNA NISSAN  SENTRA B-13 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 250, 1, 1),
+(819, 'LP-MB7111LH', 'LP-MB7111A', 'CHAPA DE PUERTA DELANTMITSUBISHI CANTER 86-96 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
+(820, 'LP-NS1091G', 'LP-NS1091G', 'MANIJA LEVANTALUNA NISSAN  SENTRA B-13 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 225, 1, 1),
 (821, 'LP-NS1104G', 'LP-NS1104G', 'MANIJA INT.LEVANTA LUNA NISSAN B11 1982-1986 GRIS OSCURO              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 145, 1, 1),
-(822, 'LP-NS2030G', 'LP-NS2030G', 'MANIJA INTERIOR NISSAN FIERA 86-97 720 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 169, 1, 1),
-(823, 'LP-NS2033G-1', 'LP-NS2033G', 'MANIJA INTERIOR DELANT.NISSAN SUNNY 84/CARAVAN', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
+(822, 'LP-NS2030G', 'LP-NS2030G', 'MANIJA INTERIOR NISSAN FIERA 86-97 720 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 109, 1, 1),
+(823, 'LP-NS2033G-1', 'LP-NS2033G', 'MANIJA INTERIOR DELANT.NISSAN SUNNY 84/CARAVAN', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
 (824, 'LP-NS2301A-LH', 'LP-NS2301A', 'MANIJA INT.NISSAN AD WAGON WINGROAD 2007//TIIDA LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
 (825, 'LP-NS2301A-RH', 'LP-NS2301B', 'MANIJA INT.NISSAN AD WAGON WINGROAD 2007//TIIDA RH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
 (826, 'LP-NS2530A-FL', 'LP-NS2530A', 'MANIJA INT.DELANT.NISSAN NV350 //CARAVAN 13 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
@@ -10163,60 +11567,60 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (829, 'LP-NS2542G-RH', 'LP-NS2542H', 'MANIJA INT.ABRE PTA.DELANT.NISSAN SENTRA B13 TSURU 92-13 GRIS RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (830, 'LP-NS2544A-LH', 'LP-NS2544A', 'MANIJA INT.ABRE PTA.DELANT.NISSAN FRONTIER 98-02 NEGRO LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (831, 'LP-NS2544A-RH', 'LP-NS2544B', 'MANIJA INT.ABRE PTA.DELANT.NISSAN FRONTIER 98-02 NEGRO RH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(832, 'LP-NS3061M-LH', 'LP-NS3061M', 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN B11 1982-1986 CROMO LH                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(832, 'LP-NS3061M-LH', 'LP-NS3061M', 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN B11 1982-1986 CROMO LH                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (833, 'LP-NS3061M-RH', 'LP-NS3061N', 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN B11 1982-1986 CROMO RH                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (834, 'LP-NS3152M-FL', 'LP-NS3152M', 'MANIJA EXT.NISSAN FRONTIER 97-2004 CROMO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
 (835, 'LP-NS3152M-FR', 'LP-NS3152N', 'MANIJA EXT.NISSAN FRONTIER 97-2004 CROMO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
-(836, 'LP-NS3172A-TG', 'LP-NS3172A', 'MANIJA EXT.PTA DE TOLVA CENTRAL DE NISSAN FIERA 86-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
-(837, 'LP-NS3175A-FL', 'LP-NS3175A', 'MANIJA EXT.DELANT.NISSAN SENTRA B15 2000 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(838, 'LP-NS3175A-FR', 'LP-NS3175B', 'MANIJA EXT.DELANT.NISSAN SENTRA B15 2000 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(839, 'LP-NS3175A-RL', 'LP-NS3175P', 'MANIJA EXT.POST.NISSAN SENTRA B15 2000 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(840, 'LP-NS3175A-RR', 'LP-NS3175D', 'MANIJA EXT.POST.NISSAN SENTRA B15 2000 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(841, 'LP-NS3193A-FL', 'LP-NS3193A', 'MANIJA EXT.NISSAN FIERA 86-97 NEGRO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(842, 'LP-NS3193A-FR', 'LP-NS3193B', 'MANIJA EXT.NISSAN FIERA 86-97 NEGRO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(843, 'LP-NS3235A-MR', 'LP-NS3235A', 'MANIJA EXT.PTA CORREDIZA NISSAN URVAN CARAVAN 2002-2008', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(844, 'LP-NS3235-TL', 'LP-NS3235T', 'GATILLO COMPUERTA NISSAN E26 NV350 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
+(836, 'LP-NS3172A-TG', 'LP-NS3172A', 'MANIJA EXT.PTA DE TOLVA CENTRAL DE NISSAN FIERA 86-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(837, 'LP-NS3175A-FL', 'LP-NS3175A', 'MANIJA EXT.DELANT.NISSAN SENTRA B15 2000 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(838, 'LP-NS3175A-FR', 'LP-NS3175B', 'MANIJA EXT.DELANT.NISSAN SENTRA B15 2000 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(839, 'LP-NS3175A-RL', 'LP-NS3175P', 'MANIJA EXT.POST.NISSAN SENTRA B15 2000 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(840, 'LP-NS3175A-RR', 'LP-NS3175D', 'MANIJA EXT.POST.NISSAN SENTRA B15 2000 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(841, 'LP-NS3193A-FL', 'LP-NS3193A', 'MANIJA EXT.NISSAN FIERA 86-97 NEGRO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(842, 'LP-NS3193A-FR', 'LP-NS3193B', 'MANIJA EXT.NISSAN FIERA 86-97 NEGRO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(843, 'LP-NS3235A-MR', 'LP-NS3235A', 'MANIJA EXT.PTA CORREDIZA NISSAN URVAN CARAVAN 2002-2008', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(844, 'LP-NS3235-TL', 'LP-NS3235T', 'GATILLO COMPUERTA NISSAN E26 NV350 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (845, 'LP-NS3236S-MR', 'LP-NS3236S', 'MANIJA EXT.PTA CORREDIZA NISSAN URVAN E24 88-97', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (846, 'LP-NS3236-TL', 'LP-NS3236T', 'GATILLO COMPUERTA NISSAN URVAN E24  86-01 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(847, 'LP-NS3241A', 'LP-NS3241A', 'MANIJA PUERTA LATERAL NISSAN CONDOR TRUCK   R:L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(847, 'LP-NS3241A', 'LP-NS3241A', 'MANIJA PUERTA LATERAL NISSAN CONDOR TRUCK   R:L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (848, 'LP-NS3242A-FL', 'LP-NS3242A', 'MANIJA EXT.DELANT.NISSAN FRONTIER 2002-2010 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
 (849, 'LP-NS3242A-FR', 'LP-NS3242B', 'MANIJA EXT.DELANT.NISSAN FRONTIER 2002-2010 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
-(850, 'LP-NS3301A-FL', 'LP-NS3301A', 'MANIJA EXT.DELANT.C/HUECO NISSAN TIIDA O4-11(L)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(850, 'LP-NS3301A-FL', 'LP-NS3301A', 'MANIJA EXT.DELANT.C/HUECO NISSAN TIIDA O4-11(L)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
 (851, 'LP-NS3301A-FR', 'LP-NS3301B', 'MANIJA EXT.DELANT.S/HUECO NISSAN TIIDA O4-11(R)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
 (852, 'LP-NS3301A-FLK', 'LP-NS3301C', 'MANIJA EXT.POST.NISSAN TIIDA O4-11/VERSA SEDAN FLK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
 (853, 'LP-NS3301A-FRK', 'LP-NS3301D', 'MANIJA EXT.POST.NISSAN TIIDA O4-11/VERSA SEDAN FRK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(854, 'LP-NS3523MA-TGC', 'LP-NS3523M', 'MANIJA DE COMPUERTA POST.NISSAN FRONTIER 2017 NEGRO C/CROMO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1),
+(854, 'LP-NS3523MA-TGC', 'LP-NS3523M', 'MANIJA DE COMPUERTA POST.NISSAN FRONTIER 2017 NEGRO C/CROMO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (855, 'LP-NS3530A-FL', 'LP-NS3530A', 'MANIJA EXT.DELANT.NISSAN NV350 2013-2019 C/H FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
 (856, 'LP-NS3530A-FRK', 'LP-NS3530K', 'MANIJA EXT.DELANT.NISSAN NV350 2013-2019 FRK ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(857, 'LP-NS3530A-TG', 'LP-NS3530T', 'MANIJA COMPUERTA NISSAN NV350 2013-2019 TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(858, 'LP-NS3903A-TL', 'LP-NS3903A', 'GATILLO DE COMPUERTA NISSAN FRONTIER 2001 2004 TL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(859, 'LP-NS3905A-TG', 'LP-NS3905A', 'MANIJA DE COMPUERTA NISSAN FRONTIER 2005 TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
-(860, 'LP-NS3905A-TL', 'LP-NS3905B', 'GATILLO COMPUERTA NISSAN FRONTIER 04 TL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(861, 'LP-NS3962P-FL', 'LP-NS3962P', 'MANIJA EXT.PTA.DELANT.NISSAN FRONTIER 98-02 NEGRO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 46, 1, 1),
-(862, 'LP-NS3962P-FR', 'LP-NS3962D', 'MANIJA EXT.PTA.DELANT.NISSAN FRONTIER 98-02 NEGRO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 46, 1, 1),
-(863, 'LP-NS4102-LHD', 'LP-NS4102', 'CHAPA DE CAPOT DATSUN PICK-UP /UNIVERSAL 620 72-79', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
-(864, 'LP-NS4205-LHD', 'LP-NS4205', 'CERRADURA DE CAPOT NISSAN SENTRA B13', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
-(865, 'LP-NS4209-LHD', 'LP-NS4209', 'CHAPA DE CAPOT NISSAN FIERA PICK UP 720 93-98 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(866, 'LP-NS5235M-FL', 'LP-NS5235M', 'CREMALLERA LEVANTALUNA NISSAN CARAVAN 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
-(867, 'LP-NS5235M-FR', 'LP-NS5235N', 'CREMALLERA LEVANTALUNA NISSAN CARAVAN 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(857, 'LP-NS3530A-TG', 'LP-NS3530T', 'MANIJA COMPUERTA NISSAN NV350 2013-2019 TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(858, 'LP-NS3903A-TL', 'LP-NS3903A', 'GATILLO DE COMPUERTA NISSAN FRONTIER 2001 2004 TL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(859, 'LP-NS3905A-TG', 'LP-NS3905A', 'MANIJA DE COMPUERTA NISSAN FRONTIER 2005 TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(860, 'LP-NS3905A-TL', 'LP-NS3905B', 'GATILLO COMPUERTA NISSAN FRONTIER 04 TL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
+(861, 'LP-NS3962P-FL', 'LP-NS3962P', 'MANIJA EXT.PTA.DELANT.NISSAN FRONTIER 98-02 NEGRO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 44, 1, 1),
+(862, 'LP-NS3962P-FR', 'LP-NS3962D', 'MANIJA EXT.PTA.DELANT.NISSAN FRONTIER 98-02 NEGRO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 44, 1, 1),
+(863, 'LP-NS4102-LHD', 'LP-NS4102', 'CHAPA DE CAPOT DATSUN PICK-UP /UNIVERSAL 620 72-79', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
+(864, 'LP-NS4205-LHD', 'LP-NS4205', 'CERRADURA DE CAPOT NISSAN SENTRA B13', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(865, 'LP-NS4209-LHD', 'LP-NS4209', 'CHAPA DE CAPOT NISSAN FIERA PICK UP 720 93-98 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(866, 'LP-NS5235M-FL', 'LP-NS5235M', 'CREMALLERA LEVANTALUNA NISSAN CARAVAN 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(867, 'LP-NS5235M-FR', 'LP-NS5235N', 'CREMALLERA LEVANTALUNA NISSAN CARAVAN 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (868, 'LP-NS5257M-FL', 'LP-NS5257M', 'CREMALLERA LEVANTALUNA NISSAN SUNNY B-12 87-92 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (869, 'LP-NS5257M-FR', 'LP-NS5257N', 'CREMALLERA LEVANTALUNA NISSAN SUNNY B-12 87-92 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
-(870, 'LP-NS7047-LH', 'LP-NS7047L', 'CHAPA DE PUERTA DELANTERA NISSAN/DATSUN   720 80-86 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(871, 'LP-NS7047-RH', 'LP-NS7047R', 'CHAPA DE PUERTA DELANTERA NISSAN/DATSUN   720 80-86 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(872, 'LP-NS7066-LH', 'LP-NS7066L', 'CHAPA DE PTA DELANT.NISSAN FIERA 720 86-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -19, 1, 1),
-(873, 'LP-NS7066-RH', 'LP-NS7066R', 'CHAPA DE PTA DELANT.NISSAN FIERA 720 86-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -13, 1, 1),
+(870, 'LP-NS7047-LH', 'LP-NS7047L', 'CHAPA DE PUERTA DELANTERA NISSAN/DATSUN   720 80-86 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(871, 'LP-NS7047-RH', 'LP-NS7047R', 'CHAPA DE PUERTA DELANTERA NISSAN/DATSUN   720 80-86 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(872, 'LP-NS7066-LH', 'LP-NS7066L', 'CHAPA DE PTA DELANT.NISSAN FIERA 720 86-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
+(873, 'LP-NS7066-RH', 'LP-NS7066R', 'CHAPA DE PTA DELANT.NISSAN FIERA 720 86-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
 (874, 'LP-NS7132-LH', 'LP-NS7132L', 'CHAPA DE PTA.DELANT.NISSAN CARAVAN HOMMY E24', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (875, 'LP-NS7132-RH', 'LP-NS7132R', 'CHAPA DE PTA.DELANT.NISSAN CARAVAN HOMMY E24', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
 (876, 'LP-NS7235', 'LP-NS7235', 'SAPITO DE PTA.MALETERA NISSAN CARAVAN  E24 88-97', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
-(877, 'LP-NSC122M', 'LP-NSC122M', 'MANIJA DE PTA TOLVA POSTERIOR NISSAN 720 /PICK-UP', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
+(877, 'LP-NSC122M', 'LP-NSC122M', 'MANIJA DE PTA TOLVA POSTERIOR NISSAN 720 /PICK-UP', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
 (878, 'LP-NSC132S-TG', 'LP-NSC132S', 'MANIJA DE PTA POST.NISSAN 720 98....', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
-(879, 'LP-OP3002A-FL', 'LP-OP3002A', 'MANIJA PTA0.EXT DELANT.CHEVROLET CORSA 98-03 FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(879, 'LP-OP3002A-FL', 'LP-OP3002A', 'MANIJA PTA0.EXT DELANT.CHEVROLET CORSA 98-03 FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (880, 'LP-OP3002A-FR', 'LP-OP3002B', 'MANIJA PTA0.EXT DELANT.CHEVROLET CORSA 98-03 FR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(881, 'LP-OP3002A-RL', 'LP-OP3002C', 'MANIJA PTA.EXT.POSTER CHEVROLET CORSA 98-03 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(881, 'LP-OP3002A-RL', 'LP-OP3002C', 'MANIJA PTA.EXT.POSTER CHEVROLET CORSA 98-03 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (882, 'LP-OP3002A-RR', 'LP-OP3002D', 'MANIJA PTA.EXT.POSTER CHEVROLET CORSA 98-03 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(883, 'LP-RN1002A', 'LP-RN1002A', 'MANIJA LEVANTALUNA RENAULT LOGAN 2004-2012(NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
-(884, 'LP-RN2005A-LH', 'LP-RN2005A', 'MANIJA PTA.INT.RENAULT CILO 05-12/KANGOO 08-C/MASTER 10-C/MEGANE 02-08/MODUS 04-12 / TWINGO 07', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(885, 'LP-RN2005A-RH', 'LP-RN2005B', 'MANIJA PTA.INT.RENAULT CILO 05-12/KANGOO 08-C/MASTER 10-C/MEGANE 02-08/MODUS 04-12 / TWINGO 07', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(883, 'LP-RN1002A', 'LP-RN1002A', 'MANIJA LEVANTALUNA RENAULT LOGAN 2004-2012(NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(884, 'LP-RN2005A-LH', 'LP-RN2005A', 'MANIJA PTA.INT.RENAULT CILO 05-12/KANGOO 08-C/MASTER 10-C/MEGANE 02-08/MODUS 04-12 / TWINGO 07', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(885, 'LP-RN2005A-RH', 'LP-RN2005B', 'MANIJA PTA.INT.RENAULT CILO 05-12/KANGOO 08-C/MASTER 10-C/MEGANE 02-08/MODUS 04-12 / TWINGO 07', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
 (886, 'LP-RN2508A-MR', 'LP-RN2508A', 'MANIJA INT.PTA CORREDIZA (INTERSTAR)2011 RENAULT MASTER 2010', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (887, 'LP-RN3505A-MR', 'LP-RN3505A', 'MANIJA EXT.PTA.CORREDIZA RENULT MASTER 2003-10 MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (888, 'LP-RN3505A-TG', 'LP-RN3505', 'MANIJA .EXT.PTA DELANT.NISSAN RENAUL MASTER 2003-10 TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1),
@@ -10232,63 +11636,63 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (898, 'LP-SK2565G-RH', 'LP-SK2565H', 'MANIJA INT.SUSUKI(ALTO) GRAN  VITARA RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (899, 'LP-SK2567G-LH', 'LP-SK2567G', 'MANIJA INTERIOR SUSUKI SWIFT CULTUS 94-01   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (900, 'LP-SK2567G-RH', 'LP-SK2567H', 'MANIJA INTERIOR SUSUKI SWIFT CULTUS 94-01   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(901, 'LP-SK2568G-LH', 'LP-SK2568G', 'MANIJA INTERIOR SUSUKI SWIFT CULTUS 88-94 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(902, 'LP-SK2568G-RH', 'LP-SK2568H', 'MANIJA INTERIOR SUSUKI SWIFT CULTUS 88-94', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(901, 'LP-SK2568G-LH', 'LP-SK2568G', 'MANIJA INTERIOR SUSUKI SWIFT CULTUS 88-94 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
+(902, 'LP-SK2568G-RH', 'LP-SK2568H', 'MANIJA INTERIOR SUSUKI SWIFT CULTUS 88-94', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
 (903, 'LP-SK3001-TL', 'LP-SK3001T', 'MANIJA DE COMPUERTA MALETERA  SUSUKI APV 2004 TL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
 (904, 'LP-SK3135A-FL', 'LP-SK3135A', 'MANIJA EXT.PTA.DELANT.DAEWO DAMAS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (905, 'LP-SK3135A-FR', 'LP-SK3135B', 'MANIJA EXT.PTA.DELANT.DAEWO DAMAS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (906, 'LP-SK3145A-ML', 'LP-SK3145A', 'MANIJA EXT.PTA POST.CORREDIZA DAEWO DAMAS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -15, 1, 1),
-(907, 'LP-SK3145A-MR', 'LP-SK3145B', 'MANIJA EXT.PTA POST.CORREDIZA DAEWO DAMAS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
+(907, 'LP-SK3145A-MR', 'LP-SK3145B', 'MANIJA EXT.PTA POST.CORREDIZA DAEWO DAMAS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -1, 1, 1),
 (908, 'LP-SK3169A-ML', 'LP-SK3169A', 'MANIJA EXT.PTA CORREDIZA SUSUKI EVERY/CARRY', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
 (909, 'LP-SK3169A-MR', 'LP-SK3169B', 'MANIJA EXT.PTA CORREDIZA SUSUKI EVERY/CARRY', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
-(910, 'LP-SK3230A-FL', 'LP-SK3230A', 'MANIJA EXT.PTA DELANT SUSUKI BALENO FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(911, 'LP-SK3230A-FR', 'LP-SK3230B', 'MANIJA EXT.PTA DELANT SUSUKI BALENO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(912, 'LP-SK3230A-RL', 'LP-SK3230C', 'MANIJA EXT.PTA POST.SUSUKI BALENO RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, -2, 1, 1),
-(913, 'LP-SK3230A-RR', 'LP-SK3230D', 'MANIJA EXT.PTA POST.SUSUKI BALENO RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, -2, 1, 1),
-(914, 'LP-SK3235A-LH', 'LP-SK3235A', 'MANIJA.EXT.PTA DELANT.SUSUKI APV-04/ALTO NEGRO CLARO LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
-(915, 'LP-SK3235A-RH', 'LP-SK3235B', 'MANIJA.EXT.PTA DELANT.SUSUKI APV-04/ALTO NEGRO CLARO RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(916, 'LP-TY1003G', 'LP-TY1003G', 'MANIJA LEVANTALUNA TOYOTA YARIS 99....', 2, 2, 1, 0, 1, 1, 0, 0, 0, 233, 1, 1),
-(917, 'LP-TY1021G', 'LP-TY1021G', 'MANIJA LEVANTALUNA TY HILUX VIGO 05-YARIS 2007-2012 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
+(910, 'LP-SK3230A-FL', 'LP-SK3230A', 'MANIJA EXT.PTA DELANT SUSUKI BALENO FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(911, 'LP-SK3230A-FR', 'LP-SK3230B', 'MANIJA EXT.PTA DELANT SUSUKI BALENO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(912, 'LP-SK3230A-RL', 'LP-SK3230C', 'MANIJA EXT.PTA POST.SUSUKI BALENO RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(913, 'LP-SK3230A-RR', 'LP-SK3230D', 'MANIJA EXT.PTA POST.SUSUKI BALENO RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, -6, 1, 1),
+(914, 'LP-SK3235A-LH', 'LP-SK3235A', 'MANIJA.EXT.PTA DELANT.SUSUKI APV-04/ALTO NEGRO CLARO LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
+(915, 'LP-SK3235A-RH', 'LP-SK3235B', 'MANIJA.EXT.PTA DELANT.SUSUKI APV-04/ALTO NEGRO CLARO RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(916, 'LP-TY1003G', 'LP-TY1003G', 'MANIJA LEVANTALUNA TOYOTA YARIS 99....', 2, 2, 1, 0, 1, 1, 0, 0, 0, 230, 1, 1),
+(917, 'LP-TY1021G', 'LP-TY1021G', 'MANIJA LEVANTALUNA TY HILUX VIGO 05-YARIS 2007-2012 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
 (918, 'LP-TY1093G', 'LP-TY1093G', 'MANIJA LEVANTALUNA TY CAMRY 97-2001 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 230, 1, 1),
-(919, 'LP-TY2004G-LH', 'LP-TY2004G', 'MANIJA INTERIOR TOYOTA YARIS 07-12 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 48, 1, 1),
-(920, 'LP-TY2004G-RH', 'LP-TY2004H', 'MANIJLA INTERIOR TOYOTA YARIS 07-12 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 48, 1, 1),
-(921, 'LP-TY2008A-LH', 'LP-TY2008A', 'MANIJA INTERIOR TOYOTA AVANZA 2012-C NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(922, 'LP-TY2008A-RH', 'LP-TY2008B', 'MANIJA INTERIOR TOYOTA AVANZA 2012-C NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(919, 'LP-TY2004G-LH', 'LP-TY2004G', 'MANIJA INTERIOR TOYOTA YARIS 07-12 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 45, 1, 1),
+(920, 'LP-TY2004G-RH', 'LP-TY2004H', 'MANIJLA INTERIOR TOYOTA YARIS 07-12 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 45, 1, 1),
+(921, 'LP-TY2008A-LH', 'LP-TY2008A', 'MANIJA INTERIOR TOYOTA AVANZA 2012-C NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(922, 'LP-TY2008A-RH', 'LP-TY2008B', 'MANIJA INTERIOR TOYOTA AVANZA 2012-C NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (923, 'LP-TY2008MA-LH', 'LP-TY2008M', 'MANIJA INT.TOYOTA AVANZA 2012 -C CROMADO C/NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
 (924, 'LP-TY2008MA-RH', 'LP-TY2008N', 'MANIJA INT.TOYOTA AVANZA 2012 -C CROMADO C/NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
 (925, 'LP-TY2523G-LH', 'LP-TY2523G', 'MANIJA INT.TOY.COROLLA AUTO 93-97 TURING GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
 (926, 'LP-TY2523G-RH', 'LP-TY2523H', 'MANIJA INT.TOY.COROLLA AUTO 93-97 TURING GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
-(927, 'LP-TY2546A-LH', 'LP-TY2546A', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 43, 1, 1),
-(928, 'LP-TY2546A-RH', 'LP-TY2546B', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 43, 1, 1),
-(929, 'LP-TY2546G-LH', 'LP-TY2546G', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1),
-(930, 'LP-TY2546G-RH', 'LP-TY2546H', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1),
+(927, 'LP-TY2546A-LH', 'LP-TY2546A', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
+(928, 'LP-TY2546A-RH', 'LP-TY2546B', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
+(929, 'LP-TY2546G-LH', 'LP-TY2546G', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(930, 'LP-TY2546G-RH', 'LP-TY2546H', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
 (931, 'LP-TY2560G-LH', 'LP-TY2560L', 'MANIJA INT.DELANT TOYOTA HIACE 90-03', 2, 2, 1, 0, 1, 1, 0, 0, 0, 50, 1, 1),
 (932, 'LP-TY2560G-RH', 'LP-TY2560R', 'MANIJA INT.DELANT TOYOTA HIACE 90-03', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
-(933, 'LP-TY2565G-RR', 'LP-TY2565G', 'MANIJA INT.DE PUERTA CORREDIZA TOYOTA HIACE 2005 GRIS RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
-(934, 'LP-TY2574G-LH', 'LP-TY2574G', 'MANIJA INT.TOYOTA CALDINA/CORONA 94-97 GRIS LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
-(935, 'LP-TY2574G-RH', 'LP-TY2574H', 'MANIJA INT.TOYOTA CALDINA/CORONA 94-97 GRIS RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(933, 'LP-TY2565G-RR', 'LP-TY2565G', 'MANIJA INT.DE PUERTA CORREDIZA TOYOTA HIACE 2005 GRIS RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
+(934, 'LP-TY2574G-LH', 'LP-TY2574G', 'MANIJA INT.TOYOTA CALDINA/CORONA 94-97 GRIS LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(935, 'LP-TY2574G-RH', 'LP-TY2574H', 'MANIJA INT.TOYOTA CALDINA/CORONA 94-97 GRIS RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
 (936, 'LP-TY2575G-LH', 'LP-TY2575G', 'MANIJA INT.TOYOTA CORONA PREMIO 98-01 GRIS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (937, 'LP-TY2575G-RH', 'LP-TY2575H', 'MANIJA INT.TOYOTA CORONA PREMIO 98-01 GRIS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(938, 'LP-TY2579G-MR', 'LP-TY2579G', 'MANIJA INT.PTA CORREDIZA TOY.HIACE 2L 85-89 GRIS MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
-(939, 'LP-3105 L          ', 'LP-3105 L          ', 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1),
-(940, 'LP-31050R     ', 'LP-31050R     ', 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(938, 'LP-TY2579G-MR', 'LP-TY2579G', 'MANIJA INT.PTA CORREDIZA TOY.HIACE 2L 85-89 GRIS MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(939, 'LP-3105 L          ', 'LP-3105 L          ', 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(940, 'LP-31050R     ', 'LP-31050R     ', 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
 (941, 'LP-TY3115A-FL', 'LP-TY3115A', 'MANIJA EXT.DELANTERA TOYOTA HIACE 2L 85-89 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
 (942, 'LP-TY3115A-FR', 'LP-TY3115B', 'MANIJA EXT.DELANTERA TOYOTA HIACE 2L 85-89 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
-(943, 'LP-TY3115A-M', 'LP-TY3115M', 'MANIJA EXT.PTA CORREDIZA TOYOTA HIACE 2L 85-89 A-M', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(944, 'LP-TY3138A-FL', 'LP-TY3138A', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 93...FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
-(945, 'LP-TY3138A-FR', 'LP-TY3138B', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 93...FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
-(946, 'LP-TY3139A-FL', 'LP-TY3139A', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 85-89 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(947, 'LP-TY3139A-FR', 'LP-TY3139B', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 85-89 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(943, 'LP-TY3115A-M', 'LP-TY3115M', 'MANIJA EXT.PTA CORREDIZA TOYOTA HIACE 2L 85-89 A-M', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
+(944, 'LP-TY3138A-FL', 'LP-TY3138A', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 93...FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(945, 'LP-TY3138A-FR', 'LP-TY3138B', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 93...FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, -2, 1, 1),
+(946, 'LP-TY3139A-FL', 'LP-TY3139A', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 85-89 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(947, 'LP-TY3139A-FR', 'LP-TY3139B', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 85-89 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (948, 'LP-TY3155A-FL', 'LP-TY3155A', 'MANIJA EXT DELANTERA TOYOTA COROLLA AE-90 88 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (949, 'LP-TY3155A-FR', 'LP-TY3155B', 'MANIJA EXT DELANTERA TOYOTA COROLLA AE-90 88 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (950, 'LP-TY3155A-RL', 'LP-TY3155C', 'MANIJA EXT POSTERIOR TOYOTA COROLLA AE-90 88 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (951, 'LP-TY3155A-RR', 'LP-TY3155D', 'MANIJA EXT POSTERIOR TOYOTA COROLLA AE-90 88 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
 (952, 'LP-TY3176S-FL', 'LP-TY3176S', 'MANIJA EXT.PTA DELANT TOYOTA CAMRY 92-96 NEGRO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(953, 'LP-TY3180A-FL', 'LP-TY3180', '\"MANIJA EXT.PTA.DELANT.TY.H.VIGO,ALTIS YARIS,CAMRY 06-12 FL\"', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(954, 'LP-TY3180A-FRK', 'LP-TY3180A', '\"MANIJA EXT.PTA.DELANT.TY.H.VIGO,ALTIS YARIS,CAMRY 06-12 FRK\"', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(953, 'LP-TY3180A-FL', 'LP-TY3180', '\"MANIJA EXT.PTA.DELANT.TY.H.VIGO,ALTIS YARIS,CAMRY 06-12 FL\"', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(954, 'LP-TY3180A-FRK', 'LP-TY3180A', '\"MANIJA EXT.PTA.DELANT.TY.H.VIGO,ALTIS YARIS,CAMRY 06-12 FRK\"', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
 (955, 'LP-TY3180A-RER', 'LP-TY3180E', '\"MANIJA EXT.POST.TY.HIGHLAN.01-07/CAMRY,VIGO, YARIS 06-12(L=R)\"', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1),
-(956, 'LP-TY3191A-TG', 'LP-TY3191A', 'MANIJA DE TOLVA TOYOTA HILUX  NEGRO VIGO 05 A-TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(957, 'LP-TY3191M-TG', 'LP-TY3191M', 'MANIJA DE TOLVA TOYOTA HILUX  CROMADO VIGO 05 M-TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 132, 1, 1),
+(956, 'LP-TY3191A-TG', 'LP-TY3191A', 'MANIJA DE TOLVA TOYOTA HILUX  NEGRO VIGO 05 A-TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(957, 'LP-TY3191M-TG', 'LP-TY3191M', 'MANIJA DE TOLVA TOYOTA HILUX  CROMADO VIGO 05 M-TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 76, 1, 1),
 (958, 'LP-TY3192A-FL', 'LP-TY3192A', 'MANIJA EXT.DELANT.TOYOTA CORONA 88-92 NEGRO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (959, 'LP-TY3192A-FR', 'LP-TY3192B', 'MANIJA EXT.DELANT.TOYOTA CORONA 88-92 NEGRO FR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
 (960, 'LP-TY3192A-RL', 'LP-TY3192L', 'MANIJA EXT.POST.TOYOTA CORONA 88-92 NEGRO RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
@@ -10297,37 +11701,37 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (963, 'LP-TY3196S-FR', 'LP-TY3196Z', 'MANILLA EXTERIOR DELANT.TOYOTA CORONA PREMIO 98-01FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
 (964, 'LP-TY3196S-RL', 'LP-TY3196L', 'MANILLA EXTERIOR POST.TOYOTA CORONA PREMIO 98-01 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
 (965, 'LP-TY3196S-RR', 'LP-TY3196R', 'MANILLA EXTERIOR POST.TOYOTA CORONA PREMIO 98-01 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(966, 'LP-3197AL     ', 'LP-C791L', 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE110 96-01                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1),
-(967, 'LP-TY3197A-RL', 'LP-TY3197A', 'MANIJA EXT.PTA.POST.TOYOTA COROLLA AE110 96-01 NEGRO RL                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 43, 1, 1),
-(968, 'LP-TY3197A-RR', 'LP-TY3197B', 'MANIJA EXT.PTA.POST.TOYOTA COROLLA AE110 96-01 NEGRO RR                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 43, 1, 1),
-(969, 'LP-TY3215A-FL', 'LP-TY3215A', 'MANIJA.EXT.DELANT.TOYOTA HIACE 3L 90-03 FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 44, 1, 1),
-(970, 'LP-TY3215A-FR', 'LP-TY3215B', 'MANIJA.EXT.DELANT.TOYOTA HIACE 3L 90-03 FR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 44, 1, 1),
-(971, 'LP-TY3215A-ML', 'LP-TY3215L', 'MANIJA EXTERIOR PTA CORREDIZA TOY.HIACE 3L 90-97 ML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
-(972, 'LP-TY3215A-MR', 'LP-TY3215R', 'MANIJA EXTERIOR PTA CORREDIZA TOY.HIACE 3L 90-97 MR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 70, 1, 1),
+(966, 'LP-3197AL     ', 'LP-C791L', 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE110 96-01                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
+(967, 'LP-TY3197A-RL', 'LP-TY3197A', 'MANIJA EXT.PTA.POST.TOYOTA COROLLA AE110 96-01 NEGRO RL                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
+(968, 'LP-TY3197A-RR', 'LP-TY3197B', 'MANIJA EXT.PTA.POST.TOYOTA COROLLA AE110 96-01 NEGRO RR                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1),
+(969, 'LP-TY3215A-FL', 'LP-TY3215A', 'MANIJA.EXT.DELANT.TOYOTA HIACE 3L 90-03 FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 36, 1, 1),
+(970, 'LP-TY3215A-FR', 'LP-TY3215B', 'MANIJA.EXT.DELANT.TOYOTA HIACE 3L 90-03 FR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 36, 1, 1),
+(971, 'LP-TY3215A-ML', 'LP-TY3215L', 'MANIJA EXTERIOR PTA CORREDIZA TOY.HIACE 3L 90-97 ML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 38, 1, 1),
+(972, 'LP-TY3215A-MR', 'LP-TY3215R', 'MANIJA EXTERIOR PTA CORREDIZA TOY.HIACE 3L 90-97 MR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 66, 1, 1),
 (973, 'LP-TY3215-TL', 'LP-TY3215T', 'GATILLO DE COMPUERTA TOYOTA HIACE 3L 90-04 TL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 43, 1, 1),
-(974, 'LP-32171 R          ', 'LP-32171 R          ', 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005..                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(975, 'LP-TY3217A-MR', 'LP-TY3217A', 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005 MR                 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
+(974, 'LP-32171 R          ', 'LP-32171 R          ', 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005..                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(975, 'LP-TY3217A-MR', 'LP-TY3217A', 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005 MR                 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (976, 'LP-TY3217M-FL', 'LP-TY3217M', 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005...CROMO FL        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (977, 'LP-TY3217M-FR', 'LP-TY3217N', 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005...CROMO FR      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (978, 'LP-TY3240A-FL', 'LP-TY3240A', 'MANIJA EXT.PUERTA DELANTERA TOYOTA DYNA FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (979, 'LP-TY3240A-FR', 'LP-TY3240B', 'MANIJA EXT.PUERTA DELANTERA TOYOTA DYNA FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(980, 'LP-TY3412A-FL', 'LP-TY3412A', 'MANIJA EXT.DELANT.HILUX REVO 2015 2015 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(980, 'LP-TY3412A-FL', 'LP-TY3412A', 'MANIJA EXT.DELANT.HILUX REVO 2015 2015 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
 (981, 'LP-TY3412A-RER', 'LP-TY3412E', 'MANIJA EXT.POST.HILUX REVO 15 (RH=LH)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
 (982, 'LP-TY3412M-FL', 'LP-TY3412M', 'MANIJA EXT.DELANT.HILUX REVO 2015 2015 CROMO M-FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
 (983, 'LP-TY3412M-RER', 'LP-TY3412N', 'MANIJA EXT.POST.HILUX REVO 15 CROMADO (RH=LH)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(984, 'LP-TY4143', 'LP-TY4143', 'CHAPA DE PTA MALETERA TOYOTA COROLLA AE100 SW 88-91', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(984, 'LP-TY4143', 'LP-TY4143', 'CHAPA DE PTA MALETERA TOYOTA COROLLA AE100 SW 88-91', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
 (985, 'LP-TY4163-LHD', 'LP-TY4163D', 'CHAPA DE CAPOT TOYOTA HILUX  2005-12 LHD', 2, 2, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1),
-(986, 'LP-TY4167-LHD', 'LP-TY4167', 'CHAPA DE CAPOT TOYOTA HILUX  89-98 LHD', 2, 2, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1),
-(987, 'LP-TY4186', 'LP-TY4186', 'CHAPA DE PUERTA MALETERA TOYOTA COROLLA AE100 93-97', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1),
+(986, 'LP-TY4167-LHD', 'LP-TY4167', 'CHAPA DE CAPOT TOYOTA HILUX  89-98 LHD', 2, 2, 1, 0, 1, 1, 0, 0, 0, -7, 1, 1),
+(987, 'LP-TY4186', 'LP-TY4186', 'CHAPA DE PUERTA MALETERA TOYOTA COROLLA AE100 93-97', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (988, 'LP-TY4187', 'LP-TY4187', 'CHAPA DE PUERTA MALETERA TOYOTA COROLLA 88-92', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
-(989, 'LP-TY4188', 'LP-TY4188', 'CHAPA DE PUERTA MALETERA AUTO TOYOTA COROLLA 98-01', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(989, 'LP-TY4188', 'LP-TY4188', 'CHAPA DE PUERTA MALETERA AUTO TOYOTA COROLLA 98-01', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (990, 'LP-TY4207-LHD', 'LP-TY4207', 'CHAPA DE CAPOT TOYOTA COROLLA  EE90 88-92 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(991, 'LP-TY4215', 'LP-TY4215', 'CHAPA DE PUERTA MALETERA TOYOTA CORONA 94-97', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(992, 'LP-TY4218', 'LP-TY4218', 'CHAPA PUERTA MALETERA TOYOTA HIACE 2L 85-89', 2, 2, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1),
+(991, 'LP-TY4215', 'LP-TY4215', 'CHAPA DE PUERTA MALETERA TOYOTA CORONA 94-97', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(992, 'LP-TY4218', 'LP-TY4218', 'CHAPA PUERTA MALETERA TOYOTA HIACE 2L 85-89', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
 (993, 'LP-TY4235-LHD', 'LP-TY4235', 'CHAPA DE CAPOT TOYOTA COROLLA AE110 AUTO 98-02 LHD', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
-(994, 'LP-TY4243-LHD', 'LP-TY4243', 'CHAPA DE CAPOT TOYOTA COROLLA AE100 93-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 39, 1, 1),
-(995, 'LP-TY4249', 'LP-TY4249', 'CHAPA DE PUERTA MALETERA AUTO TOYOTA TERCEL 95-00', 2, 2, 1, 0, 1, 1, 0, 0, 0, 36, 1, 1),
-(996, 'LP-TY4250', 'LP-TY4250', 'CHAPA DE PUERTA MALETERA TOYOTA HIACE 3L 90-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 37, 1, 1),
+(994, 'LP-TY4243-LHD', 'LP-TY4243', 'CHAPA DE CAPOT TOYOTA COROLLA AE100 93-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1),
+(995, 'LP-TY4249', 'LP-TY4249', 'CHAPA DE PUERTA MALETERA AUTO TOYOTA TERCEL 95-00', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1),
+(996, 'LP-TY4250', 'LP-TY4250', 'CHAPA DE PUERTA MALETERA TOYOTA HIACE 3L 90-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1),
 (997, 'LP-TY5084M-FL', 'LP-TY5084M', 'CREMALLERA LEVANTALUNA TOYOTA HIACE 2L 85-89 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1),
 (998, 'LP-TY5084M-FR', 'LP-TY5084N', 'CREMALLERA LEVANTALUNA TOYOTA HIACE 2L 85-89 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (999, 'LP-TY5207A-GE', 'LP-TY5207A', 'TROMPITO PARA CREMALLERA LEVANTALUNA TOYOTA GE', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
@@ -10335,69 +11739,71 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (1001, 'LP-TY5218M-FR', 'LP-TY5218N', 'CREMALLERA LENTANT.TOYOTA HIACE 2005 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
 (1002, 'LP-TY5265M-FL', 'LP-TY5265M', 'CREMALLERA LEVANT TOYOTA HILUX DLTERA FL 1990-1996 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, -10, 1, 1),
 (1003, 'LP-TY5265M-FR', 'LP-TY5265N', 'CREMALLERA LEVANT TOYOTA HILUX DLTERA FL 1990-1996 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
-(1004, 'LP-TY5278M-FL', 'LP-TY5278M', 'CREMALLERA LEVANTALUNA TOYOTA HIAC3L 90-99 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
-(1005, 'LP-TY5278M-FR', 'LP-TY5278N', 'CREMALLERA LEVANTALUNA TOYOTA HIAC3L 90-99 FR  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(1006, 'LP-TY6004-LH', 'LP-TY6004L', 'BISAGRA DE CAPOT TOYOTA COROLLA AE110 98-02 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 37, 1, 1),
-(1007, 'LP-TY6004-RH', 'LP-TY6004R', 'BISAGRA DE CAPOT TOYOTA COROLLA AE110 98-02 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 37, 1, 1),
+(1004, 'LP-TY5278M-FL', 'LP-TY5278M', 'CREMALLERA LEVANTALUNA TOYOTA HIAC3L 90-99 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(1005, 'LP-TY5278M-FR', 'LP-TY5278N', 'CREMALLERA LEVANTALUNA TOYOTA HIAC3L 90-99 FR  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(1006, 'LP-TY6004-LH', 'LP-TY6004L', 'BISAGRA DE CAPOT TOYOTA COROLLA AE110 98-02 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
+(1007, 'LP-TY6004-RH', 'LP-TY6004R', 'BISAGRA DE CAPOT TOYOTA COROLLA AE110 98-02 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
 (1008, 'LP-TY6017-LH', 'LP-TY6017L', 'BISAGRA DE CAPOT TOYOTA Hilux 98-05', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
 (1009, 'LP-TY6017-RH', 'LP-TY6017R', 'BISAGRA DE CAPOT TOYOTA Hilux 98-05', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
-(1010, 'LP-TY6035-LH', 'LP-TY6035L', 'BISAGRA DE CAPOT TOYOTA TERCEL 95-01 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(1011, 'LP-TY6035-RH', 'LP-TY6035R', 'BISAGRA DE CAPOT TOYOTA TERCEL 95-01 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1),
-(1012, 'LP-TY6037-LH', 'LP-TY6037L', 'BISAGRA DE CAPOT TOYOTA YARIS 2007-2012 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 37, 1, 1),
-(1013, 'LP-TY6037-RH', 'LP-TY6037R', 'BISAGRA DE CAPOT TOYOTA YARIS 2007-2012 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 37, 1, 1),
+(1010, 'LP-TY6035-LH', 'LP-TY6035L', 'BISAGRA DE CAPOT TOYOTA TERCEL 95-01 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(1011, 'LP-TY6035-RH', 'LP-TY6035R', 'BISAGRA DE CAPOT TOYOTA TERCEL 95-01 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
+(1012, 'LP-TY6037-LH', 'LP-TY6037L', 'BISAGRA DE CAPOT TOYOTA YARIS 2007-2012 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1),
+(1013, 'LP-TY6037-RH', 'LP-TY6037R', 'BISAGRA DE CAPOT TOYOTA YARIS 2007-2012 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1),
 (1014, 'LP-TY6163-LH', 'LP-TY6163L', 'BISAGRA DE CAPOT TOYOTA  HILUX VIGO  2005-2013 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1),
 (1015, 'LP-TY6163-RH', 'LP-TY6163R', 'BISAGRA DE CAPOT TOYOTA  HILUX VIGO  2005-2013 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1),
 (1016, 'LP-TY6217-LH', 'LP-TY6217L', 'BISAGRA DE CAPOT TOYOTA HIACE 5L 2005-2014 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1),
 (1017, 'LP-TY6217-RH', 'LP-TY6217R', 'BISAGRA DE CAPOT TOYOTA HIACE 5L 2005-2014 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1),
-(1018, 'LP-TY7054-FL', 'LP-TY7054L', 'CHAPA DE PUERTA DELANTERA TOYOTA HILUX 89/95 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
-(1019, 'LP-TY7054-FR', 'LP-TY7054R', 'CHAPA DE PUERTA DELANTERA TOYOTA HILUX 89/95 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
-(1020, 'LP-TYB032G', 'LP-TYB032G', 'MANIJA DE GUANTERA TOYOTA COROLLA AE100 93-97 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 350, 1, 1),
-(1021, 'LP-TYC001A', 'LP-TYC001A', 'MANIJA DE PUERTA TOLVA TOYOTA HILUX GANCHO( NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(1022, 'LP-TYC001Y', 'LP-TYC001Y', 'MANIJA DE PUERTA TOLVA TOYOTA HILUX GANCHO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(1018, 'LP-TY7054-FL', 'LP-TY7054L', 'CHAPA DE PUERTA DELANTERA TOYOTA HILUX 89/95 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(1019, 'LP-TY7054-FR', 'LP-TY7054R', 'CHAPA DE PUERTA DELANTERA TOYOTA HILUX 89/95 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(1020, 'LP-TYB032G', 'LP-TYB032G', 'MANIJA DE GUANTERA TOYOTA COROLLA AE100 93-97 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 263, 1, 1),
+(1021, 'LP-TYC001A', 'LP-TYC001A', 'MANIJA DE PUERTA TOLVA TOYOTA HILUX GANCHO( NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+(1022, 'LP-TYC001Y', 'LP-TYC001Y', 'MANIJA DE PUERTA TOLVA TOYOTA HILUX GANCHO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
 (1023, 'LP-3100AL', 'LP-3100AL', 'MANIJA EXTERIOR DE DAEWOO TICO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 105, 1, 1),
-(1024, 'LP-2004ARL', 'LP-2004ARL', 'MANIJA INT.PTA POST KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 43, 1, 1),
+(1024, 'LP-2004ARL', 'LP-2004ARL', 'MANIJA INT.PTA POST KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1),
 (1025, 'LP-3230MFR', 'LP-3230MFR', 'MANIJA EXT.PTA DELANT MITSUB.LANCER MIRAGE 97-02 CROMO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
 (1026, 'LP-SW6', 'CM05-SW2', 'FARO NEBLINERO SUZUKI SWIFT 2005 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
 (1027, 'LP-CO6', 'CM14-TC4', 'FARO NEBLINERO PARACHOQUE TOYOTA COROLLA 2014 (SETL/R)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1),
-(1028, 'LP-SC2', 'CM11-SZA2', 'FARO NEBLINERO SUZUKI ALTO CELERIO 2010 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1),
-(1181, 'LP-SAL10', 'LP-SAL10', 'FARO NEBLI.CHEV.SAIL 2010-2014(SET2) KIT COMP', 1, 1, 1, 0, 1, 1, 0, 0, 0, 37, 1, 1),
+(1028, 'LP-SC2', 'CM11-SZA2', 'FARO NEBLINERO SUZUKI ALTO CELERIO 2010 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(1181, 'LP-SAL10', 'LP-SAL10', 'FARO NEBLI.CHEV.SAIL 2010-2014(SET2) KIT COMP', 1, 1, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
 (1182, 'LP-SP14', 'LP-SP14', 'FARO NEBLI.CHEV. SPARK 2005 (SET2)(SET2) KIT COMP', 1, 1, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
 (1183, 'LP-EL8', 'LP-EL8', 'FARO NEBLI.HY ELANTRA 2017...(SETX2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
 (1184, 'LP-EL6', 'LP-EL6', 'FARO NEBLI.HY ELANTRA 2014-2016 (SETX2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1),
-(1185, 'LP-EL4A', 'LP-EL4A', 'FARO NEBLI.HY ELANTRA 2011-2013 (SETX2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 31, 1, 1),
-(1186, 'LP-AC4A', 'LP-AC4A', 'FARO NEBLI.PARACH. HY ACCENT 2011-2017(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 36, 1, 1),
-(1187, 'LP-TU6', 'LP-TU6', 'FARO NEBLI.PARACH.HY TUCSON 2014-2015 (SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(1185, 'LP-EL4A', 'LP-EL4A', 'FARO NEBLI.HY ELANTRA 2011-2013 (SETX2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1),
+(1186, 'LP-AC4A', 'LP-AC4A', 'FARO NEBLI.PARACH. HY ACCENT 2011-2017(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
+(1187, 'LP-TU6', 'LP-TU6', 'FARO NEBLI.PARACH.HY TUCSON 2014-2015 (SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (1188, 'LP-I108', 'LP-I108', 'FARO NEBLI.PARACH.HY.GRAND I10 2018 (SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (1189, 'LP-I104D', 'LP-I104D', 'FARO NEBLI.PARACH. HY I10 2012(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
 (1190, 'LP-H12D', 'LP-H12D', 'FARO NEBLI.PARACH. HY H1(SET2)(KIT COMP)   ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1),
 (1191, 'LP-SG2D', 'LP-SG2D', 'FARO NEBLI.KIA SPORTAGE 2005 (SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(1192, 'LP-RI4H', 'LP-RI4H', 'FARO NEBLI.KIA RIO HATCHBAC 2012 (SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(1193, 'LP-CE4D', 'LP-CE4D', 'FARO NEBLI.KIA CERATO  2013 (SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
+(1192, 'LP-RI4H', 'LP-RI4H', 'FARO NEBLI.KIA RIO HATCHBAC 2012 (SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
+(1193, 'LP-CE4D', 'LP-CE4D', 'FARO NEBLI.KIA CERATO  2013 (SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
 (1194, 'LP-PI6', 'LP-PI6', 'FARO NEBLI.KIA PICANTO 2015-2016(SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(1195, 'LP-PI4K', 'LP-PI4K', 'FARO NEBLI.KIA PICANTO 2012-2014(SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
-(1196, 'LP-TR2D', 'LP-TR2D', 'FARO NEBLI.MITSUB.TRITON L200 2009-2013..(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
-(1197, 'LP-NS4', 'LP-NS4', 'FARO NEBLI.NISS.SENTRA 2012-2015(SET2)NEGRO(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(1198, 'LP-NA4D', 'LP-NA4D', 'FARO NEBLI.NISS.NAVARA 2014/NP300...(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(1199, 'LP-VE2', 'LP-VE2', 'FARO NEBLI.VERSA 2009-2013/TIIDA 2009-2013...(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
+(1195, 'LP-PI4K', 'LP-PI4K', 'FARO NEBLI.KIA PICANTO 2012-2014(SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(1196, 'LP-TR2D', 'LP-TR2D', 'FARO NEBLI.MITSUB.TRITON L200 2009-2013..(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1),
+(1197, 'LP-NS4', 'LP-NS4', 'FARO NEBLI.NISS.SENTRA 2012-2015(SET2)NEGRO(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(1198, 'LP-NA4D', 'LP-NA4D', 'FARO NEBLI.NISS.NAVARA 2014/NP300...(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(1199, 'LP-VE2', 'LP-VE2', 'FARO NEBLI.VERSA 2009-2013/TIIDA 2009-2013...(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1),
 (1200, 'LP-TI2A', 'LP-TI2A', 'FARO NEBLI.TIIDA 2005-2008...(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(1201, 'LP-UR4B', 'LP-UR4B', 'FARO NEBLI.NISS.URVAN NV350 2013-2017 (SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(1201, 'LP-UR4B', 'LP-UR4B', 'FARO NEBLI.NISS.URVAN NV350 2013-2017 (SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
 (1202, 'LP-LC4', 'LP-LC4', 'FARO NEBLI.TOYOTA LAND CRUISER PRADO 2014-2016 (SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(1203, 'LP-PD2', 'LP-PD2', 'FARO NEBLI.TOYOTA PRADO FJ120 2003-2004 (SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
-(1204, 'LP-HR4', 'LP-HR4', 'FARO NEBLI.TY.REVO ROCCO 2018(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
-(1205, 'LP-HX2A', 'LP-HX2A', 'FARO NEBLI.TY HILUX VIGO 2011(SET 2 )(KIT COMP)   ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 77, 1, 1),
-(1206, 'LP-YS6', 'LP-YS6', 'FARO NEBLI.TY YARIS SEDAN 2017 (SET2) (KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1),
-(1207, 'LP-CO4T', 'LP-CO4T', 'FARO NEBLI.TY.COROLLA 2011-2013 CROMADO(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 49, 1, 1),
-(1208, 'LP-CO4H', 'LP-CO4H', 'FARO NEBLI.TY.COROLLA 2008-2011 NEGRO(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1),
-(1209, 'LP-ET4', 'LP-ET4', 'FARO NEBLI.TOYOTA ETIOS SEDAN/HATCHBACK CK2017(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
-(1210, 'LP-HX4T', 'LP-HX4T', 'FARO NEBLI.TY.AVANZA 2015(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
+(1203, 'LP-PD2', 'LP-PD2', 'FARO NEBLI.TOYOTA PRADO FJ120 2003-2004 (SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1),
+(1204, 'LP-HR4', 'LP-HR4', 'FARO NEBLI.TY.REVO ROCCO 2018(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
+(1205, 'LP-HX2A', 'LP-HX2A', 'FARO NEBLI.TY HILUX VIGO 2011(SET 2 )(KIT COMP)   ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 53, 1, 1),
+(1206, 'LP-YS6', 'LP-YS6', 'FARO NEBLI.TY YARIS SEDAN 2017 (SET2) (KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1),
+(1207, 'LP-CO4T', 'LP-CO4T', 'FARO NEBLI.TY.COROLLA 2011-2013 CROMADO(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 41, 1, 1),
+(1208, 'LP-CO4H', 'LP-CO4H', 'FARO NEBLI.TY.COROLLA 2008-2011 NEGRO(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
+(1209, 'LP-ET4', 'LP-ET4', 'FARO NEBLI.TOYOTA ETIOS SEDAN/HATCHBACK CK2017(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1),
+(1210, 'LP-HX4T', 'LP-HX4T', 'FARO NEBLI.TY.AVANZA 2015(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
 (1211, 'LP-SU8', 'LP-SU8', 'FARO NEBLINERO SUZUKI UNIVERSAL(SET2-KIT)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1),
-(1212, 'LP-TH4H', 'LP-TH4H', 'FARO NEBLI.TY HIACE 2011-2013(SET2)(KIT COMP)  ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1),
-(1213, 'LP-AM4', 'LP-AM4', 'FARO NEBLI.AMAROK 2014(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(1212, 'LP-TH4H', 'LP-TH4H', 'FARO NEBLI.TY HIACE 2011-2013(SET2)(KIT COMP)  ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1),
+(1213, 'LP-AM4', 'LP-AM4', 'FARO NEBLI.AMAROK 2014(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
 (1214, 'LP-FC2', 'LP-FC2', 'FARO NEBLI.CHEV.TRAX/TRACKER`1 2014- 2016...(SET2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
-(1215, 'LP-FTN2', 'LP-FTN2', 'FARO NEBLI.FORTUNER/HILUX/SW4 2012- 2015...(SET2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1),
-(1216, 'LP-AF2', 'LP-AF2', 'FARO NEBL.TOY.AXIO FIELDER 2007/COROLLA 2011 CROMO(SET2KIT)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1),
-(1217, 'LP-TG2', 'CM-CHT2', 'FARO NEBLINERO CHERRY TIGGO(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1),
-(1218, 'LP-AT2Z', '', 'FARO NEBLI.TY.ALTIS 2000-2003(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1);
+(1215, 'LP-FTN2', 'LP-FTN2', 'FARO NEBLI.FORTUNER/HILUX/SW4 2012- 2015...(SET2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1),
+(1216, 'LP-AF2', 'LP-AF2', 'FARO NEBL.TOY.AXIO FIELDER 2007/COROLLA 2011 CROMO(SET2KIT)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1),
+(1217, 'LP-TG2', 'CM-CHT2', 'FARO NEBLINERO CHERRY TIGGO(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1),
+(1218, 'LP-AT2Z', '', 'FARO NEBLI.TY.ALTIS 2000-2003(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1),
+(1220, 'LP-CS2', 'CM08-KCR2', 'FARO NEBLINERO KIA CARENS 2003(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1),
+(1221, 'LP-TA6S', 'CM08-TA4S', 'FARO NEBLI.PARACH.TY YARIS,COROLLA ALTIS 2007 (VIDRIO)(SET2) S/SOCKET ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -10406,16 +11812,14 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 --
 
 DROP TABLE IF EXISTS `profile`;
-CREATE TABLE IF NOT EXISTS `profile` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
-  `user_id` int(11) NOT NULL DEFAULT 0 COMMENT 'ID USER',
+CREATE TABLE `profile` (
+  `id` int(11) NOT NULL COMMENT 'ID UNICO',
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT 'ID USER',
   `nombre` varchar(50) NOT NULL DEFAULT '' COMMENT 'NOMBRE USUARIO',
   `apellido` varchar(50) NOT NULL DEFAULT '' COMMENT 'APELLIDO USUARIO',
-  `empresa` int(11) NOT NULL DEFAULT 0 COMMENT 'EMPRESA USUARIO',
-  `sucursal` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL USUARIO',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='GUARDA PERFILES DE USUARIOS';
+  `empresa` int(11) NOT NULL DEFAULT '0' COMMENT 'EMPRESA USUARIO',
+  `sucursal` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL USUARIO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA PERFILES DE USUARIOS';
 
 --
 -- Volcado de datos para la tabla `profile`
@@ -10431,8 +11835,8 @@ INSERT INTO `profile` (`id`, `user_id`, `nombre`, `apellido`, `empresa`, `sucurs
 --
 
 DROP TABLE IF EXISTS `proveedor`;
-CREATE TABLE IF NOT EXISTS `proveedor` (
-  `id_prove` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `proveedor` (
+  `id_prove` int(11) NOT NULL COMMENT 'ID UNICO',
   `dni_prove` varchar(20) NOT NULL COMMENT 'DNI PROVEEDOR',
   `ruc_prove` varchar(20) NOT NULL COMMENT 'RUC PROVEEDOR',
   `nombre_prove` varchar(150) NOT NULL COMMENT 'NOMBRE PROVEEDOR',
@@ -10444,14 +11848,8 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `tlf_prove` varchar(100) NOT NULL COMMENT 'TELEFONO PROVEEDOR',
   `tipo_prove` int(11) NOT NULL COMMENT 'TIPO PROVEEDOR',
   `status_prove` int(11) NOT NULL COMMENT 'ESTATUS PROVEEDOR',
-  `sucursal_prove` int(11) NOT NULL,
-  PRIMARY KEY (`id_prove`),
-  KEY `sucursal_prove` (`sucursal_prove`),
-  KEY `pais_prove` (`pais_prove`),
-  KEY `provi_prove` (`provi_prove`),
-  KEY `depto_prove` (`depto_prove`),
-  KEY `dttp_prove` (`dtto_prove`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PROVEEDORES';
+  `sucursal_prove` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PROVEEDORES';
 
 --
 -- Volcado de datos para la tabla `proveedor`
@@ -10467,16 +11865,13 @@ INSERT INTO `proveedor` (`id_prove`, `dni_prove`, `ruc_prove`, `nombre_prove`, `
 --
 
 DROP TABLE IF EXISTS `provincia`;
-CREATE TABLE IF NOT EXISTS `provincia` (
-  `id_prov` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `provincia` (
+  `id_prov` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_prov` varchar(30) NOT NULL COMMENT 'DESCRIPCION PROVINCIA',
   `status_prov` int(11) NOT NULL COMMENT 'ESTATUS PROVINCIA',
   `sucursal_prov` int(11) NOT NULL COMMENT 'SUCURSAL PROVINCIA',
-  `pais_prov` int(11) NOT NULL,
-  PRIMARY KEY (`id_prov`),
-  KEY `sucursal_prov` (`sucursal_prov`),
-  KEY `fx_pais_prov_idx` (`pais_prov`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PROVINCIA';
+  `pais_prov` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PROVINCIA';
 
 --
 -- Volcado de datos para la tabla `provincia`
@@ -10518,7 +11913,7 @@ INSERT INTO `provincia` (`id_prov`, `des_prov`, `status_prov`, `sucursal_prov`, 
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `salidas_ajustes`;
-CREATE TABLE IF NOT EXISTS `salidas_ajustes` (
+CREATE TABLE `salidas_ajustes` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -10547,7 +11942,7 @@ CREATE TABLE IF NOT EXISTS `salidas_ajustes` (
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `salidas_documentos`;
-CREATE TABLE IF NOT EXISTS `salidas_documentos` (
+CREATE TABLE `salidas_documentos` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -10576,7 +11971,7 @@ CREATE TABLE IF NOT EXISTS `salidas_documentos` (
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `salidas_proformas`;
-CREATE TABLE IF NOT EXISTS `salidas_proformas` (
+CREATE TABLE `salidas_proformas` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -10605,14 +12000,12 @@ CREATE TABLE IF NOT EXISTS `salidas_proformas` (
 --
 
 DROP TABLE IF EXISTS `series`;
-CREATE TABLE IF NOT EXISTS `series` (
-  `id_serie` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID SERIE',
+CREATE TABLE `series` (
+  `id_serie` int(11) NOT NULL COMMENT 'ID SERIE',
   `des_serie` varchar(3) DEFAULT '000' COMMENT 'DESCRIPCION SERIE',
-  `status_serie` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS SERIE',
-  `sucursal_serie` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL SERIE',
-  PRIMARY KEY (`id_serie`),
-  KEY `sucursal_serie` (`sucursal_serie`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE SERIES DE DOCUMENTOS';
+  `status_serie` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS SERIE',
+  `sucursal_serie` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL SERIE'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE SERIES DE DOCUMENTOS';
 
 --
 -- Volcado de datos para la tabla `series`
@@ -10630,15 +12023,13 @@ INSERT INTO `series` (`id_serie`, `des_serie`, `status_serie`, `sucursal_serie`)
 --
 
 DROP TABLE IF EXISTS `sucursal`;
-CREATE TABLE IF NOT EXISTS `sucursal` (
-  `id_suc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `sucursal` (
+  `id_suc` int(11) NOT NULL COMMENT 'ID UNICO',
   `nombre_suc` varchar(50) NOT NULL COMMENT 'NOMBRE SUCURSAL',
   `estatus_suc` int(11) NOT NULL COMMENT 'ESTATUS SUCURSAL',
   `empresa_suc` int(11) NOT NULL COMMENT 'EMPRESA  DE LA SUCURSAL',
-  `impuesto_suc` decimal(7,2) NOT NULL DEFAULT 0.00,
-  PRIMARY KEY (`id_suc`),
-  KEY `EMPRESA_SUC` (`empresa_suc`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE SUCURSALES';
+  `impuesto_suc` decimal(7,2) NOT NULL DEFAULT '0.00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE SUCURSALES';
 
 --
 -- Volcado de datos para la tabla `sucursal`
@@ -10654,18 +12045,16 @@ INSERT INTO `sucursal` (`id_suc`, `nombre_suc`, `estatus_suc`, `empresa_suc`, `i
 --
 
 DROP TABLE IF EXISTS `tipo_cambio`;
-CREATE TABLE IF NOT EXISTS `tipo_cambio` (
-  `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `tipo_cambio` (
+  `id_tipoc` int(11) NOT NULL COMMENT 'ID UNICO',
   `fecha_tipoc` date NOT NULL COMMENT 'FECHA TIPO CAMBIO',
   `monedac_tipoc` int(11) DEFAULT NULL COMMENT 'MONEDA A CAMBIAR',
   `moneda_tipoc` int(11) DEFAULT NULL COMMENT 'MONEDA CAMBIADA',
   `cambioc_tipoc` decimal(18,3) NOT NULL COMMENT 'VALOR COMPRA TIPO CAMBIO',
   `venta_tipoc` decimal(18,3) NOT NULL COMMENT 'VALOR DE VENTA TIPO CAMBIO',
   `valorf_tipoc` decimal(18,3) NOT NULL COMMENT 'VALOR A FACTURAR',
-  `sucursal_tipoc` int(11) NOT NULL COMMENT 'SUCURSAL TIPO DE CAMBIO',
-  PRIMARY KEY (`id_tipoc`),
-  KEY `sucursal_tipoc` (`sucursal_tipoc`)
-) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
+  `sucursal_tipoc` int(11) NOT NULL COMMENT 'SUCURSAL TIPO DE CAMBIO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
 
 --
 -- Volcado de datos para la tabla `tipo_cambio`
@@ -10768,20 +12157,84 @@ INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_t
 (96, '2020-06-27', NULL, NULL, '3.513', '3.509', '3.513', 1),
 (97, '2020-06-30', NULL, NULL, '3.513', '3.509', '3.513', 1),
 (98, '2020-07-01', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(99, '2020-07-02', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(100, '2020-07-03', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(101, '2020-07-06', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(102, '2020-07-07', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(103, '2020-07-08', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(104, '2020-07-10', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(105, '2020-07-11', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(106, '2020-07-14', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(107, '2020-07-15', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(108, '2020-07-16', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(109, '2020-07-17', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(110, '2020-07-25', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(111, '2020-07-29', NULL, NULL, '3.541', '3.534', '3.541', 1),
-(112, '2020-07-30', NULL, NULL, '3.541', '3.534', '3.541', 1);
+(99, '2020-07-02', NULL, NULL, '3.537', '3.533', '3.537', 1),
+(100, '2020-07-03', NULL, NULL, '3.537', '3.533', '3.537', 1),
+(101, '2020-07-04', NULL, NULL, '3.519', '3.515', '3.519', 1),
+(102, '2020-07-06', NULL, NULL, '3.528', '3.525', '3.528', 1),
+(103, '2020-07-07', NULL, NULL, '3.549', '3.546', '3.549', 1),
+(104, '2020-07-08', NULL, NULL, '3.547', '3.542', '3.547', 1),
+(105, '2020-07-09', NULL, NULL, '3.537', '3.534', '3.537', 1),
+(106, '2020-07-10', NULL, NULL, '3.524', '3.517', '3.524', 1),
+(107, '2020-07-11', NULL, NULL, '3.524', '3.517', '3.524', 1),
+(108, '2020-07-13', NULL, NULL, '3.508', '3.502', '3.508', 1),
+(109, '2020-07-14', NULL, NULL, '3.500', '3.498', '3.500', 1),
+(110, '2020-07-15', NULL, NULL, '3.504', '3.499', '3.504', 1),
+(111, '2020-07-16', NULL, NULL, '3.504', '3.499', '3.504', 1),
+(112, '2020-07-17', NULL, NULL, '3.499', '3.495', '3.499', 1),
+(113, '2020-07-20', NULL, NULL, '3.511', '3.504', '3.511', 1),
+(114, '2020-07-21', NULL, NULL, '3.518', '3.509', '3.518', 1),
+(115, '2020-07-22', NULL, NULL, '3.518', '3.509', '3.518', 1),
+(116, '2020-07-23', NULL, NULL, '3.505', '3.502', '3.505', 1),
+(117, '2020-07-24', NULL, NULL, '3.518', '3.514', '3.518', 1),
+(118, '2020-07-25', NULL, NULL, '3.518', '3.514', '3.518', 1),
+(119, '2020-07-28', NULL, NULL, '3.518', '3.514', '3.518', 1),
+(120, '2020-07-29', NULL, NULL, '3.529', '3.524', '3.529', 1),
+(121, '2020-07-30', NULL, NULL, '3.529', '3.524', '3.529', 1),
+(122, '2020-07-31', NULL, NULL, '3.510', '3.506', '3.510', 1),
+(123, '2020-08-01', NULL, NULL, '3.510', '3.506', '3.510', 1),
+(124, '2020-08-03', NULL, NULL, '3.510', '3.506', '3.510', 1),
+(125, '2020-08-04', NULL, NULL, '3.543', '3.538', '3.543', 1),
+(126, '2020-08-05', NULL, NULL, '3.550', '3.546', '3.550', 1),
+(127, '2020-08-06', NULL, NULL, '3.550', '3.546', '3.550', 1),
+(128, '2020-08-07', NULL, NULL, '3.548', '3.545', '3.548', 1),
+(129, '2020-08-08', NULL, NULL, '3.548', '3.545', '3.548', 1),
+(130, '2020-08-10', NULL, NULL, '3.548', '3.545', '3.548', 1),
+(131, '2020-08-11', NULL, NULL, '3.548', '3.545', '3.548', 1),
+(132, '2020-08-12', NULL, NULL, '3.548', '3.545', '3.548', 1),
+(133, '2020-08-13', NULL, NULL, '3.548', '3.545', '3.548', 1),
+(134, '2020-08-14', NULL, NULL, '3.573', '3.570', '3.573', 1),
+(135, '2020-08-15', NULL, NULL, '3.573', '3.570', '3.573', 1),
+(136, '2020-08-17', NULL, NULL, '3.573', '3.570', '3.573', 1),
+(137, '2020-08-18', NULL, NULL, '3.573', '3.570', '3.573', 1),
+(138, '2020-08-19', NULL, NULL, '3.573', '3.570', '3.573', 1),
+(139, '2020-08-20', NULL, NULL, '3.564', '3.560', '3.564', 1),
+(140, '2020-08-21', NULL, NULL, '3.564', '3.560', '3.564', 1),
+(141, '2020-08-22', NULL, NULL, '3.564', '3.560', '3.564', 1),
+(142, '2020-08-24', NULL, NULL, '3.584', '3.579', '3.584', 1),
+(143, '2020-08-25', NULL, NULL, '3.583', '3.579', '3.583', 1),
+(144, '2020-08-26', NULL, NULL, '3.583', '3.579', '3.583', 1),
+(145, '2020-08-27', NULL, NULL, '3.583', '3.579', '3.583', 1),
+(146, '2020-08-28', NULL, NULL, '3.583', '3.579', '3.583', 1),
+(147, '2020-08-29', NULL, NULL, '3.583', '3.579', '3.583', 1),
+(148, '2020-08-31', NULL, NULL, '3.583', '3.579', '3.583', 1),
+(149, '2020-09-02', NULL, NULL, '3.531', '3.527', '3.531', 1),
+(150, '2020-09-03', NULL, NULL, '3.533', '3.529', '3.533', 1),
+(151, '2020-09-04', NULL, NULL, '3.542', '3.538', '3.542', 1),
+(152, '2020-09-05', NULL, NULL, '3.542', '3.538', '3.542', 1),
+(153, '2020-09-07', NULL, NULL, '3.542', '3.538', '3.542', 1),
+(154, '2020-09-08', NULL, NULL, '3.554', '3.549', '3.554', 1),
+(155, '2020-09-09', NULL, NULL, '3.545', '3.542', '3.545', 1),
+(156, '2020-09-10', NULL, NULL, '3.537', '3.534', '3.537', 1),
+(157, '2020-09-11', NULL, NULL, '3.537', '3.534', '3.537', 1),
+(158, '2020-09-11', NULL, NULL, '3.543', '3.539', '3.543', 1),
+(159, '2020-09-12', NULL, NULL, '3.543', '3.539', '3.543', 1),
+(160, '2020-09-14', NULL, NULL, '3.570', '3.560', '3.570', 1),
+(161, '2020-09-15', NULL, NULL, '3.570', '3.560', '3.570', 1),
+(162, '2020-09-15', NULL, NULL, '3.570', '3.560', '3.570', 1),
+(163, '2020-09-16', NULL, NULL, '3.569', '3.565', '3.569', 1),
+(164, '2020-09-17', NULL, NULL, '3.553', '3.548', '3.553', 1),
+(165, '2020-09-17', NULL, NULL, '3.543', '3.537', '3.543', 1),
+(166, '2020-09-18', NULL, NULL, '3.538', '3.533', '3.538', 1),
+(167, '2020-09-19', NULL, NULL, '3.538', '3.533', '3.538', 1),
+(168, '2020-09-21', NULL, NULL, '3.527', '3.523', '3.527', 1),
+(169, '2020-09-21', NULL, NULL, '3.527', '3.523', '3.527', 1),
+(170, '2020-09-22', NULL, NULL, '3.546', '3.543', '3.546', 1),
+(171, '2020-09-22', NULL, NULL, '3.546', '3.543', '3.546', 1),
+(172, '2020-09-22', NULL, NULL, '3.546', '3.543', '3.546', 1),
+(173, '2020-09-23', NULL, NULL, '3.555', '3.552', '3.555', 1),
+(174, '2020-09-24', NULL, NULL, '3.568', '3.566', '3.568', 1),
+(175, '2020-09-25', NULL, NULL, '3.580', '3.577', '3.580', 1),
+(176, '2020-09-26', NULL, NULL, '3.580', '3.577', '3.580', 1);
 
 -- --------------------------------------------------------
 
@@ -10790,20 +12243,16 @@ INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_t
 --
 
 DROP TABLE IF EXISTS `tipo_documento`;
-CREATE TABLE IF NOT EXISTS `tipo_documento` (
-  `id_tipod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `tipo_documento` (
+  `id_tipod` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_tipod` varchar(100) DEFAULT NULL COMMENT 'DESCRIPCION TIPO DOCUMENTO',
   `abrv_tipod` varchar(4) NOT NULL COMMENT 'ABREVIACION TIPO DOCUMENTO',
   `ope_tipod` varchar(1) DEFAULT 'N' COMMENT 'E = ENTRADA, S = SALIDA, N'' = NINGUNO OPERACION TIPO DOCUMENTO',
-  `tipo_tipod` int(11) NOT NULL DEFAULT 0 COMMENT '1 = ES DOCUMENTO, 0 = ES PEDIDO, 2 = ES GUIA',
+  `tipo_tipod` int(11) NOT NULL DEFAULT '0' COMMENT '1 = ES DOCUMENTO, 0 = ES PEDIDO, 2 = ES GUIA',
   `tipodsunat_tipod` varchar(2) DEFAULT NULL COMMENT 'TIPO DOCUMENTO DE SUNAT ',
-  `sucursal_tipod` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TIPO DOCUMENTO',
-  `status_tipod` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS TIPO DOCUMENTO',
-  PRIMARY KEY (`id_tipod`),
-  KEY `id_tipod` (`id_tipod`),
-  KEY `sucursal_tipod` (`sucursal_tipod`),
-  KEY `doc_doc` (`tipo_tipod`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='ALMACENA TIPOS DE DOCUMENTOS';
+  `sucursal_tipod` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TIPO DOCUMENTO',
+  `status_tipod` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TIPO DOCUMENTO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA TIPOS DE DOCUMENTOS';
 
 --
 -- Volcado de datos para la tabla `tipo_documento`
@@ -10811,14 +12260,14 @@ CREATE TABLE IF NOT EXISTS `tipo_documento` (
 
 INSERT INTO `tipo_documento` (`id_tipod`, `des_tipod`, `abrv_tipod`, `ope_tipod`, `tipo_tipod`, `tipodsunat_tipod`, `sucursal_tipod`, `status_tipod`) VALUES
 (1, 'PEDIDO', 'NP', 'N', 0, NULL, 1, 1),
-(2, 'FACTURA ELECTRONICA', 'FE', 'S', 1, '1', 1, 1),
+(2, 'FACTURA ELECTRONICA', 'FE', 'S', 1, NULL, 1, 1),
 (3, 'GUIA DE REMISION', 'GR', 'N', 2, NULL, 1, 1),
 (4, 'NOTA DE INGRESO', 'NI', 'E', 0, NULL, 1, 1),
 (5, 'NOTA DE SALIDA', 'NS', 'S', 0, NULL, 1, 1),
 (6, 'ORDEN DE COMPRA', 'OC', 'N', 0, NULL, 1, 1),
 (7, 'PROFORMA', 'PR', 'S', 0, NULL, 1, 1),
 (8, 'COTIZACION', 'CT', 'N', 0, NULL, 1, 1),
-(9, 'BOLETA', 'BE', 'S', 1, '3', 1, 1),
+(9, 'BOLETA', 'BE', 'S', 1, NULL, 1, 1),
 (10, 'NOTA DE CREDITO', 'NC', 'E', 1, '7', 1, 1);
 
 -- --------------------------------------------------------
@@ -10828,14 +12277,13 @@ INSERT INTO `tipo_documento` (`id_tipod`, `des_tipod`, `abrv_tipod`, `ope_tipod`
 --
 
 DROP TABLE IF EXISTS `tipo_identificacion`;
-CREATE TABLE IF NOT EXISTS `tipo_identificacion` (
-  `id_tipoi` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `tipo_identificacion` (
+  `id_tipoi` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_tipoi` char(1) NOT NULL DEFAULT '0' COMMENT 'CODIGO DE TIPO DE IDENTIFICACION',
   `des_tipoi` varchar(150) NOT NULL COMMENT 'DESCRIPCION TIPO IDENTIFICACION',
-  `status_tipoi` int(11) NOT NULL DEFAULT 0 COMMENT 'STATUS DE TIPO DE IDENTIFICACION',
-  `sucursal_tipoi` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TIPO DE IDENTIFICACION',
-  PRIMARY KEY (`id_tipoi`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TIPO DE IDENTIFICACION DE CLIENTES';
+  `status_tipoi` int(11) NOT NULL DEFAULT '0' COMMENT 'STATUS DE TIPO DE IDENTIFICACION',
+  `sucursal_tipoi` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TIPO DE IDENTIFICACION'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TIPO DE IDENTIFICACION DE CLIENTES';
 
 --
 -- Volcado de datos para la tabla `tipo_identificacion`
@@ -10855,14 +12303,12 @@ INSERT INTO `tipo_identificacion` (`id_tipoi`, `cod_tipoi`, `des_tipoi`, `status
 --
 
 DROP TABLE IF EXISTS `tipo_listap`;
-CREATE TABLE IF NOT EXISTS `tipo_listap` (
-  `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `tipo_listap` (
+  `id_lista` int(11) NOT NULL COMMENT 'ID UNICO',
   `desc_lista` varchar(30) NOT NULL DEFAULT '' COMMENT 'DESCRIPCION TIPO LISTA',
   `estatus_lista` int(11) NOT NULL COMMENT 'ESTATUS TIPO LISTA',
-  `sucursal_lista` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TIPO LISTA',
-  PRIMARY KEY (`id_lista`),
-  KEY `sucursal_lista` (`sucursal_lista`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='GUARDA TIPOS DE LISTA DE PRECIOS';
+  `sucursal_lista` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TIPO LISTA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA TIPOS DE LISTA DE PRECIOS';
 
 --
 -- Volcado de datos para la tabla `tipo_listap`
@@ -10879,15 +12325,13 @@ INSERT INTO `tipo_listap` (`id_lista`, `desc_lista`, `estatus_lista`, `sucursal_
 --
 
 DROP TABLE IF EXISTS `tipo_movimiento`;
-CREATE TABLE IF NOT EXISTS `tipo_movimiento` (
-  `id_tipom` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `tipo_movimiento` (
+  `id_tipom` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_tipom` varchar(60) NOT NULL COMMENT 'DESCRIPCION TIPO MOVIMIENTO',
-  `status_tipom` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS TIPO MOVIMIENTO',
-  `sucursal_tipom` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TIPO MOVIMIENTO',
-  `tipo_tipom` varchar(1) DEFAULT NULL COMMENT 'TIPO E = ENTRADA, S = SALIDA ',
-  PRIMARY KEY (`id_tipom`),
-  KEY `sucursal_tipom` (`sucursal_tipom`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE TIPOS DE MOVIMIENTOS DE ALMACEN';
+  `status_tipom` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TIPO MOVIMIENTO',
+  `sucursal_tipom` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TIPO MOVIMIENTO',
+  `tipo_tipom` varchar(1) DEFAULT NULL COMMENT 'TIPO E = ENTRADA, S = SALIDA '
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE TIPOS DE MOVIMIENTOS DE ALMACEN';
 
 --
 -- Volcado de datos para la tabla `tipo_movimiento`
@@ -10913,13 +12357,12 @@ INSERT INTO `tipo_movimiento` (`id_tipom`, `des_tipom`, `status_tipom`, `sucursa
 --
 
 DROP TABLE IF EXISTS `tipo_producto`;
-CREATE TABLE IF NOT EXISTS `tipo_producto` (
-  `id_tpdcto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `tipo_producto` (
+  `id_tpdcto` int(11) NOT NULL COMMENT 'ID UNICO',
   `desc_tpdcto` varchar(255) NOT NULL COMMENT 'DESCRIP TIPO PRODUCTO',
   `status_tpdcto` int(11) NOT NULL COMMENT 'ESTATUS TIPO PRODUCTO',
-  `sucursal_tpdcto` int(11) NOT NULL COMMENT 'SUCURSAL TIPO PRODUCTO',
-  PRIMARY KEY (`id_tpdcto`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE TIPO PRODUCTOS';
+  `sucursal_tpdcto` int(11) NOT NULL COMMENT 'SUCURSAL TIPO PRODUCTO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE TIPO PRODUCTOS';
 
 --
 -- Volcado de datos para la tabla `tipo_producto`
@@ -10936,14 +12379,12 @@ INSERT INTO `tipo_producto` (`id_tpdcto`, `desc_tpdcto`, `status_tpdcto`, `sucur
 --
 
 DROP TABLE IF EXISTS `tipo_proveedor`;
-CREATE TABLE IF NOT EXISTS `tipo_proveedor` (
-  `id_tprov` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tipo_proveedor` (
+  `id_tprov` int(11) NOT NULL,
   `des_tprov` varchar(45) DEFAULT NULL,
   `status_tprov` int(11) NOT NULL,
-  `sucursal_tprov` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_tprov`),
-  KEY `sucursal_tprov` (`sucursal_tprov`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='GUARDA TIPO PROVEEDOR';
+  `sucursal_tprov` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA TIPO PROVEEDOR';
 
 --
 -- Volcado de datos para la tabla `tipo_proveedor`
@@ -10962,228 +12403,297 @@ INSERT INTO `tipo_proveedor` (`id_tprov`, `des_tprov`, `status_tprov`, `sucursal
 --
 
 DROP TABLE IF EXISTS `transaccion`;
-CREATE TABLE IF NOT EXISTS `transaccion` (
-  `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `transaccion` (
+  `id_trans` int(11) NOT NULL COMMENT 'ID UNICO',
   `codigo_trans` varchar(10) NOT NULL COMMENT 'CODIGO TRANSACCION',
   `fecha_trans` date DEFAULT NULL COMMENT 'FECHA TRANSACCION',
-  `obsv_trans` text DEFAULT NULL COMMENT 'OBSERVACIONES TRANSACCION',
-  `tipo_trans` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO TRANSACCION',
+  `obsv_trans` text COMMENT 'OBSERVACIONES TRANSACCION',
+  `tipo_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO TRANSACCION',
+  `numdoc_trans` int(11) NOT NULL COMMENT 'NUMERACION DEL DOCUMENTO QUE GENERA LA TRANSACCION',
   `ope_trans` varchar(1) NOT NULL COMMENT 'OPERACION TRANSACCION',
-  `numdoc_trans` int(11) DEFAULT NULL COMMENT 'NUMERACION DEL DOCUMENTO QUE GENERA LA TRANSACCION',
   `idrefdoc_trans` int(11) DEFAULT NULL COMMENT 'ID DOCUMENTO REFERENCIA TRANSACCION',
   `seriedocref_trans` varchar(4) DEFAULT NULL COMMENT 'SERIE DOC REFERENCIA TRANSACCION',
   `docref_trans` varchar(10) DEFAULT NULL COMMENT 'DOCUMENTO REFERENCIA TRANSACCION',
   `almacen_trans` int(11) NOT NULL COMMENT 'ALMACEN TRANSACCION',
-  `sucursal_trans` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TRANSACCION',
-  `usuario_trans` int(11) NOT NULL DEFAULT 0 COMMENT 'USUARIO TRANSACCION',
-  `status_trans` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS TRANSACCION 0=NO APROBADA, 1 = APROBADA, 2 = ANULADA',
-  PRIMARY KEY (`id_trans`) USING BTREE,
-  UNIQUE KEY `codigo_trans_2` (`codigo_trans`,`tipo_trans`) USING BTREE,
-  KEY `codigo_trans` (`codigo_trans`),
-  KEY `fecha_trans` (`fecha_trans`),
-  KEY `tipo_trans` (`tipo_trans`),
-  KEY `almacen_trans` (`almacen_trans`),
-  KEY `usuario_trans` (`usuario_trans`),
-  KEY `grupo_trans` (`ope_trans`),
-  KEY `idrefdoc_trans` (`idrefdoc_trans`)
-) ENGINE=InnoDB AUTO_INCREMENT=209 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TRANSACCIONES';
+  `sucursal_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TRANSACCION',
+  `usuario_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'USUARIO TRANSACCION',
+  `status_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TRANSACCION 0=NO APROBADA, 1 = APROBADA, 2 = ANULADA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TRANSACCIONES';
 
 --
 -- Volcado de datos para la tabla `transaccion`
 --
 
-INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_trans`, `tipo_trans`, `ope_trans`, `numdoc_trans`, `idrefdoc_trans`, `seriedocref_trans`, `docref_trans`, `almacen_trans`, `sucursal_trans`, `usuario_trans`, `status_trans`) VALUES
-(14, '0000000001', '2019-11-26', NULL, 4, 'S', 7, 3, NULL, NULL, 1, 1, 2, 1),
-(15, '0000000002', '2019-11-26', NULL, 4, 'S', 7, 5, NULL, NULL, 1, 1, 2, 1),
-(16, '0000000003', '2019-11-26', NULL, 4, 'S', 7, 9, NULL, NULL, 1, 1, 2, 1),
-(17, '0000000004', '2019-12-04', NULL, 4, 'S', 7, 11, NULL, NULL, 1, 1, 2, 1),
-(18, '0000000005', '2019-12-04', NULL, 4, 'S', 7, 13, NULL, NULL, 1, 1, 2, 1),
-(19, '0000000006', '2019-12-14', NULL, 4, 'S', 7, 15, NULL, NULL, 1, 1, 2, 1),
-(20, '0000000007', '2019-12-14', NULL, 4, 'S', 7, 17, NULL, NULL, 1, 1, 2, 1),
-(21, '0000000008', '2019-12-16', NULL, 4, 'S', 7, 19, NULL, NULL, 1, 1, 2, 1),
-(22, '0000000009', '2019-12-16', NULL, 4, 'S', 7, 21, NULL, NULL, 1, 1, 2, 1),
-(23, '0000000010', '2019-12-16', NULL, 4, 'S', 7, 23, NULL, NULL, 1, 1, 2, 1),
-(24, '0000000011', '2019-12-16', NULL, 4, 'S', 7, 25, NULL, NULL, 1, 1, 2, 1),
-(25, '0000000012', '2019-12-17', NULL, 4, 'S', 7, 27, NULL, NULL, 1, 1, 2, 1),
-(26, '0000000013', '2019-12-18', NULL, 4, 'S', 7, 29, NULL, NULL, 1, 1, 2, 1),
-(27, '0000000014', '2019-12-21', NULL, 4, 'S', 7, 31, NULL, NULL, 1, 1, 2, 1),
-(29, '0000000001', '2019-12-27', '', 3, 'E', 4, 1, NULL, '', 1, 1, 2, 1),
-(30, '0000000002', '2020-01-16', '', 3, 'E', 4, 2, NULL, '', 1, 1, 2, 1),
-(31, '0000000003', '2020-01-16', '', 3, 'E', 4, 3, NULL, '', 1, 1, 2, 1),
-(32, '0000000004', '2020-01-16', '', 3, 'E', 4, 4, NULL, '', 1, 1, 2, 1),
-(33, '0000000005', '2020-01-16', '', 3, 'E', 4, 5, NULL, '', 1, 1, 2, 1),
-(34, '0000000006', '2020-01-16', '', 3, 'E', 4, 6, NULL, '', 1, 1, 2, 1),
-(35, '0000000007', '2020-01-23', '', 3, 'E', 4, 13, NULL, '', 1, 1, 2, 1),
-(36, '0000000008', '2020-01-23', '', 3, 'E', 4, 7, NULL, '', 1, 1, 2, 1),
-(37, '0000000009', '2020-01-23', '', 3, 'E', 4, 8, NULL, '', 1, 1, 2, 1),
-(38, '0000000010', '2020-01-23', '', 3, 'E', 4, 9, NULL, '', 1, 1, 2, 1),
-(39, '0000000011', '2020-01-23', '', 3, 'E', 4, 10, NULL, '', 1, 1, 2, 1),
-(40, '0000000012', '2020-01-23', '', 3, 'E', 4, 11, NULL, '', 1, 1, 2, 1),
-(41, '0000000013', '2020-01-23', '', 3, 'E', 4, 12, NULL, '', 1, 1, 2, 1),
-(42, '0000000014', '2020-01-23', '', 3, 'E', 4, 14, NULL, '', 1, 1, 2, 1),
-(43, '0000000015', '2020-01-23', '', 3, 'E', 4, 15, NULL, '', 1, 1, 2, 1),
-(44, '0000000016', '2020-01-23', '', 3, 'E', 4, 16, NULL, '', 1, 1, 2, 1),
-(45, '0000000017', '2020-01-23', '', 3, 'E', 4, 17, NULL, '', 1, 1, 2, 1),
-(46, '0000000018', '2020-01-23', '', 3, 'E', 4, 18, NULL, '', 1, 1, 2, 1),
-(47, '0000000019', '2020-01-23', '', 3, 'E', 4, 19, NULL, '', 1, 1, 2, 1),
-(48, '0000000020', '2020-01-23', '', 3, 'E', 4, 20, NULL, '', 1, 1, 2, 1),
-(49, '0000000021', '2020-01-23', '', 3, 'E', 4, 21, NULL, '', 1, 1, 2, 1),
-(50, '0000000022', '2020-01-23', '', 3, 'E', 4, 22, NULL, '', 1, 1, 2, 1),
-(51, '0000000023', '2020-01-23', '', 3, 'E', 4, 23, NULL, '', 1, 1, 2, 1),
-(52, '0000000024', '2020-01-23', '', 3, 'E', 4, 24, NULL, '', 1, 1, 2, 1),
-(53, '0000000025', '2020-01-23', '', 3, 'E', 4, 25, NULL, '', 1, 1, 2, 1),
-(54, '0000000026', '2020-01-24', '', 3, 'E', 4, 26, NULL, '', 1, 1, 2, 1),
-(55, '0000000027', '2020-01-24', '', 3, 'E', 4, 27, NULL, '', 1, 1, 2, 1),
-(56, '0000000028', '2020-01-24', '', 3, 'E', 4, 28, NULL, '', 1, 1, 2, 1),
-(57, '0000000029', '2020-01-24', '', 3, 'E', 4, 29, NULL, '', 1, 1, 2, 1),
-(58, '0000000030', '2020-01-24', '', 3, 'E', 4, 30, NULL, '', 1, 1, 2, 1),
-(59, '0000000031', '2020-01-24', '', 5, 'E', 5, NULL, NULL, '', 1, 1, 2, 2),
-(60, '0000000032', '2020-01-27', '', 3, 'E', 4, 31, NULL, '', 1, 1, 2, 1),
-(61, '0000000033', '2020-01-27', '', 3, 'E', 4, 32, NULL, '', 1, 1, 2, 1),
-(62, '0000000015', '2020-01-27', NULL, 4, 'S', 7, 33, NULL, NULL, 1, 1, 2, 1),
-(63, '0000000016', '2020-01-27', NULL, 4, 'S', 7, 35, NULL, NULL, 1, 1, 2, 1),
-(64, '0000000017', '2020-01-27', NULL, 4, 'S', 7, 37, NULL, NULL, 1, 1, 2, 1),
-(65, '0000000018', '2020-01-27', NULL, 4, 'S', 7, 39, NULL, NULL, 1, 1, 2, 1),
-(66, '0000000019', '2020-01-27', NULL, 4, 'S', 7, 41, NULL, NULL, 1, 1, 2, 1),
-(67, '0000000020', '2020-01-27', NULL, 4, 'S', 7, 43, NULL, NULL, 1, 1, 2, 1),
-(68, '0000000021', '2020-01-28', NULL, 4, 'S', 7, 45, NULL, NULL, 1, 1, 2, 1),
-(69, '0000000022', '2020-01-29', NULL, 4, 'S', 7, 47, NULL, NULL, 1, 1, 2, 1),
-(70, '0000000023', '2020-01-29', NULL, 4, 'S', 7, 49, NULL, NULL, 1, 1, 2, 1),
-(71, '0000000034', '2020-01-30', '', 3, 'E', 4, 33, NULL, '', 1, 1, 2, 1),
-(72, '0000000024', '2020-01-30', NULL, 4, 'S', 7, 51, NULL, NULL, 1, 1, 2, 1),
-(73, '0000000025', '2020-01-30', NULL, 4, 'S', 7, 53, NULL, NULL, 1, 1, 2, 1),
-(74, '0000000026', '2020-01-30', NULL, 4, 'S', 7, 55, NULL, NULL, 1, 1, 2, 1),
-(75, '0000000027', '2020-01-30', NULL, 4, 'S', 7, 57, NULL, NULL, 1, 1, 2, 1),
-(76, '0000000035', '2020-01-31', '', 3, 'E', 4, 35, NULL, '', 1, 1, 2, 1),
-(77, '0000000028', '2020-02-03', NULL, 4, 'S', 7, 59, NULL, NULL, 1, 1, 2, 1),
-(78, '0000000029', '2020-02-03', NULL, 4, 'S', 7, 61, NULL, NULL, 1, 1, 2, 1),
-(79, '0000000030', '2020-02-04', NULL, 4, 'S', 7, 63, NULL, NULL, 1, 1, 2, 1),
-(80, '0000000031', '2020-02-04', NULL, 4, 'S', 7, 65, NULL, NULL, 1, 1, 2, 1),
-(81, '0000000032', '2020-02-04', NULL, 4, 'S', 7, 67, NULL, NULL, 1, 1, 2, 1),
-(82, '0000000036', '2020-02-05', '', 3, 'E', 4, 36, NULL, '', 1, 1, 2, 1),
-(83, '0000000033', '2020-02-05', NULL, 4, 'S', 7, 69, NULL, NULL, 1, 1, 2, 1),
-(84, '0000000034', '2020-02-05', NULL, 4, 'S', 7, 71, NULL, NULL, 1, 1, 2, 1),
-(85, '0000000035', '2020-02-07', NULL, 4, 'S', 7, 73, NULL, NULL, 1, 1, 2, 1),
-(86, '0000000036', '2020-02-07', NULL, 4, 'S', 7, 75, NULL, NULL, 1, 1, 2, 1),
-(87, '0000000037', '2020-02-07', '', 5, 'E', 5, NULL, NULL, '07/02/2020', 1, 1, 2, 1),
-(88, '0000000037', '2020-02-07', NULL, 4, 'S', 7, 77, NULL, NULL, 1, 1, 2, 1),
-(89, '0000000038', '2020-02-07', NULL, 4, 'S', 7, 79, NULL, NULL, 1, 1, 2, 1),
-(90, '0000000039', '2020-02-07', NULL, 4, 'S', 7, 81, NULL, NULL, 1, 1, 2, 1),
-(91, '0000000040', '2020-02-07', NULL, 4, 'S', 7, 83, NULL, NULL, 1, 1, 2, 1),
-(92, '0000000038', '2020-02-07', '', 3, 'E', 4, 37, NULL, '', 1, 1, 2, 1),
-(93, '0000000041', '2020-02-10', NULL, 4, 'S', 7, 85, NULL, NULL, 1, 1, 2, 1),
-(94, '0000000042', '2020-02-10', NULL, 4, 'S', 7, 87, NULL, NULL, 1, 1, 2, 1),
-(95, '0000000043', '2020-02-11', NULL, 4, 'S', 7, 89, NULL, NULL, 1, 1, 2, 1),
-(96, '0000000044', '2020-02-11', NULL, 4, 'S', 7, 91, NULL, NULL, 1, 1, 2, 1),
-(97, '0000000045', '2020-02-12', NULL, 4, 'S', 7, 93, NULL, NULL, 1, 1, 2, 1),
-(98, '0000000046', '2020-02-13', NULL, 4, 'S', 7, 95, NULL, NULL, 1, 1, 2, 1),
-(99, '0000000047', '2020-02-13', NULL, 4, 'S', 7, 97, NULL, NULL, 1, 1, 2, 1),
-(100, '0000000048', '2020-02-17', NULL, 4, 'S', 7, 99, NULL, NULL, 1, 1, 2, 1),
-(101, '0000000049', '2020-02-17', NULL, 4, 'S', 7, 101, NULL, NULL, 1, 1, 2, 1),
-(102, '0000000050', '2020-02-17', NULL, 4, 'S', 7, 103, NULL, NULL, 1, 1, 2, 1),
-(103, '0000000051', '2020-02-17', NULL, 4, 'S', 7, 105, NULL, NULL, 1, 1, 2, 1),
-(104, '0000000039', '2020-02-19', '', 3, 'E', 4, 38, NULL, '', 1, 1, 2, 1),
-(105, '0000000052', '2020-02-20', NULL, 4, 'S', 7, 108, NULL, NULL, 1, 1, 2, 1),
-(106, '0000000040', '2020-02-21', '', 3, 'E', 4, 39, NULL, '', 1, 1, 2, 1),
-(107, '0000000041', '2020-02-21', '', 3, 'E', 4, 40, NULL, '', 1, 1, 2, 1),
-(108, '0000000042', '2020-02-21', '', 3, 'E', 4, 41, NULL, '', 1, 1, 2, 1),
-(109, '0000000043', '2020-02-21', '', 1, 'E', 5, NULL, NULL, '', 1, 1, 2, 2),
-(111, '0000000045', '2020-02-21', '', 1, 'E', 5, NULL, NULL, '', 1, 1, 2, 1),
-(112, '0000000046', '2020-02-21', '', 3, 'E', 4, 42, NULL, '', 1, 1, 2, 1),
-(113, '0000000047', '2020-02-22', '', 3, 'E', 4, 43, NULL, '', 1, 1, 2, 1),
-(114, '0000000053', '2020-02-24', NULL, 4, 'S', 7, 110, NULL, NULL, 1, 1, 2, 1),
-(115, '0000000048', '2020-02-24', '', 1, 'E', 5, NULL, NULL, '', 1, 1, 2, 1),
-(116, '0000000054', '2020-02-24', NULL, 4, 'S', 7, 112, NULL, NULL, 1, 1, 2, 1),
-(117, '0000000055', '2020-02-24', NULL, 4, 'S', 7, 114, NULL, NULL, 1, 1, 2, 1),
-(118, '0000000056', '2020-02-25', NULL, 4, 'S', 7, 116, NULL, NULL, 1, 1, 2, 1),
-(119, '0000000057', '2020-02-25', NULL, 4, 'S', 7, 118, NULL, NULL, 1, 1, 2, 1),
-(120, '0000000058', '2020-02-26', NULL, 4, 'S', 7, 120, NULL, NULL, 1, 1, 2, 1),
-(121, '0000000049', '2020-02-27', '', 3, 'E', 4, 45, NULL, '', 1, 1, 2, 1),
-(122, '0000000059', '2020-02-27', NULL, 4, 'S', 7, 122, NULL, NULL, 1, 1, 2, 1),
-(123, '0000000060', '2020-02-27', NULL, 4, 'S', 7, 124, NULL, NULL, 1, 1, 2, 1),
-(124, '0000000061', '2020-02-28', NULL, 8, 'S', 2, 33, NULL, NULL, 1, 1, 2, 1),
-(125, '0000000062', '2020-02-28', NULL, 8, 'S', 2, 34, NULL, NULL, 1, 1, 2, 1),
-(126, '0000000063', '2020-02-28', NULL, 8, 'S', 2, 51, NULL, NULL, 1, 1, 2, 1),
-(127, '0000000064', '2020-02-28', NULL, 8, 'S', 2, 68, NULL, NULL, 1, 1, 2, 1),
-(128, '0000000065', '2020-02-28', NULL, 8, 'S', 2, 69, NULL, NULL, 1, 1, 2, 1),
-(129, '0000000066', '2020-02-28', NULL, 8, 'S', 2, 80, NULL, NULL, 1, 1, 2, 1),
-(130, '0000000067', '2020-02-28', NULL, 8, 'S', 2, 82, NULL, NULL, 1, 1, 2, 1),
-(131, '0000000068', '2020-02-28', NULL, 8, 'S', 2, 91, NULL, NULL, 1, 1, 2, 1),
-(132, '0000000069', '2020-02-28', NULL, 8, 'S', 2, 94, NULL, NULL, 1, 1, 2, 1),
-(133, '0000000070', '2020-02-28', NULL, 8, 'S', 2, 95, NULL, NULL, 1, 1, 2, 1),
-(134, '0000000071', '2020-02-28', NULL, 8, 'S', 2, 97, NULL, NULL, 1, 1, 2, 1),
-(135, '0000000072', '2020-02-28', NULL, 8, 'S', 2, 98, NULL, NULL, 1, 1, 2, 1),
-(136, '0000000073', '2020-02-28', NULL, 8, 'S', 2, 110, NULL, NULL, 1, 1, 2, 1),
-(137, '0000000050', '2020-03-02', '', 1, 'E', 5, NULL, NULL, 'AJUST-0203', 1, 1, 2, 1),
-(138, '0000000074', '2020-03-02', NULL, 4, 'S', 7, 126, NULL, NULL, 1, 1, 2, 1),
-(139, '0000000075', '2020-03-03', NULL, 4, 'S', 7, 128, NULL, NULL, 1, 1, 2, 1),
-(140, '0000000076', '2020-03-03', NULL, 4, 'S', 7, 130, NULL, NULL, 1, 1, 2, 1),
-(141, '0000000077', '2020-03-03', NULL, 4, 'S', 7, 132, NULL, NULL, 1, 1, 2, 1),
-(142, '0000000051', '2020-03-03', '', 3, 'E', 4, 46, NULL, '', 1, 1, 2, 1),
-(143, '0000000078', '2020-03-04', NULL, 4, 'S', 7, 134, NULL, NULL, 1, 1, 2, 1),
-(144, '0000000079', '2020-03-04', NULL, 4, 'S', 7, 136, NULL, NULL, 1, 1, 2, 1),
-(145, '0000000080', '2020-03-05', NULL, 4, 'S', 7, 138, NULL, NULL, 1, 1, 2, 1),
-(146, '0000000081', '2020-03-05', NULL, 4, 'S', 7, 140, NULL, NULL, 1, 1, 2, 1),
-(147, '0000000082', '2020-03-10', NULL, 4, 'S', 7, 142, NULL, NULL, 1, 1, 2, 1),
-(148, '0000000083', '2020-03-10', NULL, 4, 'S', 7, 144, NULL, NULL, 1, 1, 2, 1),
-(149, '0000000084', '2020-03-10', NULL, 4, 'S', 7, 146, NULL, NULL, 1, 1, 2, 1),
-(150, '0000000085', '2020-03-10', NULL, 4, 'S', 7, 148, NULL, NULL, 1, 1, 2, 1),
-(151, '0000000086', '2020-03-10', NULL, 4, 'S', 7, 150, NULL, NULL, 1, 1, 2, 1),
-(152, '0000000087', '2020-03-11', NULL, 4, 'S', 7, 152, NULL, NULL, 1, 1, 2, 1),
-(153, '0000000088', '2020-03-12', NULL, 4, 'S', 7, 154, NULL, NULL, 1, 1, 2, 1),
-(154, '0000000089', '2020-03-12', NULL, 4, 'S', 7, 156, NULL, NULL, 1, 1, 2, 1),
-(155, '0000000090', '2020-03-12', NULL, 4, 'S', 7, 158, NULL, NULL, 1, 1, 2, 1),
-(156, '0000000091', '2020-03-12', NULL, 4, 'S', 7, 160, NULL, NULL, 1, 1, 2, 1),
-(157, '0000000092', '2020-03-12', NULL, 4, 'S', 7, 162, NULL, NULL, 1, 1, 2, 1),
-(158, '0000000093', '2020-03-12', NULL, 4, 'S', 7, 164, NULL, NULL, 1, 1, 2, 1),
-(159, '0000000094', '2020-03-13', NULL, 4, 'S', 7, 166, NULL, NULL, 1, 1, 2, 1),
-(160, '0000000095', '2020-03-13', NULL, 4, 'S', 7, 168, NULL, NULL, 1, 1, 2, 1),
-(161, '0000000096', '2020-03-13', NULL, 4, 'S', 7, 170, NULL, NULL, 1, 1, 2, 1),
-(162, '0000000097', '2020-03-13', NULL, 4, 'S', 7, 172, NULL, NULL, 1, 1, 2, 1),
-(163, '0000000098', '2020-03-13', NULL, 4, 'S', 7, 174, NULL, NULL, 1, 1, 2, 1),
-(164, '0000000099', '2020-03-14', NULL, 4, 'S', 7, 176, NULL, NULL, 1, 1, 2, 1),
-(165, '0000000100', '2020-06-10', NULL, 4, 'S', 7, 178, NULL, NULL, 1, 1, 2, 1),
-(166, '0000000052', '2020-06-10', '', 3, 'E', 4, 47, NULL, '', 1, 1, 2, 1),
-(167, '0000000101', '2020-06-15', NULL, 4, 'S', 7, 180, NULL, NULL, 1, 1, 2, 1),
-(168, '0000000102', '2020-06-16', NULL, 4, 'S', 7, 183, NULL, NULL, 1, 1, 2, 1),
-(169, '0000000053', '2020-06-17', '', 3, 'E', 4, 48, NULL, '', 1, 1, 2, 1),
-(170, '0000000054', '2020-06-17', '', 1, 'E', 5, NULL, NULL, '', 1, 1, 2, 1),
-(171, '0000000103', '2020-06-17', NULL, 4, 'S', 7, 185, NULL, NULL, 1, 1, 2, 1),
-(172, '0000000055', '2020-06-18', '', 3, 'E', 4, 49, NULL, '', 1, 1, 2, 1),
-(173, '0000000104', '2020-06-19', NULL, 4, 'S', 7, 187, NULL, NULL, 1, 1, 2, 1),
-(174, '0000000105', '2020-06-19', NULL, 4, 'S', 7, 189, NULL, NULL, 1, 1, 2, 1),
-(175, '0000000106', '2020-06-19', NULL, 4, 'S', 7, 191, NULL, NULL, 1, 1, 2, 1),
-(176, '0000000107', '2020-06-19', NULL, 4, 'S', 7, 193, NULL, NULL, 1, 1, 2, 1),
-(177, '0000000108', '2020-06-22', NULL, 4, 'S', 7, 195, NULL, NULL, 1, 1, 2, 1),
-(178, '0000000109', '2020-06-22', NULL, 4, 'S', 7, 197, NULL, NULL, 1, 1, 2, 1),
-(179, '0000000110', '2020-06-22', NULL, 4, 'S', 7, 200, NULL, NULL, 1, 1, 2, 1),
-(180, '0000000111', '2020-06-23', NULL, 4, 'S', 7, 202, NULL, NULL, 1, 1, 2, 1),
-(181, '0000000112', '2020-06-25', NULL, 4, 'S', 7, 205, NULL, NULL, 1, 1, 2, 1),
-(182, '0000000113', '2020-06-25', '', 6, 'S', 6, NULL, NULL, 'AJUST25620', 1, 1, 2, 1),
-(183, '0000000056', '2020-06-25', '', 5, 'E', 5, NULL, NULL, 'AJUST25620', 1, 1, 2, 1),
-(184, '0000000057', '2020-06-25', '', 3, 'E', 4, 50, NULL, '', 1, 1, 2, 1),
-(185, '0000000058', '2020-06-25', '', 3, 'E', 4, 51, NULL, '', 1, 1, 2, 1),
-(186, '0000000114', '2020-06-26', NULL, 4, 'S', 7, 207, NULL, NULL, 1, 1, 2, 1),
-(187, '0000000115', '2020-06-26', NULL, 4, 'S', 7, 209, NULL, NULL, 1, 1, 2, 1),
-(188, '0000000116', '2020-06-26', NULL, 4, 'S', 7, 211, NULL, NULL, 1, 1, 2, 1),
-(189, '0000000117', '2020-07-01', NULL, 4, 'S', 7, 213, NULL, NULL, 1, 1, 2, 1),
-(190, '0000000118', '2020-07-01', NULL, 4, 'S', 7, 215, NULL, NULL, 1, 1, 2, 1),
-(191, '0000000119', '2020-07-01', NULL, 4, 'S', 7, 217, NULL, NULL, 1, 1, 2, 1),
-(192, '0000000120', '2020-07-01', NULL, 4, 'S', 7, 219, NULL, NULL, 1, 1, 2, 1),
-(193, '0000000121', '2020-07-01', NULL, 4, 'S', 7, 221, NULL, NULL, 1, 1, 2, 1),
-(194, '0000000122', '2020-07-01', NULL, 4, 'S', 7, 223, NULL, NULL, 1, 1, 2, 1),
-(195, '0000000123', '2020-07-01', NULL, 4, 'S', 7, 225, NULL, NULL, 1, 1, 2, 1),
-(197, '0000000059', '2020-07-06', NULL, 9, 'E', 5, 213, NULL, NULL, 1, 1, 2, 1),
-(198, '0000000060', '2020-07-06', NULL, 7, 'E', 10, 226, NULL, NULL, 1, 1, 2, 1),
-(199, '0000000061', '2020-07-06', NULL, 7, 'E', 10, 227, NULL, NULL, 1, 1, 2, 1),
-(200, '0000000062', '2020-07-06', NULL, 7, 'E', 10, 228, NULL, NULL, 1, 1, 2, 1),
-(201, '0000000124', '2020-07-06', NULL, 8, 'S', 2, 158, NULL, NULL, 1, 1, 2, 1),
-(202, '0000000125', '2020-07-06', NULL, 4, 'S', 7, 230, NULL, NULL, 1, 1, 2, 1),
-(203, '0000000126', '2020-07-06', NULL, 8, 'S', 2, 35, NULL, NULL, 1, 1, 2, 1),
-(204, '0000000063', '2020-07-07', '', 5, 'E', 5, NULL, NULL, '', 1, 1, 2, 1),
-(206, '0000000127', '2020-07-07', '', 6, 'S', 6, NULL, NULL, '', 1, 1, 2, 1),
-(207, '0000000064', '2020-07-07', '', 3, 'E', 5, 52, NULL, '', 1, 1, 2, 1),
-(208, '0000000128', '2020-07-08', NULL, 4, 'S', 7, 232, NULL, NULL, 1, 1, 2, 1);
+INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_trans`, `tipo_trans`, `numdoc_trans`, `ope_trans`, `idrefdoc_trans`, `seriedocref_trans`, `docref_trans`, `almacen_trans`, `sucursal_trans`, `usuario_trans`, `status_trans`) VALUES
+(14, '0000000001', '2019-11-26', NULL, 4, 7, 'S', 3, NULL, NULL, 1, 1, 2, 1),
+(15, '0000000002', '2019-11-26', NULL, 4, 7, 'S', 5, NULL, NULL, 1, 1, 2, 1),
+(16, '0000000003', '2019-11-26', NULL, 4, 7, 'S', 9, NULL, NULL, 1, 1, 2, 1),
+(17, '0000000004', '2019-12-04', NULL, 4, 7, 'S', 11, NULL, NULL, 1, 1, 2, 1),
+(18, '0000000005', '2019-12-04', NULL, 4, 7, 'S', 13, NULL, NULL, 1, 1, 2, 1),
+(19, '0000000006', '2019-12-14', NULL, 4, 7, 'S', 15, NULL, NULL, 1, 1, 2, 1),
+(20, '0000000007', '2019-12-14', NULL, 4, 7, 'S', 17, NULL, NULL, 1, 1, 2, 1),
+(21, '0000000008', '2019-12-16', NULL, 4, 7, 'S', 19, NULL, NULL, 1, 1, 2, 1),
+(22, '0000000009', '2019-12-16', NULL, 4, 7, 'S', 21, NULL, NULL, 1, 1, 2, 1),
+(23, '0000000010', '2019-12-16', NULL, 4, 7, 'S', 23, NULL, NULL, 1, 1, 2, 1),
+(24, '0000000011', '2019-12-16', NULL, 4, 7, 'S', 25, NULL, NULL, 1, 1, 2, 1),
+(25, '0000000012', '2019-12-17', NULL, 4, 7, 'S', 27, NULL, NULL, 1, 1, 2, 1),
+(26, '0000000013', '2019-12-18', NULL, 4, 7, 'S', 29, NULL, NULL, 1, 1, 2, 1),
+(27, '0000000014', '2019-12-21', NULL, 4, 7, 'S', 31, NULL, NULL, 1, 1, 2, 1),
+(29, '0000000001', '2019-12-27', '', 3, 4, 'E', 1, NULL, '', 1, 1, 2, 1),
+(30, '0000000002', '2020-01-16', '', 3, 4, 'E', 2, NULL, '', 1, 1, 2, 1),
+(31, '0000000003', '2020-01-16', '', 3, 4, 'E', 3, NULL, '', 1, 1, 2, 1),
+(32, '0000000004', '2020-01-16', '', 3, 4, 'E', 4, NULL, '', 1, 1, 2, 1),
+(33, '0000000005', '2020-01-16', '', 3, 4, 'E', 5, NULL, '', 1, 1, 2, 1),
+(34, '0000000006', '2020-01-16', '', 3, 4, 'E', 6, NULL, '', 1, 1, 2, 1),
+(35, '0000000007', '2020-01-23', '', 3, 4, 'E', 13, NULL, '', 1, 1, 2, 1),
+(36, '0000000008', '2020-01-23', '', 3, 4, 'E', 7, NULL, '', 1, 1, 2, 1),
+(37, '0000000009', '2020-01-23', '', 3, 4, 'E', 8, NULL, '', 1, 1, 2, 1),
+(38, '0000000010', '2020-01-23', '', 3, 4, 'E', 9, NULL, '', 1, 1, 2, 1),
+(39, '0000000011', '2020-01-23', '', 3, 4, 'E', 10, NULL, '', 1, 1, 2, 1),
+(40, '0000000012', '2020-01-23', '', 3, 4, 'E', 11, NULL, '', 1, 1, 2, 1),
+(41, '0000000013', '2020-01-23', '', 3, 4, 'E', 12, NULL, '', 1, 1, 2, 1),
+(42, '0000000014', '2020-01-23', '', 3, 4, 'E', 14, NULL, '', 1, 1, 2, 1),
+(43, '0000000015', '2020-01-23', '', 3, 4, 'E', 15, NULL, '', 1, 1, 2, 1),
+(44, '0000000016', '2020-01-23', '', 3, 4, 'E', 16, NULL, '', 1, 1, 2, 1),
+(45, '0000000017', '2020-01-23', '', 3, 4, 'E', 17, NULL, '', 1, 1, 2, 1),
+(46, '0000000018', '2020-01-23', '', 3, 4, 'E', 18, NULL, '', 1, 1, 2, 1),
+(47, '0000000019', '2020-01-23', '', 3, 4, 'E', 19, NULL, '', 1, 1, 2, 1),
+(48, '0000000020', '2020-01-23', '', 3, 4, 'E', 20, NULL, '', 1, 1, 2, 1),
+(49, '0000000021', '2020-01-23', '', 3, 4, 'E', 21, NULL, '', 1, 1, 2, 1),
+(50, '0000000022', '2020-01-23', '', 3, 4, 'E', 22, NULL, '', 1, 1, 2, 1),
+(51, '0000000023', '2020-01-23', '', 3, 4, 'E', 23, NULL, '', 1, 1, 2, 1),
+(52, '0000000024', '2020-01-23', '', 3, 4, 'E', 24, NULL, '', 1, 1, 2, 1),
+(53, '0000000025', '2020-01-23', '', 3, 4, 'E', 25, NULL, '', 1, 1, 2, 1),
+(54, '0000000026', '2020-01-24', '', 3, 4, 'E', 26, NULL, '', 1, 1, 2, 1),
+(55, '0000000027', '2020-01-24', '', 3, 4, 'E', 27, NULL, '', 1, 1, 2, 1),
+(56, '0000000028', '2020-01-24', '', 3, 4, 'E', 28, NULL, '', 1, 1, 2, 1),
+(57, '0000000029', '2020-01-24', '', 3, 4, 'E', 29, NULL, '', 1, 1, 2, 1),
+(58, '0000000030', '2020-01-24', '', 3, 4, 'E', 30, NULL, '', 1, 1, 2, 1),
+(59, '0000000031', '2020-01-24', '', 5, 5, 'E', NULL, NULL, '', 1, 1, 2, 2),
+(60, '0000000032', '2020-01-27', '', 3, 4, 'E', 31, NULL, '', 1, 1, 2, 1),
+(61, '0000000033', '2020-01-27', '', 3, 4, 'E', 32, NULL, '', 1, 1, 2, 1),
+(62, '0000000015', '2020-01-27', NULL, 4, 7, 'S', 33, NULL, NULL, 1, 1, 2, 1),
+(63, '0000000016', '2020-01-27', NULL, 4, 7, 'S', 35, NULL, NULL, 1, 1, 2, 1),
+(64, '0000000017', '2020-01-27', NULL, 4, 7, 'S', 37, NULL, NULL, 1, 1, 2, 1),
+(65, '0000000018', '2020-01-27', NULL, 4, 7, 'S', 39, NULL, NULL, 1, 1, 2, 1),
+(66, '0000000019', '2020-01-27', NULL, 4, 7, 'S', 41, NULL, NULL, 1, 1, 2, 1),
+(67, '0000000020', '2020-01-27', NULL, 4, 7, 'S', 43, NULL, NULL, 1, 1, 2, 1),
+(68, '0000000021', '2020-01-28', NULL, 4, 7, 'S', 45, NULL, NULL, 1, 1, 2, 1),
+(69, '0000000022', '2020-01-29', NULL, 4, 7, 'S', 47, NULL, NULL, 1, 1, 2, 1),
+(70, '0000000023', '2020-01-29', NULL, 4, 7, 'S', 49, NULL, NULL, 1, 1, 2, 1),
+(71, '0000000034', '2020-01-30', '', 3, 4, 'E', 33, NULL, '', 1, 1, 2, 1),
+(72, '0000000024', '2020-01-30', NULL, 4, 7, 'S', 51, NULL, NULL, 1, 1, 2, 1),
+(73, '0000000025', '2020-01-30', NULL, 4, 7, 'S', 53, NULL, NULL, 1, 1, 2, 1),
+(74, '0000000026', '2020-01-30', NULL, 4, 7, 'S', 55, NULL, NULL, 1, 1, 2, 1),
+(75, '0000000027', '2020-01-30', NULL, 4, 7, 'S', 57, NULL, NULL, 1, 1, 2, 1),
+(76, '0000000035', '2020-01-31', '', 3, 4, 'E', 35, NULL, '', 1, 1, 2, 1),
+(77, '0000000028', '2020-02-03', NULL, 4, 7, 'S', 59, NULL, NULL, 1, 1, 2, 1),
+(78, '0000000029', '2020-02-03', NULL, 4, 7, 'S', 61, NULL, NULL, 1, 1, 2, 1),
+(79, '0000000030', '2020-02-04', NULL, 4, 7, 'S', 63, NULL, NULL, 1, 1, 2, 1),
+(80, '0000000031', '2020-02-04', NULL, 4, 7, 'S', 65, NULL, NULL, 1, 1, 2, 1),
+(81, '0000000032', '2020-02-04', NULL, 4, 7, 'S', 67, NULL, NULL, 1, 1, 2, 1),
+(82, '0000000036', '2020-02-05', '', 3, 4, 'E', 36, NULL, '', 1, 1, 2, 1),
+(83, '0000000033', '2020-02-05', NULL, 4, 7, 'S', 69, NULL, NULL, 1, 1, 2, 1),
+(84, '0000000034', '2020-02-05', NULL, 4, 7, 'S', 71, NULL, NULL, 1, 1, 2, 1),
+(85, '0000000035', '2020-02-07', NULL, 4, 7, 'S', 73, NULL, NULL, 1, 1, 2, 1),
+(86, '0000000036', '2020-02-07', NULL, 4, 7, 'S', 75, NULL, NULL, 1, 1, 2, 1),
+(87, '0000000037', '2020-02-07', '', 5, 5, 'E', NULL, NULL, '07/02/2020', 1, 1, 2, 1),
+(88, '0000000037', '2020-02-07', NULL, 4, 7, 'S', 77, NULL, NULL, 1, 1, 2, 1),
+(89, '0000000038', '2020-02-07', NULL, 4, 7, 'S', 79, NULL, NULL, 1, 1, 2, 1),
+(90, '0000000039', '2020-02-07', NULL, 4, 7, 'S', 81, NULL, NULL, 1, 1, 2, 1),
+(91, '0000000040', '2020-02-07', NULL, 4, 7, 'S', 83, NULL, NULL, 1, 1, 2, 1),
+(92, '0000000038', '2020-02-07', '', 3, 4, 'E', 37, NULL, '', 1, 1, 2, 1),
+(93, '0000000041', '2020-02-10', NULL, 4, 7, 'S', 85, NULL, NULL, 1, 1, 2, 1),
+(94, '0000000042', '2020-02-10', NULL, 4, 7, 'S', 87, NULL, NULL, 1, 1, 2, 1),
+(95, '0000000043', '2020-02-11', NULL, 4, 7, 'S', 89, NULL, NULL, 1, 1, 2, 1),
+(96, '0000000044', '2020-02-11', NULL, 4, 7, 'S', 91, NULL, NULL, 1, 1, 2, 1),
+(97, '0000000045', '2020-02-12', NULL, 4, 7, 'S', 93, NULL, NULL, 1, 1, 2, 1),
+(98, '0000000046', '2020-02-13', NULL, 4, 7, 'S', 95, NULL, NULL, 1, 1, 2, 1),
+(99, '0000000047', '2020-02-13', NULL, 4, 7, 'S', 97, NULL, NULL, 1, 1, 2, 1),
+(100, '0000000048', '2020-02-17', NULL, 4, 7, 'S', 99, NULL, NULL, 1, 1, 2, 1),
+(101, '0000000049', '2020-02-17', NULL, 4, 7, 'S', 101, NULL, NULL, 1, 1, 2, 1),
+(102, '0000000050', '2020-02-17', NULL, 4, 7, 'S', 103, NULL, NULL, 1, 1, 2, 1),
+(103, '0000000051', '2020-02-17', NULL, 4, 7, 'S', 105, NULL, NULL, 1, 1, 2, 1),
+(104, '0000000039', '2020-02-19', '', 3, 4, 'E', 38, NULL, '', 1, 1, 2, 1),
+(105, '0000000052', '2020-02-20', NULL, 4, 7, 'S', 108, NULL, NULL, 1, 1, 2, 1),
+(106, '0000000040', '2020-02-21', '', 3, 4, 'E', 39, NULL, '', 1, 1, 2, 1),
+(107, '0000000041', '2020-02-21', '', 3, 4, 'E', 40, NULL, '', 1, 1, 2, 1),
+(108, '0000000042', '2020-02-21', '', 3, 4, 'E', 41, NULL, '', 1, 1, 2, 1),
+(109, '0000000043', '2020-02-21', '', 1, 5, 'E', NULL, NULL, '', 1, 1, 2, 2),
+(111, '0000000045', '2020-02-21', '', 1, 5, 'E', NULL, NULL, '', 1, 1, 2, 1),
+(112, '0000000046', '2020-02-21', '', 3, 4, 'E', 42, NULL, '', 1, 1, 2, 1),
+(113, '0000000047', '2020-02-22', '', 3, 4, 'E', 43, NULL, '', 1, 1, 2, 1),
+(114, '0000000053', '2020-02-24', NULL, 4, 7, 'S', 110, NULL, NULL, 1, 1, 2, 1),
+(115, '0000000048', '2020-02-24', '', 1, 5, 'E', NULL, NULL, '', 1, 1, 2, 1),
+(116, '0000000054', '2020-02-24', NULL, 4, 7, 'S', 112, NULL, NULL, 1, 1, 2, 1),
+(117, '0000000055', '2020-02-24', NULL, 4, 7, 'S', 114, NULL, NULL, 1, 1, 2, 1),
+(118, '0000000056', '2020-02-25', NULL, 4, 7, 'S', 116, NULL, NULL, 1, 1, 2, 1),
+(119, '0000000057', '2020-02-25', NULL, 4, 7, 'S', 118, NULL, NULL, 1, 1, 2, 1),
+(120, '0000000058', '2020-02-26', NULL, 4, 7, 'S', 120, NULL, NULL, 1, 1, 2, 1),
+(121, '0000000049', '2020-02-27', '', 3, 4, 'E', 45, NULL, '', 1, 1, 2, 1),
+(122, '0000000059', '2020-02-27', NULL, 4, 7, 'S', 122, NULL, NULL, 1, 1, 2, 1),
+(123, '0000000060', '2020-02-27', NULL, 4, 7, 'S', 124, NULL, NULL, 1, 1, 2, 1),
+(124, '0000000061', '2020-02-28', NULL, 8, 2, 'S', 33, NULL, NULL, 1, 1, 2, 1),
+(125, '0000000062', '2020-02-28', NULL, 8, 2, 'S', 34, NULL, NULL, 1, 1, 2, 1),
+(126, '0000000063', '2020-02-28', NULL, 8, 2, 'S', 51, NULL, NULL, 1, 1, 2, 1),
+(127, '0000000064', '2020-02-28', NULL, 8, 2, 'S', 68, NULL, NULL, 1, 1, 2, 1),
+(128, '0000000065', '2020-02-28', NULL, 8, 2, 'S', 69, NULL, NULL, 1, 1, 2, 1),
+(129, '0000000066', '2020-02-28', NULL, 8, 2, 'S', 80, NULL, NULL, 1, 1, 2, 1),
+(130, '0000000067', '2020-02-28', NULL, 8, 2, 'S', 82, NULL, NULL, 1, 1, 2, 1),
+(131, '0000000068', '2020-02-28', NULL, 8, 2, 'S', 91, NULL, NULL, 1, 1, 2, 1),
+(132, '0000000069', '2020-02-28', NULL, 8, 2, 'S', 94, NULL, NULL, 1, 1, 2, 1),
+(133, '0000000070', '2020-02-28', NULL, 8, 2, 'S', 95, NULL, NULL, 1, 1, 2, 1),
+(134, '0000000071', '2020-02-28', NULL, 8, 2, 'S', 97, NULL, NULL, 1, 1, 2, 1),
+(135, '0000000072', '2020-02-28', NULL, 8, 2, 'S', 98, NULL, NULL, 1, 1, 2, 1),
+(136, '0000000073', '2020-02-28', NULL, 8, 2, 'S', 110, NULL, NULL, 1, 1, 2, 1),
+(137, '0000000050', '2020-03-02', '', 1, 5, 'E', NULL, NULL, 'AJUST-0203', 1, 1, 2, 1),
+(138, '0000000074', '2020-03-02', NULL, 4, 7, 'S', 126, NULL, NULL, 1, 1, 2, 1),
+(139, '0000000075', '2020-03-03', NULL, 4, 7, 'S', 128, NULL, NULL, 1, 1, 2, 1),
+(140, '0000000076', '2020-03-03', NULL, 4, 7, 'S', 130, NULL, NULL, 1, 1, 2, 1),
+(141, '0000000077', '2020-03-03', NULL, 4, 7, 'S', 132, NULL, NULL, 1, 1, 2, 1),
+(142, '0000000051', '2020-03-03', '', 3, 4, 'E', 46, NULL, '', 1, 1, 2, 1),
+(143, '0000000078', '2020-03-04', NULL, 4, 7, 'S', 134, NULL, NULL, 1, 1, 2, 1),
+(144, '0000000079', '2020-03-04', NULL, 4, 7, 'S', 136, NULL, NULL, 1, 1, 2, 1),
+(145, '0000000080', '2020-03-05', NULL, 4, 7, 'S', 138, NULL, NULL, 1, 1, 2, 1),
+(146, '0000000081', '2020-03-05', NULL, 4, 7, 'S', 140, NULL, NULL, 1, 1, 2, 1),
+(147, '0000000082', '2020-03-10', NULL, 4, 7, 'S', 142, NULL, NULL, 1, 1, 2, 1),
+(148, '0000000083', '2020-03-10', NULL, 4, 7, 'S', 144, NULL, NULL, 1, 1, 2, 1),
+(149, '0000000084', '2020-03-10', NULL, 4, 7, 'S', 146, NULL, NULL, 1, 1, 2, 1),
+(150, '0000000085', '2020-03-10', NULL, 4, 7, 'S', 148, NULL, NULL, 1, 1, 2, 1),
+(151, '0000000086', '2020-03-10', NULL, 4, 7, 'S', 150, NULL, NULL, 1, 1, 2, 1),
+(152, '0000000087', '2020-03-11', NULL, 4, 7, 'S', 152, NULL, NULL, 1, 1, 2, 1),
+(153, '0000000088', '2020-03-12', NULL, 4, 7, 'S', 154, NULL, NULL, 1, 1, 2, 1),
+(154, '0000000089', '2020-03-12', NULL, 4, 7, 'S', 156, NULL, NULL, 1, 1, 2, 1),
+(155, '0000000090', '2020-03-12', NULL, 4, 7, 'S', 158, NULL, NULL, 1, 1, 2, 1),
+(156, '0000000091', '2020-03-12', NULL, 4, 7, 'S', 160, NULL, NULL, 1, 1, 2, 1),
+(157, '0000000092', '2020-03-12', NULL, 4, 7, 'S', 162, NULL, NULL, 1, 1, 2, 1),
+(158, '0000000093', '2020-03-12', NULL, 4, 7, 'S', 164, NULL, NULL, 1, 1, 2, 1),
+(159, '0000000094', '2020-03-13', NULL, 4, 7, 'S', 166, NULL, NULL, 1, 1, 2, 1),
+(160, '0000000095', '2020-03-13', NULL, 4, 7, 'S', 168, NULL, NULL, 1, 1, 2, 1),
+(161, '0000000096', '2020-03-13', NULL, 4, 7, 'S', 170, NULL, NULL, 1, 1, 2, 1),
+(162, '0000000097', '2020-03-13', NULL, 4, 7, 'S', 172, NULL, NULL, 1, 1, 2, 1),
+(163, '0000000098', '2020-03-13', NULL, 4, 7, 'S', 174, NULL, NULL, 1, 1, 2, 1),
+(164, '0000000099', '2020-03-14', NULL, 4, 7, 'S', 176, NULL, NULL, 1, 1, 2, 1),
+(165, '0000000100', '2020-06-10', NULL, 4, 7, 'S', 178, NULL, NULL, 1, 1, 2, 1),
+(166, '0000000052', '2020-06-10', '', 3, 4, 'E', 47, NULL, '', 1, 1, 2, 1),
+(167, '0000000101', '2020-06-15', NULL, 4, 7, 'S', 180, NULL, NULL, 1, 1, 2, 1),
+(168, '0000000102', '2020-06-16', NULL, 4, 7, 'S', 183, NULL, NULL, 1, 1, 2, 1),
+(169, '0000000053', '2020-06-17', '', 3, 4, 'E', 48, NULL, '', 1, 1, 2, 1),
+(170, '0000000054', '2020-06-17', '', 1, 5, 'E', NULL, NULL, '', 1, 1, 2, 1),
+(171, '0000000103', '2020-06-17', NULL, 4, 7, 'S', 185, NULL, NULL, 1, 1, 2, 1),
+(172, '0000000055', '2020-06-18', '', 3, 4, 'E', 49, NULL, '', 1, 1, 2, 1),
+(173, '0000000104', '2020-06-19', NULL, 4, 7, 'S', 187, NULL, NULL, 1, 1, 2, 1),
+(174, '0000000105', '2020-06-19', NULL, 4, 7, 'S', 189, NULL, NULL, 1, 1, 2, 1),
+(175, '0000000106', '2020-06-19', NULL, 4, 7, 'S', 191, NULL, NULL, 1, 1, 2, 1),
+(176, '0000000107', '2020-06-19', NULL, 4, 7, 'S', 193, NULL, NULL, 1, 1, 2, 1),
+(177, '0000000108', '2020-06-22', NULL, 4, 7, 'S', 195, NULL, NULL, 1, 1, 2, 1),
+(178, '0000000109', '2020-06-22', NULL, 4, 7, 'S', 197, NULL, NULL, 1, 1, 2, 1),
+(179, '0000000110', '2020-06-22', NULL, 4, 7, 'S', 200, NULL, NULL, 1, 1, 2, 1),
+(180, '0000000111', '2020-06-23', NULL, 4, 7, 'S', 202, NULL, NULL, 1, 1, 2, 1),
+(181, '0000000112', '2020-06-25', NULL, 4, 7, 'S', 205, NULL, NULL, 1, 1, 2, 1),
+(182, '0000000113', '2020-06-25', '', 6, 6, 'S', NULL, NULL, 'AJUST25620', 1, 1, 2, 1),
+(183, '0000000056', '2020-06-25', '', 5, 5, 'E', NULL, NULL, 'AJUST25620', 1, 1, 2, 1),
+(184, '0000000057', '2020-06-25', '', 3, 4, 'E', 50, NULL, '', 1, 1, 2, 1),
+(185, '0000000058', '2020-06-25', '', 3, 4, 'E', 51, NULL, '', 1, 1, 2, 1),
+(186, '0000000114', '2020-06-26', NULL, 4, 7, 'S', 207, NULL, NULL, 1, 1, 2, 1),
+(187, '0000000115', '2020-06-26', NULL, 4, 7, 'S', 209, NULL, NULL, 1, 1, 2, 1),
+(188, '0000000116', '2020-06-26', NULL, 4, 7, 'S', 211, NULL, NULL, 1, 1, 2, 1),
+(189, '0000000117', '2020-07-01', NULL, 4, 7, 'S', 213, NULL, NULL, 1, 1, 2, 1),
+(190, '0000000118', '2020-07-01', NULL, 4, 7, 'S', 215, NULL, NULL, 1, 1, 2, 1),
+(191, '0000000119', '2020-07-01', NULL, 4, 7, 'S', 217, NULL, NULL, 1, 1, 2, 1),
+(192, '0000000120', '2020-07-01', NULL, 4, 7, 'S', 219, NULL, NULL, 1, 1, 2, 1),
+(193, '0000000121', '2020-07-01', NULL, 4, 7, 'S', 221, NULL, NULL, 1, 1, 2, 1),
+(194, '0000000122', '2020-07-01', NULL, 4, 7, 'S', 223, NULL, NULL, 1, 1, 2, 1),
+(195, '0000000123', '2020-07-01', NULL, 4, 7, 'S', 225, NULL, NULL, 1, 1, 2, 1),
+(196, '0000000124', '2020-07-02', NULL, 4, 7, 'S', 227, NULL, NULL, 1, 1, 2, 1),
+(197, '0000000059', '2020-07-03', '', 3, 4, 'E', 52, NULL, '', 1, 1, 2, 1),
+(198, '0000000125', '2020-07-03', NULL, 4, 7, 'S', 229, NULL, NULL, 1, 1, 2, 1),
+(199, '0000000126', '2020-07-07', NULL, 4, 7, 'S', 231, NULL, NULL, 1, 1, 2, 1),
+(200, '0000000127', '2020-07-08', NULL, 4, 7, 'S', 233, NULL, NULL, 1, 1, 2, 1),
+(201, '0000000128', '2020-07-08', NULL, 4, 7, 'S', 235, NULL, NULL, 1, 1, 2, 1),
+(202, '0000000129', '2020-07-08', NULL, 4, 7, 'S', 237, NULL, NULL, 1, 1, 2, 1),
+(203, '0000000060', '2020-07-10', '', 3, 5, 'E', 53, NULL, '', 1, 1, 2, 1),
+(204, '0000000130', '2020-07-11', NULL, 4, 7, 'S', 239, NULL, NULL, 1, 1, 2, 1),
+(205, '0000000131', '2020-07-11', NULL, 4, 7, 'S', 241, NULL, NULL, 1, 1, 2, 1),
+(206, '0000000132', '2020-07-14', NULL, 4, 7, 'S', 243, NULL, NULL, 1, 1, 2, 1),
+(207, '0000000061', '2020-07-17', '', 3, 5, 'E', 54, NULL, '', 1, 1, 2, 1),
+(208, '0000000133', '2020-07-24', NULL, 8, 6, 'S', 36, NULL, NULL, 1, 1, 2, 1),
+(209, '0000000134', '2020-07-24', NULL, 8, 6, 'S', 52, NULL, NULL, 1, 1, 2, 1),
+(210, '0000000135', '2020-07-24', NULL, 8, 6, 'S', 63, NULL, NULL, 1, 1, 2, 1),
+(211, '0000000136', '2020-07-24', NULL, 8, 6, 'S', 89, NULL, NULL, 1, 1, 2, 1),
+(212, '0000000137', '2020-07-24', NULL, 8, 6, 'S', 93, NULL, NULL, 1, 1, 2, 1),
+(213, '0000000138', '2020-07-24', NULL, 8, 6, 'S', 96, NULL, NULL, 1, 1, 2, 1),
+(214, '0000000139', '2020-07-24', NULL, 8, 6, 'S', 111, NULL, NULL, 1, 1, 2, 1),
+(215, '0000000140', '2020-07-24', NULL, 8, 6, 'S', 120, NULL, NULL, 1, 1, 2, 1),
+(216, '0000000141', '2020-07-24', NULL, 8, 6, 'S', 128, NULL, NULL, 1, 1, 2, 1),
+(217, '0000000142', '2020-07-24', NULL, 8, 6, 'S', 129, NULL, NULL, 1, 1, 2, 1),
+(218, '0000000143', '2020-07-24', NULL, 8, 6, 'S', 140, NULL, NULL, 1, 1, 2, 1),
+(219, '0000000144', '2020-07-24', NULL, 8, 6, 'S', 146, NULL, NULL, 1, 1, 2, 1),
+(220, '0000000145', '2020-07-24', NULL, 8, 6, 'S', 158, NULL, NULL, 1, 1, 2, 1),
+(221, '0000000146', '2020-07-24', NULL, 8, 6, 'S', 174, NULL, NULL, 1, 1, 2, 1),
+(222, '0000000147', '2020-07-24', NULL, 8, 6, 'S', 177, NULL, NULL, 1, 1, 2, 1),
+(223, '0000000148', '2020-07-24', NULL, 8, 6, 'S', 186, NULL, NULL, 1, 1, 2, 1),
+(224, '0000000149', '2020-07-24', NULL, 8, 6, 'S', 188, NULL, NULL, 1, 1, 2, 1),
+(225, '0000000150', '2020-07-24', NULL, 8, 6, 'S', 191, NULL, NULL, 1, 1, 2, 1),
+(226, '0000000151', '2020-07-24', NULL, 8, 6, 'S', 192, NULL, NULL, 1, 1, 2, 1),
+(227, '0000000152', '2020-07-24', NULL, 8, 6, 'S', 193, NULL, NULL, 1, 1, 2, 1),
+(228, '0000000153', '2020-07-24', NULL, 8, 6, 'S', 194, NULL, NULL, 1, 1, 2, 1),
+(229, '0000000154', '2020-07-24', NULL, 8, 6, 'S', 200, NULL, NULL, 1, 1, 2, 1),
+(230, '0000000155', '2020-07-30', NULL, 4, 7, 'S', 245, NULL, NULL, 1, 1, 2, 1),
+(231, '0000000156', '2020-07-31', NULL, 4, 7, 'S', 247, NULL, NULL, 1, 1, 2, 1),
+(232, '0000000157', '2020-08-05', NULL, 4, 7, 'S', 249, NULL, NULL, 1, 1, 2, 1),
+(233, '0000000158', '2020-08-05', NULL, 4, 7, 'S', 251, NULL, NULL, 1, 1, 2, 1),
+(234, '0000000062', '2020-08-10', '', 5, 5, 'E', NULL, NULL, 'AJUS100820', 1, 1, 2, 1),
+(235, '0000000159', '2020-08-11', NULL, 4, 7, 'S', 253, NULL, NULL, 1, 1, 2, 1),
+(236, '0000000160', '2020-08-11', NULL, 4, 7, 'S', 255, NULL, NULL, 1, 1, 2, 1),
+(237, '0000000161', '2020-08-11', NULL, 4, 7, 'S', 257, NULL, NULL, 1, 1, 2, 1),
+(238, '0000000162', '2020-08-11', NULL, 4, 7, 'S', 259, NULL, NULL, 1, 1, 2, 1),
+(239, '0000000163', '2020-08-13', NULL, 4, 7, 'S', 261, NULL, NULL, 1, 1, 2, 1),
+(240, '0000000164', '2020-08-14', NULL, 4, 7, 'S', 263, NULL, NULL, 1, 1, 2, 1),
+(241, '0000000165', '2020-08-17', NULL, 4, 7, 'S', 265, NULL, NULL, 1, 1, 2, 1),
+(242, '0000000063', '2020-08-18', '', 3, 5, 'E', 55, NULL, '', 1, 1, 2, 1),
+(243, '0000000166', '2020-08-20', NULL, 4, 7, 'S', 267, NULL, NULL, 1, 1, 2, 1),
+(244, '0000000167', '2020-08-20', NULL, 4, 7, 'S', 269, NULL, NULL, 1, 1, 2, 1),
+(245, '0000000168', '2020-08-21', NULL, 4, 7, 'S', 271, NULL, NULL, 1, 1, 2, 1),
+(246, '0000000169', '2020-08-21', NULL, 4, 7, 'S', 273, NULL, NULL, 1, 1, 2, 1),
+(247, '0000000064', '2020-08-24', '', 3, 5, 'E', 56, NULL, '', 1, 1, 2, 1),
+(248, '0000000065', '2020-08-24', 'AJUSTE DE CANTIDADES AL ALMACEN', 5, 5, 'E', NULL, NULL, 'AJUS240820', 1, 1, 2, 1),
+(249, '0000000066', '2020-09-03', '', 3, 5, 'E', 57, NULL, '', 1, 1, 2, 1),
+(250, '0000000170', '2020-09-03', NULL, 4, 7, 'S', 275, NULL, NULL, 1, 1, 2, 1),
+(251, '0000000171', '2020-09-04', NULL, 4, 7, 'S', 277, NULL, NULL, 1, 1, 2, 1),
+(252, '0000000172', '2020-09-04', NULL, 4, 7, 'S', 279, NULL, NULL, 1, 1, 2, 1),
+(253, '0000000173', '2020-09-05', NULL, 4, 7, 'S', 281, NULL, NULL, 1, 1, 2, 1),
+(254, '0000000174', '2020-09-07', NULL, 4, 7, 'S', 283, NULL, NULL, 1, 1, 2, 1),
+(255, '0000000175', '2020-09-07', NULL, 4, 7, 'S', 285, NULL, NULL, 1, 1, 2, 1),
+(256, '0000000067', '2020-09-07', '', 5, 5, 'E', NULL, NULL, '', 1, 1, 2, 1),
+(257, '0000000176', '2020-09-07', NULL, 4, 7, 'S', 288, NULL, NULL, 1, 1, 2, 1),
+(258, '0000000177', '2020-09-08', NULL, 4, 7, 'S', 290, NULL, NULL, 1, 1, 2, 1),
+(259, '0000000178', '2020-09-08', NULL, 4, 7, 'S', 292, NULL, NULL, 1, 1, 2, 1),
+(260, '0000000179', '2020-09-08', NULL, 4, 7, 'S', 294, NULL, NULL, 1, 1, 2, 1),
+(261, '0000000068', '2020-09-08', NULL, 9, 5, 'E', 257, NULL, NULL, 1, 1, 2, 1),
+(262, '0000000069', '2020-09-08', NULL, 9, 5, 'E', 259, NULL, NULL, 1, 1, 2, 1),
+(263, '0000000180', '2020-09-09', NULL, 4, 7, 'S', 296, NULL, NULL, 1, 1, 2, 1),
+(264, '0000000181', '2020-09-09', NULL, 4, 7, 'S', 298, NULL, NULL, 1, 1, 2, 1),
+(265, '0000000182', '2020-09-09', NULL, 4, 7, 'S', 300, NULL, NULL, 1, 1, 2, 1),
+(266, '0000000183', '2020-09-10', NULL, 4, 7, 'S', 302, NULL, NULL, 1, 1, 2, 1),
+(267, '0000000184', '2020-09-10', NULL, 4, 7, 'S', 304, NULL, NULL, 1, 1, 2, 1),
+(268, '0000000185', '2020-09-10', NULL, 4, 7, 'S', 306, NULL, NULL, 1, 1, 2, 1),
+(269, '0000000186', '2020-09-11', NULL, 8, 6, 'S', 255, NULL, NULL, 1, 1, 2, 1),
+(270, '0000000187', '2020-09-11', '', 6, 6, 'S', NULL, NULL, 'AJUS110920', 1, 1, 2, 1),
+(271, '0000000070', '2020-09-12', '', 5, 5, 'E', NULL, NULL, '', 1, 1, 2, 1),
+(272, '0000000188', '2020-09-14', NULL, 4, 7, 'S', 308, NULL, NULL, 1, 1, 2, 1),
+(273, '0000000189', '2020-09-14', NULL, 4, 7, 'S', 310, NULL, NULL, 1, 1, 2, 1),
+(274, '0000000190', '2020-09-14', NULL, 4, 7, 'S', 312, NULL, NULL, 1, 1, 2, 1),
+(275, '0000000191', '2020-09-14', NULL, 4, 7, 'S', 314, NULL, NULL, 1, 1, 2, 1),
+(276, '0000000192', '2020-09-16', NULL, 4, 7, 'S', 316, NULL, NULL, 1, 1, 2, 1),
+(277, '0000000193', '2020-09-19', NULL, 8, 6, 'S', 265, NULL, NULL, 1, 1, 2, 1),
+(278, '0000000194', '2020-09-19', NULL, 8, 6, 'S', 267, NULL, NULL, 1, 1, 2, 1),
+(279, '0000000195', '2020-09-19', NULL, 4, 7, 'S', 318, NULL, NULL, 1, 1, 2, 1),
+(280, '0000000071', '2020-09-23', '', 3, 5, 'E', 58, NULL, '', 1, 1, 2, 1),
+(281, '0000000196', '2020-09-23', NULL, 4, 7, 'S', 320, NULL, NULL, 1, 1, 2, 1),
+(282, '0000000197', '2020-09-25', NULL, 4, 7, 'S', 322, NULL, NULL, 1, 1, 2, 1),
+(283, '0000000072', '2020-09-25', '', 3, 5, 'E', 59, NULL, '', 1, 1, 2, 1),
+(284, '0000000198', '2020-09-26', NULL, 8, 6, 'S', 273, NULL, NULL, 1, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -11192,16 +12702,13 @@ INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_tran
 --
 
 DROP TABLE IF EXISTS `transportista`;
-CREATE TABLE IF NOT EXISTS `transportista` (
-  `id_transp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `transportista` (
+  `id_transp` int(11) NOT NULL COMMENT 'ID UNICO',
   `ruc_transp` varchar(12) NOT NULL COMMENT 'RUC TRANSPORTISTA',
   `des_transp` varchar(150) DEFAULT NULL COMMENT 'DESCRIPCION TRANSPORTISTA',
-  `status_transp` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS TRANSPORTISTA',
-  `sucursal_transp` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TRANSPORTISTA',
-  PRIMARY KEY (`id_transp`),
-  KEY `status_transp` (`status_transp`),
-  KEY `sucursal_transp` (`sucursal_transp`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LOS TRANSPORTISTAS';
+  `status_transp` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TRANSPORTISTA',
+  `sucursal_transp` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TRANSPORTISTA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LOS TRANSPORTISTAS';
 
 --
 -- Volcado de datos para la tabla `transportista`
@@ -11226,15 +12733,12 @@ INSERT INTO `transportista` (`id_transp`, `ruc_transp`, `des_transp`, `status_tr
 --
 
 DROP TABLE IF EXISTS `trans_detalle`;
-CREATE TABLE IF NOT EXISTS `trans_detalle` (
-  `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
-  `trans_detalle` int(11) NOT NULL DEFAULT 0 COMMENT 'TRANSACCION DETALLE',
-  `prod_detalle` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO DETALLE',
-  `cant_detalle` int(11) NOT NULL DEFAULT 0 COMMENT 'CANTIDAD DETALLE',
-  PRIMARY KEY (`id_detalle`),
-  KEY `trans_detalle` (`trans_detalle`),
-  KEY `prod_detalle` (`prod_detalle`)
-) ENGINE=InnoDB AUTO_INCREMENT=2714 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE TRANSACCIONES';
+CREATE TABLE `trans_detalle` (
+  `id_detalle` int(11) NOT NULL COMMENT 'ID UNICO',
+  `trans_detalle` int(11) NOT NULL DEFAULT '0' COMMENT 'TRANSACCION DETALLE',
+  `prod_detalle` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO DETALLE',
+  `cant_detalle` int(11) NOT NULL DEFAULT '0' COMMENT 'CANTIDAD DETALLE'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE TRANSACCIONES';
 
 --
 -- Volcado de datos para la tabla `trans_detalle`
@@ -13599,137 +15103,850 @@ INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `can
 (2578, 195, 147, 1),
 (2579, 195, 1204, 1),
 (2580, 195, 170, 1),
-(2582, 197, 706, 3),
-(2583, 197, 707, 3),
-(2584, 197, 712, 6),
-(2585, 197, 713, 6),
-(2586, 197, 439, 2),
-(2587, 197, 440, 2),
-(2588, 197, 442, 2),
-(2589, 197, 441, 2),
-(2590, 197, 772, 2),
-(2591, 197, 774, 2),
-(2592, 197, 775, 2),
-(2593, 197, 776, 2),
-(2594, 197, 777, 2),
-(2595, 197, 443, 2),
-(2596, 197, 444, 2),
-(2597, 197, 524, 3),
-(2598, 197, 727, 2),
-(2599, 197, 728, 2),
-(2600, 197, 739, 3),
-(2601, 197, 740, 3),
-(2602, 197, 503, 3),
-(2603, 197, 504, 2),
-(2604, 197, 505, 2),
-(2605, 198, 984, 10),
-(2606, 198, 633, 50),
-(2607, 198, 634, 50),
-(2608, 198, 635, 10),
-(2609, 198, 636, 10),
-(2610, 198, 638, 10),
-(2611, 198, 953, 5),
-(2612, 198, 954, 5),
-(2613, 198, 646, 4),
-(2614, 198, 647, 4),
-(2615, 198, 957, 4),
-(2616, 198, 649, 5),
-(2617, 198, 648, 5),
-(2618, 198, 986, 40),
-(2619, 198, 939, 10),
-(2620, 198, 653, 4),
-(2621, 198, 940, 4),
-(2622, 198, 656, 10),
-(2623, 198, 657, 10),
-(2624, 198, 1018, 10),
-(2625, 198, 1019, 10),
-(2626, 199, 995, 25),
-(2627, 199, 1186, 1),
-(2628, 200, 506, 2),
-(2629, 200, 507, 2),
-(2630, 200, 755, 2),
-(2631, 200, 756, 2),
-(2632, 200, 757, 2),
-(2633, 200, 758, 2),
-(2634, 200, 512, 3),
-(2635, 200, 764, 2),
-(2636, 200, 766, 2),
-(2637, 200, 761, 2),
-(2638, 200, 762, 2),
-(2639, 200, 759, 2),
-(2640, 200, 760, 2),
-(2641, 200, 525, 3),
-(2642, 200, 1024, 3),
-(2643, 200, 782, 3),
-(2644, 200, 783, 3),
-(2645, 200, 793, 3),
-(2646, 200, 794, 3),
-(2647, 200, 784, 3),
-(2648, 200, 785, 3),
-(2649, 201, 633, 10),
-(2650, 201, 634, 10),
-(2651, 202, 150, 1),
-(2652, 202, 127, 2),
-(2653, 202, 148, 3),
-(2654, 202, 464, 3),
-(2655, 202, 633, 3),
-(2656, 202, 634, 3),
-(2657, 203, 712, 2),
-(2658, 203, 713, 2),
-(2659, 203, 772, 5),
-(2660, 203, 773, 5),
-(2661, 203, 451, 5),
-(2662, 203, 454, 5),
-(2663, 203, 753, 2),
-(2664, 203, 520, 2),
-(2665, 203, 521, 2),
-(2666, 203, 522, 2),
-(2667, 203, 486, 5),
-(2668, 203, 487, 10),
-(2669, 203, 755, 2),
-(2670, 203, 756, 2),
-(2671, 203, 766, 1),
-(2672, 203, 767, 2),
-(2673, 203, 771, 10),
-(2674, 203, 793, 2),
-(2675, 203, 794, 2),
-(2676, 203, 785, 2),
-(2677, 203, 573, 1),
-(2678, 203, 574, 1),
-(2679, 203, 808, 2),
-(2680, 203, 823, 10),
-(2681, 203, 847, 2),
-(2682, 203, 883, 10),
-(2683, 203, 910, 2),
-(2684, 203, 911, 2),
-(2685, 203, 912, 2),
-(2686, 203, 913, 2),
-(2687, 203, 921, 2),
-(2688, 203, 922, 2),
-(2689, 203, 656, 4),
-(2690, 203, 934, 3),
-(2691, 203, 935, 3),
-(2692, 203, 676, 2),
-(2693, 203, 677, 2),
-(2694, 203, 679, 2),
-(2695, 203, 678, 2),
-(2696, 203, 439, 2),
-(2697, 203, 440, 2),
-(2698, 203, 441, 2),
-(2699, 203, 442, 2),
-(2700, 203, 544, 2),
-(2701, 203, 545, 2),
-(2702, 203, 542, 2),
-(2703, 203, 543, 2),
-(2704, 203, 658, 5),
-(2705, 203, 473, 1),
-(2706, 203, 474, 1),
-(2707, 204, 916, 1),
-(2709, 206, 916, 3),
-(2710, 207, 916, 5),
-(2711, 208, 689, 3),
-(2712, 208, 133, 1),
-(2713, 208, 690, 5);
+(2581, 196, 1196, 4),
+(2582, 196, 96, 1),
+(2583, 196, 147, 2),
+(2584, 196, 1204, 1),
+(2585, 196, 151, 3),
+(2586, 196, 152, 3),
+(2587, 196, 158, 2),
+(2588, 196, 161, 1),
+(2589, 196, 163, 1),
+(2590, 197, 581, 20),
+(2591, 197, 9, 20),
+(2592, 197, 712, 10),
+(2593, 197, 690, 20),
+(2594, 198, 1028, 10),
+(2595, 198, 1196, 2),
+(2596, 198, 690, 2),
+(2597, 199, 148, 5),
+(2598, 199, 132, 3),
+(2599, 199, 128, 3),
+(2600, 199, 1205, 3),
+(2601, 199, 147, 2),
+(2602, 200, 774, 5),
+(2603, 200, 695, 20),
+(2604, 200, 775, 5),
+(2605, 200, 776, 5),
+(2606, 200, 777, 5),
+(2607, 200, 443, 20),
+(2608, 200, 452, 5),
+(2609, 200, 729, 15),
+(2610, 200, 730, 15),
+(2611, 200, 459, 20),
+(2612, 200, 460, 20),
+(2613, 200, 751, 20),
+(2614, 200, 752, 20),
+(2615, 200, 767, 3),
+(2616, 200, 790, 3),
+(2617, 200, 791, 3),
+(2618, 200, 806, 5),
+(2619, 200, 807, 5),
+(2620, 200, 870, 2),
+(2621, 200, 871, 2),
+(2622, 200, 877, 20),
+(2623, 200, 919, 3),
+(2624, 200, 920, 3),
+(2625, 200, 627, 30),
+(2626, 200, 628, 20),
+(2627, 201, 1020, 15),
+(2628, 201, 927, 5),
+(2629, 201, 928, 5),
+(2630, 201, 929, 5),
+(2631, 201, 930, 5),
+(2632, 201, 967, 5),
+(2633, 201, 968, 5),
+(2634, 201, 966, 5),
+(2635, 201, 639, 5),
+(2636, 201, 644, 5),
+(2637, 201, 645, 5),
+(2638, 201, 953, 5),
+(2639, 201, 954, 5),
+(2640, 201, 1021, 15),
+(2641, 201, 642, 20),
+(2642, 201, 643, 20),
+(2643, 201, 939, 3),
+(2644, 201, 652, 3),
+(2645, 201, 653, 3),
+(2646, 201, 940, 3),
+(2647, 201, 666, 15),
+(2648, 201, 667, 15),
+(2649, 201, 944, 5),
+(2650, 201, 945, 5),
+(2651, 201, 946, 5),
+(2652, 201, 947, 5),
+(2653, 202, 676, 5),
+(2654, 202, 677, 5),
+(2655, 202, 678, 5),
+(2656, 202, 679, 5),
+(2657, 203, 1, 7),
+(2658, 203, 2, 5),
+(2659, 203, 4, 5),
+(2660, 203, 7, 9),
+(2661, 203, 47, 20),
+(2662, 203, 57, 4),
+(2663, 203, 82, 10),
+(2664, 203, 86, 9),
+(2665, 203, 98, 4),
+(2666, 203, 99, 20),
+(2667, 204, 582, 1),
+(2668, 204, 836, 2),
+(2669, 204, 841, 4),
+(2670, 204, 842, 4),
+(2671, 204, 844, 2),
+(2672, 204, 857, 2),
+(2673, 204, 915, 4),
+(2674, 204, 914, 4),
+(2675, 204, 634, 24),
+(2676, 204, 633, 12),
+(2677, 204, 638, 6),
+(2678, 204, 1020, 12),
+(2679, 204, 927, 10),
+(2680, 204, 928, 10),
+(2681, 204, 967, 4),
+(2682, 204, 968, 4),
+(2683, 204, 957, 3),
+(2684, 204, 642, 12),
+(2685, 204, 643, 12),
+(2686, 204, 969, 3),
+(2687, 204, 970, 3),
+(2688, 205, 971, 2),
+(2689, 205, 972, 4),
+(2690, 205, 975, 3),
+(2691, 205, 671, 3),
+(2692, 205, 933, 3),
+(2693, 205, 1186, 2),
+(2694, 205, 8, 1),
+(2695, 205, 56, 1),
+(2696, 205, 93, 1),
+(2697, 205, 98, 1),
+(2698, 205, 1198, 1),
+(2699, 205, 1201, 1),
+(2700, 205, 123, 2),
+(2701, 205, 1209, 2),
+(2702, 205, 127, 2),
+(2703, 205, 1206, 1),
+(2704, 205, 1205, 2),
+(2705, 205, 706, 4),
+(2706, 205, 707, 4),
+(2707, 205, 754, 6),
+(2708, 205, 739, 2),
+(2709, 205, 740, 2),
+(2710, 205, 513, 2),
+(2711, 205, 771, 10),
+(2712, 205, 806, 2),
+(2713, 205, 807, 2),
+(2714, 205, 797, 10),
+(2715, 205, 803, 6),
+(2716, 205, 809, 2),
+(2717, 205, 810, 2),
+(2718, 205, 804, 2),
+(2719, 205, 805, 2),
+(2720, 206, 42, 5),
+(2721, 206, 43, 5),
+(2722, 207, 1209, 20),
+(2723, 207, 35, 10),
+(2724, 207, 38, 10),
+(2725, 207, 39, 4),
+(2726, 207, 42, 5),
+(2727, 207, 72, 15),
+(2728, 207, 451, 20),
+(2729, 207, 663, 5),
+(2730, 207, 646, 30),
+(2731, 207, 647, 30),
+(2732, 208, 712, 6),
+(2733, 208, 772, 10),
+(2734, 208, 773, 10),
+(2735, 208, 774, 6),
+(2736, 208, 775, 2),
+(2737, 208, 443, 10),
+(2738, 208, 444, 10),
+(2739, 208, 718, 10),
+(2740, 208, 719, 10),
+(2741, 208, 747, 6),
+(2742, 208, 748, 6),
+(2743, 208, 735, 6),
+(2744, 208, 736, 6),
+(2745, 208, 729, 6),
+(2746, 208, 730, 6),
+(2747, 208, 460, 6),
+(2748, 208, 753, 5),
+(2749, 208, 520, 5),
+(2750, 208, 521, 5),
+(2751, 208, 522, 5),
+(2752, 208, 487, 10),
+(2753, 208, 727, 6),
+(2754, 208, 728, 15),
+(2755, 208, 763, 2),
+(2756, 208, 511, 2),
+(2757, 208, 766, 2),
+(2758, 208, 767, 2),
+(2759, 208, 781, 6),
+(2760, 208, 530, 8),
+(2761, 208, 789, 6),
+(2762, 208, 785, 4),
+(2763, 208, 786, 5),
+(2764, 208, 787, 5),
+(2765, 208, 863, 6),
+(2766, 208, 841, 6),
+(2767, 208, 842, 6),
+(2768, 208, 603, 8),
+(2769, 208, 859, 2),
+(2770, 208, 913, 6),
+(2771, 208, 633, 20),
+(2772, 208, 634, 20),
+(2773, 208, 1020, 10),
+(2774, 208, 994, 4),
+(2775, 208, 642, 8),
+(2776, 208, 643, 8),
+(2777, 208, 992, 10),
+(2778, 208, 943, 8),
+(2779, 208, 935, 6),
+(2780, 208, 439, 10),
+(2781, 208, 440, 10),
+(2782, 208, 441, 10),
+(2783, 208, 442, 10),
+(2784, 208, 524, 6),
+(2785, 208, 473, 2),
+(2786, 208, 474, 2),
+(2787, 208, 477, 1),
+(2788, 208, 478, 1),
+(2789, 208, 479, 1),
+(2790, 208, 480, 1),
+(2791, 208, 526, 4),
+(2792, 208, 527, 4),
+(2793, 208, 447, 4),
+(2794, 208, 448, 6),
+(2795, 209, 635, 5),
+(2796, 209, 636, 5),
+(2797, 209, 637, 5),
+(2798, 209, 638, 5),
+(2799, 209, 1020, 20),
+(2800, 209, 633, 20),
+(2801, 209, 634, 20),
+(2802, 209, 647, 5),
+(2803, 209, 646, 5),
+(2804, 209, 956, 5),
+(2805, 209, 957, 5),
+(2806, 209, 877, 5),
+(2807, 209, 1022, 5),
+(2808, 209, 795, 5),
+(2809, 209, 796, 5),
+(2810, 209, 753, 2),
+(2811, 209, 520, 2),
+(2812, 209, 521, 2),
+(2813, 209, 522, 2),
+(2814, 210, 633, 25),
+(2815, 210, 634, 50),
+(2816, 211, 111, 1),
+(2817, 211, 143, 1),
+(2818, 211, 142, 1),
+(2819, 211, 129, 1),
+(2820, 211, 127, 1),
+(2821, 211, 18, 1),
+(2822, 211, 126, 1),
+(2823, 211, 172, 1),
+(2824, 211, 31, 1),
+(2825, 211, 131, 1),
+(2826, 211, 102, 1),
+(2827, 211, 107, 1),
+(2828, 211, 1192, 1),
+(2829, 211, 1197, 1),
+(2830, 211, 1204, 1),
+(2831, 211, 1206, 1),
+(2832, 211, 1216, 1),
+(2833, 212, 704, 2),
+(2834, 212, 705, 2),
+(2835, 212, 713, 4),
+(2836, 212, 773, 10),
+(2837, 212, 520, 6),
+(2838, 212, 477, 1),
+(2839, 212, 478, 1),
+(2840, 212, 479, 1),
+(2841, 212, 480, 1),
+(2842, 212, 487, 5),
+(2843, 212, 498, 5),
+(2844, 212, 499, 5),
+(2845, 212, 759, 1),
+(2846, 212, 760, 1),
+(2847, 212, 761, 1),
+(2848, 212, 762, 1),
+(2849, 212, 793, 3),
+(2850, 212, 794, 3),
+(2851, 212, 813, 2),
+(2852, 212, 814, 4),
+(2853, 212, 803, 6),
+(2854, 212, 819, 3),
+(2855, 212, 593, 6),
+(2856, 212, 858, 3),
+(2857, 212, 860, 3),
+(2858, 212, 854, 1),
+(2859, 212, 910, 4),
+(2860, 212, 911, 4),
+(2861, 212, 635, 5),
+(2862, 212, 637, 5),
+(2863, 212, 638, 5),
+(2864, 212, 633, 20),
+(2865, 212, 634, 20),
+(2866, 212, 1020, 10),
+(2867, 212, 1006, 3),
+(2868, 212, 1007, 3),
+(2869, 212, 957, 6),
+(2870, 212, 664, 10),
+(2871, 212, 665, 10),
+(2872, 212, 666, 10),
+(2873, 212, 667, 10),
+(2874, 212, 1010, 2),
+(2875, 212, 1011, 2),
+(2876, 212, 1004, 3),
+(2877, 212, 1005, 3),
+(2878, 212, 934, 12),
+(2879, 212, 935, 2),
+(2880, 212, 682, 5),
+(2881, 212, 683, 10),
+(2882, 213, 1185, 2),
+(2883, 213, 1186, 2),
+(2884, 214, 45, 1),
+(2885, 215, 633, 20),
+(2886, 215, 634, 30);
+INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `cant_detalle`) VALUES
+(2887, 216, 142, 1),
+(2888, 216, 6, 1),
+(2889, 217, 633, 70),
+(2890, 217, 634, 70),
+(2891, 218, 45, 1),
+(2892, 219, 17, 1),
+(2893, 219, 47, 2),
+(2894, 219, 50, 1),
+(2895, 219, 51, 1),
+(2896, 219, 689, 1),
+(2897, 219, 1199, 2),
+(2898, 219, 111, 2),
+(2899, 219, 120, 1),
+(2900, 219, 1028, 2),
+(2901, 219, 690, 3),
+(2902, 219, 166, 2),
+(2903, 219, 167, 2),
+(2904, 219, 63, 1),
+(2905, 220, 633, 10),
+(2906, 220, 634, 10),
+(2907, 221, 18, 1),
+(2908, 221, 31, 1),
+(2909, 221, 42, 1),
+(2910, 221, 43, 2),
+(2911, 221, 1193, 1),
+(2912, 221, 74, 1),
+(2913, 221, 88, 1),
+(2914, 221, 1201, 1),
+(2915, 221, 111, 2),
+(2916, 221, 117, 1),
+(2917, 221, 122, 1),
+(2918, 221, 1028, 3),
+(2919, 221, 161, 1),
+(2920, 221, 127, 2),
+(2921, 221, 129, 1),
+(2922, 222, 1195, 1),
+(2923, 223, 664, 8),
+(2924, 223, 665, 6),
+(2925, 223, 633, 20),
+(2926, 223, 634, 15),
+(2927, 223, 666, 8),
+(2928, 223, 667, 6),
+(2929, 223, 624, 4),
+(2930, 223, 621, 4),
+(2931, 224, 151, 3),
+(2932, 224, 152, 3),
+(2933, 224, 129, 2),
+(2934, 225, 1028, 4),
+(2935, 225, 56, 2),
+(2936, 226, 18, 3),
+(2937, 226, 127, 3),
+(2938, 226, 129, 3),
+(2939, 226, 122, 2),
+(2940, 226, 1209, 2),
+(2941, 226, 17, 1),
+(2942, 226, 37, 1),
+(2943, 226, 30, 1),
+(2944, 226, 36, 1),
+(2945, 226, 57, 1),
+(2946, 226, 689, 1),
+(2947, 226, 98, 1),
+(2948, 226, 123, 2),
+(2949, 226, 140, 1),
+(2950, 226, 136, 1),
+(2951, 226, 1212, 1),
+(2952, 227, 6, 1),
+(2953, 227, 1181, 3),
+(2954, 227, 22, 2),
+(2955, 227, 36, 1),
+(2956, 227, 42, 2),
+(2957, 227, 45, 2),
+(2958, 227, 69, 2),
+(2959, 227, 93, 3),
+(2960, 227, 1196, 2),
+(2961, 227, 97, 3),
+(2962, 227, 98, 2),
+(2963, 227, 1201, 2),
+(2964, 227, 110, 2),
+(2965, 227, 111, 2),
+(2966, 227, 1028, 5),
+(2967, 227, 120, 1),
+(2968, 227, 1209, 3),
+(2969, 227, 123, 1),
+(2970, 227, 127, 3),
+(2971, 227, 129, 3),
+(2972, 227, 140, 1),
+(2973, 227, 136, 1),
+(2974, 227, 142, 2),
+(2975, 227, 1207, 2),
+(2976, 227, 1205, 2),
+(2977, 227, 1204, 1),
+(2978, 227, 152, 5),
+(2979, 227, 151, 5),
+(2980, 227, 1212, 2),
+(2981, 227, 162, 4),
+(2982, 227, 163, 1),
+(2983, 227, 1213, 1),
+(2984, 228, 1209, 2),
+(2985, 229, 771, 20),
+(2986, 229, 756, 6),
+(2987, 229, 507, 10),
+(2988, 229, 505, 3),
+(2989, 229, 504, 3),
+(2990, 229, 729, 5),
+(2991, 229, 730, 5),
+(2992, 229, 752, 6),
+(2993, 229, 751, 5),
+(2994, 229, 517, 3),
+(2995, 229, 516, 4),
+(2996, 229, 468, 6),
+(2997, 229, 521, 5),
+(2998, 229, 522, 5),
+(2999, 229, 753, 5),
+(3000, 229, 520, 5),
+(3001, 229, 478, 2),
+(3002, 229, 477, 2),
+(3003, 229, 487, 6),
+(3004, 229, 790, 3),
+(3005, 229, 536, 2),
+(3006, 229, 535, 2),
+(3007, 229, 788, 2),
+(3008, 229, 806, 4),
+(3009, 229, 822, 10),
+(3010, 229, 865, 4),
+(3011, 229, 836, 4),
+(3012, 229, 864, 4),
+(3013, 229, 603, 6),
+(3014, 229, 604, 4),
+(3015, 229, 862, 2),
+(3016, 229, 861, 2),
+(3017, 229, 843, 2),
+(3018, 229, 850, 4),
+(3019, 229, 614, 4),
+(3020, 229, 613, 4),
+(3021, 229, 692, 6),
+(3022, 229, 691, 4),
+(3023, 229, 994, 4),
+(3024, 229, 635, 5),
+(3025, 229, 1020, 10),
+(3026, 229, 980, 2),
+(3027, 229, 957, 6),
+(3028, 229, 648, 5),
+(3029, 229, 649, 5),
+(3030, 229, 970, 5),
+(3031, 229, 969, 5),
+(3032, 229, 996, 4),
+(3033, 229, 621, 10),
+(3034, 229, 974, 2),
+(3035, 229, 944, 4),
+(3036, 229, 945, 4),
+(3037, 229, 991, 4),
+(3038, 229, 679, 4),
+(3039, 229, 678, 4),
+(3040, 230, 634, 20),
+(3041, 230, 633, 20),
+(3042, 231, 635, 10),
+(3043, 231, 636, 10),
+(3044, 231, 634, 25),
+(3045, 231, 633, 25),
+(3046, 231, 917, 25),
+(3047, 231, 624, 25),
+(3048, 231, 820, 25),
+(3049, 231, 1007, 10),
+(3050, 231, 1006, 10),
+(3051, 231, 1020, 10),
+(3052, 231, 957, 10),
+(3053, 231, 647, 10),
+(3054, 231, 646, 10),
+(3055, 231, 649, 10),
+(3056, 231, 648, 10),
+(3057, 232, 162, 1),
+(3058, 232, 103, 2),
+(3059, 232, 104, 2),
+(3060, 233, 166, 1),
+(3061, 233, 167, 1),
+(3062, 233, 1203, 1),
+(3063, 233, 147, 2),
+(3064, 233, 1204, 1),
+(3065, 233, 152, 3),
+(3066, 233, 151, 3),
+(3067, 233, 127, 1),
+(3068, 233, 1206, 1),
+(3069, 233, 101, 1),
+(3070, 233, 56, 1),
+(3071, 233, 58, 2),
+(3072, 233, 44, 2),
+(3073, 233, 122, 1),
+(3074, 233, 1209, 1),
+(3075, 233, 126, 1),
+(3076, 233, 112, 2),
+(3077, 233, 172, 2),
+(3078, 234, 1221, 20),
+(3079, 235, 957, 20),
+(3080, 236, 1221, 10),
+(3081, 236, 123, 4),
+(3082, 236, 1187, 2),
+(3083, 236, 1201, 1),
+(3084, 236, 1209, 1),
+(3085, 236, 1204, 1),
+(3086, 237, 699, 2),
+(3087, 237, 700, 2),
+(3088, 237, 701, 3),
+(3089, 237, 702, 10),
+(3090, 237, 447, 10),
+(3091, 237, 729, 10),
+(3092, 237, 730, 10),
+(3093, 237, 768, 2),
+(3094, 237, 769, 2),
+(3095, 237, 754, 4),
+(3096, 237, 486, 10),
+(3097, 237, 487, 10),
+(3098, 237, 739, 5),
+(3099, 237, 503, 10),
+(3100, 237, 603, 1),
+(3101, 237, 604, 1),
+(3102, 237, 866, 6),
+(3103, 237, 867, 4),
+(3104, 237, 615, 10),
+(3105, 237, 616, 10),
+(3106, 238, 628, 10),
+(3107, 238, 633, 10),
+(3108, 238, 634, 10),
+(3109, 238, 939, 5),
+(3110, 238, 652, 5),
+(3111, 238, 653, 5),
+(3112, 238, 940, 5),
+(3113, 238, 945, 5),
+(3114, 238, 459, 5),
+(3115, 238, 460, 5),
+(3116, 238, 752, 5),
+(3117, 239, 122, 2),
+(3118, 239, 1221, 4),
+(3119, 239, 864, 5),
+(3120, 239, 994, 5),
+(3121, 239, 88, 2),
+(3122, 239, 117, 3),
+(3123, 239, 1181, 4),
+(3124, 240, 1207, 6),
+(3125, 240, 1205, 6),
+(3126, 240, 147, 6),
+(3127, 240, 1186, 6),
+(3128, 240, 123, 5),
+(3129, 240, 96, 6),
+(3130, 240, 1187, 2),
+(3131, 241, 56, 5),
+(3132, 242, 155, 10),
+(3133, 242, 156, 10),
+(3134, 242, 29, 4),
+(3135, 242, 1028, 15),
+(3136, 242, 125, 7),
+(3137, 242, 87, 9),
+(3138, 242, 18, 10),
+(3139, 242, 73, 6),
+(3140, 242, 89, 7),
+(3141, 242, 55, 5),
+(3142, 242, 141, 5),
+(3143, 242, 1220, 4),
+(3144, 242, 148, 9),
+(3145, 243, 127, 4),
+(3146, 243, 129, 3),
+(3147, 243, 132, 1),
+(3148, 243, 142, 1),
+(3149, 243, 1208, 1),
+(3150, 243, 147, 5),
+(3151, 243, 1205, 6),
+(3152, 243, 149, 6),
+(3153, 243, 1204, 2),
+(3154, 243, 152, 2),
+(3155, 243, 151, 2),
+(3156, 243, 1213, 2),
+(3157, 243, 1215, 2),
+(3158, 243, 1221, 8),
+(3159, 243, 30, 1),
+(3160, 243, 42, 3),
+(3161, 243, 56, 4),
+(3162, 243, 58, 1),
+(3163, 243, 68, 2),
+(3164, 243, 87, 1),
+(3165, 243, 88, 1),
+(3166, 243, 93, 1),
+(3167, 243, 1196, 2),
+(3168, 243, 103, 10),
+(3169, 243, 104, 10),
+(3170, 244, 110, 1),
+(3171, 244, 111, 2),
+(3172, 244, 451, 6),
+(3173, 244, 452, 4),
+(3174, 244, 461, 2),
+(3175, 244, 535, 2),
+(3176, 244, 755, 1),
+(3177, 244, 803, 8),
+(3178, 244, 884, 2),
+(3179, 244, 885, 2),
+(3180, 244, 616, 6),
+(3181, 244, 615, 8),
+(3182, 245, 22, 12),
+(3183, 246, 111, 1),
+(3184, 246, 129, 3),
+(3185, 246, 147, 4),
+(3186, 246, 1205, 4),
+(3187, 247, 479, 5),
+(3188, 247, 480, 5),
+(3189, 247, 864, 10),
+(3190, 247, 872, 7),
+(3191, 247, 873, 7),
+(3192, 247, 806, 10),
+(3193, 247, 807, 10),
+(3194, 247, 617, 10),
+(3195, 247, 618, 10),
+(3196, 247, 619, 10),
+(3197, 247, 620, 10),
+(3198, 247, 765, 7),
+(3199, 247, 764, 7),
+(3200, 247, 729, 10),
+(3201, 247, 730, 10),
+(3202, 248, 872, 19),
+(3203, 248, 873, 13),
+(3204, 249, 1221, 25),
+(3205, 249, 22, 15),
+(3206, 250, 132, 3),
+(3207, 250, 148, 3),
+(3208, 250, 1209, 3),
+(3209, 250, 22, 3),
+(3210, 251, 26, 9),
+(3211, 251, 140, 2),
+(3212, 251, 151, 2),
+(3213, 251, 152, 2),
+(3214, 251, 136, 5),
+(3215, 252, 136, 2),
+(3216, 252, 1205, 1),
+(3217, 253, 56, 20),
+(3218, 253, 1028, 10),
+(3219, 254, 917, 9),
+(3220, 254, 624, 6),
+(3221, 254, 987, 2),
+(3222, 254, 451, 1),
+(3223, 254, 634, 60),
+(3224, 254, 633, 60),
+(3225, 254, 636, 21),
+(3226, 255, 1007, 6),
+(3227, 255, 1006, 6),
+(3228, 255, 1013, 4),
+(3229, 255, 1012, 4),
+(3230, 256, 12, 5),
+(3231, 256, 11, 5),
+(3232, 257, 104, 5),
+(3233, 257, 103, 5),
+(3234, 257, 1217, 1),
+(3235, 257, 129, 2),
+(3236, 257, 11, 2),
+(3237, 257, 12, 2),
+(3238, 258, 131, 4),
+(3239, 259, 664, 50),
+(3240, 259, 667, 50),
+(3241, 260, 1210, 2),
+(3242, 260, 127, 3),
+(3243, 261, 699, 2),
+(3244, 261, 700, 2),
+(3245, 261, 701, 3),
+(3246, 261, 702, 10),
+(3247, 261, 447, 10),
+(3248, 261, 729, 10),
+(3249, 261, 730, 10),
+(3250, 261, 768, 2),
+(3251, 261, 769, 2),
+(3252, 261, 754, 4),
+(3253, 261, 486, 10),
+(3254, 261, 487, 10),
+(3255, 261, 739, 5),
+(3256, 261, 503, 10),
+(3257, 261, 603, 1),
+(3258, 261, 604, 1),
+(3259, 261, 866, 6),
+(3260, 261, 867, 4),
+(3261, 261, 615, 10),
+(3262, 261, 616, 10),
+(3263, 262, 628, 10),
+(3264, 262, 633, 10),
+(3265, 262, 634, 10),
+(3266, 262, 939, 5),
+(3267, 262, 652, 5),
+(3268, 262, 653, 5),
+(3269, 262, 940, 5),
+(3270, 262, 945, 5),
+(3271, 262, 459, 5),
+(3272, 262, 460, 5),
+(3273, 262, 752, 5),
+(3274, 263, 616, 10),
+(3275, 263, 633, 10),
+(3276, 263, 634, 10),
+(3277, 263, 635, 2),
+(3278, 263, 636, 2),
+(3279, 264, 615, 50),
+(3280, 265, 96, 2),
+(3281, 266, 22, 4),
+(3282, 267, 628, 10),
+(3283, 267, 633, 10),
+(3284, 267, 634, 10),
+(3285, 267, 939, 5),
+(3286, 267, 652, 5),
+(3287, 267, 653, 5),
+(3288, 267, 940, 5),
+(3289, 267, 945, 5),
+(3290, 267, 459, 5),
+(3291, 267, 460, 5),
+(3292, 267, 752, 5),
+(3293, 268, 699, 2),
+(3294, 268, 700, 2),
+(3295, 268, 701, 3),
+(3296, 268, 702, 10),
+(3297, 268, 447, 10),
+(3298, 268, 729, 10),
+(3299, 268, 730, 10),
+(3300, 268, 768, 2),
+(3301, 268, 769, 2),
+(3302, 268, 754, 4),
+(3303, 268, 486, 10),
+(3304, 268, 487, 10),
+(3305, 268, 739, 5),
+(3306, 268, 503, 10),
+(3307, 268, 603, 1),
+(3308, 268, 604, 1),
+(3309, 268, 866, 6),
+(3310, 268, 867, 4),
+(3311, 268, 615, 10),
+(3312, 268, 616, 10),
+(3313, 269, 42, 2),
+(3314, 269, 62, 2),
+(3315, 269, 61, 2),
+(3316, 269, 82, 1),
+(3317, 269, 1199, 1),
+(3318, 269, 129, 2),
+(3319, 269, 152, 2),
+(3320, 269, 151, 2),
+(3321, 270, 172, 3),
+(3322, 271, 739, 2),
+(3323, 271, 740, 3),
+(3324, 271, 520, 1),
+(3326, 271, 744, 2),
+(3327, 271, 745, 2),
+(3328, 271, 54, 1),
+(3329, 271, 91, 1),
+(3330, 272, 957, 2),
+(3331, 273, 125, 1),
+(3332, 274, 693, 2),
+(3333, 274, 694, 2),
+(3334, 274, 439, 2),
+(3335, 274, 440, 2),
+(3336, 274, 442, 2),
+(3337, 274, 441, 2),
+(3338, 274, 521, 2),
+(3339, 274, 499, 1),
+(3340, 274, 498, 1),
+(3341, 274, 746, 4),
+(3342, 274, 797, 10),
+(3343, 274, 800, 6),
+(3344, 274, 799, 6),
+(3345, 274, 798, 10),
+(3346, 274, 600, 3),
+(3347, 274, 599, 3),
+(3348, 274, 594, 4),
+(3349, 274, 593, 4),
+(3350, 274, 838, 1),
+(3351, 274, 837, 1),
+(3352, 274, 840, 1),
+(3353, 274, 839, 1),
+(3354, 274, 902, 5),
+(3355, 274, 901, 5),
+(3356, 274, 658, 3),
+(3357, 274, 943, 3),
+(3358, 274, 938, 2),
+(3359, 274, 686, 4),
+(3360, 275, 1181, 2),
+(3361, 275, 152, 5),
+(3362, 275, 151, 5),
+(3363, 275, 907, 6),
+(3364, 275, 786, 5),
+(3365, 275, 791, 2),
+(3366, 275, 1221, 4),
+(3367, 276, 463, 2),
+(3368, 276, 464, 4),
+(3369, 276, 468, 6),
+(3370, 276, 467, 4),
+(3371, 276, 521, 3),
+(3372, 276, 633, 5),
+(3373, 276, 634, 5),
+(3374, 276, 625, 3),
+(3375, 276, 626, 3),
+(3376, 276, 486, 1),
+(3377, 276, 59, 1),
+(3378, 276, 795, 2),
+(3379, 276, 796, 3),
+(3380, 276, 54, 1),
+(3381, 276, 91, 1),
+(3382, 276, 739, 2),
+(3383, 276, 740, 2),
+(3384, 276, 520, 1),
+(3385, 276, 753, 2),
+(3386, 277, 1221, 5),
+(3387, 278, 127, 1),
+(3388, 279, 491, 1),
+(3389, 279, 487, 1),
+(3390, 279, 929, 5),
+(3391, 279, 930, 5),
+(3392, 280, 443, 50),
+(3393, 280, 444, 50),
+(3394, 280, 803, 50),
+(3395, 281, 879, 5),
+(3396, 281, 881, 5),
+(3397, 281, 448, 10),
+(3398, 281, 753, 5),
+(3399, 281, 767, 5),
+(3400, 281, 766, 1),
+(3401, 281, 791, 5),
+(3402, 281, 822, 50),
+(3403, 281, 832, 20),
+(3404, 281, 622, 10),
+(3405, 281, 966, 10),
+(3406, 281, 967, 10),
+(3407, 281, 968, 5),
+(3408, 281, 989, 5),
+(3409, 281, 1018, 10),
+(3410, 281, 992, 5),
+(3411, 281, 668, 1),
+(3412, 281, 995, 10),
+(3413, 281, 940, 5),
+(3414, 281, 459, 10),
+(3415, 281, 751, 10),
+(3416, 281, 449, 5),
+(3417, 281, 803, 20),
+(3418, 281, 443, 20),
+(3419, 282, 103, 4),
+(3420, 282, 104, 4),
+(3421, 283, 520, 42),
+(3422, 283, 739, 9),
+(3423, 283, 740, 9),
+(3424, 284, 1221, 1);
 
 -- --------------------------------------------------------
 
@@ -13738,15 +15955,13 @@ INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `can
 --
 
 DROP TABLE IF EXISTS `unidad_medida`;
-CREATE TABLE IF NOT EXISTS `unidad_medida` (
-  `id_und` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `unidad_medida` (
+  `id_und` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_und` varchar(50) NOT NULL COMMENT 'DESCRIPCION UNIDAD MEDIDA',
   `status_und` int(11) NOT NULL COMMENT 'ESTATUS UNIDAD MEDIDA',
   `sunatm_und` varchar(10) DEFAULT NULL COMMENT 'UNIDAD DE MEDIDA DE LA SUNAT',
-  `sucursal_und` int(11) NOT NULL COMMENT 'SUCURSAL UNIDAD MEDIDA',
-  PRIMARY KEY (`id_und`),
-  KEY `sucursal_und` (`sucursal_und`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS UNIDAD MEDIDA';
+  `sucursal_und` int(11) NOT NULL COMMENT 'SUCURSAL UNIDAD MEDIDA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS UNIDAD MEDIDA';
 
 --
 -- Volcado de datos para la tabla `unidad_medida`
@@ -13763,15 +15978,12 @@ INSERT INTO `unidad_medida` (`id_und`, `des_und`, `status_und`, `sunatm_und`, `s
 --
 
 DROP TABLE IF EXISTS `unidad_transporte`;
-CREATE TABLE IF NOT EXISTS `unidad_transporte` (
-  `id_utransp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `unidad_transporte` (
+  `id_utransp` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_utransp` varchar(150) DEFAULT NULL COMMENT 'DESCRIPCION UNIDAD TRANSPORTISTA',
-  `status_utransp` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS UNIDAD TRANSPORTISTA',
-  `sucursal_utransp` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL UNIDAD TRANSPORTISTA',
-  PRIMARY KEY (`id_utransp`),
-  KEY `status_utransp` (`status_utransp`),
-  KEY `sucursal_utransp` (`sucursal_utransp`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LAS UNIDADES TRANSPORTISTAS';
+  `status_utransp` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS UNIDAD TRANSPORTISTA',
+  `sucursal_utransp` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL UNIDAD TRANSPORTISTA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LAS UNIDADES TRANSPORTISTAS';
 
 --
 -- Volcado de datos para la tabla `unidad_transporte`
@@ -13787,22 +15999,19 @@ INSERT INTO `unidad_transporte` (`id_utransp`, `des_utransp`, `status_utransp`, 
 --
 
 DROP TABLE IF EXISTS `user`;
-CREATE TABLE IF NOT EXISTS `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL,
   `username` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `auth_key` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password_reset_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `status` smallint(6) NOT NULL DEFAULT 10,
+  `status` smallint(6) NOT NULL DEFAULT '10',
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL,
-  `empresa` int(11) DEFAULT 0,
-  `sucursal` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `empresa` (`empresa`),
-  KEY `sucursal` (`sucursal`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `empresa` int(11) DEFAULT '0',
+  `sucursal` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `user`
@@ -13818,18 +16027,15 @@ INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `password_res
 --
 
 DROP TABLE IF EXISTS `vendedor`;
-CREATE TABLE IF NOT EXISTS `vendedor` (
-  `id_vendedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `vendedor` (
+  `id_vendedor` int(11) NOT NULL COMMENT 'ID UNICO',
   `dni_vend` varchar(11) NOT NULL COMMENT 'DNI VENDEDOR',
   `nombre_vend` varchar(50) NOT NULL COMMENT 'NOMBRE VENDEDOR',
   `tlf_vend` varchar(20) NOT NULL COMMENT 'TELEFONO VENDEDOR',
   `estatus_vend` int(11) NOT NULL COMMENT 'ESTATUS VENDEDOR',
   `sucursal_vend` int(11) NOT NULL COMMENT 'SUCURSAL VENDEDOR',
-  `zona_vend` int(11) NOT NULL COMMENT 'ZONA VENDEDOR',
-  PRIMARY KEY (`id_vendedor`),
-  KEY `zona_vend` (`zona_vend`),
-  KEY `sucursal_vend` (`sucursal_vend`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE VENDEDORES';
+  `zona_vend` int(11) NOT NULL COMMENT 'ZONA VENDEDOR'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE VENDEDORES';
 
 --
 -- Volcado de datos para la tabla `vendedor`
@@ -13841,8 +16047,7 @@ INSERT INTO `vendedor` (`id_vendedor`, `dni_vend`, `nombre_vend`, `tlf_vend`, `e
 (3, '', 'MELIN HUAMAN', '', 1, 1, 1),
 (4, '', 'IRVIN PEREZ', '', 1, 1, 1),
 (5, '', 'APP', '', 1, 1, 1),
-(6, '', 'GUTIERREZ', '', 1, 1, 3),
-(7, '11111111', 'JUAN<script>alert(\"Hola\")</script>', '11111', 1, 1, 2);
+(6, '', 'GUTIERREZ', '', 1, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -13851,7 +16056,7 @@ INSERT INTO `vendedor` (`id_vendedor`, `dni_vend`, `nombre_vend`, `tlf_vend`, `e
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `v_productos`;
-CREATE TABLE IF NOT EXISTS `v_productos` (
+CREATE TABLE `v_productos` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -13865,8 +16070,6 @@ CREATE TABLE IF NOT EXISTS `v_productos` (
 ,`id_und` int(11)
 ,`des_und` varchar(50)
 ,`stock_prod` decimal(41,2)
-,`stockProducto` int(11)
-,`cantReservada` decimal(40,2)
 );
 
 -- --------------------------------------------------------
@@ -13876,15 +16079,13 @@ CREATE TABLE IF NOT EXISTS `v_productos` (
 --
 
 DROP TABLE IF EXISTS `zona`;
-CREATE TABLE IF NOT EXISTS `zona` (
-  `id_zona` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `zona` (
+  `id_zona` int(11) NOT NULL COMMENT 'ID UNICO',
   `nombre_zona` varchar(150) NOT NULL COMMENT 'NOMBRE ZONA',
   `desc_zona` text NOT NULL COMMENT 'DESCRIPCION ZONA',
   `estatus_zona` int(11) NOT NULL COMMENT 'ESTATUS ZONA',
-  `sucursal_zona` int(11) NOT NULL COMMENT 'SUCURSAL ZONA',
-  PRIMARY KEY (`id_zona`),
-  KEY `sucursal_zona` (`sucursal_zona`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE ZONAS';
+  `sucursal_zona` int(11) NOT NULL COMMENT 'SUCURSAL ZONA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE ZONAS';
 
 --
 -- Volcado de datos para la tabla `zona`
@@ -13903,7 +16104,7 @@ INSERT INTO `zona` (`id_zona`, `nombre_zona`, `desc_zona`, `estatus_zona`, `sucu
 --
 DROP TABLE IF EXISTS `entradas_ajustes`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `entradas_ajustes`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`t`.`docref_trans` AS `docref_trans`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`t`.`codigo_trans`,4,8)) AS `nro_doc`,'ENTRADA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,`td`.`cant_detalle` AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_soles`,'' AS `ingreso_valorizado_nacional`,'' AS `salidas_unidades`,'' AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans` from (((((`transaccion` `t` join `trans_detalle` `td` on(`t`.`id_trans` = `td`.`trans_detalle`)) join `producto` `p` on(`p`.`id_prod` = `td`.`prod_detalle` and `t`.`sucursal_trans` = `p`.`sucursal_prod`)) join `tipo_movimiento` `tm` on(`tm`.`id_tipom` = `t`.`tipo_trans` and `t`.`sucursal_trans` = `tm`.`sucursal_tipom`)) join `numeracion` `nd` on(`t`.`numdoc_trans` = `nd`.`id_num` and `t`.`sucursal_trans` = `nd`.`sucursal_num`)) join `tipo_documento` `tds` on(`nd`.`tipo_num` = `tds`.`id_tipod` and `t`.`sucursal_trans` = `tds`.`sucursal_tipod`)) where `t`.`tipo_trans` in (1,5,9,11) group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`t`.`docref_trans`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`t`.`codigo_trans`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`td`.`cant_detalle`,`t`.`sucursal_trans` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `entradas_ajustes`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`t`.`docref_trans` AS `docref_trans`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`t`.`codigo_trans`,4,8)) AS `nro_doc`,'ENTRADA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,`td`.`cant_detalle` AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_soles`,'' AS `ingreso_valorizado_nacional`,'' AS `salidas_unidades`,'' AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans` from (((((`transaccion` `t` join `trans_detalle` `td` on((`t`.`id_trans` = `td`.`trans_detalle`))) join `producto` `p` on(((`p`.`id_prod` = `td`.`prod_detalle`) and (`t`.`sucursal_trans` = `p`.`sucursal_prod`)))) join `tipo_movimiento` `tm` on(((`tm`.`id_tipom` = `t`.`tipo_trans`) and (`t`.`sucursal_trans` = `tm`.`sucursal_tipom`)))) join `numeracion` `nd` on(((`t`.`numdoc_trans` = `nd`.`id_num`) and (`t`.`sucursal_trans` = `nd`.`sucursal_num`)))) join `tipo_documento` `tds` on(((`nd`.`tipo_num` = `tds`.`id_tipod`) and (`t`.`sucursal_trans` = `tds`.`sucursal_tipod`)))) where (`t`.`tipo_trans` in (1,5,9,11)) group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`t`.`docref_trans`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`t`.`codigo_trans`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`td`.`cant_detalle`,`t`.`sucursal_trans` ;
 
 -- --------------------------------------------------------
 
@@ -13912,7 +16113,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `entradas_compras`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `entradas_compras`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`pr`.`nombre_prove` AS `nombre_prove`,concat(`tds`.`abrv_tipod`,`numeracion`.`serie_num`,'-',substr(`c`.`cod_compra`,4,8)) AS `nro_doc`,'ENTRADA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,`td`.`cant_detalle` AS `ingreso_unidades`,`m`.`des_moneda` AS `des_moneda`,round(`compra_detalle`.`precio_cdetalle` / `tipo_cambio`.`cambioc_tipoc`,2) AS `precio_compra_ext`,`compra_detalle`.`precio_cdetalle` AS `precio_soles`,`compra_detalle`.`precio_cdetalle` * `compra_detalle`.`cant_cdetalle` AS `ingreso_valorizado_nacional`,'' AS `salidas_unidades`,'' AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans` from ((((((((((`transaccion` `t` join `trans_detalle` `td` on(`t`.`id_trans` = `td`.`trans_detalle`)) join `compra` `c` on(`c`.`id_compra` = `t`.`idrefdoc_trans` and `c`.`sucursal_compra` = `t`.`sucursal_trans`)) join `producto` `p` on(`p`.`id_prod` = `td`.`prod_detalle` and `t`.`sucursal_trans` = `p`.`sucursal_prod`)) join `proveedor` `pr` on(`pr`.`id_prove` = `c`.`provee_compra` and `pr`.`sucursal_prove` = `t`.`sucursal_trans`)) join `tipo_movimiento` `tm` on(`tm`.`id_tipom` = `t`.`tipo_trans` and `tm`.`sucursal_tipom` = `t`.`sucursal_trans`)) join `moneda` `m` on(`c`.`moneda_compra` = `m`.`id_moneda` and `t`.`sucursal_trans` = `c`.`sucursal_compra`)) join `tipo_cambio` on(`c`.`fecha_compra` = `tipo_cambio`.`fecha_tipoc` and `t`.`sucursal_trans` = `tipo_cambio`.`sucursal_tipoc`)) join `compra_detalle` on(`c`.`id_compra` = `compra_detalle`.`compra_cdetalle` and `p`.`id_prod` = `compra_detalle`.`prod_cdetalle`)) join `numeracion` on(`t`.`numdoc_trans` = `numeracion`.`id_num` and `t`.`sucursal_trans` = `numeracion`.`sucursal_num`)) join `tipo_documento` `tds` on(`numeracion`.`tipo_num` = `tds`.`id_tipod` and `t`.`sucursal_trans` = `tds`.`sucursal_tipod`)) where `t`.`ope_trans` = 'E' group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`pr`.`nombre_prove`,`tds`.`abrv_tipod`,`numeracion`.`serie_num`,`c`.`cod_compra`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`td`.`cant_detalle`,`m`.`des_moneda`,`compra_detalle`.`precio_cdetalle`,`tipo_cambio`.`cambioc_tipoc`,`compra_detalle`.`precio_cdetalle`,`compra_detalle`.`precio_cdetalle`,`compra_detalle`.`cant_cdetalle`,`t`.`sucursal_trans` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `entradas_compras`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`pr`.`nombre_prove` AS `nombre_prove`,concat(`tds`.`abrv_tipod`,`numeracion`.`serie_num`,'-',substr(`c`.`cod_compra`,4,8)) AS `nro_doc`,'ENTRADA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,`td`.`cant_detalle` AS `ingreso_unidades`,`m`.`des_moneda` AS `des_moneda`,round((`compra_detalle`.`precio_cdetalle` / `tipo_cambio`.`cambioc_tipoc`),2) AS `precio_compra_ext`,`compra_detalle`.`precio_cdetalle` AS `precio_soles`,(`compra_detalle`.`precio_cdetalle` * `compra_detalle`.`cant_cdetalle`) AS `ingreso_valorizado_nacional`,'' AS `salidas_unidades`,'' AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans` from ((((((((((`transaccion` `t` join `trans_detalle` `td` on((`t`.`id_trans` = `td`.`trans_detalle`))) join `compra` `c` on(((`c`.`id_compra` = `t`.`idrefdoc_trans`) and (`c`.`sucursal_compra` = `t`.`sucursal_trans`)))) join `producto` `p` on(((`p`.`id_prod` = `td`.`prod_detalle`) and (`t`.`sucursal_trans` = `p`.`sucursal_prod`)))) join `proveedor` `pr` on(((`pr`.`id_prove` = `c`.`provee_compra`) and (`pr`.`sucursal_prove` = `t`.`sucursal_trans`)))) join `tipo_movimiento` `tm` on(((`tm`.`id_tipom` = `t`.`tipo_trans`) and (`tm`.`sucursal_tipom` = `t`.`sucursal_trans`)))) join `moneda` `m` on(((`c`.`moneda_compra` = `m`.`id_moneda`) and (`t`.`sucursal_trans` = `c`.`sucursal_compra`)))) join `tipo_cambio` on(((`c`.`fecha_compra` = `tipo_cambio`.`fecha_tipoc`) and (`t`.`sucursal_trans` = `tipo_cambio`.`sucursal_tipoc`)))) join `compra_detalle` on(((`c`.`id_compra` = `compra_detalle`.`compra_cdetalle`) and (`p`.`id_prod` = `compra_detalle`.`prod_cdetalle`)))) join `numeracion` on(((`t`.`numdoc_trans` = `numeracion`.`id_num`) and (`t`.`sucursal_trans` = `numeracion`.`sucursal_num`)))) join `tipo_documento` `tds` on(((`numeracion`.`tipo_num` = `tds`.`id_tipod`) and (`t`.`sucursal_trans` = `tds`.`sucursal_tipod`)))) where (`t`.`ope_trans` = 'E') group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`pr`.`nombre_prove`,`tds`.`abrv_tipod`,`numeracion`.`serie_num`,`c`.`cod_compra`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`td`.`cant_detalle`,`m`.`des_moneda`,`compra_detalle`.`precio_cdetalle`,`tipo_cambio`.`cambioc_tipoc`,`compra_detalle`.`precio_cdetalle`,`compra_detalle`.`precio_cdetalle`,`compra_detalle`.`cant_cdetalle`,`t`.`sucursal_trans` ;
 
 -- --------------------------------------------------------
 
@@ -13921,16 +16122,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `entradas_documentos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `entradas_documentos`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`cliente`.`nombre_clte` AS `nombre_clte`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`d`.`cod_doc`,4,8)) AS `nro_doc`,'ENTRADA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,`td`.`cant_detalle` AS `ingreso_unidades`,`moneda`.`des_moneda` AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_soles`,'' AS `ingreso_valorizado_nacional`,'' AS `salidas_unidades`,'' AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans` from ((((((((((`transaccion` `t` join `trans_detalle` `td` on(`t`.`id_trans` = `td`.`trans_detalle`)) join `producto` `p` on(`p`.`id_prod` = `td`.`prod_detalle` and `t`.`sucursal_trans` = `p`.`sucursal_prod`)) join `tipo_movimiento` `tm` on(`tm`.`id_tipom` = `t`.`tipo_trans` and `t`.`sucursal_trans` = `tm`.`sucursal_tipom`)) join `numeracion` `nd` on(`t`.`numdoc_trans` = `nd`.`id_num` and `t`.`sucursal_trans` = `nd`.`sucursal_num`)) join `tipo_documento` `tds` on(`nd`.`tipo_num` = `tds`.`id_tipod` and `t`.`sucursal_trans` = `tds`.`sucursal_tipod`)) join `documento` `d` on(`d`.`id_doc` = `t`.`idrefdoc_trans` and `t`.`sucursal_trans` = `d`.`sucursal_doc`)) join `documento` `dp` on(`dp`.`id_doc` = `d`.`docref_doc` and `dp`.`sucursal_doc` = `t`.`sucursal_trans`)) join `pedido` on(`dp`.`pedido_doc` = `pedido`.`id_pedido` and `pedido`.`sucursal_pedido` = `t`.`sucursal_trans`)) join `moneda` on(`moneda`.`id_moneda` = `pedido`.`moneda_pedido` and `t`.`sucursal_trans` = `moneda`.`sucursal_moneda`)) join `cliente` on(`pedido`.`clte_pedido` = `cliente`.`id_clte` and `t`.`sucursal_trans` = `cliente`.`sucursal_clte`)) where `t`.`tipo_trans` = 7 group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`cliente`.`nombre_clte`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`d`.`cod_doc`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`td`.`cant_detalle`,`moneda`.`des_moneda`,`t`.`sucursal_trans` ;
-
--- --------------------------------------------------------
-
---
--- Estructura para la vista `movimiento_producto`
---
-DROP TABLE IF EXISTS `movimiento_producto`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `movimiento_producto`  AS  select `t`.`id_prod` AS `id_prod`,`t`.`cod_prod` AS `cod_prod`,`t`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`t`.`docref_trans` AS `docref_trans`,`t`.`codigo_trans` AS `codigo_trans`,`t`.`ope_trans` AS `ope_trans`,`t`.`id_tipom` AS `id_tipom`,`t`.`des_tipom` AS `des_tipom`,`t`.`id_tipod` AS `id_tipod`,`t`.`des_tipod` AS `des_tipod`,`t`.`ingreso_unidades` AS `ingreso_unidades`,`t`.`moneda` AS `moneda`,`t`.`precio_compra_ext` AS `precio_compra_ext`,`t`.`precio_compra_soles` AS `precio_compra_soles`,`t`.`ingreso_valorizados` AS `ingreso_valorizados`,`t`.`salidas_unidades` AS `salidas_unidades`,`t`.`tipo` AS `tipo`,`t`.`sucursal_trans` AS `sucursal_trans` from (select `salidas_ajustes`.`id_prod` AS `id_prod`,`salidas_ajustes`.`cod_prod` AS `cod_prod`,`salidas_ajustes`.`des_prod` AS `des_prod`,`salidas_ajustes`.`fecha_trans` AS `fecha_trans`,`salidas_ajustes`.`docref_trans` AS `docref_trans`,`salidas_ajustes`.`codigo_trans` AS `codigo_trans`,`salidas_ajustes`.`ope_trans` AS `ope_trans`,`salidas_ajustes`.`id_tipom` AS `id_tipom`,`salidas_ajustes`.`des_tipom` AS `des_tipom`,`salidas_ajustes`.`id_tipod` AS `id_tipod`,`salidas_ajustes`.`des_tipod` AS `des_tipod`,`salidas_ajustes`.`ingreso_unidades` AS `ingreso_unidades`,`salidas_ajustes`.`moneda` AS `moneda`,`salidas_ajustes`.`precio_compra_ext` AS `precio_compra_ext`,`salidas_ajustes`.`precio_compra_soles` AS `precio_compra_soles`,`salidas_ajustes`.`ingreso_valorizados` AS `ingreso_valorizados`,`salidas_ajustes`.`salidas_unidades` AS `salidas_unidades`,`salidas_ajustes`.`tipo` AS `tipo`,`salidas_ajustes`.`sucursal_trans` AS `sucursal_trans` from `salidas_ajustes` union select `salidas_documentos`.`id_prod` AS `id_prod`,`salidas_documentos`.`cod_prod` AS `cod_prod`,`salidas_documentos`.`des_prod` AS `des_prod`,`salidas_documentos`.`fecha_trans` AS `fecha_trans`,`salidas_documentos`.`nombre_clte` AS `nombre_clte`,`salidas_documentos`.`nro_documento` AS `nro_documento`,`salidas_documentos`.`ope_trans` AS `ope_trans`,`salidas_documentos`.`id_tipom` AS `id_tipom`,`salidas_documentos`.`des_tipom` AS `des_tipom`,`salidas_documentos`.`id_tipod` AS `id_tipod`,`salidas_documentos`.`des_tipod` AS `des_tipod`,`salidas_documentos`.`ingreso_unidades` AS `ingreso_unidades`,`salidas_documentos`.`moneda` AS `moneda`,`salidas_documentos`.`precio_compra_ext` AS `precio_compra_ext`,`salidas_documentos`.`precio_compra_soles` AS `precio_compra_soles`,`salidas_documentos`.`ingreso_valorizados` AS `ingreso_valorizados`,`salidas_documentos`.`salidas_unidades` AS `salidas_unidades`,`salidas_documentos`.`tipo_pedido` AS `tipo_pedido`,`salidas_documentos`.`sucursal_trans` AS `sucursal_trans` from `salidas_documentos` union select `salidas_proformas`.`id_prod` AS `id_prod`,`salidas_proformas`.`cod_prod` AS `cod_prod`,`salidas_proformas`.`des_prod` AS `des_prod`,`salidas_proformas`.`fecha_trans` AS `fecha_trans`,`salidas_proformas`.`nombre_clte` AS `nombre_clte`,`salidas_proformas`.`codigo_trans` AS `codigo_trans`,`salidas_proformas`.`OPE_TRANS` AS `OPE_TRANS`,`salidas_proformas`.`id_tipom` AS `id_tipom`,`salidas_proformas`.`des_tipom` AS `des_tipom`,`salidas_proformas`.`id_tipod` AS `id_tipod`,`salidas_proformas`.`des_tipod` AS `des_tipod`,`salidas_proformas`.`ingreso_unidades` AS `ingreso_unidades`,`salidas_proformas`.`moneda` AS `moneda`,`salidas_proformas`.`precio_compra_ext` AS `precio_compra_ext`,`salidas_proformas`.`precio_compra_soles` AS `precio_compra_soles`,`salidas_proformas`.`ingreso_valorizados` AS `ingreso_valorizados`,`salidas_proformas`.`salidas_unidades` AS `salidas_unidades`,`salidas_proformas`.`tipo_pedido` AS `tipo_pedido`,`salidas_proformas`.`sucursal_trans` AS `sucursal_trans` from `salidas_proformas` union select `entradas_ajustes`.`id_prod` AS `id_prod`,`entradas_ajustes`.`cod_prod` AS `cod_prod`,`entradas_ajustes`.`des_prod` AS `des_prod`,`entradas_ajustes`.`fecha_trans` AS `fecha_trans`,`entradas_ajustes`.`docref_trans` AS `docref_trans`,`entradas_ajustes`.`nro_doc` AS `nro_doc`,`entradas_ajustes`.`ope_trans` AS `ope_trans`,`entradas_ajustes`.`id_tipom` AS `id_tipom`,`entradas_ajustes`.`des_tipom` AS `des_tipom`,`entradas_ajustes`.`id_tipod` AS `id_tipod`,`entradas_ajustes`.`des_tipod` AS `des_tipod`,`entradas_ajustes`.`ingreso_unidades` AS `ingreso_unidades`,`entradas_ajustes`.`moneda` AS `moneda`,`entradas_ajustes`.`precio_compra_ext` AS `precio_compra_ext`,`entradas_ajustes`.`precio_soles` AS `precio_soles`,`entradas_ajustes`.`ingreso_valorizado_nacional` AS `ingreso_valorizado_nacional`,`entradas_ajustes`.`salidas_unidades` AS `salidas_unidades`,`entradas_ajustes`.`tipo_pedido` AS `tipo_pedido`,`entradas_ajustes`.`sucursal_trans` AS `sucursal_trans` from `entradas_ajustes` union select `entradas_compras`.`id_prod` AS `id_prod`,`entradas_compras`.`cod_prod` AS `cod_prod`,`entradas_compras`.`des_prod` AS `des_prod`,`entradas_compras`.`fecha_trans` AS `fecha_trans`,`entradas_compras`.`nombre_prove` AS `nombre_prove`,`entradas_compras`.`nro_doc` AS `nro_doc`,`entradas_compras`.`ope_trans` AS `ope_trans`,`entradas_compras`.`id_tipom` AS `id_tipom`,`entradas_compras`.`des_tipom` AS `des_tipom`,`entradas_compras`.`id_tipod` AS `id_tipod`,`entradas_compras`.`des_tipod` AS `des_tipod`,`entradas_compras`.`ingreso_unidades` AS `ingreso_unidades`,`entradas_compras`.`des_moneda` AS `des_moneda`,`entradas_compras`.`precio_compra_ext` AS `precio_compra_ext`,`entradas_compras`.`precio_soles` AS `precio_soles`,`entradas_compras`.`ingreso_valorizado_nacional` AS `ingreso_valorizado_nacional`,`entradas_compras`.`salidas_unidades` AS `salidas_unidades`,`entradas_compras`.`tipo_pedido` AS `tipo_pedido`,`entradas_compras`.`sucursal_trans` AS `sucursal_trans` from `entradas_compras` union select `entradas_documentos`.`id_prod` AS `id_prod`,`entradas_documentos`.`cod_prod` AS `cod_prod`,`entradas_documentos`.`des_prod` AS `des_prod`,`entradas_documentos`.`fecha_trans` AS `fecha_trans`,`entradas_documentos`.`nombre_clte` AS `nombre_clte`,`entradas_documentos`.`nro_doc` AS `nro_doc`,`entradas_documentos`.`ope_trans` AS `ope_trans`,`entradas_documentos`.`id_tipom` AS `id_tipom`,`entradas_documentos`.`des_tipom` AS `des_tipom`,`entradas_documentos`.`id_tipod` AS `id_tipod`,`entradas_documentos`.`des_tipod` AS `des_tipod`,`entradas_documentos`.`ingreso_unidades` AS `ingreso_unidades`,`entradas_documentos`.`moneda` AS `moneda`,`entradas_documentos`.`precio_compra_ext` AS `precio_compra_ext`,`entradas_documentos`.`precio_soles` AS `precio_soles`,`entradas_documentos`.`ingreso_valorizado_nacional` AS `ingreso_valorizado_nacional`,`entradas_documentos`.`salidas_unidades` AS `salidas_unidades`,`entradas_documentos`.`tipo_pedido` AS `tipo_pedido`,`entradas_documentos`.`sucursal_trans` AS `sucursal_trans` from `entradas_documentos`) `t` order by `t`.`fecha_trans` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `entradas_documentos`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`cliente`.`nombre_clte` AS `nombre_clte`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`d`.`cod_doc`,4,8)) AS `nro_doc`,'ENTRADA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,`td`.`cant_detalle` AS `ingreso_unidades`,`moneda`.`des_moneda` AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_soles`,'' AS `ingreso_valorizado_nacional`,'' AS `salidas_unidades`,'' AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans` from ((((((((((`transaccion` `t` join `trans_detalle` `td` on((`t`.`id_trans` = `td`.`trans_detalle`))) join `producto` `p` on(((`p`.`id_prod` = `td`.`prod_detalle`) and (`t`.`sucursal_trans` = `p`.`sucursal_prod`)))) join `tipo_movimiento` `tm` on(((`tm`.`id_tipom` = `t`.`tipo_trans`) and (`t`.`sucursal_trans` = `tm`.`sucursal_tipom`)))) join `numeracion` `nd` on(((`t`.`numdoc_trans` = `nd`.`id_num`) and (`t`.`sucursal_trans` = `nd`.`sucursal_num`)))) join `tipo_documento` `tds` on(((`nd`.`tipo_num` = `tds`.`id_tipod`) and (`t`.`sucursal_trans` = `tds`.`sucursal_tipod`)))) join `documento` `d` on(((`d`.`id_doc` = `t`.`idrefdoc_trans`) and (`t`.`sucursal_trans` = `d`.`sucursal_doc`)))) join `documento` `dp` on(((`dp`.`id_doc` = `d`.`docref_doc`) and (`dp`.`sucursal_doc` = `t`.`sucursal_trans`)))) join `pedido` on(((`dp`.`pedido_doc` = `pedido`.`id_pedido`) and (`pedido`.`sucursal_pedido` = `t`.`sucursal_trans`)))) join `moneda` on(((`moneda`.`id_moneda` = `pedido`.`moneda_pedido`) and (`t`.`sucursal_trans` = `moneda`.`sucursal_moneda`)))) join `cliente` on(((`pedido`.`clte_pedido` = `cliente`.`id_clte`) and (`t`.`sucursal_trans` = `cliente`.`sucursal_clte`)))) where (`t`.`tipo_trans` = 7) group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`cliente`.`nombre_clte`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`d`.`cod_doc`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`td`.`cant_detalle`,`moneda`.`des_moneda`,`t`.`sucursal_trans` ;
 
 -- --------------------------------------------------------
 
@@ -13939,7 +16131,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `salidas_ajustes`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `salidas_ajustes`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`t`.`docref_trans` AS `docref_trans`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`t`.`codigo_trans`,4,8)) AS `codigo_trans`,'SALIDA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,'' AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_compra_soles`,'' AS `ingreso_valorizados`,`td`.`cant_detalle` AS `salidas_unidades`,'' AS `tipo`,`t`.`sucursal_trans` AS `sucursal_trans` from (((((`transaccion` `t` join `trans_detalle` `td` on(`t`.`id_trans` = `td`.`trans_detalle`)) join `producto` `p` on(`p`.`id_prod` = `td`.`prod_detalle` and `t`.`sucursal_trans` = `p`.`sucursal_prod`)) join `tipo_movimiento` `tm` on(`tm`.`id_tipom` = `t`.`tipo_trans` and `t`.`sucursal_trans` = `tm`.`sucursal_tipom`)) join `numeracion` `nd` on(`t`.`numdoc_trans` = `nd`.`id_num` and `t`.`sucursal_trans` = `nd`.`sucursal_num`)) join `tipo_documento` `tds` on(`nd`.`tipo_num` = `tds`.`id_tipod` and `t`.`sucursal_trans` = `tds`.`sucursal_tipod`)) where `t`.`tipo_trans` in (2,6,10) group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`t`.`docref_trans`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`t`.`codigo_trans`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`t`.`fecha_trans`,`td`.`cant_detalle`,`t`.`sucursal_trans` order by `t`.`id_trans` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `salidas_ajustes`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`t`.`docref_trans` AS `docref_trans`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`t`.`codigo_trans`,4,8)) AS `codigo_trans`,'SALIDA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,'' AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_compra_soles`,'' AS `ingreso_valorizados`,`td`.`cant_detalle` AS `salidas_unidades`,'' AS `tipo`,`t`.`sucursal_trans` AS `sucursal_trans` from (((((`transaccion` `t` join `trans_detalle` `td` on((`t`.`id_trans` = `td`.`trans_detalle`))) join `producto` `p` on(((`p`.`id_prod` = `td`.`prod_detalle`) and (`t`.`sucursal_trans` = `p`.`sucursal_prod`)))) join `tipo_movimiento` `tm` on(((`tm`.`id_tipom` = `t`.`tipo_trans`) and (`t`.`sucursal_trans` = `tm`.`sucursal_tipom`)))) join `numeracion` `nd` on(((`t`.`numdoc_trans` = `nd`.`id_num`) and (`t`.`sucursal_trans` = `nd`.`sucursal_num`)))) join `tipo_documento` `tds` on(((`nd`.`tipo_num` = `tds`.`id_tipod`) and (`t`.`sucursal_trans` = `tds`.`sucursal_tipod`)))) where (`t`.`tipo_trans` in (2,6,10)) group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`t`.`docref_trans`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`t`.`codigo_trans`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`t`.`fecha_trans`,`td`.`cant_detalle`,`t`.`sucursal_trans` order by `t`.`id_trans` ;
 
 -- --------------------------------------------------------
 
@@ -13948,7 +16140,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `salidas_documentos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `salidas_documentos`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`cliente`.`nombre_clte` AS `nombre_clte`,concat(`tipo_documento`.`abrv_tipod`,`numeracion`.`serie_num`,'-',substr(`documento`.`cod_doc`,4,8)) AS `nro_documento`,'SALIDA' AS `ope_trans`,`tipo_movimiento`.`id_tipom` AS `id_tipom`,`tipo_movimiento`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,'' AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_compra_soles`,'' AS `ingreso_valorizados`,`td`.`cant_detalle` AS `salidas_unidades`,`pedido`.`tipo_pedido` AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans` from ((((((((((`transaccion` `t` join `trans_detalle` `td` on(`t`.`id_trans` = `td`.`trans_detalle`)) join `producto` on(`td`.`prod_detalle` = `producto`.`id_prod` and `producto`.`status_prod` = 1 and `t`.`sucursal_trans` = `producto`.`sucursal_prod`)) join `tipo_movimiento` on(`t`.`tipo_trans` = `tipo_movimiento`.`id_tipom` and `tipo_movimiento`.`status_tipom` = 1 and `tipo_movimiento`.`id_tipom` not in (8,6) and `t`.`sucursal_trans` = `tipo_movimiento`.`sucursal_tipom`)) join `documento` on(`t`.`idrefdoc_trans` = `documento`.`id_doc` and `documento`.`status_doc` in (2,3) and `t`.`sucursal_trans` = `documento`.`sucursal_doc`)) join `pedido` on(`documento`.`pedido_doc` = `pedido`.`id_pedido` and `pedido`.`estatus_pedido` in (2,3,4) and `t`.`sucursal_trans` = `pedido`.`sucursal_pedido`)) join `cliente` on(`pedido`.`clte_pedido` = `cliente`.`id_clte` and `t`.`sucursal_trans` = `cliente`.`sucursal_clte`)) join `numeracion` on(`documento`.`numeracion_doc` = `numeracion`.`id_num` and `t`.`sucursal_trans` = `numeracion`.`sucursal_num`)) join `numeracion` `nd` on(`t`.`numdoc_trans` = `nd`.`id_num` and `t`.`sucursal_trans` = `nd`.`sucursal_num`)) join `tipo_documento` on(`numeracion`.`tipo_num` = `tipo_documento`.`id_tipod` and `t`.`sucursal_trans` = `tipo_documento`.`sucursal_tipod`)) join `tipo_documento` `tds` on(`nd`.`tipo_num` = `tds`.`id_tipod` and `t`.`sucursal_trans` = `tds`.`sucursal_tipod`)) where `t`.`ope_trans` = 'S' group by `producto`.`id_prod`,`producto`.`cod_prod`,`producto`.`des_prod`,`t`.`fecha_trans`,`cliente`.`nombre_clte`,`tipo_documento`.`abrv_tipod`,`numeracion`.`serie_num`,`documento`.`cod_doc`,`tipo_movimiento`.`id_tipom`,`tipo_movimiento`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`pedido`.`tipo_pedido`,`td`.`cant_detalle`,`t`.`sucursal_trans` order by `documento`.`cod_doc`,`producto`.`id_prod` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `salidas_documentos`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`cliente`.`nombre_clte` AS `nombre_clte`,concat(`tipo_documento`.`abrv_tipod`,`numeracion`.`serie_num`,'-',substr(`documento`.`cod_doc`,4,8)) AS `nro_documento`,'SALIDA' AS `ope_trans`,`tipo_movimiento`.`id_tipom` AS `id_tipom`,`tipo_movimiento`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,'' AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_compra_soles`,'' AS `ingreso_valorizados`,`td`.`cant_detalle` AS `salidas_unidades`,`pedido`.`tipo_pedido` AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans` from ((((((((((`transaccion` `t` join `trans_detalle` `td` on((`t`.`id_trans` = `td`.`trans_detalle`))) join `producto` on(((`td`.`prod_detalle` = `producto`.`id_prod`) and (`producto`.`status_prod` = 1) and (`t`.`sucursal_trans` = `producto`.`sucursal_prod`)))) join `tipo_movimiento` on(((`t`.`tipo_trans` = `tipo_movimiento`.`id_tipom`) and (`tipo_movimiento`.`status_tipom` = 1) and (`tipo_movimiento`.`id_tipom` not in (8,6)) and (`t`.`sucursal_trans` = `tipo_movimiento`.`sucursal_tipom`)))) join `documento` on(((`t`.`idrefdoc_trans` = `documento`.`id_doc`) and (`documento`.`status_doc` in (2,3)) and (`t`.`sucursal_trans` = `documento`.`sucursal_doc`)))) join `pedido` on(((`documento`.`pedido_doc` = `pedido`.`id_pedido`) and (`pedido`.`estatus_pedido` in (2,3,4)) and (`t`.`sucursal_trans` = `pedido`.`sucursal_pedido`)))) join `cliente` on(((`pedido`.`clte_pedido` = `cliente`.`id_clte`) and (`t`.`sucursal_trans` = `cliente`.`sucursal_clte`)))) join `numeracion` on(((`documento`.`numeracion_doc` = `numeracion`.`id_num`) and (`t`.`sucursal_trans` = `numeracion`.`sucursal_num`)))) join `numeracion` `nd` on(((`t`.`numdoc_trans` = `nd`.`id_num`) and (`t`.`sucursal_trans` = `nd`.`sucursal_num`)))) join `tipo_documento` on(((`numeracion`.`tipo_num` = `tipo_documento`.`id_tipod`) and (`t`.`sucursal_trans` = `tipo_documento`.`sucursal_tipod`)))) join `tipo_documento` `tds` on(((`nd`.`tipo_num` = `tds`.`id_tipod`) and (`t`.`sucursal_trans` = `tds`.`sucursal_tipod`)))) where (`t`.`ope_trans` = 'S') group by `producto`.`id_prod`,`producto`.`cod_prod`,`producto`.`des_prod`,`t`.`fecha_trans`,`cliente`.`nombre_clte`,`tipo_documento`.`abrv_tipod`,`numeracion`.`serie_num`,`documento`.`cod_doc`,`tipo_movimiento`.`id_tipom`,`tipo_movimiento`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`pedido`.`tipo_pedido`,`td`.`cant_detalle`,`t`.`sucursal_trans` order by `documento`.`cod_doc`,`producto`.`id_prod` ;
 
 -- --------------------------------------------------------
 
@@ -13957,7 +16149,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `salidas_proformas`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `salidas_proformas`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`cliente`.`nombre_clte` AS `nombre_clte`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`t`.`codigo_trans`,4,8)) AS `codigo_trans`,'SALIDA' AS `OPE_TRANS`,`tipo_movimiento`.`id_tipom` AS `id_tipom`,`tipo_movimiento`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,'' AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_compra_soles`,'' AS `ingreso_valorizados`,`td`.`cant_detalle` AS `salidas_unidades`,`pedido`.`tipo_pedido` AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans` from (((((((`transaccion` `t` join `trans_detalle` `td` on(`t`.`id_trans` = `td`.`trans_detalle`)) join `producto` on(`td`.`prod_detalle` = `producto`.`id_prod` and `producto`.`status_prod` = 1 and `t`.`sucursal_trans` = `producto`.`sucursal_prod`)) left join `tipo_movimiento` on(`t`.`tipo_trans` = `tipo_movimiento`.`id_tipom` and `tipo_movimiento`.`status_tipom` = 1 and `t`.`sucursal_trans` = `tipo_movimiento`.`sucursal_tipom`)) left join `pedido` on(`pedido`.`id_pedido` = `t`.`idrefdoc_trans` and `pedido`.`estatus_pedido` = 3 and `t`.`sucursal_trans` = `pedido`.`sucursal_pedido`)) join `cliente` on(`pedido`.`clte_pedido` = `cliente`.`id_clte` and `t`.`sucursal_trans` = `cliente`.`sucursal_clte`)) join `numeracion` `nd` on(`t`.`numdoc_trans` = `nd`.`id_num` and `t`.`sucursal_trans` = `nd`.`sucursal_num`)) join `tipo_documento` `tds` on(`nd`.`tipo_num` = `tds`.`id_tipod` and `t`.`sucursal_trans` = `tds`.`sucursal_tipod`)) where `t`.`ope_trans` = 'S' and `tipo_movimiento`.`id_tipom` = 8 group by `producto`.`id_prod`,`producto`.`cod_prod`,`producto`.`des_prod`,`t`.`fecha_trans`,`cliente`.`id_clte`,`cliente`.`nombre_clte`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`t`.`codigo_trans`,`t`.`id_trans`,`t`.`idrefdoc_trans`,`pedido`.`cod_pedido`,`tipo_movimiento`.`id_tipom`,`tipo_movimiento`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`pedido`.`tipo_pedido`,`td`.`cant_detalle`,`t`.`sucursal_trans` order by `pedido`.`cod_pedido`,`producto`.`id_prod` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `salidas_proformas`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`cliente`.`nombre_clte` AS `nombre_clte`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`t`.`codigo_trans`,4,8)) AS `codigo_trans`,'SALIDA' AS `OPE_TRANS`,`tipo_movimiento`.`id_tipom` AS `id_tipom`,`tipo_movimiento`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,'' AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_compra_soles`,'' AS `ingreso_valorizados`,`td`.`cant_detalle` AS `salidas_unidades`,`pedido`.`tipo_pedido` AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans` from (((((((`transaccion` `t` join `trans_detalle` `td` on((`t`.`id_trans` = `td`.`trans_detalle`))) join `producto` on(((`td`.`prod_detalle` = `producto`.`id_prod`) and (`producto`.`status_prod` = 1) and (`t`.`sucursal_trans` = `producto`.`sucursal_prod`)))) left join `tipo_movimiento` on(((`t`.`tipo_trans` = `tipo_movimiento`.`id_tipom`) and (`tipo_movimiento`.`status_tipom` = 1) and (`t`.`sucursal_trans` = `tipo_movimiento`.`sucursal_tipom`)))) left join `pedido` on(((`pedido`.`id_pedido` = `t`.`idrefdoc_trans`) and (`pedido`.`estatus_pedido` = 3) and (`t`.`sucursal_trans` = `pedido`.`sucursal_pedido`)))) join `cliente` on(((`pedido`.`clte_pedido` = `cliente`.`id_clte`) and (`t`.`sucursal_trans` = `cliente`.`sucursal_clte`)))) join `numeracion` `nd` on(((`t`.`numdoc_trans` = `nd`.`id_num`) and (`t`.`sucursal_trans` = `nd`.`sucursal_num`)))) join `tipo_documento` `tds` on(((`nd`.`tipo_num` = `tds`.`id_tipod`) and (`t`.`sucursal_trans` = `tds`.`sucursal_tipod`)))) where ((`t`.`ope_trans` = 'S') and (`tipo_movimiento`.`id_tipom` = 8)) group by `producto`.`id_prod`,`producto`.`cod_prod`,`producto`.`des_prod`,`t`.`fecha_trans`,`cliente`.`id_clte`,`cliente`.`nombre_clte`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`t`.`codigo_trans`,`t`.`id_trans`,`t`.`idrefdoc_trans`,`pedido`.`cod_pedido`,`tipo_movimiento`.`id_tipom`,`tipo_movimiento`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`pedido`.`tipo_pedido`,`td`.`cant_detalle`,`t`.`sucursal_trans` order by `pedido`.`cod_pedido`,`producto`.`id_prod` ;
 
 -- --------------------------------------------------------
 
@@ -13966,7 +16158,635 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_productos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `pr`.`id_prod` AS `id_prod`,`pr`.`cod_prod` AS `cod_prod`,`pr`.`des_prod` AS `des_prod`,`pr`.`compra_prod` AS `compra_prod`,`pr`.`venta_prod` AS `venta_prod`,`pr`.`status_prod` AS `status_prod`,`suc`.`id_suc` AS `sucursal_prod`,`pr`.`tipo_prod` AS `tipo_prod`,concat(`pr`.`cod_prod`,' ',`pr`.`des_prod`,' - ',`um`.`des_und`) AS `texto`,`suc`.`impuesto_suc` AS `impuesto_suc`,`um`.`id_und` AS `id_und`,`um`.`des_und` AS `des_und`,`pr`.`stock_prod` - (select coalesce(sum(`pedido_detalle`.`cant_pdetalle`),0) AS `cant_pedido` from (`pedido_detalle` join `pedido` on(`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`)) where `pedido_detalle`.`prod_pdetalle` = `pr`.`id_prod` and `pedido`.`sucursal_pedido` = `suc`.`id_suc` and `pedido`.`estatus_pedido` = 0) AS `stock_prod`,`pr`.`stock_prod` AS `stockProducto`,(select coalesce(sum(`pedido_detalle`.`cant_pdetalle`),0) AS `cant_pedido` from (`pedido_detalle` join `pedido` on(`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`)) where `pedido_detalle`.`prod_pdetalle` = `pr`.`id_prod` and `pedido`.`sucursal_pedido` = `suc`.`id_suc` and `pedido`.`estatus_pedido` = 0) AS `cantReservada` from ((`producto` `pr` join `unidad_medida` `um` on(`um`.`id_und` = `pr`.`umed_prod`)) join `sucursal` `suc` on(`pr`.`sucursal_prod` = `suc`.`id_suc`)) group by `pr`.`id_prod`,`pr`.`cod_prod`,`pr`.`des_prod`,`pr`.`compra_prod`,`pr`.`venta_prod`,`pr`.`status_prod`,`pr`.`stock_prod`,`suc`.`id_suc`,`pr`.`tipo_prod`,`suc`.`impuesto_suc`,`um`.`id_und`,`um`.`des_und` order by `pr`.`cod_prod` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `pr`.`id_prod` AS `id_prod`,`pr`.`cod_prod` AS `cod_prod`,`pr`.`des_prod` AS `des_prod`,`pr`.`compra_prod` AS `compra_prod`,`pr`.`venta_prod` AS `venta_prod`,`pr`.`status_prod` AS `status_prod`,`suc`.`id_suc` AS `sucursal_prod`,`pr`.`tipo_prod` AS `tipo_prod`,concat(`pr`.`cod_prod`,' ',`pr`.`des_prod`,' - ',`um`.`des_und`) AS `texto`,`suc`.`impuesto_suc` AS `impuesto_suc`,`um`.`id_und` AS `id_und`,`um`.`des_und` AS `des_und`,(`pr`.`stock_prod` - (select coalesce(sum(`pedido_detalle`.`cant_pdetalle`),0) AS `cant_pedido` from (`pedido_detalle` join `pedido` on((`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`))) where ((`pedido_detalle`.`prod_pdetalle` = `pr`.`id_prod`) and (`pedido`.`sucursal_pedido` = `suc`.`id_suc`) and (`pedido`.`estatus_pedido` = 0)))) AS `stock_prod` from ((`producto` `pr` join `unidad_medida` `um` on((`um`.`id_und` = `pr`.`umed_prod`))) join `sucursal` `suc` on((`pr`.`sucursal_prod` = `suc`.`id_suc`))) group by `pr`.`id_prod`,`pr`.`cod_prod`,`pr`.`des_prod`,`pr`.`compra_prod`,`pr`.`venta_prod`,`pr`.`status_prod`,`pr`.`stock_prod`,`suc`.`id_suc`,`pr`.`tipo_prod`,`suc`.`impuesto_suc`,`um`.`id_und`,`um`.`des_und` order by `pr`.`cod_prod` ;
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `almacen`
+--
+ALTER TABLE `almacen`
+  ADD PRIMARY KEY (`id_almacen`),
+  ADD KEY `sucursal_almacen` (`sucursal_almacen`);
+
+--
+-- Indices de la tabla `auth_assignment`
+--
+ALTER TABLE `auth_assignment`
+  ADD PRIMARY KEY (`item_name`,`user_id`),
+  ADD KEY `idx-auth_assignment-user_id` (`user_id`);
+
+--
+-- Indices de la tabla `auth_item`
+--
+ALTER TABLE `auth_item`
+  ADD PRIMARY KEY (`name`),
+  ADD KEY `rule_name` (`rule_name`),
+  ADD KEY `idx-auth_item-type` (`type`);
+
+--
+-- Indices de la tabla `auth_item_child`
+--
+ALTER TABLE `auth_item_child`
+  ADD PRIMARY KEY (`parent`,`child`),
+  ADD KEY `child` (`child`);
+
+--
+-- Indices de la tabla `auth_rule`
+--
+ALTER TABLE `auth_rule`
+  ADD PRIMARY KEY (`name`);
+
+--
+-- Indices de la tabla `cliente`
+--
+ALTER TABLE `cliente`
+  ADD PRIMARY KEY (`id_clte`),
+  ADD KEY `sucursal_clte` (`sucursal_clte`),
+  ADD KEY `cliente_ibfk_1` (`vendedor_clte`),
+  ADD KEY `pais_cte` (`pais_cte`),
+  ADD KEY `provi_cte` (`provi_cte`),
+  ADD KEY `depto_cte` (`depto_cte`),
+  ADD KEY `dtto_cte` (`dtto_clte`),
+  ADD KEY `lista_clte` (`lista_clte`),
+  ADD KEY `tipoid_clte` (`tipoid_clte`);
+
+--
+-- Indices de la tabla `compra`
+--
+ALTER TABLE `compra`
+  ADD PRIMARY KEY (`id_compra`),
+  ADD UNIQUE KEY `cod_compra` (`cod_compra`),
+  ADD KEY `fecha_compra` (`fecha_compra`),
+  ADD KEY `provee_compra` (`provee_compra`),
+  ADD KEY `moneda_compra` (`moneda_compra`),
+  ADD KEY `usuario_compra` (`usuario_compra`),
+  ADD KEY `sucursal_compra` (`sucursal_compra`),
+  ADD KEY `condp_compra` (`condp_compra`);
+
+--
+-- Indices de la tabla `compra_detalle`
+--
+ALTER TABLE `compra_detalle`
+  ADD PRIMARY KEY (`id_cdetalle`),
+  ADD KEY `prod_cdetalle` (`prod_cdetalle`),
+  ADD KEY `compra_cdetalle` (`compra_cdetalle`);
+
+--
+-- Indices de la tabla `cond_pago`
+--
+ALTER TABLE `cond_pago`
+  ADD PRIMARY KEY (`id_condp`),
+  ADD KEY `sucursal_condp` (`sucursal_condp`);
+
+--
+-- Indices de la tabla `departamento`
+--
+ALTER TABLE `departamento`
+  ADD PRIMARY KEY (`id_depto`),
+  ADD KEY `sucursal_depto` (`sucursal_depto`),
+  ADD KEY `prov_depto` (`prov_depto`);
+
+--
+-- Indices de la tabla `distrito`
+--
+ALTER TABLE `distrito`
+  ADD PRIMARY KEY (`id_dtto`),
+  ADD KEY `sucursal_dtto` (`sucursal_dtto`),
+  ADD KEY `depto_dtto` (`depto_dtto`),
+  ADD KEY `pais_dtto` (`pais_dtto`),
+  ADD KEY `prov_dtto` (`prov_dtto`);
+
+--
+-- Indices de la tabla `documento`
+--
+ALTER TABLE `documento`
+  ADD PRIMARY KEY (`id_doc`),
+  ADD KEY `cod_doc` (`cod_doc`),
+  ADD KEY `tipo_doc` (`tipo_doc`),
+  ADD KEY `pedido_doc` (`pedido_doc`),
+  ADD KEY `fecha_doc` (`fecha_doc`),
+  ADD KEY `status_doc` (`status_doc`),
+  ADD KEY `sucursal_doc` (`sucursal_doc`),
+  ADD KEY `transp_doc` (`transp_doc`),
+  ADD KEY `utransp_doc` (`utransp_doc`),
+  ADD KEY `almacen_doc` (`almacen_doc`),
+  ADD KEY `almacen_doc_2` (`almacen_doc`),
+  ADD KEY `serie_doc` (`numeracion_doc`);
+
+--
+-- Indices de la tabla `documento_detalle`
+--
+ALTER TABLE `documento_detalle`
+  ADD PRIMARY KEY (`id_ddetalle`),
+  ADD KEY `prod_pdetalle` (`prod_ddetalle`),
+  ADD KEY `pedido_pdetalle` (`documento_ddetalle`);
+
+--
+-- Indices de la tabla `empresa`
+--
+ALTER TABLE `empresa`
+  ADD PRIMARY KEY (`id_empresa`);
+
+--
+-- Indices de la tabla `inventario`
+--
+ALTER TABLE `inventario`
+  ADD PRIMARY KEY (`id_inv`),
+  ADD KEY `sucursal_inv` (`sucursal_inv`);
+
+--
+-- Indices de la tabla `lista_precios`
+--
+ALTER TABLE `lista_precios`
+  ADD PRIMARY KEY (`id_lista`),
+  ADD UNIQUE KEY `lista` (`prod_lista`,`tipo_lista`),
+  ADD KEY `tipo_lista` (`tipo_lista`),
+  ADD KEY `prod_lista` (`prod_lista`),
+  ADD KEY `sucursal_lista` (`sucursal_lista`);
+
+--
+-- Indices de la tabla `menu`
+--
+ALTER TABLE `menu`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `parent` (`parent`);
+
+--
+-- Indices de la tabla `migration`
+--
+ALTER TABLE `migration`
+  ADD PRIMARY KEY (`version`);
+
+--
+-- Indices de la tabla `moneda`
+--
+ALTER TABLE `moneda`
+  ADD PRIMARY KEY (`id_moneda`),
+  ADD KEY `sucursal_moneda` (`sucursal_moneda`);
+
+--
+-- Indices de la tabla `motivo_traslado`
+--
+ALTER TABLE `motivo_traslado`
+  ADD PRIMARY KEY (`id_motivo`);
+
+--
+-- Indices de la tabla `numeracion`
+--
+ALTER TABLE `numeracion`
+  ADD PRIMARY KEY (`id_num`),
+  ADD KEY `sucursal_num` (`sucursal_num`),
+  ADD KEY `tipo_num` (`tipo_num`);
+
+--
+-- Indices de la tabla `pais`
+--
+ALTER TABLE `pais`
+  ADD PRIMARY KEY (`id_pais`);
+
+--
+-- Indices de la tabla `pedido`
+--
+ALTER TABLE `pedido`
+  ADD PRIMARY KEY (`id_pedido`,`cod_pedido`,`tipo_pedido`),
+  ADD UNIQUE KEY `cod_pedido` (`cod_pedido`,`tipo_pedido`),
+  ADD KEY `fecha_pedido` (`fecha_pedido`),
+  ADD KEY `clte_pedido` (`clte_pedido`),
+  ADD KEY `vend_pedido` (`vend_pedido`),
+  ADD KEY `moneda_pedido` (`moneda_pedido`),
+  ADD KEY `almacen_pedido` (`almacen_pedido`),
+  ADD KEY `usuario_pedido` (`usuario_pedido`),
+  ADD KEY `sucursal_pedido` (`sucursal_pedido`),
+  ADD KEY `condp_pedido` (`condp_pedido`),
+  ADD KEY `tipo_pedido` (`tipo_pedido`);
+
+--
+-- Indices de la tabla `pedido_detalle`
+--
+ALTER TABLE `pedido_detalle`
+  ADD PRIMARY KEY (`id_pdetalle`),
+  ADD KEY `prod_pdetalle` (`prod_pdetalle`),
+  ADD KEY `pedido_pdetalle` (`pedido_pdetalle`);
+
+--
+-- Indices de la tabla `precios`
+--
+ALTER TABLE `precios`
+  ADD PRIMARY KEY (`codigo`);
+
+--
+-- Indices de la tabla `producto`
+--
+ALTER TABLE `producto`
+  ADD PRIMARY KEY (`id_prod`),
+  ADD UNIQUE KEY `cod_prod` (`cod_prod`),
+  ADD KEY `tipo_prod` (`tipo_prod`),
+  ADD KEY `sucursal_prod` (`sucursal_prod`),
+  ADD KEY `umed_prod` (`umed_prod`);
+
+--
+-- Indices de la tabla `profile`
+--
+ALTER TABLE `profile`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indices de la tabla `proveedor`
+--
+ALTER TABLE `proveedor`
+  ADD PRIMARY KEY (`id_prove`),
+  ADD KEY `sucursal_prove` (`sucursal_prove`),
+  ADD KEY `pais_prove` (`pais_prove`),
+  ADD KEY `provi_prove` (`provi_prove`),
+  ADD KEY `depto_prove` (`depto_prove`),
+  ADD KEY `dttp_prove` (`dtto_prove`);
+
+--
+-- Indices de la tabla `provincia`
+--
+ALTER TABLE `provincia`
+  ADD PRIMARY KEY (`id_prov`),
+  ADD KEY `sucursal_prov` (`sucursal_prov`),
+  ADD KEY `fx_pais_prov_idx` (`pais_prov`);
+
+--
+-- Indices de la tabla `series`
+--
+ALTER TABLE `series`
+  ADD PRIMARY KEY (`id_serie`),
+  ADD KEY `sucursal_serie` (`sucursal_serie`);
+
+--
+-- Indices de la tabla `sucursal`
+--
+ALTER TABLE `sucursal`
+  ADD PRIMARY KEY (`id_suc`),
+  ADD KEY `EMPRESA_SUC` (`empresa_suc`);
+
+--
+-- Indices de la tabla `tipo_cambio`
+--
+ALTER TABLE `tipo_cambio`
+  ADD PRIMARY KEY (`id_tipoc`),
+  ADD KEY `sucursal_tipoc` (`sucursal_tipoc`);
+
+--
+-- Indices de la tabla `tipo_documento`
+--
+ALTER TABLE `tipo_documento`
+  ADD PRIMARY KEY (`id_tipod`),
+  ADD KEY `id_tipod` (`id_tipod`),
+  ADD KEY `sucursal_tipod` (`sucursal_tipod`),
+  ADD KEY `doc_doc` (`tipo_tipod`);
+
+--
+-- Indices de la tabla `tipo_identificacion`
+--
+ALTER TABLE `tipo_identificacion`
+  ADD PRIMARY KEY (`id_tipoi`);
+
+--
+-- Indices de la tabla `tipo_listap`
+--
+ALTER TABLE `tipo_listap`
+  ADD PRIMARY KEY (`id_lista`),
+  ADD KEY `sucursal_lista` (`sucursal_lista`);
+
+--
+-- Indices de la tabla `tipo_movimiento`
+--
+ALTER TABLE `tipo_movimiento`
+  ADD PRIMARY KEY (`id_tipom`),
+  ADD KEY `sucursal_tipom` (`sucursal_tipom`);
+
+--
+-- Indices de la tabla `tipo_producto`
+--
+ALTER TABLE `tipo_producto`
+  ADD PRIMARY KEY (`id_tpdcto`);
+
+--
+-- Indices de la tabla `tipo_proveedor`
+--
+ALTER TABLE `tipo_proveedor`
+  ADD PRIMARY KEY (`id_tprov`),
+  ADD KEY `sucursal_tprov` (`sucursal_tprov`);
+
+--
+-- Indices de la tabla `transaccion`
+--
+ALTER TABLE `transaccion`
+  ADD PRIMARY KEY (`id_trans`) USING BTREE,
+  ADD UNIQUE KEY `codigo_trans_2` (`codigo_trans`,`tipo_trans`) USING BTREE,
+  ADD KEY `codigo_trans` (`codigo_trans`),
+  ADD KEY `fecha_trans` (`fecha_trans`),
+  ADD KEY `tipo_trans` (`tipo_trans`),
+  ADD KEY `almacen_trans` (`almacen_trans`),
+  ADD KEY `usuario_trans` (`usuario_trans`),
+  ADD KEY `grupo_trans` (`ope_trans`),
+  ADD KEY `idrefdoc_trans` (`idrefdoc_trans`);
+
+--
+-- Indices de la tabla `transportista`
+--
+ALTER TABLE `transportista`
+  ADD PRIMARY KEY (`id_transp`),
+  ADD KEY `status_transp` (`status_transp`),
+  ADD KEY `sucursal_transp` (`sucursal_transp`);
+
+--
+-- Indices de la tabla `trans_detalle`
+--
+ALTER TABLE `trans_detalle`
+  ADD PRIMARY KEY (`id_detalle`),
+  ADD KEY `trans_detalle` (`trans_detalle`),
+  ADD KEY `prod_detalle` (`prod_detalle`);
+
+--
+-- Indices de la tabla `unidad_medida`
+--
+ALTER TABLE `unidad_medida`
+  ADD PRIMARY KEY (`id_und`),
+  ADD KEY `sucursal_und` (`sucursal_und`);
+
+--
+-- Indices de la tabla `unidad_transporte`
+--
+ALTER TABLE `unidad_transporte`
+  ADD PRIMARY KEY (`id_utransp`),
+  ADD KEY `status_utransp` (`status_utransp`),
+  ADD KEY `sucursal_utransp` (`sucursal_utransp`);
+
+--
+-- Indices de la tabla `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `empresa` (`empresa`),
+  ADD KEY `sucursal` (`sucursal`);
+
+--
+-- Indices de la tabla `vendedor`
+--
+ALTER TABLE `vendedor`
+  ADD PRIMARY KEY (`id_vendedor`),
+  ADD KEY `zona_vend` (`zona_vend`),
+  ADD KEY `sucursal_vend` (`sucursal_vend`);
+
+--
+-- Indices de la tabla `zona`
+--
+ALTER TABLE `zona`
+  ADD PRIMARY KEY (`id_zona`),
+  ADD KEY `sucursal_zona` (`sucursal_zona`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `almacen`
+--
+ALTER TABLE `almacen`
+  MODIFY `id_almacen` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `cliente`
+--
+ALTER TABLE `cliente`
+  MODIFY `id_clte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=791;
+
+--
+-- AUTO_INCREMENT de la tabla `compra`
+--
+ALTER TABLE `compra`
+  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=60;
+
+--
+-- AUTO_INCREMENT de la tabla `compra_detalle`
+--
+ALTER TABLE `compra_detalle`
+  MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=962;
+
+--
+-- AUTO_INCREMENT de la tabla `cond_pago`
+--
+ALTER TABLE `cond_pago`
+  MODIFY `id_condp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `departamento`
+--
+ALTER TABLE `departamento`
+  MODIFY `id_depto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=217;
+
+--
+-- AUTO_INCREMENT de la tabla `distrito`
+--
+ALTER TABLE `distrito`
+  MODIFY `id_dtto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=218;
+
+--
+-- AUTO_INCREMENT de la tabla `documento`
+--
+ALTER TABLE `documento`
+  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=323;
+
+--
+-- AUTO_INCREMENT de la tabla `documento_detalle`
+--
+ALTER TABLE `documento_detalle`
+  MODIFY `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=1789;
+
+--
+-- AUTO_INCREMENT de la tabla `empresa`
+--
+ALTER TABLE `empresa`
+  MODIFY `id_empresa` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `inventario`
+--
+ALTER TABLE `inventario`
+  MODIFY `id_inv` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+
+--
+-- AUTO_INCREMENT de la tabla `lista_precios`
+--
+ALTER TABLE `lista_precios`
+  MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=811;
+
+--
+-- AUTO_INCREMENT de la tabla `menu`
+--
+ALTER TABLE `menu`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `moneda`
+--
+ALTER TABLE `moneda`
+  MODIFY `id_moneda` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `motivo_traslado`
+--
+ALTER TABLE `motivo_traslado`
+  MODIFY `id_motivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT de la tabla `numeracion`
+--
+ALTER TABLE `numeracion`
+  MODIFY `id_num` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `pais`
+--
+ALTER TABLE `pais`
+  MODIFY `id_pais` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=243;
+
+--
+-- AUTO_INCREMENT de la tabla `pedido`
+--
+ALTER TABLE `pedido`
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=277;
+
+--
+-- AUTO_INCREMENT de la tabla `pedido_detalle`
+--
+ALTER TABLE `pedido_detalle`
+  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3274;
+
+--
+-- AUTO_INCREMENT de la tabla `producto`
+--
+ALTER TABLE `producto`
+  MODIFY `id_prod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=1222;
+
+--
+-- AUTO_INCREMENT de la tabla `profile`
+--
+ALTER TABLE `profile`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `proveedor`
+--
+ALTER TABLE `proveedor`
+  MODIFY `id_prove` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `provincia`
+--
+ALTER TABLE `provincia`
+  MODIFY `id_prov` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT de la tabla `series`
+--
+ALTER TABLE `series`
+  MODIFY `id_serie` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID SERIE', AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `sucursal`
+--
+ALTER TABLE `sucursal`
+  MODIFY `id_suc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_cambio`
+--
+ALTER TABLE `tipo_cambio`
+  MODIFY `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=177;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_documento`
+--
+ALTER TABLE `tipo_documento`
+  MODIFY `id_tipod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_identificacion`
+--
+ALTER TABLE `tipo_identificacion`
+  MODIFY `id_tipoi` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_listap`
+--
+ALTER TABLE `tipo_listap`
+  MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_movimiento`
+--
+ALTER TABLE `tipo_movimiento`
+  MODIFY `id_tipom` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_producto`
+--
+ALTER TABLE `tipo_producto`
+  MODIFY `id_tpdcto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_proveedor`
+--
+ALTER TABLE `tipo_proveedor`
+  MODIFY `id_tprov` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `transaccion`
+--
+ALTER TABLE `transaccion`
+  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=285;
+
+--
+-- AUTO_INCREMENT de la tabla `transportista`
+--
+ALTER TABLE `transportista`
+  MODIFY `id_transp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `trans_detalle`
+--
+ALTER TABLE `trans_detalle`
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3425;
+
+--
+-- AUTO_INCREMENT de la tabla `unidad_medida`
+--
+ALTER TABLE `unidad_medida`
+  MODIFY `id_und` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `unidad_transporte`
+--
+ALTER TABLE `unidad_transporte`
+  MODIFY `id_utransp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `vendedor`
+--
+ALTER TABLE `vendedor`
+  MODIFY `id_vendedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `zona`
+--
+ALTER TABLE `zona`
+  MODIFY `id_zona` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
