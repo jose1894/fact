@@ -578,8 +578,15 @@ class DocumentoController extends Controller
       $mpdf->AddPage('P','','','','',10,10,100,50,50,12);
       $mpdf->WriteHtml( $content ); // call mpdf write html
       $mpdf->SetHTMLFooter( $footer );
+      if ( $modelDocumento->status_doc === Documento::DOCUMENTO_ANULADO ) {
+          $mpdf->showWatermarkText = true;
+          $mpdf->WriteHTML('<watermarktext style="color:red" content="' . Yii::t('app','CANCELED') . '" alpha="0.4" />');
+      }
 
-      $titulo = $modelDocumento->numeracion->tipoDocumento->abrv_tipod.$modelDocumento->numeracion->serie_num.'-'.$modelDocumento->cod_doc. '-'. Yii::t('documento','Referral guide') .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
+      $titulo = $modelDocumento->numeracion->tipoDocumento->abrv_tipod
+                .$modelDocumento->numeracion->serie_num.'-'
+                .$modelDocumento->cod_doc. '-'. Yii::t('documento','Referral guide')
+                .'-'.$modelDocumento->pedidoDoc->cltePedido->nombre_clte.'.pdf';
 
       $mpdf->SetTitle($titulo);
       $mpdf->Output($titulo, 'I'); // call the mpdf api output as needed
@@ -621,11 +628,11 @@ class DocumentoController extends Controller
       $labelDato = "";
 
       if ($modelDocumento->tipo_doc === Documento::TIPODOC_FACTURA) {
-      $datoCliente = $modelDocumento->pedidoDoc->cltePedido->ruc_clte;
-      $labelDato = Yii::t('cliente','R.U.C.');
+        $datoCliente = $modelDocumento->pedidoDoc->cltePedido->ruc_clte;
+        $labelDato = Yii::t('cliente','R.U.C.');
       } else {
-      $datoCliente = $modelDocumento->pedidoDoc->cltePedido->dni_clte;
-      $labelDato = Yii::t('cliente','D.N.I');
+        $datoCliente = $modelDocumento->pedidoDoc->cltePedido->dni_clte;
+        $labelDato = Yii::t('cliente','D.N.I');
       }
 
         $header = '

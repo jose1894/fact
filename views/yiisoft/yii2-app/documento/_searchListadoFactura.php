@@ -102,8 +102,8 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
   </div>
 </div>
 <div class="form-group">
-  <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
-  <?= Html::a('<i class="fa fa-refresh"></i> ' . Yii::t('app','Refresh '), ['listado-factura'], ['class' => 'btn btn-success'])?>
+  <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-flat btn-primary']) ?>
+  <?= Html::a('<i class="fa fa-refresh"></i> ' . Yii::t('app','Refresh '), ['listado-factura'], ['class' => 'btn btn-flat btn-success'])?>
 </div>
 <hr>
 <?php ActiveForm::end();

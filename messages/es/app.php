@@ -23,6 +23,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    'From' => 'Desde',
+    'to' => 'hasta',
     'January' => 'Enero',
     'February' => 'Febrero',
     'March' => 'Marzo',

@@ -24,7 +24,7 @@ class DocumentoSearch extends Documento
         return [
             [['id_doc', 'tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc'], 'integer'],
             [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc','cliente','tipo_doc','tipoDocumento','docNoEsGuia'], 'safe'],
-            [['cliente'], 'string'],
+            //[['cliente'], 'string'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
         ];
     }
@@ -49,9 +49,12 @@ class DocumentoSearch extends Documento
     {
         $sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Documento::find()
+                 ->select(['tipo_doc','id_doc','cod_doc','numeracion_doc','fecha_doc','pedido_doc','status_doc','statussunat_doc','totalimp_doc','totaldsc_doc','total_doc'])
                  ->joinWith(['pedidoDoc'])
                  ->joinWith('pedidoDoc.cltePedido')
-                 ->joinWith('tipoDoc');
+                 ->joinWith('tipoDoc')
+                 ->groupBy(['tipo_doc','id_doc','cod_doc','numeracion_doc','fecha_doc','pedido_doc','status_doc','statussunat_doc','totalimp_doc','totaldsc_doc','total_doc','transp_doc'])
+                 ->orderBy('tipo_doc');
 
         // add conditions that should always apply here
         $dataProvider = new ActiveDataProvider([
@@ -69,19 +72,19 @@ class DocumentoSearch extends Documento
         ];
 
         if ( $this->listado ) {
+          $dataProvider->pagination->pageSize = 0;
           $dataProvider->sort->defaultOrder = [
-					'fecha_doc' => SORT_DESC,
-                    'cod_doc' => SORT_DESC,
-					'tipo_doc' => SORT_ASC,
-
+    					'fecha_doc' => SORT_DESC,
+              'cod_doc' => SORT_DESC,
+    					'tipo_doc' => SORT_ASC,
           ];
         }
 
         $this->load($params);
         $this->sucursal_doc = $sucursal;
-         // print_r($this->validate()); exit();
+         //print_r(empty($params)); exit();
 
-        if (!$this->validate()) {
+        if (!$this->validate() || empty($params) ) {
             // uncomment the following line if you do not want to return any records when validation fails
             $query->where('0=1');
             return $dataProvider;

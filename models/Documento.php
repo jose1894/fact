@@ -38,7 +38,7 @@ class Documento extends \yii\db\ActiveRecord
     const TIPODOC_FACTURA = 2;
     const TIPODOC_PROFORMA = 7;
     const TIPODOC_BOLETA = 9;
-	const TIPODOC_NCREDITO = 10;
+	  const TIPODOC_NCREDITO = 10;
     const TIPODOC_GUIA = 3;
     const INGRESO_ANULACION = 9; //Tipo de operacion para las anulaciones de facturas y boletas INGRESO POR ANULACION
     const SALIDA_ANULACION = 10; //Tipo de operacion para las anulaciones de notas de credito SALIDA POR ANULACION
@@ -95,6 +95,7 @@ class Documento extends \yii\db\ActiveRecord
             'status_doc' => Yii::t('documento', 'Status'),
             'sucursal_doc' => Yii::t('documento', 'Sucursal '),
             'cliente' => Yii::t('cliente', 'Customer'),
+            'statussunat_doc' => Yii::t('documento','SUNAT'),
             'tipoDocumento' => Yii::t('tipo_documento', 'Document type'),
         ];
     }
@@ -136,7 +137,7 @@ class Documento extends \yii\db\ActiveRecord
     {
         return $this->hasOne(MotivoTraslado::className(), ['id_motivo' => 'motivo_doc']);
     }
-	
+
 	/**
      * @return \yii\db\ActiveQuery
      */
@@ -160,7 +161,7 @@ class Documento extends \yii\db\ActiveRecord
                ['status_doc' => Documento::DOCUMENTO_ANULADO]
            ]);
     }
-	
+
 	public function getDocAfectado()
 	{
 		return Documento::find()
