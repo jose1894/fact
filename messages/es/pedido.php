@@ -8,6 +8,7 @@ return [
     'Input a code' => 'Ingrese un código',
     'Description' => 'Descripción',
     'Input a name' => 'Ingrese un nombre',
+    'You can´t input a value greather than the avalaible stock' => 'No puede ingresar un valor mayor que el stock disponible',
     'Are you sure to delete this product?' => '¿Está seguro de eliminar este producto?',
     'Product' => 'Producto',
     'Purchase order' => 'Pedido',

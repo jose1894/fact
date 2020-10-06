@@ -234,7 +234,6 @@ class NotaCreditoController extends Controller
               $numeracion = Numeracion::findOne($num[0]['id_num']);
               $numeracion->scenario = 'numerar';
               $numeracion->numero_num = $codigo;
-              //print_r($numeracion->save());exit();
               $flag = $numeracion->save() && $flag;
               
               $numeracion = Numeracion::findOne($id_num);

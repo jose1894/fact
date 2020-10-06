@@ -385,7 +385,7 @@ class ProductoController extends Controller
           $tipo_lista = Yii::$app->request->get( 'tipo_listap' );
 
           $query = new Query;
-          $query->select(['lp.precio_lista as precio', 'p.impuesto_suc as impuesto'])
+          $query->select(['lp.precio_lista as precio', 'p.impuesto_suc as impuesto', 'stock_prod as stock'])
               ->from(['v_productos as p'])
               ->join('LEFT JOIN',
                     'lista_precios lp',

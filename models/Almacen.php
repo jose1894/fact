@@ -23,6 +23,25 @@ class Almacen extends \yii\db\ActiveRecord
         return 'almacen';
     }
 
+    public function beforeSave($insert)     
+    {         
+        if (parent::beforeSave($insert)) {             
+            if ($this->isNewRecord) {                 
+                // if it is new record save the current timestamp as created time                 
+                $this->created_by = Yii::$app->user->id;
+                $this->created_at = time();            
+                return true;
+            }                         
+        
+            // if it is new or update record save that timestamp as updated time            
+            $this->updated_at = time();            
+            $this->updated_by = Yii::$app->user->id;
+            return true;         
+        }         
+
+        return false;   
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -50,12 +69,12 @@ class Almacen extends \yii\db\ActiveRecord
 
     public static function getAlmacenList()
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
-      $almacenes = Almacen::find()
+        $almacenes = Almacen::find()
                    ->where('status_almacen = :status and sucursal_almacen = :sucursal', [':status' => 1, ':sucursal' => $sucursal])
                    ->orderBy('des_almacen')
                    ->all();
-      return ArrayHelper::map( $almacenes, 'id_almacen', 'des_almacen');
+        return ArrayHelper::map( $almacenes, 'id_almacen', 'des_almacen');
     }
 }

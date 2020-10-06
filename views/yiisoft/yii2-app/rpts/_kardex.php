@@ -170,15 +170,21 @@ $a = 1;
                           ],
                           [
                             'attribute' => 'salidas_unidades',
-                            'value' => function( $data,$a ) {
-								$a = 2;
+                            'value' => function( $data ) {								
                                 return $data['salidas_unidades'];
                             },
                             'label' => 'Salidas',
                             'width' => '5%',
                             'format' => ['decimal',2],
                             'hAlign' => 'right',
-                          ],
+						  ],
+						  [
+							  'label' => 'Saldo',
+							  'value' => function( $data ) {
+								  return floatVal($data['ingreso_unidades']) - floatVal($data['salidas_unidades']);
+
+							  }
+						  ]
                   ]
               ]);?>
         <?php Pjax::end(); ?>

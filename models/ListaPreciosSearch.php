@@ -41,7 +41,7 @@ class ListaPreciosSearch extends ListaPrecios
      */
     public function search($params)
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = ListaPrecios::find()
                  ->where('sucursal_lista = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);

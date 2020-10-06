@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id_lista',
             'tipo_lista',
-            'prod_lista',
+            'prodLista.des_prod',
             'precio_lista',
             'sucursal_lista',
 

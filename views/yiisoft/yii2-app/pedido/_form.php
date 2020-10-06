@@ -562,13 +562,18 @@ $('#pedido_tipo  input[type="radio"]').iCheck({
 
 });
 
-$( '.table-body' ).on( 'blur', 'input[id$="cant_pdetalle"]', function( e ) {
+$( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
-    let cant = $( this ).val();
-    let precio = $( "#pedidodetalle-" + row + "-plista_pdetalle").val();
-    let descu = $( "#pedidodetalle-" + row + "-descu_pdetalle").val();
+    let cant = +$( this ).val();
+    let precioLista = +$( "#pedidodetalle-" + row + "-plista_pdetalle").val();
+    let precio = +$( "#pedidodetalle-" + row + "-precio_pdetalle").val();
+    let descu = +$( "#pedidodetalle-" + row + "-descu_pdetalle").val();
     let total = 0.00;
+
+    if ( precioLista !== precio && precio === 0 ) {
+      precio = precioLista;
+    }
 
     if ( cant ) {
 
@@ -585,16 +590,21 @@ $( '.table-body' ).on( 'blur', 'input[id$="cant_pdetalle"]', function( e ) {
     }
 });
 
-$( '.table-body' ).on( 'blur', 'input[id$="descu_pdetalle"]', function( e ) {
+$( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
-    let descu = $( this ).val();
-    let precio = $( "#pedidodetalle-" + row + "-plista_pdetalle").val();
-    let cant = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
-    let precioDetalle = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
+    let descu = +$( this ).val();
+    let precioLista = +$( "#pedidodetalle-" + row + "-plista_pdetalle").val();
+    let precio = +$( "#pedidodetalle-" + row + "-precio_pdetalle").val();
+    let cant = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
+    let precioDetalle = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
     let total = 0.00;
     let descuento = 0;
     let precioVenta = 0.00;
+
+    if ( precioLista !== precio && precio === 0 ) {
+      precio = precioLista;
+    }
 
     if ( cant ) {
 
@@ -604,6 +614,7 @@ $( '.table-body' ).on( 'blur', 'input[id$="descu_pdetalle"]', function( e ) {
         descuento = ( precio * ( descu / 100 ) );
       } else {
         total = cant * precio;
+        precioVenta = precioLista;
       }
 
       descuento = parseFloat( descuento ).toFixed( 2 );
@@ -618,11 +629,11 @@ $( '.table-body' ).on( 'blur', 'input[id$="descu_pdetalle"]', function( e ) {
     }
 });
 
-$( '.table-body' ).on( 'change', 'input[id$="precio_pdetalle"]', function( e ) {
+$( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
-    let cant = $( "#pedidodetalle-" + row + "-cant_pdetalle").val();
-    let precio = $( this ).val();
+    let cant = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
+    let precio = +$( this ).val();
     let total = 0;
 
     if ( cant ) {
@@ -637,17 +648,6 @@ $( '.table-body' ).on( 'change', 'input[id$="precio_pdetalle"]', function( e ) {
 
 $( '.table-body' ).on( 'blur', 'input[id$="precio_pdetalle"]', function( e ) {
   calculateTotals( IMPUESTO );
-});
-
-$( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ) {
-
-  if ( e.keyCode === 13 && $( this ).val() ) {
-    let row = $( this ).attr( "id" ).split( "-" );
-    row = row[ 1 ];
-    $( '#pedidodetalle-' + row + '-descu_pdetalle' ).focus();
-    $( '#pedidodetalle-' + row + '-descu_pdetalle' ).select();
-  }
-
 });
 
 $( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ){
@@ -746,6 +746,7 @@ JS
             id: value,
             tipo_listap: tipo_lista
           },
+          async: false,
           success: function( data ) {
             if ( data.results.length ) {
               let precioLista = data.results[ 0 ].precio;
@@ -753,6 +754,8 @@ JS
 
               precioLista = parseFloat(  precioLista  ).toFixed( 2 );
               impuestoDetalle = parseFloat(  impuestoDetalle  ).toFixed( 2 );
+
+              $( '#pedidodetalle-' + row + '-cant_pdetalle' ).data( 'stock', data.results[ 0 ].stock);
 
               $( '#pedidodetalle-' + row + '-plista_pdetalle' ).val( precioLista );
               $( '#pedidodetalle-' + row + '-impuesto_pdetalle' ).val( impuestoDetalle );
@@ -767,6 +770,26 @@ JS
       });
     }
   }
+
+  $( '.table-body' ).on( 'keyup', 'input[id$=\"cant_pdetalle\"]', function( e ) {
+
+    if ( e.keyCode === 13 && $( this ).val() ) {
+  
+      if ( $( this ).val() > $( this ).data( 'stock') ) {
+        swal( 'Oops!', '" . Yii::t( 'pedido', 'You can´t input a value greather than the avalaible stock'). "', 'warning');
+        $( this ).val(''); 
+        $( this ).focus(); 
+        $( this ).select(); 
+        return false;
+      }
+  
+      let row = $( this ).attr( \"id\" ).split( \"-\" );
+      row = row[ 1 ];
+      $( '#pedidodetalle-' + row + '-descu_pdetalle' ).focus();
+      $( '#pedidodetalle-' + row + '-descu_pdetalle' ).select();
+    }
+  
+  });
 
   $( '#submit' ).on( 'click', function() {
     let form = $( 'form#Pedido' );

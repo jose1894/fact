@@ -21,9 +21,9 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `leophard_fact`
 --
-DROP DATABASE IF EXISTS `leophard_fact`;
-CREATE DATABASE IF NOT EXISTS `leophard_fact` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `leophard_fact`;
+DROP DATABASE IF EXISTS `leophard_dev`;
+CREATE DATABASE IF NOT EXISTS `leophard_dev` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `leophard_dev`;
 
 -- --------------------------------------------------------
 

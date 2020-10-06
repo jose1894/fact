@@ -120,11 +120,14 @@ class TransaccionSearch extends Transaccion
     //         ->andFilterWhere(['like', 'docref_trans', $this->docref_trans]);
     //
     //     return $dataProvider;
-    // }
+	// }
+	
+	
+
 
     public function search($params)
     {
-		$query = new Query;
+		/*$query = new Query;
 		$query->select('id_prod,
 					  cod_prod,
 					  des_prod,
@@ -156,7 +159,13 @@ class TransaccionSearch extends Transaccion
 		  select * from entradas_compras
 		  union
 		  select * from entradas_documentos
-		) as sub']);
+		) as sub']);*/
+
+		$query = \Yii::$app->db->createCommand("CALL myProcedure(:paramName1)") 
+                      ->bindValue(':paramName1' , 633 )
+					  ->queryScalar();
+		//print_r($result);
+		//exit();
 
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,

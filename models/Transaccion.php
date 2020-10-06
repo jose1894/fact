@@ -175,4 +175,13 @@ class Transaccion extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Almacen::className(), ['id_almacen' => 'almacen_trans']);
     }
+
+    public static function getTotal($provider)
+    {
+        $total = 0;
+        foreach ($provider as $item) {
+            $total = $total - $item['salidas_unidades'] + $item['ingreso_unidades'];
+        }
+        return $total;  
+    }
 }
