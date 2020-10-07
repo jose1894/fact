@@ -80,7 +80,3 @@ SELECT
                     
 -- group by p.id_prod,p.des_prod,t.fecha_trans,p.stockini_prod,p.stock_prod;
 
--- MODIFICACIONES 27/09/2020
-ALTER TABLE `documento` ADD `condpago_doc` INT NULL COMMENT 'CONDICION PAGO DOCUMENTO' AFTER `docref_doc`, ADD INDEX (`condpago_doc`);
-
-ALTER TABLE `documento` ADD FOREIGN KEY (`condpago_doc`) REFERENCES `cond_pago`(`id_condp`) ON DELETE NO ACTION ON UPDATE CASCADE;

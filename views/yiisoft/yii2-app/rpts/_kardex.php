@@ -20,15 +20,14 @@ $this->params['breadcrumbs'][] = $this->title;
 $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
 $primerDiaMes = date('01/MM/yyyy'); // hard-coded '01' for first day
 $ultimoDiaMes  = date('dd/MM/yyyy');
-$a = 1;
 ?>
 <div class="documento-index">
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(['id' => 'grid']); ?>
 
     <p><?php  echo $this->render('_searchKardex', ['model' => $searchModel]); ?></p>
-	
-	<?php 
+
+	<?php
 		$isFa = true;
 		// $isFa below determines if export['fontAwesome'] property is set to true.
 		$exportConfig = [
@@ -94,34 +93,35 @@ $a = 1;
 					'contentAfter'=>''
 				]
 			],
-			
+
 		];
 	?>
 
     <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'pjax' => true,
-				'toolbar' => [
-					'{export}',
-					'{toggleData}'
-				],
-				//'fontAwesome' => $isFa,
-				'exportConfig' => $exportConfig,
-				'panel' => [
-					'heading'=>'<h3 class="panel-title"><i class="fa fa-book"></i> ' . Yii::t('app','Product movement') . '</h3>',
-					// 'type'=>'success',
-					// 'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Create Country', ['create'], ['class' => 'btn btn-success']),
-					// 'after'=>Html::a('<i class="fa fa-refresh"></i> ' . Yii::t('app','Refresh '), ['listado-factura'], ['class' => 'btn btn-success']),
-					// 'footer'=>true,
-				],
+        				'toolbar' => [
+        					'{export}',
+        					'{toggleData}'
+        				],
+        				//'fontAwesome' => $isFa,
+        				'exportConfig' => $exportConfig,
+        				'panel' => [
+        					'heading'=>'<h3 class="panel-title"><i class="fa fa-book"></i> ' . Yii::t('app','Product movement') . '</h3>',
+        					// 'type'=>'success',
+        					// 'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Create Country', ['create'], ['class' => 'btn btn-success']),
+        					// 'after'=>Html::a('<i class="fa fa-refresh"></i> ' . Yii::t('app','Refresh '), ['listado-factura'], ['class' => 'btn btn-success']),
+        					// 'footer'=>true,
+        				],
+                'showPageSummary' => true,
                 'columns' => [
                           [
                             'attribute' => 'fecha_trans',
                             'format' => ['date', 'php:d/m/Y']
                           ],
                           [
-                            'attribute' => 'docref_trans',	
-							'label' => 'Documento',
+                            'attribute' => 'docref_trans',
+							              'label' => 'Documento',
                           ],
                           [
                             'attribute' => 'codigo_trans',
@@ -146,49 +146,48 @@ $a = 1;
                             'width' => '5%',
                             'format' => ['decimal',2],
                             'hAlign' => 'right',
+                            'pageSummary' => true,
                           ],
-                          'moneda',
-                          [
-                            'attribute' => 'precio_compra_ext',
-                            'label' => 'P.Compra$',
-                            'width' => '5%',
-                            'format' => ['decimal',2],
-                            'hAlign' => 'right',
-                          ],
-                          [
-                            'attribute' => 'precio_compra_soles',
-                            'label' => 'P.Compra/S',
-                            'width' => '5%',
-                            'format' => ['decimal',2],
-                            'hAlign' => 'right',
-                          ],
-                          [
-                            'attribute' => 'ingreso_valorizados',
-                            'label' => 'I.Valorizados',
-                            'format' => ['decimal',2],
-                            'hAlign' => 'right',
-                          ],
+                          // 'moneda',
+                          // [
+                          //   'attribute' => 'precio_compra_ext',
+                          //   'label' => 'P.Compra$',
+                          //   'width' => '5%',
+                          //   'format' => ['decimal',2],
+                          //   'hAlign' => 'right',
+                          // ],
+                          // [
+                          //   'attribute' => 'precio_compra_soles',
+                          //   'label' => 'P.Compra/S',
+                          //   'width' => '5%',
+                          //   'format' => ['decimal',2],
+                          //   'hAlign' => 'right',
+                          // ],
+                          // [
+                          //   'attribute' => 'ingreso_valorizados',
+                          //   'label' => 'I.Valorizados',
+                          //   'format' => ['decimal',2],
+                          //   'hAlign' => 'right',
+                          // ],
                           [
                             'attribute' => 'salidas_unidades',
-                            'value' => function( $data ) {								
+                            'value' => function( $data ) {
                                 return $data['salidas_unidades'];
                             },
                             'label' => 'Salidas',
                             'width' => '5%',
                             'format' => ['decimal',2],
                             'hAlign' => 'right',
-						  ],
-						  [
-							  'label' => 'Saldo',
-							  'value' => function( $data ) {
-								  return floatVal($data['ingreso_unidades']) - floatVal($data['salidas_unidades']);
-
-							  }
-						  ]
+                            'pageSummary' => true,
+            						  ],
+            						  [
+            							  'attribute' => 'saldo',
+                            'format' => ['decimal',2],
+                            'hAlign' => 'right',
+            						  ]
                   ]
               ]);?>
         <?php Pjax::end(); ?>
 </div>
 <?php
-echo $a;
 // $this->registerCss(".kv-grid-table{ width: 1600px !important; }");

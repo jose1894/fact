@@ -723,8 +723,8 @@ class DocumentoController extends Controller
 														Documento::TIPODOC_BOLETA
 													]
 							])
-                           ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
-                           ->one();
+              ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
+              ->one();
 
 
       $empresa = SiteController::getEmpresa();
@@ -788,10 +788,7 @@ class DocumentoController extends Controller
         $totalIGV = number_format($totalSIGV * ($value->impuesto_pdetalle / 100), 2, '.','');// Total de igv por item por cantidad
         $precioUnitarioSIGV = $value->precio_pdetalle /(1 + ($value->impuesto_pdetalle / 100 )); //Precio unitario sin IGV por item
         $cantidad = number_format($value->cant_pdetalle, 3, '.', '');
-		$descuento = $value->descu_pdetalle / 100;
-
-		//var_dump($totalSIGV);exit();
-
+		    $descuento = $value->descu_pdetalle / 100;
 
         $item[] = (new SaleDetail())
             ->setCodProducto(trim($value->productoPdetalle->cod_prod))
@@ -849,7 +846,6 @@ class DocumentoController extends Controller
         $endPoint  = SunatEndpoints::FE_PRODUCCION;
       }
 
-
       $model = Documento::find()
                            ->where('id_doc = :id',[':id' => $id])
                            ->andWhere(['tipo_doc' => [
@@ -897,22 +893,22 @@ class DocumentoController extends Controller
 	  //print_r($model->tipoDoc->abrv_tipod.$model->numeracion->serie_num);exit();
       // Venta
       $note = (new Note())
-		->setUblVersion('2.1')
-		->setTipoDoc($model->tipoDoc->tipodsunat_tipod)
-		->setSerie($model->tipoDoc->abrv_tipod.$model->numeracion->serie_num)
-		->setCorrelativo(substr($model->cod_doc,-8))
-		->setFechaEmision(new DateTime($model->fecha_doc))
-		->setTipDocAfectado($model->docAfectado->tipoDoc->tipodsunat_tipod) // Tipo Doc: Factura
-		->setNumDocfectado( $model->docAfectado->tipoDoc->abrv_tipod.$model->docAfectado->numeracion->serie_num."-".intval($model->docAfectado->cod_doc)) // Factura: Serie-Correlativo
-		->setCodMotivo($model->motivosunat_doc) // Catalogo. 09
-		->setDesMotivo($model->motivoNcredito->des_motivo)
-		->setTipoMoneda($model->pedidoDoc->monedaPedido->sunatm_moneda)
-		->setCompany($company)
-		->setClient($client)
-		->setMtoOperGravadas( $subtotal )
-		->setMtoIGV( $impuesto )
-		->setTotalImpuestos( $impuesto )
-		->setMtoImpVenta( $model->total_doc);
+          		->setUblVersion('2.1')
+          		->setTipoDoc($model->tipoDoc->tipodsunat_tipod)
+          		->setSerie($model->tipoDoc->abrv_tipod.$model->numeracion->serie_num)
+          		->setCorrelativo(substr($model->cod_doc,-8))
+          		->setFechaEmision(new DateTime($model->fecha_doc))
+          		->setTipDocAfectado($model->docAfectado->tipoDoc->tipodsunat_tipod) // Tipo Doc: Factura
+          		->setNumDocfectado( $model->docAfectado->tipoDoc->abrv_tipod.$model->docAfectado->numeracion->serie_num."-".intval($model->docAfectado->cod_doc)) // Factura: Serie-Correlativo
+          		->setCodMotivo($model->motivosunat_doc) // Catalogo. 09
+          		->setDesMotivo($model->motivoNcredito->des_motivo)
+          		->setTipoMoneda($model->pedidoDoc->monedaPedido->sunatm_moneda)
+          		->setCompany($company)
+          		->setClient($client)
+          		->setMtoOperGravadas( $subtotal )
+          		->setMtoIGV( $impuesto )
+          		->setTotalImpuestos( $impuesto )
+          		->setMtoImpVenta( $model->total_doc);
 
       foreach ($model->pedidoDoc->detalles as $key => $value) {
         // code...
