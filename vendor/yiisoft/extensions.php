@@ -30,15 +30,6 @@ return array (
       '@yii/faker' => $vendorDir . '/yiisoft/yii2-faker',
     ),
   ),
-  'kartik-v/yii2-date-range' => 
-  array (
-    'name' => 'kartik-v/yii2-date-range',
-    'version' => '9999999-dev',
-    'alias' => 
-    array (
-      '@kartik/daterange' => $vendorDir . '/kartik-v/yii2-date-range/src',
-    ),
-  ),
   'rmrevin/yii2-fontawesome' => 
   array (
     'name' => 'rmrevin/yii2-fontawesome',
@@ -199,6 +190,15 @@ return array (
     'alias' => 
     array (
       '@antishov/Morris' => $vendorDir . '/antishov/yii2-morrisjs',
+    ),
+  ),
+  'kartik-v/yii2-date-range' => 
+  array (
+    'name' => 'kartik-v/yii2-date-range',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@kartik/daterange' => $vendorDir . '/kartik-v/yii2-date-range/src',
     ),
   ),
   'yiisoft/yii2-swiftmailer' => 
