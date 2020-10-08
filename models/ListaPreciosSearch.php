@@ -12,13 +12,14 @@ use app\models\ListaPrecios;
  */
 class ListaPreciosSearch extends ListaPrecios
 {
+    public $descripcion;
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id_lista', 'tipo_lista', 'prod_lista', 'sucursal_lista'], 'integer'],
+            [['id_lista', 'tipo_lista', 'prod_lista', 'sucursal_lista', 'descripcion'], 'integer'],
             [['precio_lista'], 'number'],
         ];
     }
@@ -42,8 +43,9 @@ class ListaPreciosSearch extends ListaPrecios
     public function search($params)
     {
         $sucursal = Yii::$app->user->identity->profiles->sucursal;
-        $query = ListaPrecios::find()
-                 ->where('sucursal_lista = :sucursal')
+        $query = ListaPrecios::find()                
+                 ->joinWith('prodLista')
+                 ->where('sucursal_lista = :sucursal')                 
                  ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
@@ -60,11 +62,17 @@ class ListaPreciosSearch extends ListaPrecios
             return $dataProvider;
         }
 
+        
+        $dataProvider->sort->attributes['descripcion'] = [
+            'asc' => ['producto.id_prod' => SORT_ASC],
+            'desc' => ['producto.id_prod' => SORT_DESC],
+        ];
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id_lista' => $this->id_lista,
             'tipo_lista' => $this->tipo_lista,
-            'prod_lista' => $this->prod_lista,
+            'producto.id_prod' => $this->descripcion,
             'precio_lista' => $this->precio_lista,
             'sucursal_lista' => $this->sucursal_lista,
         ]);

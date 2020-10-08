@@ -38,7 +38,7 @@ class ListaPreciosController extends Controller
         $searchModel = new ListaPreciosSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
+        return $this->render('lista', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -207,6 +207,49 @@ class ListaPreciosController extends Controller
               'model' => $model,
           ]);
         }
+    }
+
+    public function actionUpdateListaPrecios() //da error porque asi es cuando son GET
+    {
+        $post = Yii::$app->request->post();
+        $band = true;
+
+        $transaction = \Yii::$app->db->beginTransaction();
+        
+        try {
+            foreach($post['dataPreciosAct'] as $key => $value) {
+                $model = $this->findModel($value['idLista']);
+                $model->precio_lista=$value['precioActual'];
+                $band = $model->save() && $band;                
+            }
+
+            if ( $band ) {
+                
+                $transaction->commit();
+                //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $return = [
+                    'success' => true,
+                    'title' => Yii::t('app', 'List price'),
+                    'message' => Yii::t('app','Record saved successfully!'),
+                    'type' => 'success',
+                    //'codigo' => $codigo,
+                ];
+                return $return;
+            }
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $return = [
+                'success' => false,
+                'title' => Yii::t('app', 'List price'),
+                'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                'type' => 'error'
+
+            ];
+            return $return;
+        }
+
     }
 
     /**
