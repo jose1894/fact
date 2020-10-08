@@ -130,8 +130,7 @@ class TransaccionSearch extends Transaccion
 
     public function search($params)
     {
-
-
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
     		$query = new Query;
     		$query->select('id_prod,
     					  cod_prod,
@@ -165,10 +164,11 @@ class TransaccionSearch extends Transaccion
     		  union
     		  select * from entradas_documentos
     		) as sub'])
+        ->where(['=','sucursal_trans',$sucursal])
         ->orderBy('fecha_trans asc');
 
         if ( !empty($params['TransaccionSearch']['id_prod']) ) {
-          $query->where(['=','id_prod',$params['TransaccionSearch']['id_prod']]);
+          $query->andwhere(['=','id_prod',$params['TransaccionSearch']['id_prod']]);
         }
 
         if ( !empty($params['TransaccionSearch']['fecha_trans']) ) {
@@ -177,6 +177,23 @@ class TransaccionSearch extends Transaccion
             $fechaDocFin = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[1]))->format('Y-m-d');
             $query->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);
         }
+
+        if (!empty($params['TransaccionSearch']['id_prod']) || !empty($params['TransaccionSearch']['fecha_trans'])) {
+          $queryMinFecha = new Query();
+          $queryMinFecha->select(['min(fecha_trans)'])
+                        ->from(['transaccion'])
+                        ->innerJoin(['trans_detalle','id_trans = trans_detalle'])
+                        ->where(["=","sucursal_trans",$sucursal])
+                        ->andWhere(['=','ope_trans','E']);
+
+                        if ( !empty($params['TransaccionSearch']['id_prod']) ) {
+                          $queryMinFecha->andWhere(['=','prod_detalle',$params['TransaccionSearch']['id_prod']]);
+                        }
+          $res = $queryMinFecha->all();
+          var_dump($res);exit();
+        }
+
+
         //echo $query->createCommand()->sql;
         $models = $query->all();
 

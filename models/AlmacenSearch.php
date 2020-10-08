@@ -41,7 +41,7 @@ class AlmacenSearch extends Almacen
      */
     public function search($params)
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
         $query = Almacen::find()
                  ->where('sucursal_almacen = :sucursal')

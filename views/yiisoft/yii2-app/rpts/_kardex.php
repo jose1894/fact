@@ -191,3 +191,8 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
 </div>
 <?php
 // $this->registerCss(".kv-grid-table{ width: 1600px !important; }");
+$this->registerJsVar( "buttonCreate", "" );
+$this->registerJsVar( "buttonSubmit", "" );
+$this->registerJsVar( "buttonCancel", "" );
+$this->registerJsVar( "buttonPrint", "" );
+$this->registerJsVar( "frameRpt", "" );

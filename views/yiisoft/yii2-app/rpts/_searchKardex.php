@@ -28,7 +28,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
     <div class="col-lg-6 col-xs-12">
       <?= $form->field($model, 'id_prod',[
         'addClass' => 'form-control ',
-        'addon' => [ 
+        'addon' => [
 					'prepend' => ['content'=>'<i class="fa fa-barcode"></i>']
 					]
 		])->widget(Select2::classname(), [
@@ -36,16 +36,15 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
             'initValueText' => null,
             'language' => Yii::$app->language,
             'options' => [
-				'allowClear' => true,
-				'placeholder' => Yii::t('producto','Select a product').'...',
+            				'allowClear' => true,
+            				'placeholder' => Yii::t('producto','Select a product').'...',
             ],
-			'changeOnReset' => true,
+      			'changeOnReset' => true,
             'theme' => Select2::THEME_DEFAULT,
             'pluginOptions' => [
-              'allowClear' => true,
-              //'multiple' => true
+                    'allowClear' => true,
             ],
-            ]) ?>
+    ]) ?>
     </div>
     <div class="col-lg-6 col-xs-12">
       <?= $form->field($model, 'fecha_trans',[
@@ -55,16 +54,15 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
             'useWithAddon'=>true,
             'presetDropdown'=>true,
             'convertFormat'=>true,
-            // 'includeMonthsFilter'=>true,
+            'includeMonthsFilter'=>true,
+            //'language' => Yii::$app->language,
             'pluginOptions' => [
                   'locale' => ['format' => 'd/m/Y'],
-                  'maxDate' => 0,
-                  'showDropdowns'=>true
+                  'showDropdowns'=> true,
+                  'maxDate' => date('d/m/Y'),
             ],
             'options' => ['placeholder' => Yii::t( 'app', 'Select range' )."..." ],
-            // 'pluginEvents' => [
-            //         "apply.daterangepicker" => "function() { aplicarDateRangeFilter() }",
-            // ],
+
         ]) ?>
       </div>
 

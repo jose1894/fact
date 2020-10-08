@@ -1,99 +1,105 @@
-$( document ).ready( function( e ){
+$( document ).ready( function( e ) {
   $('[data-toggle="tooltip"]').tooltip();
 
   var form = $( frame ).contents().find('form');
 
-  $( 'body' ).on('click', buttonCreate, function ( e ) {
-    e.preventDefault();
-    $( buttonSubmit ).css( 'display', 'block' );
-    $( buttonSubmit ).css( 'float', 'right' );
-    $( frame ).attr( "src", $( this ).attr( 'href' ));
-    $( modal ).modal({
-      backdrop: 'static',
-      keyboard: false,
-    });
-    $( modal ).modal("show");
-  });
-
-  $( 'body' ).on( 'click', buttonSubmit, function( e ){
-    e.preventDefault();
-    e.stopPropagation();
-    let $form = $( frame ).contents().find('form');
-    //let $form = window.frames[ 0 ].$( 'form' );
-
-      $.ajax( {
-        'url'    : $( $form ).attr( 'action' ),
-        'method' : $( $form ).attr( 'method' ),
-        'data'   : $( $form ).serialize(),
-        'async'  : false,
-        'success': function ( data ){
-          if ( data.success ) {
-            swal(data.title, data.message, data.type);
-            window.parent.$.pjax.reload( { container: '#grid' } );
-
-            if ( $( $form ).attr( 'action' ).indexOf( 'create' ) != -1) {
-              $( $form ).trigger( 'reset' );
-              $selects = window.frames[ 0 ].$( $form ).find( 'select' );
-
-              if ( $selects.length ) {
-                $selects.trigger( 'change' );
-              }
-            }
-
-            return;
-          }
-
-          window.frames[ 0 ].$( $form ).yiiActiveForm( 'updateMessages', data);
-          //window.$( frame ).contents( ).find($form).yiiActiveForm( 'updateMessages', data);
-
-        },
-        error: function(data) {
-            let message;
-
-            if ( data.responseJSON )
-            {
-              let error = data.responseJSON;
-              message =   "Se ha encontrado un error: " +
-                "\n\nCode " + error.code +
-                "\n\nFile: " + error.file +
-                "\n\nLine: " + error.line +
-                "\n\nName: " + error.name +
-                "\n Message: " + error.message;
-            }
-            else
-            {
-                message = data.responseText;
-            }
-
-            swal('Oops!!!',message,"error" );
-        }
+  if ( buttonCreate ) {
+    $( 'body' ).on('click', buttonCreate, function ( e ) {
+      e.preventDefault();
+      $( buttonSubmit ).css( 'display', 'block' );
+      $( buttonSubmit ).css( 'float', 'right' );
+      $( frame ).attr( "src", $( this ).attr( 'href' ));
+      $( modal ).modal({
+        backdrop: 'static',
+        keyboard: false,
       });
-  });
+      $( modal ).modal("show");
+    });
+  }
+
+  if ( buttonSubmit ) {
+    $( 'body' ).on( 'click', buttonSubmit, function( e ){
+      e.preventDefault();
+      e.stopPropagation();
+      let $form = $( frame ).contents().find('form');
+      //let $form = window.frames[ 0 ].$( 'form' );
+
+        $.ajax( {
+          'url'    : $( $form ).attr( 'action' ),
+          'method' : $( $form ).attr( 'method' ),
+          'data'   : $( $form ).serialize(),
+          'async'  : false,
+          'success': function ( data ){
+            if ( data.success ) {
+              swal(data.title, data.message, data.type);
+              window.parent.$.pjax.reload( { container: '#grid' } );
+
+              if ( $( $form ).attr( 'action' ).indexOf( 'create' ) != -1) {
+                $( $form ).trigger( 'reset' );
+                $selects = window.frames[ 0 ].$( $form ).find( 'select' );
+
+                if ( $selects.length ) {
+                  $selects.trigger( 'change' );
+                }
+              }
+
+              return;
+            }
+
+            window.frames[ 0 ].$( $form ).yiiActiveForm( 'updateMessages', data);
+            //window.$( frame ).contents( ).find($form).yiiActiveForm( 'updateMessages', data);
+
+          },
+          error: function(data) {
+              let message;
+
+              if ( data.responseJSON )
+              {
+                let error = data.responseJSON;
+                message =   "Se ha encontrado un error: " +
+                  "\n\nCode " + error.code +
+                  "\n\nFile: " + error.file +
+                  "\n\nLine: " + error.line +
+                  "\n\nName: " + error.name +
+                  "\n Message: " + error.message;
+              }
+              else
+              {
+                  message = data.responseText;
+              }
+
+              swal('Oops!!!',message,"error" );
+          }
+        });
+      });
+  }
 
 
-  $( 'body' ).on( 'click', buttonCancel, function(){
-    $( frame ).attr( 'src', 'about:blank' );
-    $( modal ).modal("hide");
+  if (buttonCancel) {
+    $( 'body' ).on( 'click', buttonCancel, function(){
+      $( frame ).attr( 'src', 'about:blank' );
+      $( modal ).modal("hide");
 
-    if ( frameRpt && modalRpt){
-      $( frameRpt ).attr( 'src', 'about:blank' );
-      $( modalRpt ).modal("hide");
-    }
+      if ( frameRpt && modalRpt){
+        $( frameRpt ).attr( 'src', 'about:blank' );
+        $( modalRpt ).modal("hide");
+      }
 
-    if ( frameGuide && modalGuide){
-      $( frameGuide ).attr( 'src', 'about:blank' );
-      $( modalGuide ).modal("hide");
-    }
+      if ( frameGuide && modalGuide){
+        $( frameGuide ).attr( 'src', 'about:blank' );
+        $( modalGuide ).modal("hide");
+      }
 
-    if ( frameDocumento && modalDocumento){
-      $( frameDocumento ).attr( 'src', 'about:blank' );
-      $( modalDocumento ).modal("hide");
-    }
-    
-    $( '#modal-tipoc' ).attr( 'src', 'about:blank' );
-    $( '#modal-tipoc' ).modal("hide");
+      if ( frameDocumento && modalDocumento){
+        $( frameDocumento ).attr( 'src', 'about:blank' );
+        $( modalDocumento ).modal("hide");
+      }
 
-  });
+      $( '#modal-tipoc' ).attr( 'src', 'about:blank' );
+      $( '#modal-tipoc' ).modal("hide");
+
+    });
+  }
 
   $( 'body' ).on( 'click', '.pjax-delete', function( e ){
 
@@ -218,19 +224,21 @@ $( document ).ready( function( e ){
   });
 
 
-  $( 'body' ).on( 'click', buttonPrint, function( e ){
+  if ( buttonPrint ) {
+    $( 'body' ).on( 'click', buttonPrint, function( e ){
 
-    e.preventDefault();
+      e.preventDefault();
 
-    $( buttonSubmit ).css( 'display', 'none' );
+      $( buttonSubmit ).css( 'display', 'none' );
 
-    $( frameRpt ).attr( "src", $( this ).attr( 'href' ));
-    $( modalRpt ).modal({
-      backdrop: 'static',
-      keyboard: false
+      $( frameRpt ).attr( "src", $( this ).attr( 'href' ));
+      $( modalRpt ).modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+      $( modalRpt ).modal("show");
     });
-    $( modalRpt ).modal("show");
-  });
+  }
 
   $( 'body' ).on("show.bs.modal",frame, function() {
     let height = $(window).height() - 200;
@@ -242,61 +250,65 @@ $( document ).ready( function( e ){
     $(this).find(".modal-body").css("max-height", height);
   });
 
-    $( 'body' ).on( 'click', buttonSubmit, function( e ){
-        e.preventDefault();
-        e.stopPropagation();
-        let $form = $( frame ).contents().find('form');
-        //let $form = window.frames[ 0 ].$( 'form' );
+  if ( buttonSubmit ) {
+      $( 'body' ).on( 'click', buttonSubmit, function( e ){
+            e.preventDefault();
+            e.stopPropagation();
+            let $form = $( frame ).contents().find('form');
+            //let $form = window.frames[ 0 ].$( 'form' );
 
-        $.ajax( {
-            'url'    : $( $form ).attr( 'action' ),
-            'method' : $( $form ).attr( 'method' ),
-            'data'   : $( $form ).serialize(),
-            'async'  : false,
-            'success': function ( data ){
-                if ( data.success )
-                {
-                    swal(data.title, data.message, data.type);
-                    window.parent.$.pjax.reload( { container: '#grid' } );
+            $.ajax( {
+                'url'    : $( $form ).attr( 'action' ),
+                'method' : $( $form ).attr( 'method' ),
+                'data'   : $( $form ).serialize(),
+                'async'  : false,
+                'success': function ( data ){
+                    if ( data.success )
+                    {
+                        swal(data.title, data.message, data.type);
+                        window.parent.$.pjax.reload( { container: '#grid' } );
 
-                    if ( $( $form ).attr( 'action' ).indexOf( 'create' ) != -1) {
-                        $( $form ).trigger( 'reset' );
-                        $selects = window.frames[ 0 ].$( $form ).find( 'select' );
+                        if ( $( $form ).attr( 'action' ).indexOf( 'create' ) != -1) {
+                            $( $form ).trigger( 'reset' );
+                            $selects = window.frames[ 0 ].$( $form ).find( 'select' );
 
-                        if ( $selects.length ) {
-                            $selects.trigger( 'change' );
+                            if ( $selects.length ) {
+                                $selects.trigger( 'change' );
+                            }
                         }
+
+                        return;
                     }
 
-                    return;
+                    window.frames[ 0 ].$( $form ).yiiActiveForm( 'updateMessages', data);
+                    //window.$( frame ).contents( ).find($form).yiiActiveForm( 'updateMessages', data);
+
+                },
+                error: function(data) {
+                    let message;
+
+                    if ( data.responseJSON )
+                    {
+                        let error = data.responseJSON;
+                        message =   "Se ha encontrado un error: " +
+                            "\n\nCode " + error.code +
+                            "\n\nFile: " + error.file +
+                            "\n\nLine: " + error.line +
+                            "\n\nName: " + error.name +
+                            "\n Message: " + error.message;
+                    }
+                    else
+                    {
+                        message = data.responseText;
+                    }
+
+                    swal('Oops!!!',message,"error" );
                 }
-
-                window.frames[ 0 ].$( $form ).yiiActiveForm( 'updateMessages', data);
-                //window.$( frame ).contents( ).find($form).yiiActiveForm( 'updateMessages', data);
-
-            },
-            error: function(data) {
-                let message;
-
-                if ( data.responseJSON )
-                {
-                    let error = data.responseJSON;
-                    message =   "Se ha encontrado un error: " +
-                        "\n\nCode " + error.code +
-                        "\n\nFile: " + error.file +
-                        "\n\nLine: " + error.line +
-                        "\n\nName: " + error.name +
-                        "\n Message: " + error.message;
-                }
-                else
-                {
-                    message = data.responseText;
-                }
-
-                swal('Oops!!!',message,"error" );
-            }
+            });
         });
-    });
+    }
+
+
 });
 
 function errorsCode( error ){

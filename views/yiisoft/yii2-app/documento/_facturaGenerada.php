@@ -29,7 +29,7 @@ $rs = "";
 
 if (!empty($get)) {
   $fecha = $get['DocumentoSearch']['fecha_doc'];
-  
+
   if (!empty($fecha)) {
     $fechaDoc = explode(" - ", $fecha);
     $rs = "<br>" . Yii::t('app', 'From') . " " . $fechaDoc[0] . " ". Yii::t('app','to')." ". $fechaDoc[1];
@@ -421,6 +421,11 @@ $js = <<<JS
     });
 
 JS;
+$this->registerJsVar( "buttonCreate", "" );
+$this->registerJsVar( "buttonSubmit", "" );
+$this->registerJsVar( "buttonCancel", "" );
+$this->registerJsVar( "buttonPrint", "" );
+$this->registerJsVar( "frameRpt", "" );
 $this->registerJs( $js, View::POS_LOAD);
 
 $js = <<<JS

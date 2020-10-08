@@ -39,10 +39,10 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
               'useWithAddon'=>true,
               'presetDropdown'=>true,
               'convertFormat'=>true,
-              // 'includeMonthsFilter'=>true,
+              'includeMonthsFilter'=>true,
               'pluginOptions' => [
                     'locale' => ['format' => 'd/m/Y'],
-                    'maxDate' => 0,
+                    'maxDate' => date('d/m/Y'),
                     'showDropdowns'=>true
               ],
               'options' => ['placeholder' => Yii::t( 'app', 'Select range' )."..." ],
