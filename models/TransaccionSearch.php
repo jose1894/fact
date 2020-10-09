@@ -167,30 +167,60 @@ class TransaccionSearch extends Transaccion
         ->where(['=','sucursal_trans',$sucursal])
         ->orderBy('fecha_trans asc');
 
-        if ( !empty($params['TransaccionSearch']['id_prod']) ) {
-          $query->andwhere(['=','id_prod',$params['TransaccionSearch']['id_prod']]);
+        $id_prod = $params['TransaccionSearch']['id_prod'];
+        $fecha_trans = $params['TransaccionSearch']['fecha_trans'];
+
+        if ( !empty($id_prod) ) {
+          $query->andwhere(['=','id_prod',$id_prod]);
         }
 
-        if ( !empty($params['TransaccionSearch']['fecha_trans']) ) {
-            $fechaDoc = explode(" - ", $params['TransaccionSearch']['fecha_trans']);
+        if ( !empty($fecha_trans) ) {
+            $fechaDoc = explode(" - ", $fecha_trans);
             $fechaDocInicio = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[0]))->format('Y-m-d');
             $fechaDocFin = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[1]))->format('Y-m-d');
             $query->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);
         }
 
-        if (!empty($params['TransaccionSearch']['id_prod']) || !empty($params['TransaccionSearch']['fecha_trans'])) {
+        if (!empty($id_prod) || !empty($fecha_trans)) {
           $queryMinFecha = new Query();
           $queryMinFecha->select(['min(fecha_trans)'])
                         ->from(['transaccion'])
                         ->innerJoin(['trans_detalle','id_trans = trans_detalle'])
                         ->where(["=","sucursal_trans",$sucursal])
+                        ->andWhere(['=','status_trans','1']);
                         ->andWhere(['=','ope_trans','E']);
 
-                        if ( !empty($params['TransaccionSearch']['id_prod']) ) {
-                          $queryMinFecha->andWhere(['=','prod_detalle',$params['TransaccionSearch']['id_prod']]);
+                        if ( !empty($id_prod) ) {
+                          $queryMinFecha->andWhere(['=','prod_detalle',$id_prod]);
                         }
-          $res = $queryMinFecha->all();
-          var_dump($res);exit();
+                        
+                        if ( !empty($fecha_trans ) {
+                          $queryMinFecha->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);
+                        }
+
+          $querySinicial = new Query();
+          $querySinicial->select([
+                              'sum(cant_detalle)',
+                              ])
+                        ->from(['transaccion'])
+                        ->innerJoin(['trans_detalle','id_trans = trans_detalle'])
+                        ->where(["=","sucursal_trans",$sucursal])
+                        ->andWhere(['=','status_trans','1']);
+                        ->andWhere(['=','ope_trans','E']);
+
+                        if ( !empty($id_prod) ) {
+                          $queryMinFecha->andWhere(['=','prod_detalle',$id_prod]);
+                        }
+                        
+                        if ( !empty($fecha_trans ) {
+                          $queryMinFecha->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);
+                        }
+
+
+
+
+          // $res = $queryMinFecha->all();
+          // var_dump($res);exit();
         }
 
 

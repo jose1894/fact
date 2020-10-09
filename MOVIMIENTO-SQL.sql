@@ -80,3 +80,64 @@ SELECT
                     
 -- group by p.id_prod,p.des_prod,t.fecha_trans,p.stockini_prod,p.stock_prod;
 
+SELECT 
+( 
+	 select sum(td.cant_detalle)
+    from transaccion t
+    inner join trans_detalle td on t.id_trans = td.trans_detalle
+    where fecha_trans < (
+			select min(fecha_trans) 
+			from transaccion t 
+			inner join trans_detalle td on t.id_trans = td.trans_detalle 
+			where t.ope_trans = 'E' and td.prod_detalle = 633 AND sucursal_trans = 1
+    ) and t.ope_trans = 'S' and td.prod_detalle = 633 AND sucursal_trans = 1
+) stock_inicial,
+(			
+	select sum(td.cant_detalle) 
+	from transaccion t 
+	inner join trans_detalle td on t.id_trans = td.trans_detalle 
+	where 
+		t.ope_trans = 'E' and 
+		td.prod_detalle = 633  and 
+		t.status_trans = 1 AND 
+		sucursal_trans = 1
+) total_cant_compradas,
+(			
+	select sum(td.cant_detalle) 
+	from transaccion t 
+	inner join trans_detalle td on t.id_trans = td.trans_detalle 
+	where t.ope_trans = 'E' and td.prod_detalle = 633  and t.status_trans = 1
+) - 
+( 
+	 select sum(td.cant_detalle)
+    from transaccion t
+    inner join trans_detalle td on t.id_trans = td.trans_detalle
+    where fecha_trans < (
+			select min(fecha_trans) 
+			from transaccion t 
+			inner join trans_detalle td on t.id_trans = td.trans_detalle 
+			where t.ope_trans = 'E' and td.prod_detalle = 633 AND sucursal_trans = 1
+    ) and t.ope_trans = 'S' and td.prod_detalle = 633 AND sucursal_trans = 1
+) stockInicial_menos_cant_compradas,
+sum(td.cant_detalle) total_salidas,
+sum(td.cant_detalle) -
+( 
+	select sum(td.cant_detalle)
+    from transaccion t
+    inner join trans_detalle td on t.id_trans = td.trans_detalle
+    where fecha_trans < (
+			select min(fecha_trans) 
+			from transaccion t 
+			inner join trans_detalle td on t.id_trans = td.trans_detalle 
+			where t.ope_trans = 'E' and td.prod_detalle = 633 and t.status_trans = 1
+    ) and t.ope_trans = 'S' and td.prod_detalle = 633
+) cant_total_menos_stockini,
+
+        p.stock_prod
+from transaccion t 
+inner join trans_detalle td on id_trans = trans_detalle 
+inner join producto p on p.id_prod = td.prod_detalle
+inner join v_productos vp on vp.id_prod = p.id_prod
+where prod_detalle = 633 and ope_trans = 'S' and t.status_trans = 1
+group by p.stock_prod;
+
