@@ -165,11 +165,12 @@ class TransaccionSearch extends Transaccion
     		  select * from entradas_documentos
     		) as sub'])
         ->where(['=','sucursal_trans',$sucursal])
-        ->andWhere(['=','status_trans',1])
         ->orderBy('fecha_trans asc');
 
         $id_prod = !empty($params['TransaccionSearch']['id_prod']) ? $params['TransaccionSearch']['id_prod'] : "";
         $fecha_trans = !empty($params['TransaccionSearch']['fecha_trans']) ? $params['TransaccionSearch']['fecha_trans'] : "";
+        $fechaDocInicio = "";
+        $fechaDocFin = "";
 
         if ( !empty($id_prod) ) {
           $query->andwhere(['=','id_prod',$id_prod]);
@@ -183,45 +184,45 @@ class TransaccionSearch extends Transaccion
         }
 
         if (!empty($id_prod) || !empty($fecha_trans)) {
-          $queryMinFecha = new Query();
-          $queryMinFecha->select(['min(fecha_trans) minFecha'])
-                        ->from(['transaccion'])
-                        ->join('INNER JOIN', 'trans_detalle', 'id_trans = trans_detalle')
-                        ->where(["=","sucursal_trans",$sucursal])
-                        ->andWhere(['=','status_trans','1'])
-                        ->andWhere(['=','ope_trans','S']);
-
-                        if ( !empty($id_prod) ) {
-                          $queryMinFecha->andWhere(['=','prod_detalle',$id_prod]);
-                        }
-
-                        if ( !empty($fecha_trans) ) {
-                          $queryMinFecha->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);
-                        }
+          //Subquery fecha minima para stock inicial
+          $queryMinFecha = $this->minFecha($id_prod,$fechaDocInicio,$fechaDocFin,$sucursal);
           $minFecha = $queryMinFecha->all();
           $minFecha = $minFecha[0]['minFecha'];
-          // echo $queryMinFecha->createCommand()->sql;
-          // var_dump($minFecha);exit();
-          $querySinicial = new Query();
-          $querySinicial->select([ 'coalesce(sum(cant_detalle),0) as stock_inicial'])
-                        ->from(['transaccion'])
-                        ->join('INNER JOIN', 'trans_detalle', 'id_trans = trans_detalle')
-                        ->where(["=","sucursal_trans",$sucursal])
-                        ->andWhere(['=','status_trans','1'])
-                        ->andWhere(['=','ope_trans','S'])
-                        ->andWhere(['<','fecha_trans', $minFecha]);
 
-                        if ( !empty($id_prod) ) {
-                          $querySinicial->andWhere(['=','prod_detalle',$id_prod]);
-                        }
+          //Subquery stock inicial
+          $querySinicial = $this->stockInicial($id_prod, $minFecha, $sucursal);
+                        
+          
+          //Subquery saldo anterior
+          $querySanterior = $this->saldoAnterior($id_prod, $fechaDocInicio, $sucursal);
 
-                        if ( !empty($fecha_trans) ) {
-                          $querySinicial->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);
-                        }
 
-           $res = $querySinicial->all();
-           echo $querySinicial->createCommand()->sql;
-           var_dump($res,$id_prod,$fecha_trans);exit();
+          $queryPrincipal = new Query();
+          $queryPrincipal->select([
+                                    'p.id_prod',
+                                    // 'stock_inicial' => $querySinicial,
+                                    // 'saldo_anterior' => $querySanterior,
+                                    'vp.stock_prod'
+                                  ])
+                        ->from(['transaccion t'])
+                        ->join('inner join', 'trans_detalle td', 't.id_trans = td.trans_detalle')
+                        ->join('inner join', 'producto p', 'p.id_prod = td.prod_detalle')
+                        ->join('inner join', 'v_productos vp', 'vp.id_prod = td.prod_detalle')
+                        ->where(['=','p.id_prod',$id_prod])
+                        ->andWhere(['=','t.ope_trans','S'])
+                        ->andWhere(['=','t.status_trans',1])
+                        ->andWhere(['=','t.sucursal_trans',1]);
+          
+          if ( !empty($fechaDocInicio) && !empty($fechaDocFin) ) {
+            $queryMinFecha->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);      
+          }
+
+          $queryPrincipal->groupBy('p.id_prod,p.stock_prod');
+                        
+
+          $res = $queryPrincipal->all();
+          echo $queryPrincipal->createCommand()->sql;
+          var_dump($res,$id_prod,$fecha_trans);exit();
         }
 
 
@@ -342,5 +343,61 @@ class TransaccionSearch extends Transaccion
     		]);
 
     		return $dataProvider;
+    }
+
+    protected function minFecha($id_prod = null, $fechaDocInicio = null , $fechaDocFin = null, $sucursal)
+    {
+      $queryMinFecha = new Query();
+      $queryMinFecha->select(['min(fecha_trans) minFecha'])
+                    ->from(['transaccion'])
+                    ->join('INNER JOIN', 'trans_detalle', 'id_trans = trans_detalle')
+                    ->where(["=","sucursal_trans",$sucursal])
+                    ->andWhere(['=','status_trans','1'])
+                    ->andWhere(['=','ope_trans','E']);
+
+      if ( !empty($id_prod) ) {
+        $queryMinFecha->andWhere(['=','prod_detalle',$id_prod]);
+      }
+
+      if ( !empty($fechaDocInicio) && !empty($fechaDocFin) ) {
+        $queryMinFecha->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);      
+      }
+
+      return $queryMinFecha;
+    }
+
+    protected function stockInicial($id_prod = null, $minFecha, $sucursal)
+    {
+      $querySinicial = new Query();
+      $querySinicial->select([ 'coalesce(sum(cant_detalle),0) as stock_inicial'])
+                    ->from(['transaccion'])
+                    ->join('INNER JOIN', 'trans_detalle', 'id_trans = trans_detalle')
+                    ->where(["=","sucursal_trans",$sucursal])
+                    ->andWhere(['=','status_trans','1'])
+                    ->andWhere(['=','ope_trans','S'])
+                    ->andWhere(['<','fecha_trans', $minFecha]);
+                    
+      if ( !empty($id_prod) ) {
+        $querySinicial->andWhere(['=','prod_detalle',$id_prod]);
+      }
+
+      return $querySinicial;
+    }
+
+    protected function saldoAnterior($id_prod, $minFecha, $sucursal)
+    {
+      $querySanterior = new Query();
+      $querySanterior->select([ 'coalesce(sum(cant_detalle),0) as saldo_anterior'])
+                        ->from(['transaccion'])
+                        ->join('INNER JOIN', 'trans_detalle', 'id_trans = trans_detalle')
+                        ->where(["=","sucursal_trans",$sucursal])
+                        ->andWhere(['=','status_trans','1'])       
+                        ->andWhere(['<','fecha_trans', $minFecha]);
+
+      if ( !empty($id_prod) ) {
+        $querySanterior->andWhere(['=','prod_detalle',$id_prod]);
+      }
+
+      return $querySanterior;
     }
 }
