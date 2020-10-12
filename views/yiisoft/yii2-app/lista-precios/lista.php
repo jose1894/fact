@@ -83,7 +83,23 @@ $('#update').click(function(){
                     url: '". Url::to('lista-precios/update-lista-precios') ."',
                     dataType: 'json',
                     data: {dataPreciosAct}
-                }).done(function(data){});
+                }).done(function(data){
+                    if (data.success) {
+                        $('#actualizar-precio').val('');
+                        $('#check-porcentaje').prop('checked',false);
+                        $('.table tr').each(function (i, row) {
+                            var actualrow = $(row);
+                            checkbox = actualrow.find('input').is(':checked');
+                            if(checkbox) {
+                                var key = $(this).attr('data-key');
+                                $('#check-'+key).prop('checked',false);
+                                var currentRow = $(this).closest('tr');
+                                var precioNew = currentRow.find('td:eq(2)').text();
+                                $('#check-'+key).value = key*precioNew;
+                            }
+                        })
+                    }
+                });
             } else {
                 $('#actualizar-precio').val('');
                 $('#check-porcentaje').prop('checked',false);
@@ -91,10 +107,68 @@ $('#update').click(function(){
         }        
     }
 })
+$('#actualizar-precio').on('keyup', function() {
+    var incremento = $(this).val();   
+    if (incremento !== '') {
+        incremento = Number(incremento);
+        if ($.isNumeric(incremento)) {
+            actualizarPrecioGrid(incremento);
+        }
+    }    
+});
+/**Método que se activa cuando se selecciona el check de procentaje*/
+$('#check-porcentaje').click(function(){
+    var incremento = parseFloat($('#actualizar-precio').val());
+    if( incremento > 100){
+        alert('El incremento en porcentaje no debe ser mayor a 100%');
+        $('#check-porcentaje').prop('checked',false);
+    } else {
+        updateDataGrid(true, incremento);
+    }
+});
+
+/**Métod que se activa cuando se escribe en el input para actualizar el precio*/
+function actualizarPrecioGrid(incremento){
+    var optionPorcentaje = $('#check-porcentaje').prop('checked'); 
+    updateDataGrid(optionPorcentaje, incremento);   
+}
+
+/**Este metodo se utiliza cuando se escribe en el input y cuando se seleccion el check de porcentaje*/
+function updateDataGrid(optionPorcentaje, incremento) {
+    var total = 0;
+    $('.table tr').each(function (i, row) {
+        var actualrow = $(row);
+        checkbox = actualrow.find('input').is(':checked');        
+        if(checkbox) { // si esta seleccionado el check de la fila
+            var key = $(this).attr('data-key');
+            var precioProd = getPrecioGrid(key);
+            var currentRow = $(this).closest('tr');
+            if(optionPorcentaje) { // si esta seleccionado el check de aplciar porcentaje
+                total = calcularPorcentaje(precioProd,incremento);
+            } else {
+                total = precioProd + incremento;
+            }  
+            //actualizar fila de precio del producto          
+            currentRow.find('td:eq(2)').text(total);
+         }
+    });
+}
+
+function getPrecioGrid(key) {
+    var value = $('#check-'+key).val();
+    value = value.split('*');
+    return parseFloat(value[1]);
+}
+
 /**Para calcular el porcentaje al precio */
 function calcularPorcentaje(precio, porcentaje){
-    var precioPor = (precio* porcentaje)/100;
-    return precio = round(precio + precioPor);
+    var precioPor = 0;
+    if(porcentaje <= 100) {
+        precioPor = (precio* porcentaje)/100;        
+    } else {        
+        precioPor = round(precio + precioPor);
+    }
+    return precioPor;   
 }
-";
+"; 
 $this->registerJs($js,View::POS_LOAD);

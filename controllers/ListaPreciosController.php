@@ -8,6 +8,7 @@ use app\models\ListaPreciosSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * ListaPreciosController implements the CRUD actions for ListaPrecios model.
