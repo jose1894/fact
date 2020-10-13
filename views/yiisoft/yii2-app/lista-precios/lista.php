@@ -46,12 +46,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'width' => '20%'       
             ],
             'precio_lista',
-            [
-                'label' => 'precio',
-                'attribute' => 'precio_lista',
-                'value' => 'precio_lista',
-                'visible' => '0',
-            ],
         ],
     ]); ?>
     <?php Pjax::end(); ?>
@@ -91,20 +85,7 @@ $('#update').click(function(){
                     data: {dataPreciosAct}
                 }).done(function(data){
                     if (data.success) {
-                        $('#actualizar-precio').val('');
-                        $('#check-porcentaje').prop('checked',false);
-                        $('.table tr').each(function (i, row) {
-                            var actualrow = $(row);
-                            checkbox = actualrow.find('input').is(':checked');
-                            if(checkbox) {
-                                var key = $(this).attr('data-key');
-                                $('#check-'+key).prop('checked',false);
-                                var currentRow = $(this).closest('tr');
-                                var precioNew = currentRow.find('td:eq(2)').text();
-                                $('#check-'+key).value = key*precioNew;
-                            }
-                            window.parent.$.pjax.reload( { container: '#grid' } );
-                        })
+                        window.parent.$.pjax.reload('#w0', {timeout: 3000} );
                     }
                 });
             } else {
@@ -154,10 +135,9 @@ function updateDataGrid(optionPorcentaje, incremento) {
             if(optionPorcentaje) { // si esta seleccionado el check de aplciar porcentaje
                 total = calcularPorcentaje(precioProd,incremento);
             } else {
-                total = precioProd + incremento;
+                total = round(precioProd + incremento);
             }  
-            //actualizar fila de precio del producto  
-            console.log(currentRow.find('td:eq(3)').text());      
+            //actualizar fila de precio del producto     
             currentRow.find('td:eq(2)').text(total);
          }
     });
@@ -177,11 +157,11 @@ function getPrecioGrid(key) {
 function calcularPorcentaje(precio, porcentaje){
     var precioPor = 0;
     if(porcentaje <= 100) {
-        precioPor = (precio* porcentaje)/100;        
+        precioPor = ((precio* porcentaje)/100);        
     } else {        
-        precioPor = round(precio + precioPor);
+        precioPor = precio + precioPor;
     }
-    return precioPor;   
+    return round(precioPor);   
 }
 "; 
 $this->registerJs($js,View::POS_LOAD);
