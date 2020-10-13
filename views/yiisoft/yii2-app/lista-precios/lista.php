@@ -46,6 +46,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'width' => '20%'       
             ],
             'precio_lista',
+            [
+                'label' => 'precio',
+                'attribute' => 'precio_lista',
+                'value' => 'precio_lista',
+                'visible' => '0',
+            ],
         ],
     ]); ?>
     <?php Pjax::end(); ?>
@@ -97,6 +103,7 @@ $('#update').click(function(){
                                 var precioNew = currentRow.find('td:eq(2)').text();
                                 $('#check-'+key).value = key*precioNew;
                             }
+                            window.parent.$.pjax.reload( { container: '#grid' } );
                         })
                     }
                 });
@@ -106,7 +113,8 @@ $('#update').click(function(){
             }
         }        
     }
-})
+});
+/**evento para actualizar el precio cuando se escribe en el input*/
 $('#actualizar-precio').on('keyup', function() {
     var incremento = $(this).val();   
     if (incremento !== '') {
@@ -116,7 +124,7 @@ $('#actualizar-precio').on('keyup', function() {
         }
     }    
 });
-/**Método que se activa cuando se selecciona el check de procentaje*/
+/**Evento que se activa cuando se selecciona el check de procentaje*/
 $('#check-porcentaje').click(function(){
     var incremento = parseFloat($('#actualizar-precio').val());
     if( incremento > 100){
@@ -148,16 +156,21 @@ function updateDataGrid(optionPorcentaje, incremento) {
             } else {
                 total = precioProd + incremento;
             }  
-            //actualizar fila de precio del producto          
+            //actualizar fila de precio del producto  
+            console.log(currentRow.find('td:eq(3)').text());      
             currentRow.find('td:eq(2)').text(total);
          }
     });
 }
-
+/**Método que retorna el valor del precio, 
+ * para esto se toma lo que esta en la propiedad 
+ * value del check de cada fila del grid*/
 function getPrecioGrid(key) {
     var value = $('#check-'+key).val();
-    value = value.split('*');
-    return parseFloat(value[1]);
+    if(value) {
+        value = value.split('*');
+        return parseFloat(value[1]);
+    }
 }
 
 /**Para calcular el porcentaje al precio */
