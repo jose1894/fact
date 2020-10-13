@@ -494,7 +494,7 @@ $( "#pedido-clte_pedido" ).on( "change",function () {
           tpl = cliente.tpl;
 
       $( "#pedido-direccion_pedido" ).val( textDirecc );
-	  
+
 	  //$( "#pedido-condp_pedido" ).val( 10 ).trigger( "select2:select" );
 
       if ( !$( "#pedido-condp_pedido" ).val() ) {
@@ -738,8 +738,8 @@ JS
 , VIEW::POS_END);
 
   $jsSave = "
-  function setPrices( value = null, row, tipo_lista ) {
-    if ( value ) {
+  function setPrices( value = null, row, tipo_lista ) {    
+    if ( value && +tipo_lista ) {
       $.ajax({
           url:'".Url::to(['producto/product-price'])."',
           data:{
@@ -774,21 +774,21 @@ JS
   $( '.table-body' ).on( 'keyup', 'input[id$=\"cant_pdetalle\"]', function( e ) {
 
     if ( e.keyCode === 13 && $( this ).val() ) {
-  
+
       if ( $( this ).val() > $( this ).data( 'stock') ) {
         swal( 'Oops!', '" . Yii::t( 'pedido', 'You can´t input a value greather than the avalaible stock'). "', 'warning');
-        $( this ).val(''); 
-        $( this ).focus(); 
-        $( this ).select(); 
+        $( this ).val('');
+        $( this ).focus();
+        $( this ).select();
         return false;
       }
-  
+
       let row = $( this ).attr( \"id\" ).split( \"-\" );
       row = row[ 1 ];
       $( '#pedidodetalle-' + row + '-descu_pdetalle' ).focus();
       $( '#pedidodetalle-' + row + '-descu_pdetalle' ).select();
     }
-  
+
   });
 
   $( '#submit' ).on( 'click', function() {
