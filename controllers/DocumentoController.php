@@ -340,10 +340,12 @@ class DocumentoController extends Controller
               }
 
               $numeracion = Numeracion::findOne($num[0]['id_num']);
+              $numeracion->scenario = 'numerar';
               $numeracion->numero_num = $codigo;
               $flag = $numeracion->save() && $flag;
 
               $numeracion = Numeracion::findOne($id_num);
+              $numeracion->scenario = 'numerar';
               $numeracion->numero_num = $codigoDoc;
               $flag = $numeracion->save() && $flag;
 
@@ -392,6 +394,8 @@ class DocumentoController extends Controller
         $model->scenario = Documento::SCENARIO_GUIA;
         $modelPedido = Pedido::findOne( $id );
 
+
+
         if ( $modelPedido === null) {
             throw new NotFoundHttpException(Yii::t('documento', 'The requested page does not exist.'));
         }
@@ -439,6 +443,7 @@ class DocumentoController extends Controller
               $flag           = $model->save();
               $flag           = $modelPedido->save() && $flag;
 
+
               if ( $flag ) {
                 for($i = 0; $i < count($documentoDetalle); $i++) {
                       $modelDocumentoDetalle                     = new DocumentoDetalle();
@@ -446,7 +451,9 @@ class DocumentoController extends Controller
                       $modelDocumentoDetalle->prod_ddetalle      = $documentoDetalle[$i]['prod_detalle'];
                       $modelDocumentoDetalle->cant_ddetalle      = $documentoDetalle[$i]['cant_detalle'];
 
-                      if ( !($flag = $modelDocumentoDetalle->save()) ) {
+                      $flag = $flag && $modelDocumentoDetalle->save();
+
+                      if ( !($flag) ) {
                           $transaction->rollBack();
                           throw new \Exception("Error Processing Request", 1);
                           break;
@@ -455,7 +462,9 @@ class DocumentoController extends Controller
               }
 
               $numeracion = Numeracion::findOne($id_num);
+              $numeracion->scenario = 'numerar';
               $numeracion->numero_num = $codigoDoc;
+              // var_dump($numeracion->validate());exit();
               $flag = $numeracion->save() && $flag;
 
               if ( $flag ) {
@@ -469,6 +478,8 @@ class DocumentoController extends Controller
                   'type' => 'success'
                 ];
                 return $return;
+              } else {
+                throw new \Exception("Error Processing Request", 1);
               }
             } catch (Exception $e) {
                 $transaction->rollBack();

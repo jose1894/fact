@@ -284,7 +284,7 @@ if ( $model->isNewRecord ) {
 
                       if ( $model->utransp_doc) {
                         $undTransp = UnidadTransporte::findOne($model->utransp_doc);
-                        $undTranspText = $tipoDoc->des_utransp;
+                        $undTranspText = $undTransp->des_utransp;
                       }
 
                       $undTransp = UnidadTransporte::getUnidadTransporte( );

@@ -159,15 +159,23 @@ $exportConfig = [
 
                     'hAlign' => 'center',
                     'vAlign' => 'middle',
-                    'width' => '10%'
+                    //'width' => '%'
                 ],
                 [
-                  'width' => '9%',
+                  //'width' => '9%',
                   'value' => function($data){
                        return Yii::$app->formatter->asDate($data->fecha_doc, 'dd/MM/yyyy');
                   },
                   'attribute' => 'fecha_doc',
                   'vAlign' => 'middle',
+                ],
+                [
+                  'label' => 'DNI',
+                  'value' => 'pedidoDoc.cltePedido.dni_clte',
+                ],
+                [
+                  'label' => 'RUC',
+                  'value' => 'pedidoDoc.cltePedido.ruc_clte',
                 ],
                 [
                     'attribute' => 'cliente',
@@ -221,13 +229,13 @@ $exportConfig = [
                     },
                     'hAlign' => 'left',
                     'vAlign' => 'middle',
-                    'width' => '10%',
+                    //'width' => '10%',
                 ],
                 [
                     'attribute' => 'statussunat_doc',
                     'hAlign' => 'center',
                     'vAlign' => 'middle',
-                    'width' => '10%',
+                    //'width' => '10%',
                     'format' => 'raw',
                     'value' => function ($model) {
 
@@ -258,7 +266,7 @@ $exportConfig = [
                       return ($model->status_doc !== Documento::DOCUMENTO_ANULADO) ? ($model->tipo_doc === NotaCredito::TIPODOC_NCREDITO ? -1 * $total : $total) : 0;
                   },
                   'format' => ['decimal', 2],
-                  'width' => '10%',
+                  //'width' => '10%',
                   'hAlign' => 'right',
                 ],
                 [
@@ -267,7 +275,7 @@ $exportConfig = [
                     return ($data->status_doc !== Documento::DOCUMENTO_ANULADO) ? ($data->tipo_doc === NotaCredito::TIPODOC_NCREDITO ? -1 * $data->totalimp_doc : $data->totalimp_doc) : '0';
                   },
                   'hAlign' => 'right',
-                  'width' => '10%',
+                  //'width' => '10%',
                   'format' => ['decimal', 2],
                   'pageSummary' => true
                 ],
@@ -277,7 +285,7 @@ $exportConfig = [
                     return ($data->status_doc !== Documento::DOCUMENTO_ANULADO) ? ($data->tipo_doc === NotaCredito::TIPODOC_NCREDITO ? -1 * $data->total_doc : $data->total_doc) : '0';
                   },
                   'hAlign' => 'right',
-                  'width' => '10%',
+                  //'width' => '10%',
                   'pageSummary' => true,
                   'format' => ['decimal', 2],
                 ],

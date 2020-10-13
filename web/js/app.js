@@ -32,7 +32,7 @@ $( document ).ready( function( e ) {
           'success': function ( data ){
             if ( data.success ) {
               swal(data.title, data.message, data.type);
-              window.parent.$.pjax.reload( { container: '#grid' } );
+              window.parent.$.pjax.reload( '#grid', { timeout: 3000 } );
 
               if ( $( $form ).attr( 'action' ).indexOf( 'create' ) != -1) {
                 $( $form ).trigger( 'reset' );
@@ -138,7 +138,7 @@ $( document ).ready( function( e ) {
                     var res = $.parseJSON(data);
                     if( res ) {
                         swal(title, succMessage, "success")
-                        window.parent.$.pjax.reload( { container: '#grid' } );
+                        window.parent.$.pjax.reload( '#grid', {timeout: 3000} );
 
                         return;
                     }
@@ -266,7 +266,7 @@ $( document ).ready( function( e ) {
                     if ( data.success )
                     {
                         swal(data.title, data.message, data.type);
-                        window.parent.$.pjax.reload( { container: '#grid' } );
+                        window.parent.$.pjax.reload(  '#grid', {timeout: 3000} );
 
                         if ( $( $form ).attr( 'action' ).indexOf( 'create' ) != -1) {
                             $( $form ).trigger( 'reset' );
