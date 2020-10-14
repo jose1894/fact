@@ -1,12 +1,13 @@
 <?php
-
-use yii\helpers\Html;
-use kartik\grid\GridView;
-use yii\widgets\Pjax;
-use kartik\select2\Select2;
 use yii\web\View;
-use app\models\Producto;
 use yii\helpers\Url;
+use yii\helpers\Html;
+use yii\widgets\Pjax;
+use app\models\Producto;
+use kartik\grid\GridView;
+use app\models\TipoListap;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ListaPreciosSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -45,7 +46,28 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 //'width' => '20%'       
             ],
-            'precio_lista',
+            [
+                'attribute'=> 'precio_lista',
+                'value' => 'precio_lista',
+                'width' => '10%'
+
+            ],
+            [
+                'attribute'=>'tipo_lista',
+                'value' => function($data){
+                     return $data->tipoLista->desc_lista;
+                },
+                'filter'=>ArrayHelper::map(TipoListap::find()->where(['estatus_lista' => 1])->asArray()->all(), 'id_lista', 'desc_lista'),
+                'filterType' => GridView::FILTER_SELECT2,
+                'filterWidgetOptions' => [
+                    'language' => Yii::$app->language,
+                    'theme' => Select2::THEME_DEFAULT,
+                    'pluginOptions' => ['allowClear' => true],
+                    'pluginEvents' =>[],
+                    'options' => ['prompt' => ''],
+                ],
+                //'width' => '10%'
+              ],
         ],
     ]); ?>
     <?php Pjax::end(); ?>

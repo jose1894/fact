@@ -68,7 +68,7 @@ class ListaPreciosSearch extends ListaPrecios
             'desc' => ['producto.id_prod' => SORT_DESC],
         ];
 
-        // grid filtering conditions
+        // grid filtering conditions 
         $query->andFilterWhere([
             'id_lista' => $this->id_lista,
             'tipo_lista' => $this->tipo_lista,
