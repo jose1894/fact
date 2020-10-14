@@ -69,6 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'width' => '10%'
               ],
         ],
+        'pjax'=>true,
     ]); ?>
     <?php Pjax::end(); ?>
 </div>
