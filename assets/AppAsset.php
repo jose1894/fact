@@ -30,6 +30,6 @@ class AppAsset extends AssetBundle
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
         'yii\jui\JuiAsset',
-		    '\rmrevin\yii\ionicon\AssetBundle',
+		'\rmrevin\yii\ionicon\AssetBundle',
     ];
 }

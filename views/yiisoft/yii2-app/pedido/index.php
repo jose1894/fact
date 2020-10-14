@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'pjax' => true,
         'columns' => [
             [
               'attribute'=>'tipo_pedido',

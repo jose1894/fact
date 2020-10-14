@@ -125,9 +125,9 @@ class Transaccion extends \yii\db\ActiveRecord
         return [
 			'id_prod' => Yii::t('producto','Product'),
 			'docref_trans' => Yii::t('cliente', 'Customer'),
+            'fecha_trans' => Yii::t('app', 'Date'),
             /*'id_trans' => Yii::t('app', 'Id Trans'),
             'codigo_trans' => Yii::t('app', 'Codigo Trans'),
-            'fecha_trans' => Yii::t('app', 'Fecha Trans'),
             'obsv_trans' => Yii::t('app', 'Obsv Trans'),
             'tipo_trans' => Yii::t('app', 'Tipo Trans'),
             'ope_trans' => Yii::t('app', 'Ope Trans'),
