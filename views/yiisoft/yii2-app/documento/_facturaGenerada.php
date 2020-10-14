@@ -26,14 +26,17 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
 
 $get = Yii::$app->request->get();
 $rs = "";
+$fecha = "";
 
 if (!empty($get)) {
-  $fecha = $get['DocumentoSearch']['fecha_doc'];
+    if ( !empty($get['DocumentoSearch']['fecha_doc'])) {
+        $fecha = $get['DocumentoSearch']['fecha_doc'];
+    }
 
-  if (!empty($fecha)) {
-    $fechaDoc = explode(" - ", $fecha);
-    $rs = "<br>" . Yii::t('app', 'From') . " " . $fechaDoc[0] . " ". Yii::t('app','to')." ". $fechaDoc[1];
-  }
+    if (!empty($fecha)) {
+        $fechaDoc = explode(" - ", $fecha);
+        $rs = "<br>" . Yii::t('app', 'From') . " " . $fechaDoc[0] . " ". Yii::t('app','to')." ". $fechaDoc[1];
+    }
 }
 
 $pdfHeader = '
@@ -418,8 +421,9 @@ $js = <<<JS
                     swal('Success',data.description,'success');
                 } else {
                     swal('Warning',data.code + ' - ' + data.description,'warning');
+                    return;
                 }
-                $.pjax.reload( { container: '#grid' } )
+                $.pjax.reload( '#grid', { timeout: 3000 } )
 
             },
             error: function(data){

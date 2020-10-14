@@ -26,8 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'pjax' => true,
         'columns' => [
-            //['class' => 'yii\grid\SerialColumn'],
+            //['class' => 'yii\grid\SerialColumn'],            
             ['class' => 'kartik\grid\CheckboxColumn',
             'checkboxOptions' => function ($dataProvider, $key, $index, $column) {
                 return ['value' => $dataProvider->id_lista.'*'.$dataProvider->precio_lista, 'id' => 'check-'.$key];   }

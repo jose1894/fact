@@ -280,16 +280,12 @@ class DocumentoController extends Controller
           $model->totalimp_doc             = $post['impuesto'];
           $model->total_doc                = $post['total'];
           $model->status_doc               = $model::DOCUMENTO_GENERADO;
-          $numDoc                          = Numeracion::getNumeracionById( $model->tipo_doc );
-          $codigoDoc                       = (int) $numDoc->numero_num + 1;
-          $id_num                          = $numDoc->id_num;
-          $model->tipo_doc                 = $numDoc->tipo_num;
-          $codigoDoc                       = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
-          $model->cod_doc                  = $codigoDoc;
-          $model->numeracion_doc           = $id_num;
+
           // validate all models
           $valid                           = $model->validate();
           $valid                           = $modelNotaSalida->validate() && $valid;
+
+
 
           if (!$valid) {
             if (Yii::$app->request->isAjax) {
@@ -301,6 +297,15 @@ class DocumentoController extends Controller
             }
           } else {
             $transaction = \Yii::$app->db->beginTransaction();
+
+            $numDoc                          = Numeracion::getNumeracionById( $model->tipo_doc );
+            $codigoDoc                       = (int) $numDoc->numero_num + 1;
+            $id_num                          = $numDoc->id_num;
+            $model->tipo_doc                 = $numDoc->tipo_num;
+            $codigoDoc                       = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
+            $model->cod_doc                  = $codigoDoc;
+            $model->numeracion_doc           = $id_num;
+
             $flag            = $model->save();
             $flag            = $modelPedido->save() && $flag;
             $tipoDoc         = $model->numeracion->tipoDocumento->tipodsunat_tipod;
@@ -828,10 +833,20 @@ class DocumentoController extends Controller
       // Guardar XML
       file_put_contents(Yii::getAlias('@app') . '/xml/sent/' . $invoice->getName().'.xml',
                         $see->getFactory()->getLastXml());
-	    //print_r($result);exit();
+
+      // print_r($result->getError()->getMessage());exit();
+      if ( $result->getError() ) {
+          $return = [
+                'description' => $result->getError()->getMessage(),
+                'code' => $result->getError()->getCode(),                
+        ];
+        echo json_encode($return);
+        return;
+      }
+
       $model->statussunat_doc = $result->getCdrResponse()->getCode();
       $model->save();
-
+      
       $return = [
           'description' => $result->getCdrResponse()->getDescription(),
           'code' => $result->getCdrResponse()->getCode(),
@@ -958,11 +973,19 @@ class DocumentoController extends Controller
 
       // Guardar XML
       file_put_contents(Yii::getAlias('@app') . '/xml/sent/' . $note->getName().'.xml',
-                        $see->getFactory()->getLastXml());
-	    //print_r($result);exit();
+      $see->getFactory()->getLastXml());
+      if ( $result->getError() ) {
+        $return = [
+              'description' => $result->getError()->getMessage(),
+              'code' => $result->getError()->getCode(),                
+        ];
+        echo json_encode($return);
+        return;
+      }
+
       $model->statussunat_doc = $result->getCdrResponse()->getCode();
       $model->save();
-
+      
       $return = [
           'description' => $result->getCdrResponse()->getDescription(),
           'code' => $result->getCdrResponse()->getCode(),

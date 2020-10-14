@@ -196,19 +196,18 @@ class TransaccionSearch extends Transaccion
           //Subquery saldo anterior
           $querySanterior = $this->saldoAnterior($id_prod, $fechaDocInicio, $sucursal);
 
-
           $queryPrincipal = new Query();
           $queryPrincipal->select([
-                                    'p.id_prod',
-                                    // 'stock_inicial' => $querySinicial,
-                                    // 'saldo_anterior' => $querySanterior,
-                                    'vp.stock_prod'
+                                    'vp.id_prod',
+                                    'stock_inicial' => $querySinicial,
+                                    'saldo_anterior' => $querySanterior,
+                                    'p.stock_prod'
                                   ])
                         ->from(['transaccion t'])
                         ->join('inner join', 'trans_detalle td', 't.id_trans = td.trans_detalle')
                         ->join('inner join', 'producto p', 'p.id_prod = td.prod_detalle')
                         ->join('inner join', 'v_productos vp', 'vp.id_prod = td.prod_detalle')
-                        ->where(['=','p.id_prod',$id_prod])
+                        ->where(['=','vp.id_prod',$id_prod])
                         ->andWhere(['=','t.ope_trans','S'])
                         ->andWhere(['=','t.status_trans',1])
                         ->andWhere(['=','t.sucursal_trans',1]);
@@ -217,12 +216,11 @@ class TransaccionSearch extends Transaccion
             $queryMinFecha->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);      
           }
 
-          $queryPrincipal->groupBy('p.id_prod,p.stock_prod');
-                        
+          $queryPrincipal->groupBy('vp.id_prod,vp.stock_prod');                        
 
-          $res = $queryPrincipal->all();
-          echo $queryPrincipal->createCommand()->sql;
-          var_dump($res,$id_prod,$fecha_trans);exit();
+          $qryPpal = $queryPrincipal->all();
+          // echo $queryPrincipal->createCommand()->sql;
+          // var_dump($res,$id_prod,$fecha_trans);exit();
         }
 
 

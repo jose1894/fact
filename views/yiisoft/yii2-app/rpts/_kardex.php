@@ -116,6 +116,8 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                 'showPageSummary' => true,
                 'columns' => [
                           [
+
+							'label' => Yii::t('app', 'Date'),
                             'attribute' => 'fecha_trans',
                             'format' => ['date', 'php:d/m/Y']
                           ],
