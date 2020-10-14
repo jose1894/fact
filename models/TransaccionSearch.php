@@ -216,12 +216,11 @@ class TransaccionSearch extends Transaccion
             $queryMinFecha->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);      
           }
 
-          $queryPrincipal->groupBy('vp.id_prod,vp.stock_prod');
-                        
+          $queryPrincipal->groupBy('vp.id_prod,vp.stock_prod');                        
 
-          $res = $queryPrincipal->all();
-          echo $queryPrincipal->createCommand()->sql;
-          var_dump($res,$id_prod,$fecha_trans);exit();
+          $qryPpal = $queryPrincipal->all();
+          // echo $queryPrincipal->createCommand()->sql;
+          // var_dump($res,$id_prod,$fecha_trans);exit();
         }
 
 
