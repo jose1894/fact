@@ -286,6 +286,46 @@ class PedidoController extends Controller
     }
 
     /**
+     * Deletes an existing Pedido model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionAnular($id)
+    {
+      
+      $model = $this->findModel($id);      
+      if (Yii::$app->request->isAjax) {
+        $transaction = \Yii::$app->db->beginTransaction();
+        try {
+          $model->estatus_pedido = 1;
+          $model->save();
+          $transaction->commit();
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          $return = [
+            'success' => true,
+            'title' => Yii::t('pedido', 'Status'),
+            'id' => $model->id_pedido,
+            'message' => Yii::t('app','Record saved successfully!'),
+            'type' => 'success'
+          ];
+          return $return;
+        } catch (Exception $e) {
+          $transaction->rollBack();
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          $return = [
+            'success' => false,
+            'title' => Yii::t('pedido', 'Status'),
+            'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+            'type' => 'error'
+          ];
+          return $return;
+        }
+      }      
+    }
+
+    /**
      * Finds the Pedido model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id

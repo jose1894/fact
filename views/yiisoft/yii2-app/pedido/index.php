@@ -140,7 +140,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
-                'template' => ' {print} &nbsp; {view} &nbsp; {update} &nbsp; {delete}',
+                'template' => ' {print} &nbsp; {view} &nbsp; {update} &nbsp; {anular}',
                 'buttons' => [
                   'print' => function ($url, $model) {
                       return Html::a('<span class="glyphicon glyphicon-print"></span>', $url, [
@@ -170,12 +170,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                   ]
                       ]) : '' ;
                   },
-                  'delete' => function ($url, $model) {
-                      return !$model->estatus_pedido ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-                                  'title' => Yii::t('app', 'Delete'),
-                                  'class' => 'pjax-delete',
+                  'anular' => function ($url, $model) {
+                      return Html::a('<span class="glyphicon glyphicon-remove"></span>', $url, [
+                                  'title' => Yii::t('app', 'Anular'),
+                                  'class' => 'pjax-cancel',
                                   'data' => [
-                                      'message' => Yii::t('app','Are you sure you want to delete this item?'),
+                                      'message' => Yii::t('app','Are you sure you want to anular this item?'),
                                       'succmessage' => Yii::t('app', 'Item deleted successfully!'),
                                       'method' => 'post',
                                       'pjax' => 0,
@@ -185,7 +185,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                       'cancel' => Yii::t('app', 'Cancel'),
                                       'id' => $model->id_pedido
                                   ],
-                      ]) : '';
+                      ]);
                   }
 
                 ],
@@ -202,8 +202,8 @@ $this->params['breadcrumbs'][] = $this->title;
                       $url = Url::to(['pedido/update','id' => $model->id_pedido]);
                       return $url;
                   }
-                  if ($action === 'delete') {
-                    $url = Url::to(['pedido/delete','id' => $model->id_pedido]);
+                  if ($action === 'anular') {
+                    $url = Url::to(['pedido/anular','id' => $model->id_pedido]);
                       return $url;
                   }
 
@@ -232,3 +232,11 @@ $this->registerJsVar( "buttonPrint", ".pjax-print" );
 $this->registerJsVar( "frameRpt", "#frame-rpt" );
 $this->registerJsVar( "modalRpt", "#modal-rpt" );
 echo   $this->render('//site/_modalRpt',[]);
+$js = "
+  $('.pjax-cancel').click(function(){
+    alert('acaa');
+
+  })
+
+"; 
+$this->registerJs($js,View::POS_LOAD);
