@@ -191,6 +191,7 @@ class TransaccionSearch extends Transaccion
 
           //Subquery stock inicial
           $querySinicial = $this->stockInicial($id_prod, $minFecha, $sucursal);
+          $queryFinicial = $this->stockFechaInicial($id_prod, $minFecha, $sucursal)->all();
                         
           
           //Subquery saldo anterior
@@ -201,7 +202,8 @@ class TransaccionSearch extends Transaccion
                                     'vp.id_prod',
                                     'stock_inicial' => $querySinicial,
                                     'saldo_anterior' => $querySanterior,
-                                    'p.stock_prod'
+                                    'p.stock_prod',
+                                    'vp.stock_prod_bruto',
                                   ])
                         ->from(['transaccion t'])
                         ->join('inner join', 'trans_detalle td', 't.id_trans = td.trans_detalle')
@@ -219,24 +221,50 @@ class TransaccionSearch extends Transaccion
           $queryPrincipal->groupBy('vp.id_prod,vp.stock_prod');                        
 
           $qryPpal = $queryPrincipal->all();
-          // echo $queryPrincipal->createCommand()->sql;
-          // var_dump($res,$id_prod,$fecha_trans);exit();
+          // echo $queryPrincipal->createCommand()->sql;exit();
+          // var_dump($qryPpal,$id_prod,$fecha_trans);exit();
         }
 
 
         //echo $query->createCommand()->sql;
         $models = $query->all();
 
-        //var_dump($models);exit();
-
+        // var_dump($queryFinicial);exit();
         $total = 0;
         $data = [];
+        
+        if (!empty($qryPpal)) {
+          $total =  $qryPpal[0]['stock_inicial'] + $qryPpal[0]['saldo_anterior'];
+          $data[] = [
+            'id_prod' => '',
+            'cod_prod' => '',
+            'des_prod' => '',
+            'docref_trans' => 'SALDO ANTERIOR =======>>>',
+            'codigo_trans' => '',
+            'ope_trans' => '',
+            'id_tipom' => '',
+            'des_tipom' => '',
+            'id_tipod' => '',
+            'des_tipod' => '',
+            'ingreso_unidades' => $qryPpal[0]['stock_inicial'] + $qryPpal[0]['saldo_anterior'],
+            'moneda' => '',
+            'precio_compra_ext' => '',
+            'precio_compra_soles' => '',
+            'ingreso_valorizados' =>'',
+            'salidas_unidades' => '',
+            'tipo' => '',
+            'sucursal_trans' => '',
+            'saldo' => $qryPpal[0]['stock_inicial'] + $qryPpal[0]['saldo_anterior'],
+          ];
+        }
         foreach ($models as $key => $value) {
           // code...
           $total = $total + floatval($value['ingreso_unidades']) - floatval($value['salidas_unidades']);
           $value['saldo'] = $total;
-          $data[ $key ] = $value;
+          $data[ $key + 1 ] = $value;
         }
+
+        // var_dump($data);exit();
 
     		$dataProvider = new ArrayDataProvider([
     			'allModels' => $data,
@@ -380,6 +408,24 @@ class TransaccionSearch extends Transaccion
       }
 
       return $querySinicial;
+    }
+
+    protected function stockFechaInicial($id_prod = null, $minFecha, $sucursal)
+    {
+      $queryFinicial = new Query();
+      $queryFinicial->select([ 'coalesce(fecha_trans,0) as fecha_inicial'])
+                    ->from(['transaccion'])
+                    ->join('INNER JOIN', 'trans_detalle', 'id_trans = trans_detalle')
+                    ->where(["=","sucursal_trans",$sucursal])
+                    ->andWhere(['=','status_trans','1'])
+                    ->andWhere(['=','ope_trans','S'])
+                    ->andWhere(['<','fecha_trans', $minFecha]);
+                    
+      if ( !empty($id_prod) ) {
+        $queryFinicial->andWhere(['=','prod_detalle',$id_prod]);
+      }
+
+      return $queryFinicial;
     }
 
     protected function saldoAnterior($id_prod, $minFecha, $sucursal)
