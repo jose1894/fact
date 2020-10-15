@@ -45,7 +45,7 @@ $js = '
         "async"  : false,
         "success": function ( data ) {
           if ( data.success ) {
-            window.parent.$.pjax.reload( { container: "#grid" } );
+            window.parent.$.pjax.reload( { container: "#grid" , timeout: 3000} );
 
             if ( $( $form ).attr( "action" ).indexOf( "create" ) != -1) {
               $( $form ).trigger( "reset" );

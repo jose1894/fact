@@ -10,6 +10,10 @@ use app\models\Documento;
 use app\models\TipoDocumento;
 use app\models\NotaCredito;
 use kartik\daterange\DateRangePicker;
+use app\controllers\SiteController;
+// on your view layout file
+use kartik\icons\FontAwesomeAsset;
+FontAwesomeAsset::register($this);
 
 
 /* @var $this yii\web\View */
@@ -23,40 +27,87 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
 ?>
 <div class="documento-index">
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(['id' => 'grid']); ?>
+    <?php Pjax::begin(['id' => 'grid', 'timeout' => 3000]); ?>
 
     <p><?php  echo $this->render('_searchKardex', ['model' => $searchModel]); ?></p>
 
 	<?php
 		$isFa = true;
-		// $isFa below determines if export['fontAwesome'] property is set to true.
+    // $isFa below determines if export['fontAwesome'] property is set to true.
+    $get = Yii::$app->request->get();
+    $rs = "";
+    $fecha = "";
+
+    if (!empty($get)) {
+        if ( !empty($get['TransaccionSearch']['fecha_trans'])) {
+            $fecha = $get['TransaccionSearch']['fecha_trans'];
+        }
+
+        if (!empty($fecha)) {
+            $fechaDoc = explode(" - ", $fecha);
+            $rs = "<br>" . Yii::t('app', 'From') . " " . $fechaDoc[0] . " ". Yii::t('app','to')." ". $fechaDoc[1];
+        }
+    }
+
+    $pdfHeader = '
+    <table class="" style="">
+        <tr>
+            <td width="25%">
+              <div class="rounded"> <img src="'.Url::to('img/logo.jpg').'" width="180px"/> </div>
+            </td>
+            <td width="50%" align="center" >
+              <div class="titulo-emp" style="font-size:20px;font-weight:bold;">' . SiteController::getEmpresa()->nombre_empresa . '</div><br>
+              <div class="datos-emp">' . SiteController::getEmpresa()->direcc_empresa . '</div>
+              <div class="datos-emp">' . SiteController::getEmpresa()->tlf_empresa . '</div>
+              <div class="datos-emp">' . SiteController::getEmpresa()->movil_empresa . '</div>
+              <div class="datos-emp">' . SiteController::getEmpresa()->correo_empresa . '</div>
+            </td>
+            <td width="25%" align="right">
+                <b>' . Yii::t('app', 'Date') . ':</b> {DATE d/m/Y}
+                <br>
+                <b>' . Yii::t('app', 'Hour') . ':</b> {DATE H:i:s}
+                <br>
+                <b>' . Yii::t('app', 'Page') . ':</b> {PAGENO}/{nbpg}
+            </td>
+        </tr>
+    </table>
+    <hr>
+    <table width="100%">
+    <tr>
+        <td colspan="3" style="text-align:center">
+            <b>'. Yii::t('rpts', 'Product movement'). '</b> <br>
+            <b>'. $rs.'</b> <br>
+        </td>
+    </tr>
+    </table>
+    ';
 		$exportConfig = [
 			GridView::EXCEL => [
 				'label' => Yii::t('app', 'Excel'),
-				'icon' => $isFa ? 'file-excel-o' : 'floppy-remove',
+				'icon' => 'fa-file-excel-o',
 				'iconOptions' => ['class' => 'text-success'],
 				'showHeader' => true,
 				'showPageSummary' => true,
 				'showFooter' => true,
 				'showCaption' => true,
-				'filename' => Yii::t('app', 'grid-export'),
+				'filename' => Yii::t('app', 'kardex'),
 				'alertMsg' => Yii::t('app', 'The EXCEL export file will be generated for download.'),
 				'options' => ['title' => Yii::t('app', 'Microsoft Excel 95+')],
 				'mime' => 'application/vnd.ms-excel',
 				'config' => [
-					'worksheet' => Yii::t('app', 'ExportWorksheet'),
+					'worksheet' => Yii::t('app', 'Kardex'),
 					'cssFile' => ''
 				]
 			],
 			GridView::PDF => [
 				'label' => Yii::t('app', 'PDF'),
-				'icon' => $isFa ? 'file-pdf-o' : 'floppy-disk',
+				'icon' =>  'fa-file-pdf-o',
 				'iconOptions' => ['class' => 'text-danger'],
 				'showHeader' => true,
 				'showPageSummary' => true,
 				'showFooter' => true,
 				'showCaption' => true,
-				'filename' => Yii::t('app', 'grid-export'),
+				'filename' => Yii::t('rpts', 'Product movement'),
 				'alertMsg' => Yii::t('app', 'The PDF export file will be generated for download.'),
 				'options' => ['title' => Yii::t('app', 'Portable Document Format')],
 				'mime' => 'application/pdf',
@@ -64,26 +115,13 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
 					'mode' => 'c',
 					'format' => 'A4-L',
 					'destination' => 'I',
-					'marginTop' => 20,
+					'marginTop' => 60,
 					'marginBottom' => 20,
-					'cssInline' => '.kv-wrap{padding:20px;}' .
-						'.kv-align-center{text-align:center;}' .
-						'.kv-align-left{text-align:left;}' .
-						'.kv-align-right{text-align:right;}' .
-						'.kv-align-top{vertical-align:top!important;}' .
-						'.kv-align-bottom{vertical-align:bottom!important;}' .
-						'.kv-align-middle{vertical-align:middle!important;}' .
-						'.kv-page-summary{border-top:4px double #ddd;font-weight: bold;}' .
-						'.kv-table-footer{border-top:4px double #ddd;font-weight: bold;}' .
-						'.kv-table-caption{font-size:1.5em;padding:8px;border:1px solid #ddd;border-bottom:none;}',
-					'methods' => [
-						/*'SetHeader' => [
-							['odd' => $pdfHeader, 'even' => $pdfHeader]
-						],
-						'SetFooter' => [
-							['odd' => $pdfFooter, 'even' => $pdfFooter]
-						],*/
-					],
+          'cssFile' => '@webroot/css/rptCss.css',
+          'methods' => [
+               'SetHeader' => $pdfHeader,
+              'SetFooter' => "",
+          ],
 					'options' => [
 						'title' => 'Title',
 						'subject' => Yii::t('app', 'PDF export generated by kartik-v/yii2-grid extension'),
@@ -95,16 +133,33 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
 			],
 
 		];
+
+    $prod = "";
+
+    if ( !empty($dataProvider->getModels()) ) {
+      $prod = $dataProvider->getModels()[0]['cod_prod']." - ".trim($dataProvider->getModels()[0]['des_prod']);
+    } else {
+      $this->registerJs('
+          swal("Warning", "' . Yii::t('rpts', 'No data to display!') . '", "warning");
+      ',View::POS_END);
+    }
 	?>
+
+
 
     <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'pjax' => true,
         				'toolbar' => [
-        					'{export}',
-        					'{toggleData}'
+                    [
+                        'content'=> (!empty($prod)) ? '<button class="btn btn-flat btn-success">'.$prod.'</btn>' : "",
+                    ],
+          					'{export}',
+          					'{toggleData}'
         				],
-        				//'fontAwesome' => $isFa,
+                'export' => [
+                  'showConfirmAlert' => false,
+                ],
         				'exportConfig' => $exportConfig,
         				'panel' => [
         					'heading'=>'<h3 class="panel-title"><i class="fa fa-book"></i> ' . Yii::t('app','Product movement') . '</h3>',
@@ -142,6 +197,13 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                             'label' => 'Tipo documento',
                           ],
                           [
+                            'attribute' => 'precio_compra_ext',
+                            'label' => 'P.Compra$',
+                            'width' => '5%',
+                            'format' => ['decimal',2],
+                            'hAlign' => 'right',
+                          ],
+                          [
                             'attribute' => 'ingreso_unidades',
                             'label' => 'Ingreso',
                             'format' => ['decimal',2],
@@ -151,13 +213,6 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                             'pageSummary' => true,
                           ],
                           // 'moneda',
-                          // [
-                          //   'attribute' => 'precio_compra_ext',
-                          //   'label' => 'P.Compra$',
-                          //   'width' => '5%',
-                          //   'format' => ['decimal',2],
-                          //   'hAlign' => 'right',
-                          // ],
                           // [
                           //   'attribute' => 'precio_compra_soles',
                           //   'label' => 'P.Compra/S',

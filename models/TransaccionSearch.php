@@ -192,16 +192,21 @@ class TransaccionSearch extends Transaccion
           //Subquery stock inicial
           $querySinicial = $this->stockInicial($id_prod, $minFecha, $sucursal);
           $queryFinicial = $this->stockFechaInicial($id_prod, $minFecha, $sucursal)->all();
-                        
-          
+
+
           //Subquery saldo anterior
-          $querySanterior = $this->saldoAnterior($id_prod, $fechaDocInicio, $sucursal);
+          $queryEntAnteriores = $this->entradasAnteriores($id_prod, $fechaDocInicio, $sucursal);
+
+          $querySalAnteriores = $this->salidasAnteriores($id_prod, $fechaDocInicio, $sucursal);
 
           $queryPrincipal = new Query();
           $queryPrincipal->select([
                                     'vp.id_prod',
+                                    'vp.cod_prod',
+                                    'vp.des_prod',
                                     'stock_inicial' => $querySinicial,
-                                    'saldo_anterior' => $querySanterior,
+                                    'entradas_anteriores' => $queryEntAnteriores,
+                                    'salidas_anteriores' => $querySalAnteriores,
                                     'p.stock_prod',
                                     'vp.stock_prod_bruto',
                                   ])
@@ -213,50 +218,50 @@ class TransaccionSearch extends Transaccion
                         ->andWhere(['=','t.ope_trans','S'])
                         ->andWhere(['=','t.status_trans',1])
                         ->andWhere(['=','t.sucursal_trans',1]);
-          
+
           if ( !empty($fechaDocInicio) && !empty($fechaDocFin) ) {
-            $queryMinFecha->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);      
+            $queryMinFecha->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);
           }
 
-          $queryPrincipal->groupBy('vp.id_prod,vp.stock_prod');                        
+          $queryPrincipal->groupBy('vp.id_prod,vp.cod_prod,vp.des_prod,p.stock_prod,vp.stock_prod_bruto');
 
           $qryPpal = $queryPrincipal->all();
-          // echo $queryPrincipal->createCommand()->sql;exit();
-          // var_dump($qryPpal,$id_prod,$fecha_trans);exit();
         }
 
 
         //echo $query->createCommand()->sql;
         $models = $query->all();
 
-        // var_dump($queryFinicial);exit();
+        // var_dump($qryPpal);exit();
         $total = 0;
         $data = [];
-        
+
         if (!empty($qryPpal)) {
-          $total =  $qryPpal[0]['stock_inicial'] + $qryPpal[0]['saldo_anterior'];
+          $total =  $qryPpal[0]['stock_inicial'] + $qryPpal[0]['entradas_anteriores'] - $qryPpal[0]['salidas_anteriores'];
+
           $data[] = [
             'id_prod' => '',
-            'cod_prod' => '',
-            'des_prod' => '',
-            'docref_trans' => 'SALDO ANTERIOR =======>>>',
-            'codigo_trans' => '',
+            'cod_prod' => trim($qryPpal[0]['cod_prod']),
+            'des_prod' => trim($qryPpal[0]['des_prod']),
+            'docref_trans' => trim($qryPpal[0]['cod_prod']).' - '.trim($qryPpal[0]['des_prod']),
+            'codigo_trans' => Yii::t('rpts', 'Previous balance').' =======>>>',
             'ope_trans' => '',
             'id_tipom' => '',
             'des_tipom' => '',
             'id_tipod' => '',
             'des_tipod' => '',
-            'ingreso_unidades' => $qryPpal[0]['stock_inicial'] + $qryPpal[0]['saldo_anterior'],
+            'ingreso_unidades' => $total,
             'moneda' => '',
             'precio_compra_ext' => '',
             'precio_compra_soles' => '',
             'ingreso_valorizados' =>'',
-            'salidas_unidades' => '',
+            'salidas_unidades' => $qryPpal[0]['salidas_anteriores'],
             'tipo' => '',
             'sucursal_trans' => '',
-            'saldo' => $qryPpal[0]['stock_inicial'] + $qryPpal[0]['saldo_anterior'],
+            'saldo' => $total,
           ];
         }
+        // var_dump($data);exit();
         foreach ($models as $key => $value) {
           // code...
           $total = $total + floatval($value['ingreso_unidades']) - floatval($value['salidas_unidades']);
@@ -264,7 +269,6 @@ class TransaccionSearch extends Transaccion
           $data[ $key + 1 ] = $value;
         }
 
-        // var_dump($data);exit();
 
     		$dataProvider = new ArrayDataProvider([
     			'allModels' => $data,
@@ -286,71 +290,73 @@ class TransaccionSearch extends Transaccion
     		  'desc' => ['fecha_trans' => SORT_DESC],
     		];
 
-    		$dataProvider->sort->attributes['docref_trans'] = [
-    		  'asc' => ['docref_trans' => SORT_ASC],
-    		  'desc' => ['docref_trans' => SORT_DESC],
-    		];
-
-    		$dataProvider->sort->attributes['codigo_trans'] = [
-    		  'asc' => ['codigo_trans' => SORT_ASC],
-    		  'desc' => ['codigo_trans' => SORT_DESC],
-    		];
-
-    		$dataProvider->sort->attributes['ope_trans'] = [
-    		  'asc' => ['ope_trans' => SORT_ASC],
-    		  'desc' => ['ope_trans' => SORT_DESC],
-    		];
-
-    		$dataProvider->sort->attributes['des_tipom'] = [
-    		  'asc' => ['des_tipom' => SORT_ASC],
-    		  'desc' => ['des_tipom' => SORT_DESC],
-    		];
-
-    		$dataProvider->sort->attributes['des_tipod'] = [
-    		  'asc' => ['des_tipod' => SORT_ASC],
-    		  'desc' => ['des_tipod' => SORT_DESC],
-    		];
-
-    		$dataProvider->sort->attributes['ingreso_unidades'] = [
-    		  'asc' => ['ingreso_unidades' => SORT_ASC],
-    		  'desc' => ['ingreso_unidades' => SORT_DESC],
-    		];
-
-    		$dataProvider->sort->attributes['moneda'] = [
-    		  'asc' => ['moneda' => SORT_ASC],
-    		  'desc' => ['moneda' => SORT_DESC],
-    		];
-
-    		$dataProvider->sort->attributes['precio_compra_ext'] = [
-    		  'asc' => ['precio_compra_ext' => SORT_ASC],
-    		  'desc' => ['precio_compra_ext' => SORT_DESC],
-    		];
-
-    		$dataProvider->sort->attributes['precio_compra_soles'] = [
-    		  'asc' => ['precio_compra_soles' => SORT_ASC],
-    		  'desc' => ['precio_compra_soles' => SORT_DESC],
-    		];
-
-    		$dataProvider->sort->attributes['ingreso_valorizados'] = [
-    		  'asc' => ['ingreso_valorizados' => SORT_ASC],
-    		  'desc' => ['ingreso_valorizados' => SORT_DESC],
-    		];
-
-    		$dataProvider->sort->attributes['salidas_unidades'] = [
-    		  'asc' => ['salidas_unidades' => SORT_ASC],
-    		  'desc' => ['salidas_unidades' => SORT_DESC],
-    		];
-
-        $dataProvider->sort->attributes['saldo'] = [
-          'asc' => ['saldo' => SORT_ASC],
-          'desc' => ['saldo' => SORT_DESC],
-        ];
+    		// $dataProvider->sort->attributes['docref_trans'] = [
+    		//   'asc' => ['docref_trans' => SORT_ASC],
+    		//   'desc' => ['docref_trans' => SORT_DESC],
+    		// ];
+        //
+    		// $dataProvider->sort->attributes['codigo_trans'] = [
+    		//   'asc' => ['codigo_trans' => SORT_ASC],
+    		//   'desc' => ['codigo_trans' => SORT_DESC],
+    		// ];
+        //
+    		// $dataProvider->sort->attributes['ope_trans'] = [
+    		//   'asc' => ['ope_trans' => SORT_ASC],
+    		//   'desc' => ['ope_trans' => SORT_DESC],
+    		// ];
+        //
+    		// $dataProvider->sort->attributes['des_tipom'] = [
+    		//   'asc' => ['des_tipom' => SORT_ASC],
+    		//   'desc' => ['des_tipom' => SORT_DESC],
+    		// ];
+        //
+    		// $dataProvider->sort->attributes['des_tipod'] = [
+    		//   'asc' => ['des_tipod' => SORT_ASC],
+    		//   'desc' => ['des_tipod' => SORT_DESC],
+    		// ];
+        //
+    		// $dataProvider->sort->attributes['ingreso_unidades'] = [
+    		//   'asc' => ['ingreso_unidades' => SORT_ASC],
+    		//   'desc' => ['ingreso_unidades' => SORT_DESC],
+    		// ];
+        //
+    		// $dataProvider->sort->attributes['moneda'] = [
+    		//   'asc' => ['moneda' => SORT_ASC],
+    		//   'desc' => ['moneda' => SORT_DESC],
+    		// ];
+        //
+    		// $dataProvider->sort->attributes['precio_compra_ext'] = [
+    		//   'asc' => ['precio_compra_ext' => SORT_ASC],
+    		//   'desc' => ['precio_compra_ext' => SORT_DESC],
+    		// ];
+        //
+    		// $dataProvider->sort->attributes['precio_compra_soles'] = [
+    		//   'asc' => ['precio_compra_soles' => SORT_ASC],
+    		//   'desc' => ['precio_compra_soles' => SORT_DESC],
+    		// ];
+        //
+    		// $dataProvider->sort->attributes['ingreso_valorizados'] = [
+    		//   'asc' => ['ingreso_valorizados' => SORT_ASC],
+    		//   'desc' => ['ingreso_valorizados' => SORT_DESC],
+    		// ];
+        //
+    		// $dataProvider->sort->attributes['salidas_unidades'] = [
+    		//   'asc' => ['salidas_unidades' => SORT_ASC],
+    		//   'desc' => ['salidas_unidades' => SORT_DESC],
+    		// ];
+        //
+        // $dataProvider->sort->attributes['saldo'] = [
+        //   'asc' => ['saldo' => SORT_ASC],
+        //   'desc' => ['saldo' => SORT_DESC],
+        // ];
 
     		$this->load($params);
     		//
-    		if (!$this->validate() || empty($params) ) {
+        // var_dump($params);exit();
+    		if (!$this->validate() || (empty($params['TransaccionSearch']['id_prod']) && empty($params['TransaccionSearch']['fecha_trans'])) ) {
     		  // uncomment the following line if you do not want to return any records when validation fails
     		  $query->where('0=1');
+          $dataProvider->models = [];
     		  return $dataProvider;
     		}
 
@@ -385,10 +391,6 @@ class TransaccionSearch extends Transaccion
         $queryMinFecha->andWhere(['=','prod_detalle',$id_prod]);
       }
 
-      if ( !empty($fechaDocInicio) && !empty($fechaDocFin) ) {
-        $queryMinFecha->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);      
-      }
-
       return $queryMinFecha;
     }
 
@@ -402,7 +404,7 @@ class TransaccionSearch extends Transaccion
                     ->andWhere(['=','status_trans','1'])
                     ->andWhere(['=','ope_trans','S'])
                     ->andWhere(['<','fecha_trans', $minFecha]);
-                    
+
       if ( !empty($id_prod) ) {
         $querySinicial->andWhere(['=','prod_detalle',$id_prod]);
       }
@@ -420,7 +422,7 @@ class TransaccionSearch extends Transaccion
                     ->andWhere(['=','status_trans','1'])
                     ->andWhere(['=','ope_trans','S'])
                     ->andWhere(['<','fecha_trans', $minFecha]);
-                    
+
       if ( !empty($id_prod) ) {
         $queryFinicial->andWhere(['=','prod_detalle',$id_prod]);
       }
@@ -428,14 +430,33 @@ class TransaccionSearch extends Transaccion
       return $queryFinicial;
     }
 
-    protected function saldoAnterior($id_prod, $minFecha, $sucursal)
+    protected function entradasAnteriores($id_prod, $minFecha, $sucursal)
     {
       $querySanterior = new Query();
       $querySanterior->select([ 'coalesce(sum(cant_detalle),0) as saldo_anterior'])
                         ->from(['transaccion'])
                         ->join('INNER JOIN', 'trans_detalle', 'id_trans = trans_detalle')
                         ->where(["=","sucursal_trans",$sucursal])
-                        ->andWhere(['=','status_trans','1'])       
+                        ->andWhere(['=','status_trans','1'])
+                        ->andWhere(['=','ope_trans','E'])
+                        ->andWhere(['<','fecha_trans', $minFecha]);
+
+      if ( !empty($id_prod) ) {
+        $querySanterior->andWhere(['=','prod_detalle',$id_prod]);
+      }
+
+      return $querySanterior;
+    }
+
+    protected function salidasAnteriores($id_prod, $minFecha, $sucursal)
+    {
+      $querySanterior = new Query();
+      $querySanterior->select([ 'coalesce(sum(cant_detalle),0) as salidas_anteriores'])
+                        ->from(['transaccion'])
+                        ->join('INNER JOIN', 'trans_detalle', 'id_trans = trans_detalle')
+                        ->where(["=","sucursal_trans",$sucursal])
+                        ->andWhere(['=','status_trans','1'])
+                        ->andWhere(['=','ope_trans','S'])
                         ->andWhere(['<','fecha_trans', $minFecha]);
 
       if ( !empty($id_prod) ) {

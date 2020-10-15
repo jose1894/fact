@@ -114,7 +114,7 @@ return [
                 'motivo_traslado' => 'motivoTraslado.php',
             ],
         ],
-		'motivo_ncredito' => [
+		    'motivo_ncredito' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',
             'sourceLanguage' => 'en-US',
@@ -178,6 +178,14 @@ return [
               'provincia' => 'provincia.php',
             ],
         ],
+        'rpts' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+              'rpts' => 'rpts.php',
+            ],
+        ],        
         'salida' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',

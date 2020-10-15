@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="pedido-index">
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(['id' => 'grid']); ?>
+    <?php Pjax::begin(['id' => 'grid', 'timeout' => 3000]); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -234,7 +234,7 @@ $this->registerJsVar( "frameRpt", "#frame-rpt" );
 $this->registerJsVar( "modalRpt", "#modal-rpt" );
 echo   $this->render('//site/_modalRpt',[]);
 $js = <<<JS
-  $('.pjax-cancel').click(function(e) {
+  $('body').on('click','.pjax-cancel',function(e) {
     e.preventDefault();
     e.stopPropagation();
 
@@ -299,5 +299,5 @@ $js = <<<JS
 
               return false;
     })
-JS; 
+JS;
 $this->registerJs($js,View::POS_LOAD);

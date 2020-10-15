@@ -22,7 +22,7 @@
  *
  * NOTE: this file must be saved in UTF-8 encoding.
  */
-return [
+return [    
     'From' => 'Desde',
     'to' => 'hasta',
     'January' => 'Enero',

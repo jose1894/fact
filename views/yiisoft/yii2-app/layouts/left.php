@@ -47,10 +47,10 @@
                     ],
                     ['label' => 'Menu', 'options' => ['class' => 'header']],
                     [
-                      'label' => Yii::t('app','Set Up') , 'icon' => 'gears',
+                      'label' => Yii::t('app','Set Up') , 'icon' => 'cogs',
                       'items' => [
                         ['label' => Yii::t('empresa','Company'), 'url' => ['/empresa'], 'icon' => 'industry', 'visible' => Yii::$app->user->can('/empresa/index')],
-                        ['label' => Yii::t('app', 'Maintenance'), 'icon' => 'gears',
+                        ['label' => Yii::t('app', 'Maintenance'), 'icon' => 'cogs',
                           'items' => [
                             ['label' => Yii::t('tipo_producto','Product types'), 'url' => ['/tipo-producto'], 'icon' => 'cube', 'visible' => Yii::$app->user->can('/tipo-producto/index')],
                             ['label' => Yii::t('transportista','Carrier'), 'url' => ['/transportista'], 'icon' => 'truck', 'visible' => Yii::$app->user->can('/transportista/index')],
@@ -78,7 +78,7 @@
                         ['label' => Yii::t('proveedor','Supplier'), 'url' => ['/proveedor'], 'icon' => 'suitcase', 'visible' => Yii::$app->user->can('/proveedor/index')],
                         ['label' => Yii::t('producto','Product'), 'url' => ['/producto'], 'icon' => 'tags', 'visible' => Yii::$app->user->can('/producto/index')],
                         ['label' => Yii::t('serie','Numeration'), 'url' => ['/numeracion'], 'icon' => 'tachometer', 'visible' => Yii::$app->user->can('/numeracion/index')],
-                        ['label' => Yii::t('motivo_traslado','Transfer reason'), 'url' => ['/motivo-traslado'], 'icon' => 'tachometer', 'visible' => Yii::$app->user->can('/motivo-traslado/index')],
+                        ['label' => Yii::t('motivo_traslado','Transfer reason'), 'url' => ['/motivo-traslado'], 'icon' => 'bookmark', 'visible' => Yii::$app->user->can('/motivo-traslado/index')],
                       ]
                     ],
                     ['label' => Yii::t('tipo_cambio', 'Exchange'), 'icon' => 'money', 'url' => ['/tipo-cambio/'], 'visible' => Yii::$app->user->can('/tipo-cambio/index')],
