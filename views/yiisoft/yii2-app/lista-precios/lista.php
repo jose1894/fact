@@ -49,7 +49,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute'=> 'precio_lista',
-                'value' => 'precio_lista',
+                'value' => function($data){
+                    $precio_lista = Yii::$app->formatter->asDecimal($data->precio_lista);
+                    return $precio_lista;
+                },
+                //'value' => 'precio_lista',
                 'width' => '10%'
 
             ],
@@ -76,7 +80,6 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <?php
 $js = "
-
 $('#update').click(function(){
     if($('#actualizar-precio').val() == ''){
         alert('Debe colocar el nuevo precio');
@@ -180,11 +183,11 @@ function getPrecioGrid(key) {
 /**Para calcular el porcentaje al precio */
 function calcularPorcentaje(precio, porcentaje){
     var precioPor = 0;
+    console.log(precio);
     if(porcentaje <= 100) {
         precioPor = ((precio* porcentaje)/100);        
-    } else {        
-        precioPor = precio + precioPor;
-    }
+    } 
+    precioPor = precio + precioPor;
     return round(precioPor);   
 }
 "; 
