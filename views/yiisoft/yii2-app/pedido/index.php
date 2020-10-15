@@ -173,10 +173,10 @@ $this->params['breadcrumbs'][] = $this->title;
                   },
                   'anular' => function ($url, $model) {
                       return Html::a('<span class="glyphicon glyphicon-remove"></span>', $url, [
-                                  'title' => Yii::t('app', 'Anular'),
+                                  'title' => Yii::t('app', 'Cancel'),
                                   'class' => 'pjax-cancel',
                                   'data' => [
-                                      'message' => Yii::t('app','Are you sure you want to anular this item?'),
+                                      'message' => Yii::t('pedido','Are you sure you want to cancel this order?'),
                                       'succmessage' => Yii::t('app', 'Item deleted successfully!'),
                                       'method' => 'post',
                                       'pjax' => 0,
@@ -233,11 +233,71 @@ $this->registerJsVar( "buttonPrint", ".pjax-print" );
 $this->registerJsVar( "frameRpt", "#frame-rpt" );
 $this->registerJsVar( "modalRpt", "#modal-rpt" );
 echo   $this->render('//site/_modalRpt',[]);
-$js = "
-  $('.pjax-cancel').click(function(){
-    alert('acaa');
+$js = <<<JS
+  $('.pjax-cancel').click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
 
-  })
+    var id = $( this ).data( 'id' );
+    var title = $( this ).data( 'title' );
+    var icon =  $( this ).data( 'icon' );
+    var ok =  $( this ).data( 'ok' );
+    var url =  $( this ).attr( 'href' );
+    var message = $( this ).data( 'message' );
+    var succMessage = $( this ).data( 'succmessage' );
 
-"; 
+        data  = {
+                title: title,
+                text: message,
+                icon: icon,
+                confirmButtonClass: 'btn-danger',
+                confirmButtonText: ok ,
+                showCancelButton: true,
+                buttons: true,
+                dangerMode: true,
+            };
+
+        // Show the user a swal confirmation window
+        swal( data ).
+            then( (willdelete) => {
+                if (willdelete) {
+                    let url = $( this ).prop( 'href' );
+
+                    $.ajax({
+                        url: url,
+                        success: function(data){
+                          if( data.success ) {
+                              swal(data.title, data.message, data.type)
+                              $.pjax.reload( { container: '#grid', timeout : 3000 } );
+                              return;
+                          }
+                        },
+                        error: function(data){
+                          let message;
+
+                          if ( data.responseJSON )
+                          {
+                            let error = data.responseJSON;
+                            message =   'Se ha encontrado un error: ' +
+                              'Code ' + error.code +
+                              'File: ' + error.file +
+                              'Line: ' + error.line +
+                              'Name: ' + error.name +
+                              'Message: ' + error.message;
+                          }
+                          else
+                          {
+                              message = data.responseText;
+                          }
+
+                          swal('Oops!!!',message,'error' );
+                            return;
+                        }
+                    });
+                }
+              });
+
+              return false;
+    })
+JS; 
 $this->registerJs($js,View::POS_LOAD);

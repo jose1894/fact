@@ -37,6 +37,7 @@ return [
     'Order' => 'Pedido',
     'The order must have at least one item to be saved' => 'El pedido debe tener almenos un artículo para poder ser guardado',
     'Do you want to issue the document?' => '¿Quieres emitir el documento?',
+    'Are you sure you want to cancel this order?'=>  '¿Está seguro de querer anular este pedido?',
     'N.Price' => 'P.Neto',
     'G.Price' => 'P.Bruto',
     'Orders list' => 'Listado de pedidos',

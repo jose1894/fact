@@ -305,7 +305,7 @@ class PedidoController extends Controller
           Yii::$app->response->format = Response::FORMAT_JSON;
           $return = [
             'success' => true,
-            'title' => Yii::t('pedido', 'Status'),
+            'title' => Yii::t('pedido', 'Order'),
             'id' => $model->id_pedido,
             'message' => Yii::t('app','Record saved successfully!'),
             'type' => 'success'
@@ -316,7 +316,7 @@ class PedidoController extends Controller
           Yii::$app->response->format = Response::FORMAT_JSON;
           $return = [
             'success' => false,
-            'title' => Yii::t('pedido', 'Status'),
+            'title' => Yii::t('pedido', 'Order'),
             'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
             'type' => 'error'
           ];
