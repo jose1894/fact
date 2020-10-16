@@ -135,10 +135,10 @@ class TransaccionSearch extends Transaccion
     		$query->select('id_prod,
     					  cod_prod,
     					  des_prod,
-    					  fecha_trans,
-    					  docref_trans,
-    					  codigo_trans,
-    					  ope_trans,
+    					  t.fecha_trans,
+    					  sub.docref_trans,
+    					  sub.codigo_trans,
+    					  sub.ope_trans,
     					  id_tipom,
     					  des_tipom,
     					  id_tipod,
@@ -150,7 +150,7 @@ class TransaccionSearch extends Transaccion
     					  ingreso_valorizados,
     					  salidas_unidades,
     					  tipo,
-    					  sucursal_trans')
+    					  t.sucursal_trans')
     		->from(['(
     		select * from salidas_ajustes
     		  union
@@ -164,8 +164,9 @@ class TransaccionSearch extends Transaccion
     		  union
     		  select * from entradas_documentos
     		) as sub'])
-        ->where(['=','sucursal_trans',$sucursal])
-        ->orderBy('fecha_trans asc');
+        ->join('inner join', 'transaccion t', 't.id_trans = sub.id_trans and t.sucursal_trans = sub.sucursal_trans')
+        ->where(['=','t.sucursal_trans',$sucursal])
+        ->orderBy('t.fecha_trans asc');
 
         $id_prod = !empty($params['TransaccionSearch']['id_prod']) ? $params['TransaccionSearch']['id_prod'] : "";
         $fecha_trans = !empty($params['TransaccionSearch']['fecha_trans']) ? $params['TransaccionSearch']['fecha_trans'] : "";
@@ -180,7 +181,7 @@ class TransaccionSearch extends Transaccion
             $fechaDoc = explode(" - ", $fecha_trans);
             $fechaDocInicio = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[0]))->format('Y-m-d');
             $fechaDocFin = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[1]))->format('Y-m-d');
-            $query->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);
+            $query->andWhere(['between','t.fecha_trans',$fechaDocInicio,$fechaDocFin]);
         }
 
         if (!empty($id_prod) || !empty($fecha_trans)) {
@@ -250,7 +251,7 @@ class TransaccionSearch extends Transaccion
             'des_tipom' => '',
             'id_tipod' => '',
             'des_tipod' => '',
-            'ingreso_unidades' => $total,
+            'ingreso_unidades' => $qryPpal[0]['stock_inicial'] + $qryPpal[0]['entradas_anteriores'],
             'moneda' => '',
             'precio_compra_ext' => '',
             'precio_compra_soles' => '',

@@ -11,9 +11,6 @@ use app\models\TipoDocumento;
 use app\models\NotaCredito;
 use kartik\daterange\DateRangePicker;
 use app\controllers\SiteController;
-// on your view layout file
-use kartik\icons\FontAwesomeAsset;
-FontAwesomeAsset::register($this);
 
 
 /* @var $this yii\web\View */
@@ -152,7 +149,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                 'pjax' => true,
         				'toolbar' => [
                     [
-                        'content'=> (!empty($prod)) ? '<button class="btn btn-flat btn-success">'.$prod.'</btn>' : "",
+                        'content'=> (!empty($prod)) ? '<button class="btn btn-flat btn-danger">'.$prod.'</btn>' : "",
                     ],
           					'{export}',
           					'{toggleData}'
