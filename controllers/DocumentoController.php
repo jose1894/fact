@@ -690,12 +690,14 @@ class DocumentoController extends Controller
           <tr>
             <td align="center" width="25%" style="font-weight:bold">'.Yii::t('documento','Emission date').'</td>
             <td align="center" width="25%" style="font-weight:bold">'.Yii::t('pedido','Order').'</td>
+            <td align="center" width="25%" style="font-weight:bold">'.Yii::t('vendedor','Seller').'</td>
             <td align="center" width="25%" style="font-weight:bold">'.Yii::t('condicionp','Payment condition').'</td>
             <td align="center" width="25%" style="font-weight:bold">'.Yii::t('documento','Referral guide').'</td>
           </tr>
           <tr>
             <td align="center">'.$date.'</td>
             <td align="center">'.$modelDocumento->pedidoDoc->nrodoc_pedido.'</td>
+            <td align="center">'.$modelDocumento->pedidoDoc->vendPedido->nombre_vend.'</td>
             <td align="center">'.$modelDocumento->pedidoDoc->condpPedido->desc_condp.'</td>
             <td align="center">'.$modelDocumento->guiaRem->tipoDoc->abrv_tipod . $modelDocumento->guiaRem->numeracion->serie_num .'-'.substr($modelDocumento->guiaRem->cod_doc,-8).'</td>
           </tr>
@@ -838,7 +840,7 @@ class DocumentoController extends Controller
       if ( $result->getError() ) {
           $return = [
                 'description' => $result->getError()->getMessage(),
-                'code' => $result->getError()->getCode(),                
+                'code' => $result->getError()->getCode(),
         ];
         echo json_encode($return);
         return;
@@ -846,7 +848,7 @@ class DocumentoController extends Controller
 
       $model->statussunat_doc = $result->getCdrResponse()->getCode();
       $model->save();
-      
+
       $return = [
           'description' => $result->getCdrResponse()->getDescription(),
           'code' => $result->getCdrResponse()->getCode(),
@@ -977,7 +979,7 @@ class DocumentoController extends Controller
       if ( $result->getError() ) {
         $return = [
               'description' => $result->getError()->getMessage(),
-              'code' => $result->getError()->getCode(),                
+              'code' => $result->getError()->getCode(),
         ];
         echo json_encode($return);
         return;
@@ -985,7 +987,7 @@ class DocumentoController extends Controller
 
       $model->statussunat_doc = $result->getCdrResponse()->getCode();
       $model->save();
-      
+
       $return = [
           'description' => $result->getCdrResponse()->getDescription(),
           'code' => $result->getCdrResponse()->getCode(),

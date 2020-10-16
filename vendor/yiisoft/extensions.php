@@ -183,15 +183,6 @@ return array (
       '@rmrevin/yii/ionicon' => $vendorDir . '/rmrevin/yii2-ionicon',
     ),
   ),
-  'antishov/yii2-morrisjs' => 
-  array (
-    'name' => 'antishov/yii2-morrisjs',
-    'version' => '1.1.2.0',
-    'alias' => 
-    array (
-      '@antishov/Morris' => $vendorDir . '/antishov/yii2-morrisjs',
-    ),
-  ),
   'kartik-v/yii2-date-range' => 
   array (
     'name' => 'kartik-v/yii2-date-range',

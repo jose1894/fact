@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "836c92241d6c1f3d8964502c77b86f7c",
+    "content-hash": "b083b95dc049bfaa7b86c33c14e8aa51",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -50,50 +50,6 @@
             "time": "2019-08-29T08:20:20+00:00"
         },
         {
-            "name": "antishov/yii2-morrisjs",
-            "version": "v1.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/antishov/yii2-morrisjs.git",
-                "reference": "9e0153b6495d0f4053c6e5d650244918f7a4ff81"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/antishov/yii2-morrisjs/zipball/9e0153b6495d0f4053c6e5d650244918f7a4ff81",
-                "reference": "9e0153b6495d0f4053c6e5d650244918f7a4ff81",
-                "shasum": ""
-            },
-            "require": {
-                "bower-asset/morrisjs": "0.5.1",
-                "bower-asset/raphael": "2.2.7",
-                "php": ">=5.5",
-                "yiisoft/yii2": "^2.0",
-                "yiisoft/yii2-bootstrap": "^2.0"
-            },
-            "type": "yii2-extension",
-            "autoload": {
-                "psr-4": {
-                    "antishov\\Morris\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Antishov Viktor",
-                    "email": "antishov.viktor@gmail.com"
-                }
-            ],
-            "keywords": [
-                "chart",
-                "morris",
-                "yii2"
-            ],
-            "time": "2019-01-20T19:18:54+00:00"
-        },
-        {
             "name": "bower-asset/bootstrap",
             "version": "v3.4.1",
             "source": {
@@ -108,24 +64,6 @@
             },
             "require": {
                 "bower-asset/jquery": ">=1.9.1,<4.0"
-            },
-            "type": "bower-asset",
-            "license": [
-                "MIT"
-            ]
-        },
-        {
-            "name": "bower-asset/eve-raphael",
-            "version": "v0.5.0",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:tomasAlabes/eve.git",
-                "reference": "93132d5d47a0ce31dbd1b75208b1d4c0e2ad81e8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tomasAlabes/eve/zipball/93132d5d47a0ce31dbd1b75208b1d4c0e2ad81e8",
-                "reference": "93132d5d47a0ce31dbd1b75208b1d4c0e2ad81e8"
             },
             "type": "bower-asset",
             "license": [
@@ -193,41 +131,6 @@
             ]
         },
         {
-            "name": "bower-asset/mocha",
-            "version": "1.17.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mochajs/mocha.git",
-                "reference": "7fc565ee3e225cb7a66bf39ae9c2c05b346675c1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mochajs/mocha/zipball/7fc565ee3e225cb7a66bf39ae9c2c05b346675c1",
-                "reference": "7fc565ee3e225cb7a66bf39ae9c2c05b346675c1"
-            },
-            "type": "bower-asset"
-        },
-        {
-            "name": "bower-asset/morrisjs",
-            "version": "0.5.1",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:morrisjs/morris.js.git",
-                "reference": "d5cf1410eda7055eaf2c7d218d4cb24ec5ed55c8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/morrisjs/morris.js/zipball/d5cf1410eda7055eaf2c7d218d4cb24ec5ed55c8",
-                "reference": "d5cf1410eda7055eaf2c7d218d4cb24ec5ed55c8"
-            },
-            "require": {
-                "bower-asset/jquery": ">=2.1.0",
-                "bower-asset/mocha": "~1.17.1",
-                "bower-asset/raphael": ">=2.0"
-            },
-            "type": "bower-asset"
-        },
-        {
             "name": "bower-asset/punycode",
             "version": "v1.3.2",
             "source": {
@@ -241,27 +144,6 @@
                 "reference": "38c8d3131a82567bfef18da09f7f4db68c84f8a3"
             },
             "type": "bower-asset"
-        },
-        {
-            "name": "bower-asset/raphael",
-            "version": "v2.2.7",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:DmitryBaranovskiy/raphael.git",
-                "reference": "c02b9c125d036e42b9bb95d0e401bbf6a5153da5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/DmitryBaranovskiy/raphael/zipball/c02b9c125d036e42b9bb95d0e401bbf6a5153da5",
-                "reference": "c02b9c125d036e42b9bb95d0e401bbf6a5153da5"
-            },
-            "require": {
-                "bower-asset/eve-raphael": "0.5.0"
-            },
-            "type": "bower-asset",
-            "license": [
-                "MIT"
-            ]
         },
         {
             "name": "bower-asset/yii2-pjax",

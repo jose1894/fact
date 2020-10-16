@@ -10,9 +10,12 @@ class DatatableAsset extends AssetBundle
         // 'iCheck/icheck.min.js',
         'datatables.net/js/jquery.dataTables.min.js',
         'datatables.net-bs/js/dataTables.bootstrap.min.js',
+        'chart.js/Chart.js',
+        'morris.js/morris.min.js'
     ];
-    public $css = [        
+    public $css = [
         'datatables.net-bs/css/dataTables.bootstrap.min.css',
+        'morris.js/morris.css',
         // 'iCheck/all.css',
         // more plugin CSS here
     ];

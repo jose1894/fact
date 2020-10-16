@@ -235,4 +235,20 @@ class DocumentoSearch extends Documento
 
         return $dataProvider;
     }/* searchListadoAnular */
+
+    /* Muestra total de ventas por dia */
+    public static function showVentasDiarias()
+    {
+
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
+        return Documento::find()
+                ->select( ['month(fecha_doc) mes, concat(year(fecha_doc),"-",month(fecha_doc)) AS `mesAno`,sum(total_doc) AS `total`'] )
+                ->where('sucursal_doc = :sucursal',[':sucursal' => $sucursal])
+                ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
+                ->andWhere(['in','tipo_doc',[Documento::TIPODOC_FACTURA,Documento::TIPODOC_BOLETA]])
+                ->andWhere(['=','year(fecha_doc)',date('Y')])
+                ->groupBy('month(fecha_doc),mesAno')
+                ->asArray()
+                ->all();
+    } /* fin de funcion showVentasDiarias*/
 }

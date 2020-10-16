@@ -4,12 +4,12 @@ use mdm\admin\components\Helper;
 /* @var $this yii\web\View */
 use yii\helpers\Url;
 use yii\web\View;
-use antishov\Morris;
 use yii\web\JsExpression;
 use app\models\PedidoSearch;
 use app\models\DocumentoSearch;
 use app\models\CompraSearch;
 use app\models\User;
+
 
 $this->title = 'Resumen';
 
@@ -81,106 +81,122 @@ $mes = Yii::t('app',strftime("%B",$date->getTimestamp()))
 
             </div>
 
-        	  <div class="row">
-        			<section class="col-lg-12 connectedSortable">
-        			  <!-- Custom tabs (Charts with tabs)-->
-        			  <div class="nav-tabs-custom">
-        				<!-- Tabs within a box -->
-        				<ul class="nav nav-tabs pull-right">
-        				  <li class="active"><a href="#revenue-chart" data-toggle="tab">Area</a></li>
-        				  <li class="pull-left header"><i class="fa fa-inbox"></i> Ventas (Datos demo)</li>
-        				</ul>
-        				<div class="tab-content no-padding">
-        				  <!-- Morris chart - Sales -->
-        				  <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;"></div>
-        				</div>
-        			  </div>
-        			  <!-- /.nav-tabs-custom -->
-        			</section>
-        	  </div>
+            <div class="row">
+              <div class="col-md-12">
+                <!-- AREA CHART -->
+                <div class="box box-primary">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">Ventas por mes</h3>
 
-	  <div class="row" style="display:none">
+                    <div class="box-tools pull-right">
+                      <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                  </div>
+                  <div class="box-body">
+                    <div class="chart">
+                      <canvas id="areaChart" style="height:250px"></canvas>
+                    </div>
+                  </div>
+                  <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+              </div>
+            </div>
 
-	  <?= Morris\Line::widget([
-     'resize' => true,
-     'gridTextSize' => 11,
-     'element' => 'lineChart',
-     'data' => [
-         ['date' => '2017-06-14', 'value' => 2],
-         ['date' => '2017-06-15', 'value' => 4],
-         ['date' => '2017-06-16', 'value' => 1]
-     ],
-     'xKey' => 'date',
-     'yKeys' => ['value'],
-     'labels' => ['Impressions'],
-     'xLabels' => 'day',
-     'yLabelFormat' => new JsExpression(
-         'function (y) {if (y === parseInt(y, 10)) {return y;}else {return "";}}'
-     ),
-     'yMin' => 'auto 40',
-     'lineColors' => ['rgb(123, 204, 221)'],
-     'pointFillColors' => ['rgb(82, 188, 211)'],
- ]); ?>
-	  </div>
 </div>
 
 
 
 
 <?php
-echo   $this->render('//site/_modalForm',[]);
-$js = "
-  /* Morris.js Charts */
-  // Sales chart
-  var area = new Morris.Area({
-    element   : 'revenue-chart',
-    resize    : true,
-    data      : [
-      { y: '2011 Q1', item1: 2666, item2: 2666 },
-      { y: '2011 Q2', item1: 2778, item2: 2294 },
-      { y: '2011 Q3', item1: 4912, item2: 1969 },
-      { y: '2011 Q4', item1: 3767, item2: 3597 },
-      { y: '2012 Q1', item1: 6810, item2: 1914 },
-      { y: '2012 Q2', item1: 5670, item2: 4293 },
-      { y: '2012 Q3', item1: 4820, item2: 3795 },
-      { y: '2012 Q4', item1: 15073, item2: 5967 },
-      { y: '2013 Q1', item1: 10687, item2: 4460 },
-      { y: '2013 Q2', item1: 8432, item2: 5713 }
-    ],
-    xkey      : 'y',
-    ykeys     : ['item1', 'item2'],
-    labels    : ['Item 1', 'Item 2'],
-    lineColors: ['#a0d0e0', '#3c8dbc'],
-    hideHover : 'auto'
-  });
-  var line = new Morris.Line({
-    element          : 'line-chart',
-    resize           : true,
-    data             : [
-      { y: '2011 Q1', item1: 2666 },
-      { y: '2011 Q2', item1: 2778 },
-      { y: '2011 Q3', item1: 4912 },
-      { y: '2011 Q4', item1: 3767 },
-      { y: '2012 Q1', item1: 6810 },
-      { y: '2012 Q2', item1: 5670 },
-      { y: '2012 Q3', item1: 4820 },
-      { y: '2012 Q4', item1: 15073 },
-      { y: '2013 Q1', item1: 10687 },
-      { y: '2013 Q2', item1: 8432 }
-    ],
-    xkey             : 'y',
-    ykeys            : ['item1'],
-    labels           : ['Item 1'],
-    lineColors       : ['#efefef'],
-    lineWidth        : 2,
-    hideHover        : 'auto',
-    gridTextColor    : '#fff',
-    gridStrokeWidth  : 0.4,
-    pointSize        : 4,
-    pointStrokeColors: ['#efefef'],
-    gridLineColor    : '#efefef',
-    gridTextFamily   : 'Open Sans',
-    gridTextSize     : 10
-  });";
 
-  $this->registerJs($js, View::POS_LOAD);
+$ventas = DocumentoSearch::showVentasDiarias();
+
+ // var_dump($ventas);exit();
+
+$data = [];
+$labels = [];
+foreach ($ventas as $key => $value) {
+  // code...
+  $labels[] = $value['mesAno'];
+  $data[] = $value['total'];
+
+}
+
+echo   $this->render('//site/_modalForm',[]);
+
+$this->registerJs("
+  /* ChartJS
+   * -------
+   * Here we will create a few charts using ChartJS
+   */
+
+  //--------------
+  //- AREA CHART -
+  //--------------
+
+  // Get context with jQuery - using jQuery's .get() method.
+  var areaChartCanvas = $('#areaChart').get(0).getContext('2d')
+  // This will get the first returned node in the jQuery collection.
+  var areaChart       = new Chart(areaChartCanvas)
+
+  var areaChartData = {
+    labels  : ". json_encode($labels) .",
+    datasets: [
+      {
+        label               : 'Ventas',
+        fillColor           : 'rgba(0, 166, 90, 1)',
+        strokeColor         : 'rgba(221, 75, 57, 1)',
+        pointColor          : 'rgba(255, 214, 222, 1)',
+        pointStrokeColor    : '#c1c7d1',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        data                : ". json_encode($data)."
+      },
+    ]
+  }
+
+  var areaChartOptions = {
+    //Boolean - If we should show the scale at all
+    showScale               : true,
+    //Boolean - Whether grid lines are shown across the chart
+    scaleShowGridLines      : false,
+    //String - Colour of the grid lines
+    scaleGridLineColor      : 'rgba(0,0,0,.05)',
+    //Number - Width of the grid lines
+    scaleGridLineWidth      : 1,
+    //Boolean - Whether to show horizontal lines (except X axis)
+    scaleShowHorizontalLines: true,
+    //Boolean - Whether to show vertical lines (except Y axis)
+    scaleShowVerticalLines  : true,
+    //Boolean - Whether the line is curved between points
+    bezierCurve             : true,
+    //Number - Tension of the bezier curve between points
+    bezierCurveTension      : 0.3,
+    //Boolean - Whether to show a dot for each point
+    pointDot                : false,
+    //Number - Radius of each point dot in pixels
+    pointDotRadius          : 4,
+    //Number - Pixel width of point dot stroke
+    pointDotStrokeWidth     : 2,
+    //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+    pointHitDetectionRadius : 20,
+    //Boolean - Whether to show a stroke for datasets
+    datasetStroke           : true,
+    //Number - Pixel width of dataset stroke
+    datasetStrokeWidth      : 2,
+    //Boolean - Whether to fill the dataset with a color
+    datasetFill             : true,
+    //String - A legend template
+    legendTemplate          : '<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>',
+    //Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+    maintainAspectRatio     : true,
+    //Boolean - whether to make the chart responsive to window resizing
+    responsive              : true
+  }
+
+  //Create the line chart
+  areaChart.Line(areaChartData, areaChartOptions)
+");

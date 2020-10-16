@@ -60,7 +60,6 @@ return array(
     'dmstr\\' => array($vendorDir . '/dmstr/yii2-adminlte-asset'),
     'cebe\\markdown\\' => array($vendorDir . '/cebe/markdown'),
     'cURL\\' => array($vendorDir . '/jossmp/sunatphp/src'),
-    'antishov\\Morris\\' => array($vendorDir . '/antishov/yii2-morrisjs'),
     'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
     'Twig\\' => array($vendorDir . '/twig/twig/src'),
     'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),

@@ -107,10 +107,6 @@ class ComposerStaticInit7c41c433e795145533304e96c61d6159
             'cebe\\markdown\\' => 14,
             'cURL\\' => 5,
         ),
-        'a' => 
-        array (
-            'antishov\\Morris\\' => 16,
-        ),
         'W' => 
         array (
             'Webmozart\\Assert\\' => 17,
@@ -407,10 +403,6 @@ class ComposerStaticInit7c41c433e795145533304e96c61d6159
         'cURL\\' => 
         array (
             0 => __DIR__ . '/..' . '/jossmp/sunatphp/src',
-        ),
-        'antishov\\Morris\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/antishov/yii2-morrisjs',
         ),
         'Webmozart\\Assert\\' => 
         array (

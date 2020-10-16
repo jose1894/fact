@@ -16,7 +16,7 @@ use app\controllers\SiteController;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\DocumentoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-$this->title = Yii::t('app', 'Product movement');
+$this->title = Yii::t('rpts', 'Product movement');
 $this->params['breadcrumbs'][] = $this->title;
 $status = [ 2 => 'DOCUMENTO GENERADO', 3 => 'DOCUMENTO ANULADO'];
 $primerDiaMes = date('01/MM/yyyy'); // hard-coded '01' for first day
@@ -159,7 +159,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                 ],
         				'exportConfig' => $exportConfig,
         				'panel' => [
-        					'heading'=>'<h3 class="panel-title"><i class="fa fa-book"></i> ' . Yii::t('app','Product movement') . '</h3>',
+        					'heading'=>'<h3 class="panel-title"><i class="fa fa-book"></i> ' . Yii::t('rpts','Product movement') . '</h3>',
         					// 'type'=>'success',
         					// 'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Create Country', ['create'], ['class' => 'btn btn-success']),
         					// 'after'=>Html::a('<i class="fa fa-refresh"></i> ' . Yii::t('app','Refresh '), ['listado-factura'], ['class' => 'btn btn-success']),
