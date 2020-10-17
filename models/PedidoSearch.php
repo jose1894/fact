@@ -70,7 +70,7 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
             // $query->where('0=1');
             return $dataProvider;
         }
-		
+
 		if ( $this->pendientes ) {
 			$query->andFilterWhere(['in','estatus_pedido',[Pedido::STATUS_INACTIVO,Pedido::GUIA_GENERADA]])
                  ->andFilterWhere(['like','tipo_pedido',[Pedido::PEDIDO]]);
@@ -229,9 +229,27 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
                 ->andWhere('tipo_pedido = :tipo',[':tipo' => Pedido::PEDIDO])
                 ->andWhere('fecha_pedido between "' . date('Y-m-01') . '" and "' . date('Y-m-d') . '"')
                 ->all();
+    } /* fin de funcion showPendientes*/
 
-      // return $dataProvider = new ActiveDataProvider([
-      //      'query' => $query,
-      //  ]);
+    /* Suma el total de proformas del mes */
+    public static function showVentasProformas()
+    {
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
+        return  Pedido::find()
+                ->select( ["month(fecha_pedido) mes,
+														concat(
+																year(fecha_pedido),
+													            '-',
+													            month(fecha_pedido)
+													            ) mesAno,
+														sum(total_pdetalle) AS total"] )
+								->join('inner join', 'pedido_detalle','id_pedido = pedido_pdetalle ')
+                ->where('sucursal_pedido = :sucursal',[':sucursal' => $sucursal])
+                // ->andWhere(['estatus_pedido' => [Pedido::STATUS_INACTIVO,Pedido::GUIA_GENERADA]])
+                ->andWhere('tipo_pedido = :tipo',[':tipo' => Pedido::PROFORMA])
+                ->andWhere('year(fecha_pedido) = "' . date('Y') . '"')
+								->groupBy('month(fecha_pedido),mesAno')
+								->asArray()
+                ->all();
     } /* fin de funcion showPendientes*/
 }

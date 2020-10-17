@@ -112,18 +112,28 @@ $mes = Yii::t('app',strftime("%B",$date->getTimestamp()))
 
 <?php
 
-$ventas = DocumentoSearch::showVentasDiarias();
+$ventasFacturas = DocumentoSearch::showVentasDiarias();
+$ventasProformas = PedidoSearch::showVentasProformas();
 
- // var_dump($ventas);exit();
+ // var_dump($ventasProformas);exit();
 
-$data = [];
-$labels = [];
-foreach ($ventas as $key => $value) {
+$dataFact = [];
+$labelsFact = [];
+foreach ($ventasFacturas as $key => $value) {
   // code...
-  $labels[] = $value['mesAno'];
-  $data[] = $value['total'];
-
+  $labelsFact[] = $value['mesAno'];
+  $dataFact[] = $value['total'];
 }
+
+$dataProf = [];
+$labelsProf = [];
+
+foreach ($ventasProformas as $key => $value) {
+  // code...
+  $labelsProf[] = $value['mesAno'];
+  $dataProf[] = $value['total'];
+}
+
 
 echo   $this->render('//site/_modalForm',[]);
 
@@ -143,17 +153,27 @@ $this->registerJs("
   var areaChart       = new Chart(areaChartCanvas)
 
   var areaChartData = {
-    labels  : ". json_encode($labels) .",
+    labels  : ". json_encode($labelsFact) .",
     datasets: [
       {
-        label               : 'Ventas',
-        fillColor           : 'rgba(0, 166, 90, 1)',
-        strokeColor         : 'rgba(221, 75, 57, 1)',
-        pointColor          : 'rgba(255, 214, 222, 1)',
+        label               : 'Ventas facturadas',
+        fillColor           : 'rgba(210, 214, 222, 1)',
+        strokeColor         : 'rgba(210, 214, 222, 1)',
+        pointColor          : 'rgba(210, 214, 222, 1)',
         pointStrokeColor    : '#c1c7d1',
         pointHighlightFill  : '#fff',
         pointHighlightStroke: 'rgba(220,220,220,1)',
-        data                : ". json_encode($data)."
+        data                : ". json_encode($dataFact)."
+      },
+      {
+        label               : 'Ventas proformas',
+        fillColor           : 'rgba(60,141,188,0.9)',
+        strokeColor         : 'rgba(60,141,188,0.8)',
+        pointColor          : '#3b8bba',
+        pointStrokeColor    : 'rgba(60,141,188,1)',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(60,141,188,1)',
+        data                : ". json_encode($dataProf)."
       },
     ]
   }
