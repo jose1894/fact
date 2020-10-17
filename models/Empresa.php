@@ -3,6 +3,7 @@
 namespace app\models;
 
 use yii\helpers\ArrayHelper;
+use yii\web\UploadedFile;
 
 use Yii;
 
@@ -51,6 +52,10 @@ class Empresa extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    /**
+     * @var UploadedFile
+     */
+    public $imageFile;
      public function rules()
      {
          return [
@@ -62,6 +67,7 @@ class Empresa extends \yii\db\ActiveRecord
              [['correo_empresa'], 'string', 'max' => 70],
              [['ruc_empresa'], 'string', 'max' => 11],
              [['dni_empresa'], 'unique'],
+             [['imageFiles'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg']
          ];
      }
 
@@ -81,6 +87,7 @@ class Empresa extends \yii\db\ActiveRecord
              'movil_empresa' => Yii::t('empresa', 'Mobile'),
              'correo_empresa' => Yii::t('empresa', 'Email'),
              'direcc_empresa' => Yii::t('empresa', 'Address'),
+             'imageFiles' => Yii::t('empresa', 'Imag'),
          ];
      }
 

@@ -13,6 +13,7 @@ use app\base\Model;
 use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\ActiveForm;
+use yii\web\UploadedFile;
 
 /**
  * EmpresaController implements the CRUD actions for Empresa model.
@@ -82,8 +83,12 @@ class EmpresaController extends Controller
         $this->layout = "justStuff";
 
         if ($model->load(Yii::$app->request->post())) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
 
-            //exit( "post aki" );
+            //exit( $model->imageFile);
+            echo "<pre>";
+            print_r($model->imageFile);
+            echo "</pre>";
             $modelsSucursal = Model::createMultiple(Sucursal::classname(),[],'id_suc');
             Model::loadMultiple($modelsSucursal, Yii::$app->request->post());
 

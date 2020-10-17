@@ -57,7 +57,11 @@ $(".dynamicform_wrapper").on("limitReached", function(e, item) {
 $this->registerJs($js,View::POS_LOAD);
 ?>
 <div class="empresa-form">
-      <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true,  ]); ?>
+      <?php $form = ActiveForm::begin([ 
+        'id' => $model->formName(), 
+        'enableClientScript' => true, 
+        'options' => ['enctype' => 'multipart/form-data']
+      ]); ?>
 
       <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -138,6 +142,11 @@ $this->registerJs($js,View::POS_LOAD);
               'addClass' => 'form-control ',
               'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-file-text"></i>']]
               ])->textarea(['rows' => 6,'placeholder' => Yii::t("empresa","Input an address")."..."]) ?>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-lg-12">
+            <?= $form->field($model, 'imageFile')->fileInput()?>
           </div>
       </div>
 
