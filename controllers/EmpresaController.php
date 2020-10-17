@@ -78,12 +78,13 @@ class EmpresaController extends Controller
     public function actionCreate()
     {
         $model = new Empresa();
+        Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/uploads/';
 
         $modelsSucursal = [new Sucursal];
         $this->layout = "justStuff";
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            $model->image = UploadedFile::getInstance($model, 'image');
 
             //exit( $model->imageFile);
             echo "<pre>";

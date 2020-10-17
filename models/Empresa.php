@@ -67,7 +67,8 @@ class Empresa extends \yii\db\ActiveRecord
              [['correo_empresa'], 'string', 'max' => 70],
              [['ruc_empresa'], 'string', 'max' => 11],
              [['dni_empresa'], 'unique'],
-             [['imageFiles'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg']
+             [['image'], 'safe'],
+             [['image'], 'file', 'extensions'=>'jpg, gif, png'],
          ];
      }
 
