@@ -203,9 +203,8 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                           [
                             'attribute' => 'ingreso_unidades',
                             'label' => 'Ingreso',
-                            'format' => ['decimal',2],
                             'width' => '5%',
-                            'format' => ['decimal',2],
+                            'format' => ['decimal',0],
                             'hAlign' => 'right',
                             'pageSummary' => true,
                           ],
@@ -230,13 +229,13 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                             },
                             'label' => 'Salidas',
                             'width' => '5%',
-                            'format' => ['decimal',2],
+                            'format' => ['decimal',0],
                             'hAlign' => 'right',
                             'pageSummary' => true,
             						  ],
             						  [
             							  'attribute' => 'saldo',
-                            'format' => ['decimal',2],
+                            'format' => ['decimal',0],
                             'hAlign' => 'right',
             						  ]
                   ]

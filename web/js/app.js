@@ -23,12 +23,16 @@ $( document ).ready( function( e ) {
       e.stopPropagation();
       let $form = $( frame ).contents().find('form');
       //let $form = window.frames[ 0 ].$( 'form' );
+      debugger;
+      let formData = new FormData($form[0]);
 
         $.ajax( {
           'url'    : $( $form ).attr( 'action' ),
           'method' : $( $form ).attr( 'method' ),
-          'data'   : $( $form ).serialize(),
+          'data'   : formData,
           'async'  : false,
+          'contentType': false,
+          'processData': false,
           'success': function ( data ){
             if ( data.success ) {
               swal(data.title, data.message, data.type);

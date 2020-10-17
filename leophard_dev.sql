@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 17-10-2020 a las 14:18:08
--- Versión del servidor: 10.4.10-MariaDB
--- Versión de PHP: 7.3.12
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 17-10-2020 a las 16:20:22
+-- Versión del servidor: 10.1.36-MariaDB
+-- Versión de PHP: 7.2.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `leophard_dev`
+-- Base de datos: `leophard_fact`
 --
 DROP DATABASE IF EXISTS `leophard_dev`;
 CREATE DATABASE IF NOT EXISTS `leophard_dev` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
@@ -32,20 +32,16 @@ USE `leophard_dev`;
 --
 
 DROP TABLE IF EXISTS `almacen`;
-CREATE TABLE IF NOT EXISTS `almacen` (
-  `id_almacen` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `almacen` (
+  `id_almacen` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_almacen` varchar(50) NOT NULL COMMENT 'DESCRIPCION ALMACEN',
   `status_almacen` int(11) NOT NULL COMMENT 'ESTATUS ALMACEN',
   `sucursal_almacen` int(11) NOT NULL COMMENT 'SUCURSAL ALMACEN',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_almacen`),
-  KEY `sucursal_almacen` (`sucursal_almacen`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT=' GUARDA DATOS DE ALMACENES';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT=' GUARDA DATOS DE ALMACENES';
 
 --
 -- Volcado de datos para la tabla `almacen`
@@ -61,12 +57,10 @@ INSERT INTO `almacen` (`id_almacen`, `des_almacen`, `status_almacen`, `sucursal_
 --
 
 DROP TABLE IF EXISTS `auth_assignment`;
-CREATE TABLE IF NOT EXISTS `auth_assignment` (
+CREATE TABLE `auth_assignment` (
   `item_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `user_id` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` int(11) DEFAULT NULL,
-  PRIMARY KEY (`item_name`,`user_id`),
-  KEY `idx-auth_assignment-user_id` (`user_id`)
+  `created_at` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -84,17 +78,14 @@ INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
 --
 
 DROP TABLE IF EXISTS `auth_item`;
-CREATE TABLE IF NOT EXISTS `auth_item` (
+CREATE TABLE `auth_item` (
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `type` smallint(6) NOT NULL,
-  `description` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
   `rule_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `data` blob DEFAULT NULL,
+  `data` blob,
   `created_at` int(11) DEFAULT NULL,
-  `updated_at` int(11) DEFAULT NULL,
-  PRIMARY KEY (`name`),
-  KEY `rule_name` (`rule_name`),
-  KEY `idx-auth_item-type` (`type`)
+  `updated_at` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -420,11 +411,9 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 --
 
 DROP TABLE IF EXISTS `auth_item_child`;
-CREATE TABLE IF NOT EXISTS `auth_item_child` (
+CREATE TABLE `auth_item_child` (
   `parent` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `child` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`parent`,`child`),
-  KEY `child` (`child`)
+  `child` varchar(64) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -843,12 +832,11 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 --
 
 DROP TABLE IF EXISTS `auth_rule`;
-CREATE TABLE IF NOT EXISTS `auth_rule` (
+CREATE TABLE `auth_rule` (
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `data` blob DEFAULT NULL,
+  `data` blob,
   `created_at` int(11) DEFAULT NULL,
-  `updated_at` int(11) DEFAULT NULL,
-  PRIMARY KEY (`name`)
+  `updated_at` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -858,8 +846,8 @@ CREATE TABLE IF NOT EXISTS `auth_rule` (
 --
 
 DROP TABLE IF EXISTS `cliente`;
-CREATE TABLE IF NOT EXISTS `cliente` (
-  `id_clte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `cliente` (
+  `id_clte` int(11) NOT NULL COMMENT 'ID UNICO',
   `dni_clte` varchar(20) NOT NULL COMMENT 'DNI CLIENTE',
   `ruc_clte` varchar(20) NOT NULL COMMENT 'RUC CLIENTE',
   `nombre_clte` varchar(150) NOT NULL COMMENT 'NOMBRE CLIENTE',
@@ -878,20 +866,9 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
   `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  `lista_clte` int(11) NOT NULL DEFAULT 0 COMMENT 'LISTA DE PRECIOS CLIENTE',
-  `tipoid_clte` int(11) NOT NULL DEFAULT 6 COMMENT 'TIPO DE IDENTIFICACION CLIENTE',
-  PRIMARY KEY (`id_clte`),
-  KEY `sucursal_clte` (`sucursal_clte`),
-  KEY `cliente_ibfk_1` (`vendedor_clte`),
-  KEY `pais_cte` (`pais_cte`),
-  KEY `provi_cte` (`provi_cte`),
-  KEY `depto_cte` (`depto_cte`),
-  KEY `dtto_cte` (`dtto_clte`),
-  KEY `lista_clte` (`lista_clte`),
-  KEY `tipoid_clte` (`tipoid_clte`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=794 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE CLIENTES';
+  `lista_clte` int(11) NOT NULL DEFAULT '0' COMMENT 'LISTA DE PRECIOS CLIENTE',
+  `tipoid_clte` int(11) NOT NULL DEFAULT '6' COMMENT 'TIPO DE IDENTIFICACION CLIENTE'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE CLIENTES';
 
 --
 -- Volcado de datos para la tabla `cliente`
@@ -1693,7 +1670,8 @@ INSERT INTO `cliente` (`id_clte`, `dni_clte`, `ruc_clte`, `nombre_clte`, `direcc
 (790, '', '', 'MICAS ÑOL', 'AV.  WIESSE 3566 S.J.L', 241, 135, 15, 135, '', NULL, 4, 1, 1, 1, NULL, NULL, NULL, NULL, 1, 1),
 (791, '', '20600154622', 'DISTRIBUCIONES HATUN PUCARA E.I.R.L.', 'CAL. PUNO 562 MIRAFLORES - AREQUIPA AREQUIPA AREQUIPA      ', 241, 35, 4, 35, '', NULL, 3, 1, 1, 1, NULL, NULL, NULL, NULL, 1, 4),
 (792, '16781338            ', '', 'MONTALVAN SANCHEZ ANGELICA   ', 'JR.IQUITOS NRO.482-SAN MARTIN RIOJA NUEVA CAJAMARCA      ', 241, 183, 22, 183, '', NULL, 2, 1, 1, 1, NULL, NULL, NULL, NULL, 1, 2),
-(793, '', '10447662545', 'MENDOZA DE LA CRUZ MARITZA', 'JR. SANTA ISABEL #1400 EL TAMBO - HUANCAYO', 241, 107, 12, 107, '', NULL, 3, 1, 1, 1, NULL, NULL, NULL, NULL, 1, 4);
+(793, '', '10447662545', 'MENDOZA DE LA CRUZ MARITZA', 'JR. SANTA ISABEL #1400 EL TAMBO - HUANCAYO', 241, 107, 12, 107, '', NULL, 3, 1, 1, 1, NULL, NULL, NULL, NULL, 1, 4),
+(794, '', '20604679061', 'IMPORTACIONES JUANCITO EDVIR E.I.R.L.', 'AV. MANCO INCA NRO. 300 - CUSCO CUSCO WANCHAQ ', 241, 74, 8, 74, '', NULL, 1, 1, 1, 1, NULL, NULL, NULL, NULL, 1, 4);
 
 -- --------------------------------------------------------
 
@@ -1702,35 +1680,25 @@ INSERT INTO `cliente` (`id_clte`, `dni_clte`, `ruc_clte`, `nombre_clte`, `direcc
 --
 
 DROP TABLE IF EXISTS `compra`;
-CREATE TABLE IF NOT EXISTS `compra` (
-  `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `compra` (
+  `id_compra` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_compra` varchar(10) NOT NULL COMMENT 'CODIGO COMPRA',
   `fecha_compra` date NOT NULL COMMENT 'FECHA COMPRA',
   `provee_compra` int(11) NOT NULL COMMENT 'PROVEEDOR COMPRA',
   `moneda_compra` int(11) NOT NULL COMMENT 'MONEDA COMPRA',
   `condp_compra` int(11) NOT NULL COMMENT 'CONDICION PAGO COMPRA',
   `usuario_compra` int(11) NOT NULL COMMENT 'USUARIO COMPRA',
-  `estatus_compra` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS COMPRA',
+  `estatus_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS COMPRA',
   `edicion_compra` varchar(1) DEFAULT 'N' COMMENT 'EDICION COMPRA',
-  `excento_compra` int(11) NOT NULL DEFAULT 1 COMMENT 'EXCENTO DE IMPUESTO 1=EXCENTO, 0=APLICA IMPUESTO',
-  `afectaalm_compra` int(11) NOT NULL DEFAULT 0 COMMENT 'AFECTA ALMACEN COMPRA',
+  `excento_compra` int(11) NOT NULL DEFAULT '1' COMMENT 'EXCENTO DE IMPUESTO 1=EXCENTO, 0=APLICA IMPUESTO',
+  `afectaalm_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'AFECTA ALMACEN COMPRA',
   `nrodoc_compra` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO COMPRA',
-  `sucursal_compra` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL COMPRA',
+  `sucursal_compra` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL COMPRA',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_compra`),
-  UNIQUE KEY `cod_compra` (`cod_compra`),
-  KEY `fecha_compra` (`fecha_compra`),
-  KEY `provee_compra` (`provee_compra`),
-  KEY `moneda_compra` (`moneda_compra`),
-  KEY `usuario_compra` (`usuario_compra`),
-  KEY `sucursal_compra` (`sucursal_compra`),
-  KEY `condp_compra` (`condp_compra`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1 COMMENT='GUARDA ORDEN DE COMPRAS';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA ORDEN DE COMPRAS';
 
 --
 -- Volcado de datos para la tabla `compra`
@@ -1795,7 +1763,8 @@ INSERT INTO `compra` (`id_compra`, `cod_compra`, `fecha_compra`, `provee_compra`
 (57, '0000000056', '2020-09-03', 1, 1, 3, 2, 2, 'N', 0, 1, 'FE01-0002451', 1, NULL, NULL, NULL, NULL),
 (58, '0000000057', '2020-09-23', 1, 1, 1, 2, 2, 'N', 0, 1, 'FE01-0002524', 1, NULL, NULL, NULL, NULL),
 (59, '0000000058', '2020-09-25', 1, 1, 2, 2, 2, 'N', 0, 1, '', 1, NULL, NULL, NULL, NULL),
-(60, '0000000059', '2020-10-05', 1, 1, 3, 2, 2, 'N', 0, 1, 'FE01-0002567', 1, NULL, NULL, NULL, NULL);
+(60, '0000000059', '2020-10-05', 1, 1, 3, 2, 2, 'N', 0, 1, 'FE01-0002567', 1, NULL, NULL, NULL, NULL),
+(63, '0000000060', '2020-10-16', 1, 1, 1, 2, 2, 'N', 0, 1, '', 1, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1804,22 +1773,19 @@ INSERT INTO `compra` (`id_compra`, `cod_compra`, `fecha_compra`, `provee_compra`
 --
 
 DROP TABLE IF EXISTS `compra_detalle`;
-CREATE TABLE IF NOT EXISTS `compra_detalle` (
-  `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `compra_detalle` (
+  `id_cdetalle` int(11) NOT NULL COMMENT 'ID UNICO',
   `prod_cdetalle` int(11) NOT NULL COMMENT 'PRODUCTO COMPRA DETALLE',
-  `cant_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'CANTIDAD COMPRA DETALLE',
-  `precio_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO COMPRA DETALLE',
-  `descu_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'DESCUENTO % COMPRA DETALLE',
-  `impuestouni_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'IMPUESTO UNITARIO COMPRA DETALLE',
-  `status_cdetalle` int(11) NOT NULL DEFAULT 1 COMMENT 'ESTATUS COMPRA DETALLE',
-  `compra_cdetalle` int(11) NOT NULL DEFAULT 0,
-  `plista_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO LISTA COMPRA DETALLE',
-  `total_cdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'TOTAL COMPRA DETALLE',
-  `impuestototal_cdetalle` decimal(18,2) UNSIGNED NOT NULL DEFAULT 0.00 COMMENT 'IMPUESTO TOTAL COMPRA DETALLE',
-  PRIMARY KEY (`id_cdetalle`),
-  KEY `prod_cdetalle` (`prod_cdetalle`),
-  KEY `compra_cdetalle` (`compra_cdetalle`)
-) ENGINE=InnoDB AUTO_INCREMENT=966 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE COMPRAS';
+  `cant_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'CANTIDAD COMPRA DETALLE',
+  `precio_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO COMPRA DETALLE',
+  `descu_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'DESCUENTO % COMPRA DETALLE',
+  `impuestouni_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'IMPUESTO UNITARIO COMPRA DETALLE',
+  `status_cdetalle` int(11) NOT NULL DEFAULT '1' COMMENT 'ESTATUS COMPRA DETALLE',
+  `compra_cdetalle` int(11) NOT NULL DEFAULT '0',
+  `plista_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA COMPRA DETALLE',
+  `total_cdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL COMPRA DETALLE',
+  `impuestototal_cdetalle` decimal(18,2) UNSIGNED NOT NULL DEFAULT '0.00' COMMENT 'IMPUESTO TOTAL COMPRA DETALLE'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE COMPRAS';
 
 --
 -- Volcado de datos para la tabla `compra_detalle`
@@ -2780,7 +2746,11 @@ INSERT INTO `compra_detalle` (`id_cdetalle`, `prod_cdetalle`, `cant_cdetalle`, `
 (962, 88, '10.00', '79.60', '0.00', '0.00', 1, 60, '0.00', '796.00', '0.00'),
 (963, 117, '5.00', '56.00', '0.00', '0.00', 1, 60, '0.00', '280.00', '0.00'),
 (964, 1028, '10.00', '32.00', '0.00', '0.00', 1, 60, '0.00', '320.00', '0.00'),
-(965, 140, '15.00', '35.20', '0.00', '0.00', 1, 60, '0.00', '528.00', '0.00');
+(965, 140, '15.00', '35.20', '0.00', '0.00', 1, 60, '0.00', '528.00', '0.00'),
+(968, 944, '10.00', '10.00', '0.00', '0.00', 1, 63, '0.00', '100.00', '0.00'),
+(969, 945, '10.00', '10.00', '0.00', '0.00', 1, 63, '0.00', '100.00', '0.00'),
+(970, 680, '7.00', '2.00', '0.00', '0.00', 1, 63, '0.00', '14.00', '0.00'),
+(971, 681, '7.00', '2.00', '0.00', '0.00', 1, 63, '0.00', '14.00', '0.00');
 
 -- --------------------------------------------------------
 
@@ -2789,20 +2759,16 @@ INSERT INTO `compra_detalle` (`id_cdetalle`, `prod_cdetalle`, `cant_cdetalle`, `
 --
 
 DROP TABLE IF EXISTS `cond_pago`;
-CREATE TABLE IF NOT EXISTS `cond_pago` (
-  `id_condp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `cond_pago` (
+  `id_condp` int(11) NOT NULL COMMENT 'ID UNICO',
   `desc_condp` varchar(100) NOT NULL COMMENT 'DESCRIP COND PAGO',
   `status_condp` int(11) NOT NULL COMMENT 'ESTATUS CONDICION PAGO',
-  `sucursal_condp` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL COND PAGO',
+  `sucursal_condp` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL COND PAGO',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_condp`),
-  KEY `sucursal_condp` (`sucursal_condp`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='GUARDA LAS CONDICIONES DE PAGO';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA LAS CONDICIONES DE PAGO';
 
 --
 -- Volcado de datos para la tabla `cond_pago`
@@ -2811,7 +2777,7 @@ CREATE TABLE IF NOT EXISTS `cond_pago` (
 INSERT INTO `cond_pago` (`id_condp`, `desc_condp`, `status_condp`, `sucursal_condp`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
 (1, 'CONTADO', 1, 1, NULL, NULL, NULL, NULL),
 (2, 'CREDITO', 1, 1, NULL, NULL, NULL, NULL),
-(3, 'FACTURA A 30 DIAS', 1, 1, NULL, NULL, 2, 1602193450),
+(3, 'FACTURA A 30 DIAS', 1, 1, NULL, NULL, NULL, NULL),
 (4, 'LETRA', 1, 1, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
@@ -2821,8 +2787,8 @@ INSERT INTO `cond_pago` (`id_condp`, `desc_condp`, `status_condp`, `sucursal_con
 --
 
 DROP TABLE IF EXISTS `departamento`;
-CREATE TABLE IF NOT EXISTS `departamento` (
-  `id_depto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `departamento` (
+  `id_depto` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_depto` varchar(30) NOT NULL COMMENT 'DESCRIPCION DEPARTAMENTO',
   `prov_depto` int(11) NOT NULL COMMENT 'PROVINCIA DEPARTAMENTO',
   `pais_depto` int(11) NOT NULL,
@@ -2831,13 +2797,8 @@ CREATE TABLE IF NOT EXISTS `departamento` (
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_depto`),
-  KEY `sucursal_depto` (`sucursal_depto`),
-  KEY `prov_depto` (`prov_depto`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE DEPARTAMENTOS';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE DEPARTAMENTOS';
 
 --
 -- Volcado de datos para la tabla `departamento`
@@ -3050,7 +3011,7 @@ INSERT INTO `departamento` (`id_depto`, `des_depto`, `prov_depto`, `pais_depto`,
 --
 
 DROP TABLE IF EXISTS `depts`;
-CREATE TABLE IF NOT EXISTS `depts` (
+CREATE TABLE `depts` (
   `provincia` varchar(100) DEFAULT NULL,
   `depart` varchar(100) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
   `dtto` varchar(100) DEFAULT NULL
@@ -3265,8 +3226,8 @@ INSERT INTO `depts` (`provincia`, `depart`, `dtto`) VALUES
 --
 
 DROP TABLE IF EXISTS `distrito`;
-CREATE TABLE IF NOT EXISTS `distrito` (
-  `id_dtto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `distrito` (
+  `id_dtto` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_dtto` varchar(30) NOT NULL COMMENT 'DESCRIPCION DISTRITO',
   `pais_dtto` int(11) NOT NULL,
   `prov_dtto` int(11) NOT NULL,
@@ -3276,15 +3237,8 @@ CREATE TABLE IF NOT EXISTS `distrito` (
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_dtto`),
-  KEY `sucursal_dtto` (`sucursal_dtto`),
-  KEY `depto_dtto` (`depto_dtto`),
-  KEY `pais_dtto` (`pais_dtto`),
-  KEY `prov_dtto` (`prov_dtto`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=218 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE DISTRITOS';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE DISTRITOS';
 
 --
 -- Volcado de datos para la tabla `distrito`
@@ -3500,51 +3454,35 @@ INSERT INTO `distrito` (`id_dtto`, `des_dtto`, `pais_dtto`, `prov_dtto`, `depto_
 --
 
 DROP TABLE IF EXISTS `documento`;
-CREATE TABLE IF NOT EXISTS `documento` (
-  `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `documento` (
+  `id_doc` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_doc` varchar(10) DEFAULT '0000000000' COMMENT 'CODIGO DEL DOCUMENTO',
-  `tipo_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO DE DOCUMENTO: FACTURA, NOTA DE CREDITO, NOTA DE DEBITO, GUIA DE REMISION',
+  `tipo_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO DE DOCUMENTO: FACTURA, NOTA DE CREDITO, NOTA DE DEBITO, GUIA DE REMISION',
   `numeracion_doc` int(10) NOT NULL COMMENT 'SERIE DOCUMENTO',
-  `pedido_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'PEDIDO DEL DOCUMENTO',
+  `pedido_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'PEDIDO DEL DOCUMENTO',
   `fecha_doc` date DEFAULT NULL COMMENT 'FECHA DEL DOCUMENTO',
-  `obsv_doc` text DEFAULT NULL COMMENT 'OBSERVACIONES DEL DOCUMENTO',
-  `totalimp_doc` decimal(18,2) DEFAULT 0.00 COMMENT 'TOTAL IMPUESTO DEL DOCUMENTO',
-  `totaldsc_doc` decimal(18,2) DEFAULT 0.00 COMMENT 'TOTAL DESCUENTO DEL DOCUMENTO',
-  `total_doc` decimal(18,2) DEFAULT 0.00 COMMENT 'TOTAL DEL DOCUMENTO',
+  `obsv_doc` text COMMENT 'OBSERVACIONES DEL DOCUMENTO',
+  `totalimp_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL IMPUESTO DEL DOCUMENTO',
+  `totaldsc_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL DESCUENTO DEL DOCUMENTO',
+  `total_doc` decimal(18,2) DEFAULT '0.00' COMMENT 'TOTAL DEL DOCUMENTO',
   `transp_doc` int(11) DEFAULT NULL COMMENT 'TRANSPORTISTA DOCUMENTO',
   `utransp_doc` int(11) DEFAULT NULL COMMENT 'UNIDAD DE TRANSPORTE DOCUMENTO',
   `almacen_doc` int(11) NOT NULL COMMENT 'ALMACEN DOCUMENTO',
-  `motivo_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'MOTIVO TRASLADO, PARA LAS GUIAS DE REMISION',
-  `tipocambio_doc` decimal(18,3) NOT NULL DEFAULT 0.000 COMMENT 'TIPO DE CAMBIO DE DOCUMENTO',
+  `motivo_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'MOTIVO TRASLADO, PARA LAS GUIAS DE REMISION',
+  `tipocambio_doc` decimal(18,3) NOT NULL DEFAULT '0.000' COMMENT 'TIPO DE CAMBIO DE DOCUMENTO',
   `hash_doc` varchar(255) DEFAULT NULL COMMENT 'CODIGO HASH DEL DOCUMENTO',
   `valorr_doc` varchar(255) DEFAULT NULL COMMENT 'VALOR RESUMEN DEL DOCUMENTO ELECTRONICO',
-  `statussunat_doc` int(11) NOT NULL DEFAULT -1 COMMENT 'ESTATUS SUNAT',
+  `statussunat_doc` int(11) NOT NULL DEFAULT '-1' COMMENT 'ESTATUS SUNAT',
   `docref_doc` int(11) DEFAULT NULL COMMENT 'REFERENCIA A UN DOCUMENTO ANTERIOR  EN EL CASO DE NOTAS DE CREDITO O DEBITO',
   `condpago_doc` int(11) DEFAULT NULL COMMENT 'CONDICION PAGO DOCUMENTO',
   `motivosunat_doc` int(11) DEFAULT NULL COMMENT 'MOTIVO SUNAT PARA NOTAS DE CREDITO',
-  `status_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTADO DEL DOCUMENTO: 0 = SIN GENERAR, 1 = GUIA GENERADA, 2 = DOCUMENTO GENERADO, 3 = DOCUMENTO ANULADO',
-  `sucursal_doc` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL DEL DOCUMENTO',
+  `status_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTADO DEL DOCUMENTO: 0 = SIN GENERAR, 1 = GUIA GENERADA, 2 = DOCUMENTO GENERADO, 3 = DOCUMENTO ANULADO',
+  `sucursal_doc` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL DEL DOCUMENTO',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_doc`),
-  KEY `cod_doc` (`cod_doc`),
-  KEY `tipo_doc` (`tipo_doc`),
-  KEY `pedido_doc` (`pedido_doc`),
-  KEY `fecha_doc` (`fecha_doc`),
-  KEY `status_doc` (`status_doc`),
-  KEY `sucursal_doc` (`sucursal_doc`),
-  KEY `transp_doc` (`transp_doc`),
-  KEY `utransp_doc` (`utransp_doc`),
-  KEY `almacen_doc` (`almacen_doc`),
-  KEY `almacen_doc_2` (`almacen_doc`),
-  KEY `serie_doc` (`numeracion_doc`),
-  KEY `condpago_doc` (`condpago_doc`),
-  KEY `motivosunat_doc` (`motivosunat_doc`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=364 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE LOS DOCUMENTOS: FACTURAS, GUIAS DE REMISION, NOTAS DE CREDITO, NOTAS DE DEBITO';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE LOS DOCUMENTOS: FACTURAS, GUIAS DE REMISION, NOTAS DE CREDITO, NOTAS DE DEBITO';
 
 --
 -- Volcado de datos para la tabla `documento`
@@ -3873,20 +3811,36 @@ INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `ped
 (323, '0000000257', 3, 9, 268, '2020-10-01', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
 (324, '0000000158', 2, 7, 268, '2020-10-01', '', '117.36', '0.00', '769.36', NULL, NULL, 1, 0, '3.597', NULL, '20604954241||FE01|00000158|117.36|769.36|2020-10-01|6|10238466810', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, NULL, NULL),
 (325, '0000000258', 3, 9, 292, '2020-10-03', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
-(326, '0000000159', 2, 7, 292, '2020-10-03', '', '51.17', '0.00', '335.46', NULL, NULL, 1, 0, '3.607', NULL, '20604954241|01|FE01|00000159|51.17|335.46|2020-10-03|6|10446228086', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, 2, 1602691359),
-(332, '0000000001', 10, 10, 85, '2020-10-05', NULL, '496.53', '207.63', '3255.00', NULL, NULL, 1, 0, '3.620', NULL, '20604954241|07|NC1|00000001|496.53|3255.00|2020-10-05|6|10099888437', 0, 103, 2, 6, 3, 1, NULL, NULL, NULL, NULL),
-(333, '0000000002', 10, 10, 292, '2020-10-05', NULL, '51.17', '-2.67', '335.46', NULL, NULL, 1, 0, '3.620', NULL, '20604954241|07|FNC1|00000002|51.17|335.46|2020-10-05|6|10446228086', -1, 326, 3, 2, 2, 1, NULL, NULL, NULL, NULL),
-(353, '0000000259', 3, 9, 211, '2020-10-13', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, 2, 1602621673, NULL, NULL),
-(354, '0000000160', 2, 7, 211, '2020-10-13', '', '845.06', '0.00', '5539.82', NULL, NULL, 1, 0, '3.586', NULL, '20604954241|01|FE01|00000160|845.06|5539.82|2020-10-13|6|10093331538', 0, NULL, NULL, NULL, 2, 1, 2, 1602623332, 2, 1602691364),
-(355, '0000000260', 3, 9, 212, '2020-10-13', '', '0.00', '0.00', '0.00', 9, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, 2, 1602623444, NULL, NULL),
-(356, '0000000161', 2, 7, 212, '2020-10-13', '', '274.58', '0.00', '1800.04', NULL, NULL, 1, 0, '3.586', NULL, '20604954241|01|FE01|00000161|274.58|1800.04|2020-10-13|6|10093331538', 0, NULL, NULL, NULL, 2, 1, 2, 1602623470, 2, 1602691369),
-(357, '0000000261', 3, 9, 221, '2020-10-14', '', '0.00', '0.00', '0.00', 5, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, 2, 1602690887, NULL, NULL),
-(358, '0000000162', 2, 7, 221, '2020-10-14', '', '9.17', '0.00', '60.10', NULL, NULL, 1, 0, '3.586', NULL, '20604954241|01|FE01|00000162|9.17|60.10|2020-10-14|6|20601815428', 0, NULL, NULL, NULL, 2, 1, 2, 1602691305, 2, 1602691373),
-(359, '0000000163', 2, 7, 291, '2020-10-15', '', '222.54', '0.00', '1458.90', NULL, NULL, 1, 0, '3.586', NULL, '20604954241|01|FE01|00000163|222.54|1458.90|2020-10-15|6|10447662545', -1, NULL, NULL, NULL, 2, 1, 2, 1602781127, 2, 1602781128),
-(360, '0000000262', 3, 9, 289, '2020-10-15', '', '0.00', '0.00', '0.00', 3, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, 2, 1602781187, NULL, NULL),
-(361, '0000000164', 2, 7, 289, '2020-10-15', '', '130.58', '0.00', '856.00', NULL, NULL, 1, 0, '3.586', NULL, '20604954241|01|FE01|00000164|130.58|856.00|2020-10-15|6|20600154622', -1, NULL, NULL, NULL, 2, 1, 2, 1602781208, 2, 1602781209),
-(362, '0000000263', 3, 9, 287, '2020-10-15', '', '0.00', '0.00', '0.00', 3, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, 2, 1602781359, NULL, NULL),
-(363, '0000000165', 2, 7, 287, '2020-10-15', '', '196.19', '0.00', '1286.14', NULL, NULL, 1, 0, '3.586', NULL, '20604954241|01|FE01|00000165|196.19|1286.14|2020-10-15|6|10101436310', -1, NULL, NULL, NULL, 2, 1, 2, 1602781375, 2, 1602781375);
+(326, '0000000159', 2, 7, 292, '2020-10-03', '', '51.17', '0.00', '335.46', NULL, NULL, 1, 0, '3.607', NULL, '20604954241|01|FE01|00000159|51.17|335.46|2020-10-03|6|10446228086', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, NULL, NULL),
+(332, '0000000001', 10, 10, 269, '2020-10-05', NULL, '19.59', '-1.02', '128.40', NULL, NULL, 1, 0, '3.620', NULL, '20604954241|07|NC1|00000001|19.59|128.40|2020-10-05|6|20494693497', 0, 320, 3, 7, 2, 1, NULL, NULL, NULL, NULL),
+(333, '0000000259', 3, 9, 293, '2020-10-05', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
+(334, '0000000160', 2, 7, 293, '2020-10-05', '', '19.59', '0.00', '128.40', NULL, NULL, 1, 0, '3.620', NULL, '20604954241|01|FE01|00000160|19.59|128.40|2020-10-05|6|20494693497', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, NULL, NULL),
+(335, '0000000260', 3, 9, 289, '2020-10-05', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
+(336, '0000000161', 2, 7, 289, '2020-10-05', '', '130.58', '0.00', '856.00', NULL, NULL, 1, 0, '3.620', NULL, '20604954241|01|FE01|00000161|130.58|856.00|2020-10-05|6|20600154622', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, NULL, NULL),
+(337, '0000000261', 3, 9, 291, '2020-10-09', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
+(338, '0000000162', 2, 7, 291, '2020-10-09', '', '222.69', '0.00', '1459.88', NULL, NULL, 1, 0, '3.581', NULL, '20604954241|01|FE01|00000162|222.69|1459.88|2020-10-09|6|10447662545', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, NULL, NULL),
+(339, '0000000262', 3, 9, 287, '2020-10-09', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
+(340, '0000000163', 2, 7, 287, '2020-10-09', '', '196.19', '0.00', '1286.14', NULL, NULL, 1, 0, '3.581', NULL, '20604954241|01|FE01|00000163|196.19|1286.14|2020-10-09|6|10101436310', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, NULL, NULL),
+(341, '0000000263', 3, 9, 295, '2020-10-09', '', '0.00', '0.00', '0.00', 10, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
+(342, '0000000164', 2, 7, 295, '2020-10-09', '', '401.93', '0.00', '2634.90', NULL, NULL, 1, 0, '3.581', NULL, '20604954241|01|FE01|00000164|401.93|2634.90|2020-10-09|6|10414917491', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, NULL, NULL),
+(343, '0000000264', 3, 9, 299, '2020-10-10', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
+(344, '0000000165', 2, 7, 299, '2020-10-10', '', '83.24', '0.00', '545.70', NULL, NULL, 1, 0, '3.581', NULL, '20604954241|01|FE01|00000165|83.24|545.70|2020-10-10|6|20548255954', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, NULL, NULL),
+(345, '0000000265', 3, 9, 300, '2020-10-12', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
+(346, '0000000166', 2, 7, 300, '2020-10-12', '', '321.47', '0.00', '2107.40', NULL, NULL, 1, 0, '3.580', NULL, '20604954241|01|FE01|00000166|321.47|2107.40|2020-10-12|6|20493905997', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, NULL, NULL),
+(347, '0000000266', 3, 9, 298, '2020-10-13', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
+(348, '0000000167', 2, 7, 298, '2020-10-13', '', '12.42', '0.00', '81.40', NULL, NULL, 1, 0, '3.580', NULL, '20604954241|01|FE01|00000167|12.42|81.40|2020-10-13|6|20604679061', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, NULL, NULL),
+(349, '0000000267', 3, 9, 301, '2020-10-13', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
+(350, '0000000168', 2, 7, 301, '2020-10-13', '', '86.18', '0.00', '564.96', NULL, NULL, 1, 0, '3.580', NULL, '20604954241|01|FE01|00000168|86.18|564.96|2020-10-13|6|20601069483', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, NULL, NULL),
+(351, '0000000268', 3, 9, 303, '2020-10-13', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
+(352, '0000000169', 2, 7, 303, '2020-10-13', '', '27.75', '0.00', '181.90', NULL, NULL, 1, 0, '3.580', NULL, '20604954241|01|FE01|00000169|27.75|181.90|2020-10-13|6|10295751482', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, NULL, NULL),
+(353, '0000000269', 3, 9, 304, '2020-10-14', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 3, 1, NULL, NULL, NULL, NULL),
+(354, '0000000170', 2, 7, 304, '2020-10-14', '', '62.66', '0.00', '410.80', NULL, NULL, 1, 0, '3.596', NULL, '20604954241|01|FE01|00000170|62.66|410.80|2020-10-14|6|20548255954', -1, NULL, NULL, NULL, 3, 1, NULL, NULL, NULL, NULL),
+(355, '0000000270', 3, 9, 307, '2020-10-15', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
+(356, '0000000171', 2, 7, 307, '2020-10-15', '', '62.66', '0.00', '410.80', NULL, NULL, 1, 0, '3.596', NULL, '20604954241|01|FE01|00000171|62.66|410.80|2020-10-15|6|20548255954', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, 2, 1602941256),
+(357, '0000000271', 3, 9, 302, '2020-10-15', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
+(358, '0000000172', 2, 7, 302, '2020-10-15', '', '26.12', '0.00', '171.20', NULL, NULL, 1, 0, '3.596', NULL, '20604954241|01|FE01|00000172|26.12|171.20|2020-10-15|6|10432530260', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, 2, 1602941262),
+(359, '0000000272', 3, 9, 305, '2020-10-16', '', '0.00', '0.00', '0.00', 4, 1, 1, 1, '0.000', NULL, NULL, -1, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL),
+(360, '0000000173', 2, 7, 305, '2020-10-16', '', '69.37', '0.00', '454.78', NULL, NULL, 1, 0, '3.590', NULL, '20604954241|01|FE01|00000173|69.37|454.78|2020-10-16|6|10414032589', 0, NULL, NULL, NULL, 2, 1, NULL, NULL, 2, 1602941271);
 
 -- --------------------------------------------------------
 
@@ -3895,21 +3849,18 @@ INSERT INTO `documento` (`id_doc`, `cod_doc`, `tipo_doc`, `numeracion_doc`, `ped
 --
 
 DROP TABLE IF EXISTS `documento_detalle`;
-CREATE TABLE IF NOT EXISTS `documento_detalle` (
-  `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `documento_detalle` (
+  `id_ddetalle` int(11) NOT NULL COMMENT 'ID UNICO',
   `prod_ddetalle` int(11) NOT NULL COMMENT 'PRODUCTO DOCUMENTO DETALLE',
-  `cant_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'CANTIDAD DOCUMENTO DETALLE',
-  `precio_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO DOCUMENTO DETALLE',
-  `descu_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'DESCUENTO % DOCUMENTO DETALLE',
-  `impuesto_ddetalle` decimal(18,0) NOT NULL DEFAULT 0 COMMENT 'IMPUESTO DOCUMENTO DETALLE',
-  `status_ddetalle` int(11) NOT NULL DEFAULT 1 COMMENT 'ESTATUS DOCUMENTO DETALLE',
-  `documento_ddetalle` int(11) NOT NULL DEFAULT 0 COMMENT 'DOCUMENTO DETALLE',
-  `plista_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO LISTA DOCUMENTO DETALLE',
-  `total_ddetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'TOTAL DOCUMENTO DETALLE',
-  PRIMARY KEY (`id_ddetalle`),
-  KEY `prod_pdetalle` (`prod_ddetalle`),
-  KEY `pedido_pdetalle` (`documento_ddetalle`)
-) ENGINE=InnoDB AUTO_INCREMENT=2372 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE DOCUMENTOS, PRINCIPALMENTE PENSADO PARA GUARDAR LAS CANTIDADES DE LAS GUIAS DE REMISION';
+  `cant_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'CANTIDAD DOCUMENTO DETALLE',
+  `precio_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO DOCUMENTO DETALLE',
+  `descu_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'DESCUENTO % DOCUMENTO DETALLE',
+  `impuesto_ddetalle` decimal(18,0) NOT NULL DEFAULT '0' COMMENT 'IMPUESTO DOCUMENTO DETALLE',
+  `status_ddetalle` int(11) NOT NULL DEFAULT '1' COMMENT 'ESTATUS DOCUMENTO DETALLE',
+  `documento_ddetalle` int(11) NOT NULL DEFAULT '0' COMMENT 'DOCUMENTO DETALLE',
+  `plista_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA DOCUMENTO DETALLE',
+  `total_ddetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL DOCUMENTO DETALLE'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE DOCUMENTOS, PRINCIPALMENTE PENSADO PARA GUARDAR LAS CANTIDADES DE LAS GUIAS DE REMISION';
 
 --
 -- Volcado de datos para la tabla `documento_detalle`
@@ -5721,63 +5672,74 @@ INSERT INTO `documento_detalle` (`id_ddetalle`, `prod_ddetalle`, `cant_ddetalle`
 (1801, 740, '3.00', '0.00', '0.00', '0', 1, 325, '0.00', '0.00'),
 (1802, 739, '2.00', '0.00', '0.00', '0', 1, 325, '0.00', '0.00'),
 (1803, 503, '3.00', '0.00', '0.00', '0', 1, 325, '0.00', '0.00'),
-(1804, 956, '250.00', '13.02', '7.00', '18', 1, 332, '14.00', '3255.00'),
-(1805, 531, '1.00', '32.10', '0.00', '18', 1, 333, '31.80', '32.10'),
-(1806, 532, '1.00', '32.10', '0.00', '18', 1, 333, '31.80', '32.10'),
-(1807, 533, '1.00', '32.10', '0.00', '18', 1, 333, '31.80', '32.10'),
-(1808, 534, '1.00', '32.10', '0.00', '18', 1, 333, '31.80', '32.10'),
-(1809, 784, '1.00', '38.52', '0.00', '18', 1, 333, '38.16', '38.52'),
-(1810, 785, '1.00', '38.52', '0.00', '18', 1, 333, '38.16', '38.52'),
-(1811, 740, '3.00', '16.05', '0.00', '18', 1, 333, '15.90', '48.15'),
-(1812, 739, '2.00', '16.05', '0.00', '18', 1, 333, '15.90', '32.10'),
-(1813, 503, '3.00', '16.59', '0.00', '18', 1, 333, '16.43', '49.77'),
-(2325, 944, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2326, 975, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2327, 706, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2328, 707, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2329, 468, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2330, 729, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2331, 730, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2332, 753, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2333, 520, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2334, 754, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2335, 477, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2336, 480, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2337, 492, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2338, 740, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2339, 512, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2340, 767, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2341, 513, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2342, 530, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2343, 535, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2344, 789, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2345, 784, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2346, 816, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2347, 836, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2348, 833, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2349, 859, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2350, 843, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2351, 850, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2352, 890, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2353, 623, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2354, 622, '6.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
-(2355, 984, '6.00', '0.00', '0.00', '0', 1, 355, '0.00', '0.00'),
-(2356, 635, '6.00', '0.00', '0.00', '0', 1, 355, '0.00', '0.00'),
-(2357, 966, '6.00', '0.00', '0.00', '0', 1, 355, '0.00', '0.00'),
-(2358, 980, '6.00', '0.00', '0.00', '0', 1, 355, '0.00', '0.00'),
-(2359, 982, '6.00', '0.00', '0.00', '0', 1, 355, '0.00', '0.00'),
-(2360, 662, '6.00', '0.00', '0.00', '0', 1, 355, '0.00', '0.00'),
-(2361, 665, '6.00', '0.00', '0.00', '0', 1, 355, '0.00', '0.00'),
-(2362, 941, '6.00', '0.00', '0.00', '0', 1, 355, '0.00', '0.00'),
-(2363, 969, '6.00', '0.00', '0.00', '0', 1, 355, '0.00', '0.00'),
-(2364, 975, '6.00', '0.00', '0.00', '0', 1, 355, '0.00', '0.00'),
-(2365, 946, '6.00', '0.00', '0.00', '0', 1, 355, '0.00', '0.00'),
-(2366, 676, '6.00', '0.00', '0.00', '0', 1, 355, '0.00', '0.00'),
-(2367, 82, '1.00', '0.00', '0.00', '0', 1, 357, '0.00', '0.00'),
-(2368, 56, '20.00', '0.00', '0.00', '0', 1, 360, '0.00', '0.00'),
-(2369, 1221, '5.00', '0.00', '0.00', '0', 1, 362, '0.00', '0.00'),
-(2370, 140, '8.00', '0.00', '0.00', '0', 1, 362, '0.00', '0.00'),
-(2371, 136, '15.00', '0.00', '0.00', '0', 1, 362, '0.00', '0.00');
+(1804, 443, '20.00', '6.42', '0.00', '18', 1, 332, '6.36', '128.40'),
+(1805, 443, '20.00', '0.00', '0.00', '0', 1, 333, '0.00', '0.00'),
+(1806, 56, '20.00', '0.00', '0.00', '0', 1, 335, '0.00', '0.00'),
+(1807, 22, '1.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1808, 56, '1.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1809, 1193, '1.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1810, 1199, '1.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1811, 1209, '1.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1812, 133, '1.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1813, 147, '1.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1814, 1205, '2.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1815, 88, '1.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1816, 117, '1.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1817, 1028, '2.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1818, 140, '2.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1819, 1207, '1.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1820, 1221, '6.00', '0.00', '0.00', '0', 1, 337, '0.00', '0.00'),
+(1821, 1221, '5.00', '0.00', '0.00', '0', 1, 339, '0.00', '0.00'),
+(1822, 140, '8.00', '0.00', '0.00', '0', 1, 339, '0.00', '0.00'),
+(1823, 136, '15.00', '0.00', '0.00', '0', 1, 339, '0.00', '0.00'),
+(1824, 1217, '2.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1825, 9, '1.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1826, 1181, '2.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1827, 44, '2.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1828, 48, '2.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1829, 49, '2.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1830, 69, '2.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1831, 80, '2.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1832, 1200, '1.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1833, 127, '2.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1834, 147, '1.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1835, 1205, '3.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1836, 149, '1.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1837, 150, '1.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1838, 169, '2.00', '0.00', '0.00', '0', 1, 341, '0.00', '0.00'),
+(1839, 1181, '6.00', '0.00', '0.00', '0', 1, 343, '0.00', '0.00'),
+(1840, 147, '5.00', '0.00', '0.00', '0', 1, 345, '0.00', '0.00'),
+(1841, 150, '3.00', '0.00', '0.00', '0', 1, 345, '0.00', '0.00'),
+(1842, 149, '3.00', '0.00', '0.00', '0', 1, 345, '0.00', '0.00'),
+(1843, 1205, '10.00', '0.00', '0.00', '0', 1, 345, '0.00', '0.00'),
+(1844, 633, '10.00', '0.00', '0.00', '0', 1, 347, '0.00', '0.00'),
+(1845, 634, '10.00', '0.00', '0.00', '0', 1, 347, '0.00', '0.00'),
+(1846, 646, '2.00', '0.00', '0.00', '0', 1, 349, '0.00', '0.00'),
+(1847, 647, '2.00', '0.00', '0.00', '0', 1, 349, '0.00', '0.00'),
+(1848, 980, '2.00', '0.00', '0.00', '0', 1, 349, '0.00', '0.00'),
+(1849, 981, '2.00', '0.00', '0.00', '0', 1, 349, '0.00', '0.00'),
+(1850, 982, '2.00', '0.00', '0.00', '0', 1, 349, '0.00', '0.00'),
+(1851, 983, '2.00', '0.00', '0.00', '0', 1, 349, '0.00', '0.00'),
+(1852, 1205, '2.00', '0.00', '0.00', '0', 1, 351, '0.00', '0.00'),
+(1853, 58, '4.00', '0.00', '0.00', '0', 1, 353, '0.00', '0.00'),
+(1854, 58, '4.00', '0.00', '0.00', '0', 1, 355, '0.00', '0.00'),
+(1855, 1205, '1.00', '0.00', '0.00', '0', 1, 357, '0.00', '0.00'),
+(1856, 1182, '1.00', '0.00', '0.00', '0', 1, 357, '0.00', '0.00'),
+(1857, 727, '5.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1858, 728, '5.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1859, 739, '2.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1860, 740, '2.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1861, 805, '1.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1862, 804, '1.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1863, 865, '2.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1864, 916, '6.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1865, 952, '4.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1866, 682, '5.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1867, 683, '5.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1868, 944, '2.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1869, 945, '2.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1870, 680, '5.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00'),
+(1871, 681, '5.00', '0.00', '0.00', '0', 1, 359, '0.00', '0.00');
 
 -- --------------------------------------------------------
 
@@ -5786,8 +5748,8 @@ INSERT INTO `documento_detalle` (`id_ddetalle`, `prod_ddetalle`, `cant_ddetalle`
 --
 
 DROP TABLE IF EXISTS `empresa`;
-CREATE TABLE IF NOT EXISTS `empresa` (
-  `id_empresa` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `empresa` (
+  `id_empresa` int(11) NOT NULL COMMENT 'ID UNICO',
   `nombre_empresa` varchar(150) NOT NULL COMMENT 'NOMBRE EMPRESA',
   `estatus_empresa` int(11) NOT NULL COMMENT 'ESTATUS EMPRESA',
   `dni_empresa` varchar(20) NOT NULL COMMENT 'DNI EMPRESA',
@@ -5800,11 +5762,8 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_empresa`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `empresa`
@@ -5820,7 +5779,7 @@ INSERT INTO `empresa` (`id_empresa`, `nombre_empresa`, `estatus_empresa`, `dni_e
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `entradas_ajustes`;
-CREATE TABLE IF NOT EXISTS `entradas_ajustes` (
+CREATE TABLE `entradas_ajustes` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -5850,7 +5809,7 @@ CREATE TABLE IF NOT EXISTS `entradas_ajustes` (
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `entradas_compras`;
-CREATE TABLE IF NOT EXISTS `entradas_compras` (
+CREATE TABLE `entradas_compras` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -5880,7 +5839,7 @@ CREATE TABLE IF NOT EXISTS `entradas_compras` (
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `entradas_documentos`;
-CREATE TABLE IF NOT EXISTS `entradas_documentos` (
+CREATE TABLE `entradas_documentos` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -5910,23 +5869,19 @@ CREATE TABLE IF NOT EXISTS `entradas_documentos` (
 --
 
 DROP TABLE IF EXISTS `inventario`;
-CREATE TABLE IF NOT EXISTS `inventario` (
-  `id_inv` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
-  `tipotrans_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO TRANSACCION INVENTARIO',
+CREATE TABLE `inventario` (
+  `id_inv` int(11) NOT NULL COMMENT 'ID UNICO',
+  `tipotrans_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO TRANSACCION INVENTARIO',
   `fecha_inv` date NOT NULL COMMENT 'FECHA DE CREACION INVENTARIO',
   `fecham_inv` date NOT NULL COMMENT 'FECHA DE MODIFICACION INVENTARIO',
-  `prod_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO INVENTARIO',
-  `cantidad_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'CANTIDAD INVENTARIO',
-  `orden_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'NUMERO DE ORDEN PEDIDO / COMPRA INVENTARIO',
-  `sucursal_inv` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL INVENTARIO',
+  `prod_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO INVENTARIO',
+  `cantidad_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'CANTIDAD INVENTARIO',
+  `orden_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'NUMERO DE ORDEN PEDIDO / COMPRA INVENTARIO',
+  `sucursal_inv` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL INVENTARIO',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_inv`),
-  KEY `sucursal_inv` (`sucursal_inv`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA MOVIMIENTOS DE ALMACEN';
 
 -- --------------------------------------------------------
@@ -5936,35 +5891,28 @@ CREATE TABLE IF NOT EXISTS `inventario` (
 --
 
 DROP TABLE IF EXISTS `lista_precios`;
-CREATE TABLE IF NOT EXISTS `lista_precios` (
-  `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
-  `tipo_lista` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO DE LISTA DE PRECIO',
-  `prod_lista` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO LISTA',
-  `precio_lista` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO LISTA',
-  `sucursal_lista` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL LISTA',
+CREATE TABLE `lista_precios` (
+  `id_lista` int(11) NOT NULL COMMENT 'ID UNICO',
+  `tipo_lista` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO DE LISTA DE PRECIO',
+  `prod_lista` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO LISTA',
+  `precio_lista` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA',
+  `sucursal_lista` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL LISTA',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
   `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  `preciod_lista` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO DIVISAS LISTA',
-  `preciom_lista` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO MONEDA LOCAL LISTA',
-  `utilidad1_lista` decimal(5,2) NOT NULL DEFAULT 0.00 COMMENT 'UTILIDAD 1 LISTA',
-  `utilidad2_lista` decimal(5,2) NOT NULL DEFAULT 0.00 COMMENT 'UTILIDAD 2 LISTA',
-  PRIMARY KEY (`id_lista`),
-  UNIQUE KEY `lista` (`prod_lista`,`tipo_lista`),
-  KEY `tipo_lista` (`tipo_lista`),
-  KEY `prod_lista` (`prod_lista`),
-  KEY `sucursal_lista` (`sucursal_lista`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=811 DEFAULT CHARSET=latin1 COMMENT='GUARDA LISTAS DE PRECIOS';
+  `preciod_lista` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO DIVISAS LISTA',
+  `preciom_lista` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO MONEDA LOCAL LISTA',
+  `utilidad1_lista` decimal(5,2) NOT NULL DEFAULT '0.00' COMMENT 'UTILIDAD 1 LISTA',
+  `utilidad2_lista` decimal(5,2) NOT NULL DEFAULT '0.00' COMMENT 'UTILIDAD 2 LISTA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA LISTAS DE PRECIOS';
 
 --
 -- Volcado de datos para la tabla `lista_precios`
 --
 
 INSERT INTO `lista_precios` (`id_lista`, `tipo_lista`, `prod_lista`, `precio_lista`, `sucursal_lista`, `created_by`, `created_at`, `updated_by`, `updated_at`, `preciod_lista`, `preciom_lista`, `utilidad1_lista`, `utilidad2_lista`) VALUES
-(2, 1, 1, '69.98', 1, NULL, NULL, 2, 1602714401, '0.50', '0.00', '0.00', '0.00'),
+(2, 1, 1, '70.00', 1, NULL, NULL, NULL, NULL, '0.50', '0.00', '0.00', '0.00'),
 (3, 1, 2, '63.60', 1, NULL, NULL, NULL, NULL, '0.00', '0.00', '0.00', '0.00'),
 (4, 1, 3, '22.26', 1, NULL, NULL, NULL, NULL, '0.00', '0.00', '0.00', '0.00'),
 (5, 1, 4, '55.12', 1, NULL, NULL, NULL, NULL, '0.00', '0.00', '0.00', '0.00'),
@@ -6782,15 +6730,13 @@ INSERT INTO `lista_precios` (`id_lista`, `tipo_lista`, `prod_lista`, `precio_lis
 --
 
 DROP TABLE IF EXISTS `menu`;
-CREATE TABLE IF NOT EXISTS `menu` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `menu` (
+  `id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
   `parent` int(11) DEFAULT NULL,
   `route` varchar(255) DEFAULT NULL,
   `order` int(11) DEFAULT NULL,
-  `data` blob DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `parent` (`parent`)
+  `data` blob
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -6800,10 +6746,9 @@ CREATE TABLE IF NOT EXISTS `menu` (
 --
 
 DROP TABLE IF EXISTS `migration`;
-CREATE TABLE IF NOT EXISTS `migration` (
+CREATE TABLE `migration` (
   `version` varchar(180) NOT NULL,
-  `apply_time` int(11) DEFAULT NULL,
-  PRIMARY KEY (`version`)
+  `apply_time` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -6824,8 +6769,8 @@ INSERT INTO `migration` (`version`, `apply_time`) VALUES
 --
 
 DROP TABLE IF EXISTS `moneda`;
-CREATE TABLE IF NOT EXISTS `moneda` (
-  `id_moneda` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `moneda` (
+  `id_moneda` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_moneda` varchar(50) NOT NULL COMMENT 'DESCRIPCION MONEDA',
   `tipo_moneda` varchar(1) NOT NULL DEFAULT 'N' COMMENT 'TIPO MONEDA',
   `sunatm_moneda` varchar(10) DEFAULT NULL COMMENT 'ABREVIACION DE MONEDA SEGUN SUNAT',
@@ -6834,12 +6779,8 @@ CREATE TABLE IF NOT EXISTS `moneda` (
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_moneda`),
-  KEY `sucursal_moneda` (`sucursal_moneda`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT=' GUARDA DATOS DE MONEDAS';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT=' GUARDA DATOS DE MONEDAS';
 
 --
 -- Volcado de datos para la tabla `moneda`
@@ -6856,8 +6797,8 @@ INSERT INTO `moneda` (`id_moneda`, `des_moneda`, `tipo_moneda`, `sunatm_moneda`,
 --
 
 DROP TABLE IF EXISTS `motivo_ncredito`;
-CREATE TABLE IF NOT EXISTS `motivo_ncredito` (
-  `id_motivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `motivo_ncredito` (
+  `id_motivo` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_motivo` varchar(2) NOT NULL COMMENT 'CODIGO MOTIVO',
   `des_motivo` varchar(50) NOT NULL COMMENT 'DESCRIPCION MOTIVO',
   `status_motivo` int(11) NOT NULL COMMENT 'STATUS MOTIVO',
@@ -6865,11 +6806,8 @@ CREATE TABLE IF NOT EXISTS `motivo_ncredito` (
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_motivo`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='GUARDA LOS DATOS PARA LOS MOTIVOS DE NOTAS DE CREDITO';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA LOS DATOS PARA LOS MOTIVOS DE NOTAS DE CREDITO';
 
 --
 -- Volcado de datos para la tabla `motivo_ncredito`
@@ -6894,19 +6832,16 @@ INSERT INTO `motivo_ncredito` (`id_motivo`, `cod_motivo`, `des_motivo`, `status_
 --
 
 DROP TABLE IF EXISTS `motivo_traslado`;
-CREATE TABLE IF NOT EXISTS `motivo_traslado` (
-  `id_motivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `motivo_traslado` (
+  `id_motivo` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_motivo` varchar(100) NOT NULL COMMENT 'DESCRIPCION MOTIVO',
-  `status_motivo` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS MOTIVO',
-  `sucursal_motivo` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL MOTIVO',
+  `status_motivo` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS MOTIVO',
+  `sucursal_motivo` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL MOTIVO',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_motivo`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE MOTIVOS DE TRASLADO';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS DATOS DE MOTIVOS DE TRASLADO';
 
 --
 -- Volcado de datos para la tabla `motivo_traslado`
@@ -6931,72 +6866,38 @@ INSERT INTO `motivo_traslado` (`id_motivo`, `des_motivo`, `status_motivo`, `sucu
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `movimiento_producto`
--- (Véase abajo para la vista actual)
---
-DROP VIEW IF EXISTS `movimiento_producto`;
-CREATE TABLE IF NOT EXISTS `movimiento_producto` (
-`id_prod` int(11)
-,`cod_prod` varchar(25)
-,`des_prod` text
-,`fecha_trans` date
-,`docref_trans` varchar(150)
-,`codigo_trans` varchar(14)
-,`ope_trans` varchar(7)
-,`id_tipom` int(11)
-,`des_tipom` varchar(60)
-,`id_tipod` int(11)
-,`des_tipod` varchar(100)
-,`ingreso_unidades` char(11)
-,`moneda` varchar(50)
-,`precio_compra_ext` char(24)
-,`precio_compra_soles` char(20)
-,`ingreso_valorizados` char(38)
-,`salidas_unidades` char(11)
-,`tipo` varchar(2)
-,`sucursal_trans` int(11)
-);
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `numeracion`
 --
 
 DROP TABLE IF EXISTS `numeracion`;
-CREATE TABLE IF NOT EXISTS `numeracion` (
-  `id_num` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
-  `tipo_num` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO NUMERACION',
+CREATE TABLE `numeracion` (
+  `id_num` int(11) NOT NULL COMMENT 'ID UNICO',
+  `tipo_num` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO NUMERACION',
   `numero_num` varchar(10) NOT NULL DEFAULT '0000000000' COMMENT 'NUMERO NUMERACION',
-  `sucursal_num` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL NUMERACION',
+  `sucursal_num` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL NUMERACION',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
   `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
   `serie_num` varchar(2) NOT NULL COMMENT 'SERIE NUMERACION',
-  `status_num` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS NUMERACION',
-  PRIMARY KEY (`id_num`),
-  KEY `sucursal_num` (`sucursal_num`),
-  KEY `tipo_num` (`tipo_num`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='GUARDA NUMERACION DE DOCUMENTOS';
+  `status_num` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS NUMERACION'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA NUMERACION DE DOCUMENTOS';
 
 --
 -- Volcado de datos para la tabla `numeracion`
 --
 
 INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `created_by`, `created_at`, `updated_by`, `updated_at`, `serie_num`, `status_num`) VALUES
-(1, 1, '0000000180', 1, NULL, NULL, NULL, NULL, '00', 1),
-(2, 7, '0000000087', 1, NULL, NULL, NULL, NULL, '00', 1),
+(1, 1, '0000000191', 1, NULL, NULL, NULL, NULL, '00', 1),
+(2, 7, '0000000092', 1, NULL, NULL, NULL, NULL, '00', 1),
 (3, 8, '0000000001', 1, NULL, NULL, NULL, NULL, '00', 1),
-(4, 6, '0000000059', 1, NULL, NULL, NULL, NULL, '00', 1),
-(5, 4, '0000000076', 1, NULL, NULL, NULL, NULL, '00', 1),
-(6, 5, '0000000211', 1, NULL, NULL, 2, 1602781375, '00', 1),
-(7, 2, '0000000165', 1, NULL, NULL, 2, 1602781375, '01', 1),
+(4, 6, '0000000060', 1, NULL, NULL, NULL, NULL, '00', 1),
+(5, 4, '0000000077', 1, NULL, NULL, NULL, NULL, '00', 1),
+(6, 5, '0000000222', 1, NULL, NULL, NULL, NULL, '00', 1),
+(7, 2, '0000000173', 1, NULL, NULL, NULL, NULL, '01', 1),
 (8, 9, '0000000000', 1, NULL, NULL, NULL, NULL, '01', 1),
-(9, 3, '0000000263', 1, NULL, NULL, 2, 1602781359, '01', 1),
-(10, 10, '0000000002', 1, NULL, NULL, NULL, NULL, '1', 1);
+(9, 3, '0000000272', 1, NULL, NULL, NULL, NULL, '01', 1),
+(10, 10, '0000000001', 1, NULL, NULL, NULL, NULL, '1', 1);
 
 -- --------------------------------------------------------
 
@@ -7005,20 +6906,17 @@ INSERT INTO `numeracion` (`id_num`, `tipo_num`, `numero_num`, `sucursal_num`, `c
 --
 
 DROP TABLE IF EXISTS `pais`;
-CREATE TABLE IF NOT EXISTS `pais` (
-  `id_pais` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `pais` (
+  `id_pais` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_pais` varchar(3) NOT NULL COMMENT 'CODIGO PAIS',
   `des_pais` varchar(100) NOT NULL COMMENT 'DESCIPCION DE PAIS',
-  `status_pais` int(11) NOT NULL DEFAULT 1 COMMENT 'ESTATUS PAIS',
-  `sucursal_pais` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL PAIS',
+  `status_pais` int(11) NOT NULL DEFAULT '1' COMMENT 'ESTATUS PAIS',
+  `sucursal_pais` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL PAIS',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_pais`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=243 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PAISES';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PAISES';
 
 --
 -- Volcado de datos para la tabla `pais`
@@ -7274,8 +7172,8 @@ INSERT INTO `pais` (`id_pais`, `cod_pais`, `des_pais`, `status_pais`, `sucursal_
 --
 
 DROP TABLE IF EXISTS `pedido`;
-CREATE TABLE IF NOT EXISTS `pedido` (
-  `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `pedido` (
+  `id_pedido` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_pedido` varchar(10) NOT NULL COMMENT 'CODIGO PEDIDO',
   `fecha_pedido` date NOT NULL COMMENT 'FECHA PEDIDO',
   `clte_pedido` int(11) NOT NULL COMMENT 'CLIENTE PEDIDO',
@@ -7283,30 +7181,17 @@ CREATE TABLE IF NOT EXISTS `pedido` (
   `moneda_pedido` int(11) NOT NULL COMMENT 'MONEDA PEDIDO',
   `almacen_pedido` int(11) NOT NULL COMMENT 'ALMACEN PEDIDO',
   `usuario_pedido` int(11) NOT NULL COMMENT 'USUARIO PEDIDO',
-  `estatus_pedido` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS PEDIDO: STATUS_INACTIVO=0;GUIA_GENERADA = 1; DOCUMENTO_GENERADO = 2; PEDIDO_FINALIZADO = 3; PEDIDO_ANULADO = 4;',
-  `sucursal_pedido` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL PEDIDO',
+  `estatus_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS PEDIDO: STATUS_INACTIVO=0;GUIA_GENERADA = 1; DOCUMENTO_GENERADO = 2; PEDIDO_FINALIZADO = 3; PEDIDO_ANULADO = 4;',
+  `sucursal_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL PEDIDO',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
   `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  `condp_pedido` int(11) NOT NULL DEFAULT 0 COMMENT 'CONDICION PAGO PEDIDO',
+  `condp_pedido` int(11) NOT NULL DEFAULT '0' COMMENT 'CONDICION PAGO PEDIDO',
   `tipo_pedido` varchar(2) NOT NULL COMMENT 'TIPO DE PEDIDO NP = PEDIDO, PR = PROFORMA, CT = COTIZACION  ',
   `edicion_pedido` varchar(1) DEFAULT 'N' COMMENT 'EDICION PEDIDO',
-  `nrodoc_pedido` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO PEDIDO',
-  PRIMARY KEY (`id_pedido`,`cod_pedido`,`tipo_pedido`),
-  UNIQUE KEY `cod_pedido` (`cod_pedido`,`tipo_pedido`),
-  KEY `fecha_pedido` (`fecha_pedido`),
-  KEY `clte_pedido` (`clte_pedido`),
-  KEY `vend_pedido` (`vend_pedido`),
-  KEY `moneda_pedido` (`moneda_pedido`),
-  KEY `almacen_pedido` (`almacen_pedido`),
-  KEY `usuario_pedido` (`usuario_pedido`),
-  KEY `sucursal_pedido` (`sucursal_pedido`),
-  KEY `condp_pedido` (`condp_pedido`),
-  KEY `tipo_pedido` (`tipo_pedido`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=293 DEFAULT CHARSET=latin1 COMMENT='GUARDA PEDIDOS';
+  `nrodoc_pedido` varchar(25) DEFAULT NULL COMMENT 'NRO DOCUMENTO PEDIDO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA PEDIDOS';
 
 --
 -- Volcado de datos para la tabla `pedido`
@@ -7418,8 +7303,8 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (120, '0000000026', '2020-02-29', 489, 1, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (121, '0000000027', '2020-03-02', 761, 6, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 2, 'PR', 'N', ''),
 (122, '0000000078', '2020-03-02', 730, 3, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
-(123, '0000000028', '2020-03-03', 753, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 4, 'PR', 'N', ''),
-(124, '0000000029', '2020-03-03', 323, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 4, 'PR', 'N', '001020'),
+(123, '0000000028', '2020-03-03', 753, 2, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 4, 'PR', 'N', ''),
+(124, '0000000029', '2020-03-03', 323, 2, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 4, 'PR', 'N', '001020'),
 (125, '0000000079', '2020-03-04', 460, 2, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', ''),
 (126, '0000000080', '2020-03-04', 460, 2, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', ''),
 (127, '0000000081', '2020-03-04', 332, 2, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', ''),
@@ -7452,7 +7337,7 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (154, '0000000101', '2020-06-13', 52, 2, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 4, 'NP', 'N', ''),
 (155, '0000000102', '2020-06-13', 589, 3, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', ''),
 (156, '0000000103', '2020-06-13', 231, 3, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
-(157, '0000000038', '2020-06-15', 780, 4, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
+(157, '0000000038', '2020-06-15', 780, 4, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (158, '0000000039', '2020-06-16', 781, 4, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (159, '0000000104', '2020-06-19', 462, 1, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', ''),
 (160, '0000000105', '2020-06-20', 48, 2, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', ''),
@@ -7485,7 +7370,7 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (187, '0000000129', '2020-07-08', 229, 3, 1, 1, 2, 4, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
 (188, '0000000043', '2020-07-08', 123, 2, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (189, '0000000130', '2020-07-08', 768, 3, 1, 1, 2, 4, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
-(190, '0000000044', '2020-07-09', 751, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
+(190, '0000000044', '2020-07-09', 751, 2, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (191, '0000000045', '2020-07-09', 116, 2, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (192, '0000000046', '2020-07-13', 751, 2, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (193, '0000000047', '2020-07-13', 321, 2, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 4, 'PR', 'N', ''),
@@ -7506,8 +7391,8 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (208, '0000000057', '2020-07-28', 147, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (209, '0000000058', '2020-07-28', 751, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (210, '0000000136', '2020-07-28', 471, 1, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
-(211, '0000000137', '2020-08-03', 760, 6, 1, 1, 2, 2, 1, NULL, NULL, 2, 1602623333, 2, 'NP', 'N', ''),
-(212, '0000000138', '2020-08-03', 760, 6, 1, 1, 2, 2, 1, NULL, NULL, 2, 1602623470, 2, 'NP', 'N', ''),
+(211, '0000000137', '2020-08-03', 760, 6, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 2, 'NP', 'N', ''),
+(212, '0000000138', '2020-08-03', 760, 6, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 2, 'NP', 'N', ''),
 (213, '0000000059', '2020-08-05', 321, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (214, '0000000139', '2020-08-07', 694, 3, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
 (215, '0000000140', '2020-08-07', 755, 6, 1, 1, 2, 4, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', ''),
@@ -7516,7 +7401,7 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (218, '0000000060', '2020-08-10', 46, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 3, 'PR', 'N', ''),
 (219, '0000000061', '2020-08-10', 784, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (220, '0000000062', '2020-08-10', 751, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
-(221, '0000000143', '2020-08-10', 240, 2, 1, 1, 2, 2, 1, NULL, NULL, 2, 1602691305, 3, 'NP', 'N', ''),
+(221, '0000000143', '2020-08-10', 240, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', ''),
 (222, '0000000144', '2020-08-10', 330, 2, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
 (223, '0000000145', '2020-08-12', 335, 1, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', ''),
 (224, '0000000063', '2020-08-17', 751, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
@@ -7528,7 +7413,7 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (230, '0000000150', '2020-08-22', 76, 3, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 4, 'NP', 'N', ''),
 (231, '0000000065', '2020-08-24', 754, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (232, '0000000151', '2020-08-27', 694, 3, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
-(233, '0000000066', '2020-08-28', 98, 1, 1, 1, 2, 1, 1, NULL, NULL, 2, 1602781100, 1, 'PR', 'N', ''),
+(233, '0000000066', '2020-08-28', 98, 1, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (234, '0000000152', '2020-08-29', 387, 1, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
 (235, '0000000153', '2020-08-29', 387, 1, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
 (236, '0000000154', '2020-09-02', 234, 3, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
@@ -7537,7 +7422,7 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (239, '0000000156', '2020-09-03', 235, 3, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', ''),
 (240, '0000000157', '2020-09-03', 71, 2, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 4, 'NP', 'N', ''),
 (241, '0000000158', '2020-09-04', 721, 3, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', 'FE01'),
-(242, '0000000068', '2020-09-04', 786, 1, 1, 1, 2, 1, 1, NULL, NULL, 2, 1602781096, 1, 'PR', 'N', ''),
+(242, '0000000068', '2020-09-04', 786, 1, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (243, '0000000159', '2020-09-07', 332, 2, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', 'FE01'),
 (244, '0000000069', '2020-09-07', 751, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (245, '0000000070', '2020-09-07', 158, 1, 1, 1, 2, 4, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
@@ -7556,7 +7441,7 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (261, '0000000170', '2020-09-14', 788, 1, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', 'FE01'),
 (262, '0000000171', '2020-09-16', 788, 1, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
 (263, '0000000172', '2020-09-17', 703, 3, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', 'FE01'),
-(264, '0000000075', '2020-09-17', 420, 4, 1, 1, 2, 1, 1, NULL, NULL, 2, 1602780964, 1, 'PR', 'N', ''),
+(264, '0000000075', '2020-09-17', 420, 4, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (265, '0000000076', '2020-09-17', 751, 2, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (266, '0000000077', '2020-09-18', 420, 4, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (267, '0000000078', '2020-09-19', 420, 4, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
@@ -7569,11 +7454,27 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 (275, '0000000082', '2020-09-25', 751, 2, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (276, '0000000083', '2020-09-25', 753, 2, 1, 1, 2, 3, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
 (277, '0000000084', '2020-09-30', 754, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
-(287, '0000000177', '2020-09-30', 694, 3, 1, 1, 2, 2, 1, NULL, NULL, 2, 1602781375, 1, 'NP', 'N', ''),
-(288, '0000000086', '2020-10-02', 147, 2, 1, 1, 2, 1, 1, NULL, NULL, 2, 1602780865, 1, 'PR', 'N', ''),
-(289, '0000000178', '2020-10-02', 791, 3, 1, 1, 2, 2, 1, NULL, NULL, 2, 1602781208, 1, 'NP', 'N', 'FE01'),
-(291, '0000000179', '2020-10-03', 793, 3, 1, 1, 2, 2, 1, NULL, NULL, 2, 1602781127, 1, 'NP', 'N', ''),
-(292, '0000000180', '2020-10-03', 789, 1, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', '');
+(287, '0000000177', '2020-09-30', 694, 3, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
+(288, '0000000086', '2020-10-02', 147, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
+(289, '0000000178', '2020-10-02', 791, 3, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', 'FE01'),
+(291, '0000000179', '2020-10-03', 793, 3, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
+(292, '0000000180', '2020-10-03', 789, 1, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
+(293, '0000000181', '2020-10-05', 779, 6, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', 'FE01'),
+(294, '0000000088', '2020-10-07', 786, 1, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
+(295, '0000000182', '2020-10-08', 234, 3, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', 'FE01'),
+(296, '0000000089', '2020-10-08', 751, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
+(297, '0000000090', '2020-10-09', 15, 2, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 3, 'PR', 'N', ''),
+(298, '0000000183', '2020-10-09', 794, 1, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
+(299, '0000000184', '2020-10-10', 330, 2, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', 'FE01'),
+(300, '0000000185', '2020-10-10', 332, 2, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', 'FE01'),
+(301, '0000000186', '2020-10-10', 89, 2, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', 'FE01'),
+(302, '0000000187', '2020-10-12', 459, 2, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 3, 'NP', 'N', 'FE01'),
+(303, '0000000188', '2020-10-13', 462, 1, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', ''),
+(304, '0000000189', '2020-10-13', 330, 2, 1, 1, 2, 4, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', 'FE01'),
+(305, '0000000190', '2020-10-14', 766, 6, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', 'FE01'),
+(306, '0000000091', '2020-10-14', 420, 4, 1, 1, 2, 0, 1, NULL, NULL, NULL, NULL, 1, 'PR', 'N', ''),
+(307, '0000000191', '2020-10-15', 330, 2, 1, 1, 2, 2, 1, NULL, NULL, NULL, NULL, 1, 'NP', 'N', 'FE01'),
+(308, '0000000092', '2020-10-16', 420, 4, 1, 1, 2, 0, 1, NULL, NULL, 2, 1602940837, 1, 'PR', 'N', '');
 
 -- --------------------------------------------------------
 
@@ -7582,21 +7483,18 @@ INSERT INTO `pedido` (`id_pedido`, `cod_pedido`, `fecha_pedido`, `clte_pedido`, 
 --
 
 DROP TABLE IF EXISTS `pedido_detalle`;
-CREATE TABLE IF NOT EXISTS `pedido_detalle` (
-  `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `pedido_detalle` (
+  `id_pdetalle` int(11) NOT NULL COMMENT 'ID UNICO',
   `prod_pdetalle` int(11) NOT NULL COMMENT 'PRODUCTO PEDIDO DETALLE',
-  `cant_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'CANTIDAD PEDIDO DETALLE',
-  `precio_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO PEDIDO DETALLE',
-  `descu_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'DESCUENTO % PEDIDO DETALLE',
-  `impuesto_pdetalle` decimal(18,0) NOT NULL DEFAULT 0 COMMENT 'IMPUESTO PEDIDO DETALLE',
-  `status_pdetalle` int(11) NOT NULL DEFAULT 1 COMMENT 'ESTATUS PEDIDO DETALLE',
-  `pedido_pdetalle` int(11) NOT NULL DEFAULT 0,
-  `plista_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'PRECIO LISTA PEDIDO DETALLE',
-  `total_pdetalle` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'TOTAL PEDIDO DETALLE',
-  PRIMARY KEY (`id_pdetalle`),
-  KEY `prod_pdetalle` (`prod_pdetalle`),
-  KEY `pedido_pdetalle` (`pedido_pdetalle`)
-) ENGINE=InnoDB AUTO_INCREMENT=3352 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE PEDIDOS';
+  `cant_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'CANTIDAD PEDIDO DETALLE',
+  `precio_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO PEDIDO DETALLE',
+  `descu_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'DESCUENTO % PEDIDO DETALLE',
+  `impuesto_pdetalle` decimal(18,0) NOT NULL DEFAULT '0' COMMENT 'IMPUESTO PEDIDO DETALLE',
+  `status_pdetalle` int(11) NOT NULL DEFAULT '1' COMMENT 'ESTATUS PEDIDO DETALLE',
+  `pedido_pdetalle` int(11) NOT NULL DEFAULT '0',
+  `plista_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'PRECIO LISTA PEDIDO DETALLE',
+  `total_pdetalle` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT 'TOTAL PEDIDO DETALLE'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE PEDIDOS';
 
 --
 -- Volcado de datos para la tabla `pedido_detalle`
@@ -9239,7 +9137,6 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 (1800, 172, '2.00', '38.16', '10.00', '18', 1, 149, '42.40', '76.32'),
 (1801, 163, '1.00', '114.48', '10.00', '18', 1, 149, '127.20', '114.48'),
 (1802, 162, '1.00', '71.55', '10.00', '18', 1, 149, '79.50', '71.55'),
-(1803, 1184, '4.00', '103.03', '10.00', '18', 1, 149, '114.48', '412.13'),
 (1804, 1188, '1.00', '181.26', '10.00', '18', 1, 149, '201.40', '181.26'),
 (1805, 170, '1.00', '131.65', '10.00', '18', 1, 149, '146.28', '131.65'),
 (1806, 128, '1.00', '113.05', '10.00', '18', 1, 149, '125.61', '113.05'),
@@ -9811,9 +9708,9 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 (2391, 42, '1.00', '27.67', '10.00', '18', 1, 190, '30.74', '27.67'),
 (2392, 1028, '4.00', '38.16', '10.00', '18', 1, 191, '42.40', '152.64'),
 (2393, 56, '2.00', '38.16', '10.00', '18', 1, 191, '42.40', '76.32'),
-(2396, 621, '4.00', '4.01', '5.50', '18', 1, 186, '4.24', '16.03');
+(2396, 621, '4.00', '4.01', '5.50', '18', 1, 186, '4.24', '16.03'),
+(2397, 18, '3.00', '75.52', '10.50', '18', 1, 192, '84.38', '226.56');
 INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `precio_pdetalle`, `descu_pdetalle`, `impuesto_pdetalle`, `status_pdetalle`, `pedido_pdetalle`, `plista_pdetalle`, `total_pdetalle`) VALUES
-(2397, 18, '3.00', '75.52', '10.50', '18', 1, 192, '84.38', '226.56'),
 (2398, 127, '3.00', '80.64', '10.50', '18', 1, 192, '90.10', '241.92'),
 (2399, 129, '3.00', '80.64', '10.50', '18', 1, 192, '90.10', '241.92'),
 (2400, 122, '2.00', '80.64', '10.50', '18', 1, 192, '90.10', '161.28'),
@@ -10533,9 +10430,9 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 (3276, 1188, '1.00', '203.30', '0.00', '18', 1, 268, '201.40', '203.30'),
 (3277, 476, '1.00', '32.10', '0.00', '18', 1, 277, '33.39', '32.10'),
 (3278, 474, '1.00', '32.10', '0.00', '18', 1, 277, '33.39', '32.10'),
-(3279, 458, '1.00', '30.57', '0.00', '18', 1, 277, '31.80', '30.57');
+(3279, 458, '1.00', '30.57', '0.00', '18', 1, 277, '31.80', '30.57'),
+(3280, 743, '1.00', '32.60', '0.00', '18', 1, 277, '33.92', '32.60');
 INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `precio_pdetalle`, `descu_pdetalle`, `impuesto_pdetalle`, `status_pdetalle`, `pedido_pdetalle`, `plista_pdetalle`, `total_pdetalle`) VALUES
-(3280, 743, '1.00', '32.60', '0.00', '18', 1, 277, '33.92', '32.60'),
 (3281, 742, '1.00', '32.60', '0.00', '18', 1, 277, '33.92', '32.60'),
 (3282, 536, '2.00', '28.50', '0.00', '18', 1, 277, '29.68', '57.00'),
 (3283, 773, '5.00', '7.06', '0.00', '18', 1, 277, '7.42', '37.10'),
@@ -10560,11 +10457,9 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 (3309, 1199, '2.00', '93.50', '0.00', '18', 1, 288, '97.52', '187.00'),
 (3310, 1186, '2.00', '99.60', '0.00', '18', 1, 288, '103.88', '199.20'),
 (3311, 56, '20.00', '42.80', '0.00', '18', 1, 289, '42.40', '856.00'),
-(3324, 22, '1.00', '34.24', '0.00', '18', 1, 291, '33.92', '34.24'),
+(3324, 22, '1.00', '34.25', '0.00', '18', 1, 291, '33.92', '34.25'),
 (3325, 56, '1.00', '42.80', '0.00', '18', 1, 291, '42.40', '42.80'),
 (3326, 1193, '1.00', '144.45', '0.00', '18', 1, 291, '143.10', '144.45'),
-(3327, 103, '2.00', '26.75', '0.00', '18', 1, 291, '26.50', '53.50'),
-(3328, 104, '2.00', '26.75', '0.00', '18', 1, 291, '26.50', '53.50'),
 (3329, 1199, '1.00', '98.44', '0.00', '18', 1, 291, '97.52', '98.44'),
 (3330, 1209, '1.00', '98.44', '0.00', '18', 1, 291, '97.52', '98.44'),
 (3331, 133, '1.00', '96.30', '0.00', '18', 1, 291, '95.40', '96.30'),
@@ -10581,10 +10476,75 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 (3345, 503, '3.00', '16.59', '0.00', '18', 1, 292, '16.43', '49.77'),
 (3346, 88, '1.00', '106.42', '0.00', '18', 1, 291, '105.47', '106.42'),
 (3347, 117, '1.00', '74.90', '0.00', '18', 1, 291, '74.20', '74.90'),
-(3348, 1028, '3.00', '42.80', '0.00', '18', 1, 291, '42.40', '128.40'),
-(3349, 140, '1.00', '47.08', '0.00', '18', 1, 291, '44.00', '47.08'),
-(3350, 1207, '1.00', '96.30', '0.00', '18', 1, 291, '95.40', '96.30'),
-(3351, 1221, '3.00', '34.24', '0.00', '18', 1, 291, '32.00', '102.72');
+(3348, 1028, '2.00', '42.80', '0.00', '18', 1, 291, '42.40', '85.60'),
+(3349, 140, '2.00', '47.08', '0.00', '18', 1, 291, '44.00', '94.16'),
+(3350, 1207, '1.00', '96.37', '0.00', '18', 1, 291, '95.40', '96.37'),
+(3351, 1221, '6.00', '34.39', '0.00', '18', 1, 291, '32.00', '206.34'),
+(3352, 443, '20.00', '6.42', '0.00', '18', 1, 293, '6.36', '128.40'),
+(3354, 636, '1.00', '13.20', '0.00', '18', 1, 294, '13.78', '13.20'),
+(3356, 638, '1.00', '13.20', '0.00', '18', 1, 294, '13.78', '13.20'),
+(3357, 1217, '2.00', '64.20', '0.00', '18', 1, 295, '63.60', '128.40'),
+(3358, 9, '1.00', '149.80', '0.00', '18', 1, 295, '148.40', '149.80'),
+(3359, 1181, '2.00', '90.95', '0.00', '18', 1, 295, '90.10', '181.90'),
+(3360, 44, '2.00', '126.80', '0.00', '18', 1, 295, '125.61', '253.60'),
+(3361, 48, '2.00', '80.25', '0.00', '18', 1, 295, '79.50', '160.50'),
+(3362, 49, '2.00', '96.30', '0.00', '18', 1, 295, '95.40', '192.60'),
+(3363, 69, '2.00', '139.10', '0.00', '18', 1, 295, '137.80', '278.20'),
+(3364, 80, '2.00', '84.80', '0.00', '18', 1, 295, '84.80', '169.60'),
+(3365, 1200, '1.00', '98.44', '0.00', '18', 1, 295, '97.52', '98.44'),
+(3366, 127, '2.00', '90.95', '0.00', '18', 1, 295, '90.10', '181.90'),
+(3367, 147, '1.00', '99.51', '0.00', '18', 1, 295, '98.58', '99.51'),
+(3368, 1205, '3.00', '90.95', '0.00', '18', 1, 295, '90.10', '272.85'),
+(3369, 149, '1.00', '112.35', '0.00', '18', 1, 295, '111.30', '112.35'),
+(3370, 150, '1.00', '120.91', '0.00', '18', 1, 295, '119.78', '120.91'),
+(3371, 169, '2.00', '117.17', '0.00', '18', 1, 295, '116.07', '234.34'),
+(3372, 22, '1.00', '32.52', '0.00', '18', 1, 296, '33.92', '32.52'),
+(3373, 27, '1.00', '43.70', '0.00', '18', 1, 296, '45.58', '43.70'),
+(3375, 1193, '1.00', '137.22', '0.00', '18', 1, 296, '143.10', '137.22'),
+(3376, 1191, '1.00', '109.78', '0.00', '18', 1, 296, '114.48', '109.78'),
+(3377, 111, '3.00', '111.81', '0.00', '18', 1, 296, '116.60', '335.43'),
+(3379, 127, '2.00', '86.40', '0.00', '18', 1, 296, '90.10', '172.80'),
+(3382, 1210, '2.00', '81.52', '0.00', '18', 1, 296, '84.80', '163.04'),
+(3383, 93, '2.00', '81.52', '0.00', '18', 1, 297, '84.80', '163.04'),
+(3384, 1191, '1.00', '111.00', '0.00', '18', 1, 297, '114.48', '111.00'),
+(3385, 633, '10.00', '4.07', '0.00', '18', 1, 298, '4.24', '40.70'),
+(3386, 634, '10.00', '4.07', '0.00', '18', 1, 298, '4.24', '40.70'),
+(3387, 151, '2.00', '13.24', '0.00', '18', 1, 297, '13.78', '26.48'),
+(3388, 152, '2.00', '13.24', '0.00', '18', 1, 297, '13.78', '26.48'),
+(3389, 1203, '1.00', '101.94', '0.00', '18', 1, 297, '106.00', '101.94'),
+(3390, 1181, '6.00', '90.95', '0.00', '18', 1, 299, '90.10', '545.70'),
+(3391, 147, '5.00', '99.50', '0.00', '18', 1, 300, '98.58', '497.50'),
+(3392, 150, '3.00', '120.90', '0.00', '18', 1, 300, '119.78', '362.70'),
+(3393, 149, '3.00', '112.40', '0.00', '18', 1, 300, '111.30', '337.20'),
+(3394, 1205, '10.00', '91.00', '0.00', '18', 1, 300, '90.10', '910.00'),
+(3395, 646, '2.00', '23.54', '0.00', '18', 1, 301, '23.32', '47.08'),
+(3396, 647, '2.00', '23.54', '0.00', '18', 1, 301, '23.32', '47.08'),
+(3397, 980, '2.00', '53.50', '0.00', '18', 1, 301, '53.00', '107.00'),
+(3398, 981, '2.00', '53.50', '0.00', '18', 1, 301, '53.00', '107.00'),
+(3399, 982, '2.00', '64.20', '0.00', '18', 1, 301, '63.60', '128.40'),
+(3400, 983, '2.00', '64.20', '0.00', '18', 1, 301, '63.60', '128.40'),
+(3401, 1205, '1.00', '90.95', '0.00', '18', 1, 302, '0.00', '90.95'),
+(3402, 1182, '1.00', '80.25', '0.00', '18', 1, 302, '0.00', '80.25'),
+(3403, 1205, '2.00', '90.95', '0.00', '18', 1, 303, '90.10', '181.90'),
+(3404, 58, '4.00', '102.70', '0.00', '18', 1, 304, '101.76', '410.80'),
+(3405, 727, '5.00', '6.42', '0.00', '18', 1, 305, '6.36', '32.10'),
+(3406, 728, '5.00', '6.42', '0.00', '18', 1, 305, '6.36', '32.10'),
+(3407, 739, '2.00', '16.05', '0.00', '18', 1, 305, '15.90', '32.10'),
+(3408, 740, '2.00', '16.05', '0.00', '18', 1, 305, '15.90', '32.10'),
+(3409, 805, '1.00', '12.84', '0.00', '18', 1, 305, '12.72', '12.84'),
+(3410, 804, '1.00', '12.84', '0.00', '18', 1, 305, '12.72', '12.84'),
+(3411, 865, '2.00', '23.54', '0.00', '18', 1, 305, '23.32', '47.08'),
+(3412, 916, '6.00', '5.89', '0.00', '18', 1, 305, '5.83', '35.34'),
+(3413, 952, '4.00', '18.19', '0.00', '18', 1, 305, '18.02', '72.76'),
+(3414, 682, '5.00', '5.35', '0.00', '18', 1, 305, '5.30', '26.75'),
+(3415, 683, '5.00', '5.35', '0.00', '18', 1, 305, '5.30', '26.75'),
+(3416, 166, '1.00', '45.74', '0.00', '18', 1, 306, '22.50', '45.74'),
+(3417, 58, '4.00', '102.70', '0.00', '18', 1, 307, '101.76', '410.80'),
+(3418, 944, '2.00', '14.98', '0.00', '18', 1, 305, '14.84', '29.96'),
+(3419, 945, '2.00', '14.98', '0.00', '18', 1, 305, '14.84', '29.96'),
+(3420, 680, '5.00', '3.21', '0.00', '18', 1, 305, '3.18', '16.05'),
+(3421, 681, '5.00', '3.21', '0.00', '18', 1, 305, '3.18', '16.05'),
+(3422, 524, '1.00', '42.40', '0.00', '18', 1, 308, '42.40', '42.40');
 
 -- --------------------------------------------------------
 
@@ -10593,10 +10553,9 @@ INSERT INTO `pedido_detalle` (`id_pdetalle`, `prod_pdetalle`, `cant_pdetalle`, `
 --
 
 DROP TABLE IF EXISTS `precios`;
-CREATE TABLE IF NOT EXISTS `precios` (
+CREATE TABLE `precios` (
   `codigo` varchar(20) NOT NULL,
-  `precio` decimal(18,2) DEFAULT NULL,
-  PRIMARY KEY (`codigo`)
+  `precio` decimal(18,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -11382,8 +11341,8 @@ INSERT INTO `precios` (`codigo`, `precio`) VALUES
 --
 
 DROP TABLE IF EXISTS `producto`;
-CREATE TABLE IF NOT EXISTS `producto` (
-  `id_prod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `producto` (
+  `id_prod` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_prod` varchar(25) NOT NULL COMMENT 'CODIGO PRODUCTO',
   `codfab_prod` varchar(45) DEFAULT NULL,
   `des_prod` text NOT NULL COMMENT 'DESCRIPCION PRODUCTO',
@@ -11391,26 +11350,19 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `umed_prod` int(11) NOT NULL COMMENT 'UNIDAD DE MEDIDA PRODUCTO',
   `contenido_prod` int(11) NOT NULL COMMENT 'CONTENIDO PRODUCTO',
   `exctoigv_prod` int(11) NOT NULL COMMENT 'EXCENTO IGV (IVA) PRODUCTO',
-  `compra_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO PARA COMPRA',
-  `venta_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO PARA VENTA',
-  `stockini_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'STOCK INICIAL PRODUCTO',
-  `stockmax_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'STOCK MAXIMO PRODUCTO',
-  `stockmin_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'STOCK MINIMO PRODUCTO',
-  `stock_prod` int(11) NOT NULL DEFAULT 0 COMMENT 'STOCK PRODUCTO',
+  `compra_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO PARA COMPRA',
+  `venta_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO PARA VENTA',
+  `stockini_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'STOCK INICIAL PRODUCTO',
+  `stockmax_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'STOCK MAXIMO PRODUCTO',
+  `stockmin_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'STOCK MINIMO PRODUCTO',
+  `stock_prod` int(11) NOT NULL DEFAULT '0' COMMENT 'STOCK PRODUCTO',
   `status_prod` int(11) NOT NULL COMMENT 'ESTATUS PRODUCTO',
   `sucursal_prod` int(11) NOT NULL COMMENT 'SUCURSAL PRODUCTO',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_prod`),
-  UNIQUE KEY `cod_prod` (`cod_prod`),
-  KEY `tipo_prod` (`tipo_prod`),
-  KEY `sucursal_prod` (`sucursal_prod`),
-  KEY `umed_prod` (`umed_prod`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=1222 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS PRODUCTOS';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS PRODUCTOS';
 
 --
 -- Volcado de datos para la tabla `producto`
@@ -11425,7 +11377,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (6, 'LP-CF2', 'CM-CH02', 'FARO NEBLINERO MINIVAN CHANGHE FREEDOM(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
 (7, 'LP-A12', 'CM-A102', 'FARO NEBLINERO CHERRY A1 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
 (8, 'LP-AV2C', 'CM07-AV4', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
-(9, 'LP-AV2', 'CM-9416', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)NEGRO         ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
+(9, 'LP-AV2', 'CM-9416', 'FARO NEBLI.CHEV. AVEO 2005-2007(SETX2)NEGRO         ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, NULL, NULL),
 (10, 'LP-N32', 'CM-N3004  ', 'FARO NEBLI.CHEV. N300 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (11, 'LP-N22L', 'CM-N2004L', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
 (12, 'LP-N22R', 'CM-N2004R', 'FARO NEBLI.CHEV. N200 ( HONGTU 2010)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
@@ -11433,18 +11385,18 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (14, 'LP-SP2', 'CM5-SPK04', 'FARO NEBLI.CHEV. SPARK 2005 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (15, 'LP-SP2A', 'CM5-SPK8', 'FARO NEBLI.CHEV. SPARK 2005 POST RED', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (16, 'LP-SP2B', 'CM5-SPK5', 'FARO NEBLI.CHEV. SPARK 2005 POST.BLANCO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(17, 'LP-SP4', 'CM9-SPK02', 'FARO NEBLI.CHEV. SPARK 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
-(18, 'LP-OP2', 'CM-9342', 'FARO NEBLI.CHEV. OPTRA 2003-2008(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
+(17, 'LP-SP4', 'CM9-SPK02', 'FARO NEBLI.CHEV. SPARK 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
+(18, 'LP-OP2', 'CM-9342', 'FARO NEBLI.CHEV. OPTRA 2003-2008(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
 (19, 'LP-ES2L', 'CM92-DE4L', 'FARO NEBLI.DAEWOO ESPERO 92....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (20, 'LP-ES2R', 'CM92-DE4R', 'FARO NEBLI.DAEWOO ESPERO 92....', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (21, 'LP-ES4', 'CM96-DE4A', 'FARO NEBLI.DAEWOO ESPERO 96(SET)  ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(22, 'LP-CI2', 'CM94-DC4A', 'FARO NEBLI.DAEWOO CIELO NEGRO 94-96 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, 2, 1602781127),
+(22, 'LP-CI2', 'CM94-DC4A', 'FARO NEBLI.DAEWOO CIELO NEGRO 94-96 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL),
 (23, 'LP-CI2CL', 'CM94-DC4L', 'FARO NEBLI.DAEWOO CIELO CRISTAL 94-96', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (24, 'LP-CI2CR', 'CM94-DC4R', 'FARO NEBLI.DAEWOO CIELO CRISTAL 94-96', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (25, 'LP-LA2', 'CM-LN04', 'FARO NEBLI.DAEWOO LANOS (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (26, 'LP-LA2C', 'CM-LN04C', 'FARO NEBLI.DAEWOO LANOS CRYSTAL(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, -3, 1, 1, NULL, NULL, NULL, NULL),
 (27, 'LP-NB2', 'CM97-DN04', 'FARO NEBLI.DAEWOO NUBIRA 1997 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
-(28, 'LP-NB4', 'CM00-DN2', 'FARO NEBLI.DAEWOO NUBIRA 2000 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
+(28, 'LP-NB4', 'CM00-DN2', 'FARO NEBLI.DAEWOO NUBIRA 2000 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
 (29, 'LP-XI2', 'CM15-DX02', 'FARO NEBLI.DONGFENG XIAOKANG(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
 (30, 'LP-C372', 'CM37-DF02', 'FARO NEBLI.DONGFEND C37 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (31, 'LP-RA4', 'CM-9296', 'FARO NEBLI.FORD RANGER 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1, NULL, NULL, NULL, NULL),
@@ -11458,23 +11410,23 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (39, 'LP-FJ2', 'CM5-WIN2', 'FARO NEBLI.GREATWALL FENG JUN 5(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
 (40, 'LP-GH2', 'CM5-GH02', 'FARO NEBLI.GREATWALL HOVER(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
 (41, 'LP-ST4', 'CM05-SX2', 'FARO NEBLI.PARACH. HY.STAREX 2005(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
-(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
+(42, 'LP-AC2', 'CM98-AC4A', 'FARO NEBLI.PARACH. HY ACCENT AMBAR 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL),
 (43, 'LP-AC2B', 'CM98-AC4', 'FARO NEBLI.PARACH. HY ACCENT BLANCO 1998-1999 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL),
-(44, 'LP-AC4', 'CM-9172', 'FARO NEBLI.PARACH. HY ACCENT 2006...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 42, 1, 1, NULL, NULL, NULL, NULL),
-(45, 'LP-AC4B', 'CM10-AC04', 'FARO NEBLI.PARACH. HY ACCENT 2011-2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL),
+(44, 'LP-AC4', 'CM-9172', 'FARO NEBLI.PARACH. HY ACCENT 2006...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1, NULL, NULL, NULL, NULL),
+(45, 'LP-AC4B', 'CM10-AC04', 'FARO NEBLI.PARACH. HY ACCENT 2011-2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, -1, 1, 1, NULL, NULL, NULL, NULL),
 (46, 'LP-EL2', 'CM-9071', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1, NULL, NULL, NULL, NULL),
 (47, 'LP-EL2C', 'CM07-EL02', 'FARO NEBLI.PARACH. HY ELANTRA 2007(SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1, NULL, NULL, NULL, NULL),
-(48, 'LP-EL4', 'CM11-EL5  ', 'FARO NEBLI.PARACH. HY ELANTRA 2011(SETX2)CHINO ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
-(49, 'LP-EL4B', 'CM13-EL4', 'FARO NEBLI.PARACH. HY ELANTRA 2013-2014 (SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
+(48, 'LP-EL4', 'CM11-EL5  ', 'FARO NEBLI.PARACH. HY ELANTRA 2011(SETX2)CHINO ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
+(49, 'LP-EL4B', 'CM13-EL4', 'FARO NEBLI.PARACH. HY ELANTRA 2013-2014 (SETX2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
 (50, 'LP-I104L', 'CM12-I104L', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 2, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1, NULL, NULL, NULL, NULL),
 (51, 'LP-I104R', 'CM12-I104R', 'FARO NEBLI.PARACH. HY I10 2012 CHINO', 1, 2, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1, NULL, NULL, NULL, NULL),
 (52, 'LP-I104A', 'CM14-I102', 'FARO NEBLI.PARACH. HY I10 2014 (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(53, 'LP-I104B', 'CM14-I102A', 'FARO NEBLI.PARACH. HY I10 2014FULL (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL),
+(53, 'LP-I104B', 'CM14-I102A', 'FARO NEBLI.PARACH. HY I10 2014FULL (SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (54, 'LP-H12', 'CMH1-002', 'FARO NEBLI.PARACH. HY H1(SET2)    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (55, 'LP-HD2', 'CM65-HD04', 'FARO NEBLI.PARACH. HY.HD 65 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
-(56, 'LP-HD4', 'CM75-HD05', 'FARO NEBLI.PARACH. HY.HD 75 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, 2, 1602781209),
+(56, 'LP-HD4', 'CM75-HD05', 'FARO NEBLI.PARACH. HY.HD 75 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (57, 'LP-H1004', 'CM96-HP4', 'FARO NEBLI.PARACH. H100 PANEL VAN GRACE (SET2) 96', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
-(58, 'LP-PO4', 'CM13-PRT2', 'FARO NEBLI.PARACH. HY PORTER II 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
+(58, 'LP-PO4', 'CM13-PRT2', 'FARO NEBLI.PARACH. HY PORTER II 2013(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (59, 'LP-SF2', 'CM09-SF2', 'FARO NEBLI.PARACH. HY SANTA FE 2009 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (60, 'LP-MA2', 'CM07-MX2', 'FARO NEBLI.PARACH. HY MATRIX 2005(SET X 2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (61, 'LP-SO2L', 'CM03-SON4L', 'FARO NEBLI.PARACH.HY SONATA 2003', 1, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
@@ -11485,7 +11437,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (66, 'LP-JR2', 'CM-JRF02', 'FARO NEBLI.JAC REFINE(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 41, 1, 1, NULL, NULL, NULL, NULL),
 (67, 'LP-JS4', 'CM13-JS02', 'FARO NEBLI.JAC STAR SEDAN 2013 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (68, 'LP-JM2', 'CM02-JB06', 'FARO NEBLI.JINBEI 2002 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
-(69, 'LP-K27004', 'CM12-BN02', 'FARO NEBLI.KIA K2700 2012-2013(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
+(69, 'LP-K27004', 'CM12-BN02', 'FARO NEBLI.KIA K2700 2012-2013(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
 (71, 'LP-CE4', 'CM13-KC2', 'FARO NEBLI.KIA CERATO  2013 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (72, 'LP-CE4B', 'CM17-CR2', 'FARO NEBLI.KIA CERATO 2018(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
 (73, 'LP-PI2C', 'CM08-PI02', 'FARO NEBLI.KIA PICANTO 2008(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
@@ -11495,15 +11447,15 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (77, 'LP-PI4D', 'CM16-PI2A', 'FARO NEBLI.KIA PICANTO 2016  (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (78, 'LP-PI4B', 'CM16-PI02', 'FARO NEBLI.KIA PICANTO 2016 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (79, 'LP-RI2', 'CM10-KR02', 'FARO NEBLI.KIA RIO 2010 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(80, 'LP-RI4', 'CM11-KR02', 'FARO NEBLI.KIA RIO SEDAN 2011(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
+(80, 'LP-RI4', 'CM11-KR02', 'FARO NEBLI.KIA RIO SEDAN 2011(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (81, 'LP-RI4D', 'CM16-KR4A', 'FARO NEBLI.KIA RIO 2016(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
-(82, 'LP-SG2', 'CM05-SP2', 'FARO NEBLI.KIA SPORTAGE 2005 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, 2, 1602691305),
+(82, 'LP-SG2', 'CM05-SP2', 'FARO NEBLI.KIA SPORTAGE 2005 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
 (83, 'LP-SG4', 'CM11-SP02', 'FARO NEBLI.KIA SPORTAGE 2011 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (84, 'LP-SG4A', 'CM11-SP2N', 'FARO NEBLI.KIA SPORTAGE 2011 (SETX2)(NEGRO)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (85, 'LP-LI2', 'CM-LF02', 'FARO NEBLI.LIFAN 520 SET X2', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
 (86, 'LP-LI4', 'CM-LF02B', 'FARO NEBLI.LIFAN 620 SET X 2', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
 (87, 'LP-MZ4', 'CM-9403', 'FARO NEBLI.PARACH MAZDA CX5 2013-2016(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
-(88, 'LP-MZ2', 'CM-9101', 'FARO NEBLI.PARACH MAZDA 3 2008(SET2)NEGRO              ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, 2, 1602781128),
+(88, 'LP-MZ2', 'CM-9101', 'FARO NEBLI.PARACH MAZDA 3 2008(SET2)NEGRO              ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (89, 'LP-BT2', 'CM-9289', 'FARO NEBLI.PARACH.MAZDA BT-50 2008(SET2)NEGRO      ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
 (90, 'LP-BT4', 'CM-9295', 'FARO NEBLI.PARACH.MAZDA BT-50 2015 (SET2)CROMO       ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1, NULL, NULL, NULL, NULL),
 (91, 'LP-AM2', 'CM-9483', 'FARO NEBLI.AMAROK-JETTA III-GOLF V 2001-2016(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
@@ -11518,8 +11470,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (100, 'LP-NA4', 'CM-9406', 'FARO NEBLI.NISS.NAVARA 2009(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (101, 'LP-NA4B', 'CM-9449', 'FARO NEBLI.NISS.NAVARA 2010-2015(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
 (102, 'LP-UR4', 'CM25-UC5', 'FARO NEBLI.NISS.CARAVAN E25 2005(SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
-(103, 'LP-UR4AL', 'CM26-UC5L', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, 2, 1602781127),
-(104, 'LP-UR4AR', 'CM26-UC5R', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, 2, 1602781127),
+(103, 'LP-UR4AL', 'CM26-UC5L', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
+(104, 'LP-UR4AR', 'CM26-UC5R', 'FARO NEBLI.NISS.URVAN NV350/AMARO/RAV4/SUZUKI GRAND NOMA', 1, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (105, 'LP-UR4CL', 'CM26-UC5AL', 'FARO NEBLI.NISS.URVAN NV350 C/LED AZUL 2013', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (106, 'LP-UR4CR', 'CM26-UC5AR', 'FARO NEBLI.NISS.URVAN NV350 C/LED AZUL 2013', 1, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (107, 'LP-AL2', 'CM-9141', 'FARO NEBLI.NISS.ALMERA 2000-2007(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, NULL, NULL),
@@ -11532,40 +11484,40 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (114, 'LP-JU4', 'CM-9456', 'FARO NEBLI.NISS.JUKE 2015(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (115, 'LP-MH2', 'CM-9255', 'FARO NEBLI.NISS.MARCH 2010 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (116, 'LP-NE2', 'CM-9374', 'FARO NEBLI.NISS.NEO 2004 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(117, 'LP-SW2', 'CM4-SW02', 'FARO NEBLI.SUZ.SWIFT SX4 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, 2, 1602781128),
+(117, 'LP-SW2', 'CM4-SW02', 'FARO NEBLI.SUZ.SWIFT SX4 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
 (118, 'LP-SW4', 'CM-9197', 'FARO NEBLI.SUZ.SWIFT05-10/SX4 06-13/ALTO 09/CELERIO14/(SET2)UNIVERSAL', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
-(120, 'LP-SW4N', 'CM-9310', 'FARO NEBLI.SUZ.SWIFT 2012....(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
-(122, 'LP-AE2', 'CM03-AE02     ', 'FARO NEBLI.SUZ.AERIO 2003 (SET2)               ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL),
-(123, 'LP-AZ4', 'CM-9262', 'FARO NEBLI.TY AVANZA 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
+(120, 'LP-SW4N', 'CM-9310', 'FARO NEBLI.SUZ.SWIFT 2012....(SET2)NEGRO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, NULL, NULL),
+(122, 'LP-AE2', 'CM03-AE02     ', 'FARO NEBLI.SUZ.AERIO 2003 (SET2)               ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
+(123, 'LP-AZ4', 'CM-9262', 'FARO NEBLI.TY AVANZA 2012...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, NULL, NULL),
 (124, 'LP-DI2L', 'CM99-DN4L', 'FARO NEBLI.TY DINA 1999-2008', 1, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (125, 'LP-DI2T', 'CM99-DN4R', 'FARO NEBLI.TY DINA 1999-2008', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
 (126, 'LP-CA2', 'CM98-CA4', 'FARO NEBLI.TY CALDINA AVENSIS(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
-(127, 'LP-YS2', 'CM-9225', 'FARO NEBLI.TY YARIS SEDAN 2007...NEGRO (SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 54, 1, 1, NULL, NULL, NULL, NULL),
+(127, 'LP-YS2', 'CM-9225', 'FARO NEBLI.TY YARIS SEDAN 2007...NEGRO (SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 49, 1, 1, NULL, NULL, NULL, NULL),
 (128, 'LP-YS2C', 'CM-9235', 'FARO NEBLI.TY YARIS SEDAN 2007...CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (129, 'LP-YS4', 'CM-9333', 'FARO NEBLI.TY YARIS SEDAN 2013-2016 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 55, 1, 1, NULL, NULL, NULL, NULL),
 (130, 'LP-YS4C', 'CM-9336', 'FARO NEBLI.TY YARIS SEDAN 2013-2016 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (131, 'LP-YH2', 'CM-9241', 'FARO NEBLI.TY YARIS HASHBACH 2009...NEGRO(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1, NULL, NULL, NULL, NULL),
 (132, 'LP-YH4', 'CM-9352', 'FARO NEBLI.TY.YARIS HASHBACK 2014-2017 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1, NULL, NULL, NULL, NULL),
-(133, 'LP-YP2', 'CM-9107', 'FARO NEBLI.TY.YARIS PLAST(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, 2, 1602781128),
+(133, 'LP-YP2', 'CM-9107', 'FARO NEBLI.TY.YARIS PLAST(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
 (134, 'LP-AT2D', 'CM-9128', 'FARO NEBLI.TY.ALTIS 2001-2006 DOBLE PUNTA(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, NULL, NULL, NULL, NULL),
 (135, 'LP-AT2', 'CM-9282', 'FARO NEBLI.TY.ALTIS 2001-2006 UNA PUNTA(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
-(136, 'LP-AT2C', 'CM01-TA5', 'FARO NEBLI.TY ALTIS 2001-2006 DOBLE PUNTA(CHINO)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 38, 1, 1, NULL, NULL, 2, 1602781375),
+(136, 'LP-AT2C', 'CM01-TA5', 'FARO NEBLI.TY ALTIS 2001-2006 DOBLE PUNTA(CHINO)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 37, 1, 1, NULL, NULL, NULL, NULL),
 (137, 'LP-AT2B', 'CM01-TA5C', 'FARO NEBLI.TY ALTIS 2001-2006 UNA PUNTA CRYSTAL CHINO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
 (138, 'LP-AT4C', 'CM-9228', 'FARO NEBLI.TY.ALTIS 2011-2013 CROMADO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (139, 'LP-AS2', 'CM-9174', 'FARO NEBLI.TY COROLLA 2001-ASISTA..(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
-(140, 'LP-CO2', 'CM01-TC4', 'FARO NEBLI.TY COROLLA 2001..', 1, 1, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, 2, 1602781375),
+(140, 'LP-CO2', 'CM01-TC4', 'FARO NEBLI.TY COROLLA 2001..', 1, 1, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1, NULL, NULL, NULL, NULL),
 (141, 'LP-CO4', 'CM-9170', 'FARO NEBLI.TY.COROLLA 2008-2011 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 63, 1, 1, NULL, NULL, NULL, NULL),
 (142, 'LP-CO4N', 'CM-9277', 'FARO NEBLI.TY.COROLLA 2011-2013 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1, NULL, NULL, NULL, NULL),
 (143, 'LP-CO4D', 'CM-9366', ' FARO NEBLI.TY.COROLLA 2014-2016 C/NEGRO(SET2) ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
 (144, 'LP-FS2', 'CM-9024', 'FARO NEBLI.TY.FIELDER SEDAN 2004 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
 (145, 'LP-FS2C', 'CM04-TF4', 'FARO NEBLI.TY.FIELDER 2004 (212-2031-UEH)(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
 (146, 'LP-HX2', 'CM-9129', 'FARO NEBLI.TY HILUX VIGO 04-07(SET 2 )    ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(147, 'LP-HX2D', 'CM-9222', 'FARO NEBLI.TY HILUX VIGO 2008-2010 (SETX2)      ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, 2, 1602781128),
+(147, 'LP-HX2D', 'CM-9222', 'FARO NEBLI.TY HILUX VIGO 2008-2010 (SETX2)      ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (148, 'LP-HX4C', 'CM15-HX4', 'FARO NEBLI.TY REVO 2015-AVANZA 2016-YARIS 2014(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
-(149, 'LP-HX4', 'CM-9430', 'FARO NEBLI.TY.REVO 2015 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 38, 1, 1, NULL, NULL, NULL, NULL),
-(150, 'LP-HX4B', 'CM-9430C', 'FARO NEBLI.TY.REVO 2015 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
-(151, 'LP-TH2L', 'CM97-TH6L', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 64, 1, 1, NULL, NULL, NULL, NULL),
-(152, 'LP-TH2R', 'CM97-TH6R', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 64, 1, 1, NULL, NULL, NULL, NULL),
+(149, 'LP-HX4', 'CM-9430', 'FARO NEBLI.TY.REVO 2015 NEGRO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1, NULL, NULL, NULL, NULL),
+(150, 'LP-HX4B', 'CM-9430C', 'FARO NEBLI.TY.REVO 2015 CROMO (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
+(151, 'LP-TH2L', 'CM97-TH6L', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 63, 1, 1, NULL, NULL, NULL, NULL),
+(152, 'LP-TH2R', 'CM97-TH6R', 'FARO NEBLI.TY HIACE WAGON-OJO CHINO 1996 (212-2014)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 63, 1, 1, NULL, NULL, NULL, NULL),
 (153, 'LP-TH2AL', 'CM04-TH9L', 'FARO NEBLI.TY HIACE 2004-2010', 1, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
 (154, 'LP-TH2AR', 'CM04-TH9R', 'FARO NEBLI.TY HIACE 2004-2010', 1, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
 (155, 'LP-TH4AL', 'CM11-TH7L ', 'FARO NEBLI.TY HIACE 2011-2013 NEGRO CHINO        ', 1, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
@@ -11582,10 +11534,10 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (166, 'LP-SU2VL', 'CM05-SC6L', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (167, 'LP-SU2VR', 'CM05-SC6R', 'FARO NEBLI.TY SUCCED(VIDRIO)', 1, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (168, 'LP-RV2C', 'CM-9431', 'FARO NEBLI.TY RAV4 2008-2012 CROMO(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
-(169, 'LP-RV4', 'CM-9488', 'FARO NEBLI.TY RAV4 2013-2015 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
-(170, 'LP-RV6', 'CM-9455', 'FARO NEBLI.TY RAV4 2016-2017 NEGRO...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, NULL, NULL),
+(169, 'LP-RV4', 'CM-9488', 'FARO NEBLI.TY RAV4 2013-2015 (SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
+(170, 'LP-RV6', 'CM-9455', 'FARO NEBLI.TY RAV4 2016-2017 NEGRO...(SET2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
 (171, 'LP-WR2', 'CM-WRG2', 'FARO NEBLI.WULING RONGGUANS  (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(172, 'LP-ZT2', 'CM08-ZT2', 'FARO NEBLI.ZOTYE 2008 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
+(172, 'LP-ZT2', 'CM08-ZT2', 'FARO NEBLI.ZOTYE 2008 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
 (428, 'LP-3004AL', NULL, 'MANIJA EXT PTA.DELANT.KIA TOWNER', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (429, 'LP-3004AR', NULL, 'MANIJA EXT PTA DELANT.KIA TOWNER', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (430, 'LP-1001G', NULL, 'MANIJA LEVANTULA DAEWOO MATIZ 98-2005 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
@@ -11603,10 +11555,10 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (442, 'LP-3103MSRR', NULL, 'MANIJA EXT. PTA POST.CHEV.MAGNUS 2003-2006 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 73, 1, 1, NULL, NULL, NULL, NULL),
 (443, 'LP-2000AL', NULL, 'MANIJA INTERIOR  CHEVROLET SPARK 2005        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1, NULL, NULL, NULL, NULL),
 (444, 'LP-2000AR', NULL, 'MANIJA INTERIOR CHEVROLET SPARK 2005        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 62, 1, 1, NULL, NULL, NULL, NULL),
-(445, 'LP-3000AL', NULL, 'MANIJA EXT.PTA DELANT CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
-(446, 'LP-3000AR', NULL, 'MANIJA EXT.PTA DELANT CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
-(447, 'LP-3000APL', NULL, 'MANIJA EXT.PTA POST CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
-(448, 'LP-3000APR', NULL, 'MANIJA EXT.PTA POST CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
+(445, 'LP-3000AL', NULL, 'MANIJA EXT.PTA DELANT CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, NULL, NULL),
+(446, 'LP-3000AR', NULL, 'MANIJA EXT.PTA DELANT CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, NULL, NULL),
+(447, 'LP-3000APL', NULL, 'MANIJA EXT.PTA POST CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, NULL, NULL),
+(448, 'LP-3000APR', NULL, 'MANIJA EXT.PTA POST CHEVROLET SPARK 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (449, 'LP-2001GL', '', 'MANIJA  INTERIOR HYUNDAI EXCEL 91-94 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1, NULL, NULL, NULL, NULL),
 (450, 'LP-2001GR', '', 'MANIJA  INTERIOR HYUNDAI EXCEL 91-94 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1, NULL, NULL, NULL, NULL),
 (451, 'LP-3001AFL', '', 'MANIJA.EXT PTA.DELANT HYUNDAI EXCEL 90-94 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
@@ -11617,8 +11569,8 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (456, 'LP-2110 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI I10 2008....                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (457, 'LP-3110 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI I10 2008-2013                        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (458, 'LP-3110 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI I10 2008-2013                        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, NULL, NULL),
-(459, 'LP-3232 L           ', '', 'MANIJA EXT.PTA.DELANTERO HYUNDAI ACCENT 1998-2000                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
-(460, 'LP-3232 R           ', '', 'MANIJA EXT.PTA.DELANTERO HYUNDAI ACCENT 1998-2000                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, NULL, NULL),
+(459, 'LP-3232 L           ', '', 'MANIJA EXT.PTA.DELANTERO HYUNDAI ACCENT 1998-2000                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
+(460, 'LP-3232 R           ', '', 'MANIJA EXT.PTA.DELANTERO HYUNDAI ACCENT 1998-2000                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1, NULL, NULL, NULL, NULL),
 (461, 'LP-2323AL          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 00-06 NEGRO              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (462, 'LP-2323AR          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 00-06 NEGRO              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
 (463, 'LP-2235AL', NULL, 'MANIJA INT.PTA DELANT.HYUNDAI ACCENT 2006-2011 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1, NULL, NULL, NULL, NULL),
@@ -11626,7 +11578,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (465, 'LP-2235EL          ', NULL, 'MANIJA INT.PTA DELANT.HYUNDAI ACCENT 2006-2011BEIS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (466, 'LP-2235ER          ', NULL, 'MANIJA INT.PTA DELANT.HYUNDAI ACCENT 2006-2011BEIS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (467, 'LP-2235ARL', NULL, 'MANIJA INT.PTA POST.HYUNDAI ACCENT 2006-2011 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1, NULL, NULL, NULL, NULL),
-(468, 'LP-2235ARR', NULL, 'MANIJA INT.PTA POST.HYUNDAI ACCENT 2006-2011 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, 2, 1602623334),
+(468, 'LP-2235ARR', NULL, 'MANIJA INT.PTA POST.HYUNDAI ACCENT 2006-2011 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1, NULL, NULL, NULL, NULL),
 (469, 'LP-2237RFL', NULL, 'MANIJA INT.PTA DELANT.HY ACCENT 2012 PLATEADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
 (470, 'LP-2237RFR', NULL, 'MANIJA INT.PTA DELANT.HY ACCENT 2012 PLATEADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
 (471, 'LP-2237RRL', NULL, 'MANIJA INT.PTA POST.HY ACCENT 2012 PLATEADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
@@ -11635,22 +11587,22 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (474, 'LP-25010R          ', NULL, 'MANIJA INT.ABRE PTA.POSTERIOR HYUNDAI SANTA FE 01-06                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (475, 'LP-2501GL          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI SANTA FE 01-06                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (476, 'LP-2501GR          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI SANTA FE 01-06                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
-(477, 'LP-3501L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -4, 1, 1, NULL, NULL, 2, 1602623334),
-(478, 'LP-3501R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
-(479, 'LP-35011L          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
-(480, 'LP-35011R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, 2, 1602623334),
+(477, 'LP-3501L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL),
+(478, 'LP-3501R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL),
+(479, 'LP-35011L          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
+(480, 'LP-35011R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI SANTA FE 2001-2006                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
 (481, 'LP-2509 L           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI SANTA FE 07-10.                 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (482, 'LP-2509 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI SANTE FE 07-10                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (483, 'LP-2503 L           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI TUCSON 05-09GR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (484, 'LP-2503 R           ', '', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI TUCSON 05-09GR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (485, 'LP-35031R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI TUCSON 2005-2008                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(486, 'LP-2305AL', '', 'MANIJA INT.HY.SONATA 2003-2005(NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1, NULL, NULL, NULL, NULL),
-(487, 'LP-2305AR', '', 'MANIJA INT.HY.SONATA 2003-2005(NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 76, 1, 1, NULL, NULL, NULL, NULL),
+(486, 'LP-2305AL', '', 'MANIJA INT.HY.SONATA 2003-2005(NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1, NULL, NULL, NULL, NULL),
+(487, 'LP-2305AR', '', 'MANIJA INT.HY.SONATA 2003-2005(NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 66, 1, 1, NULL, NULL, NULL, NULL),
 (488, 'LP-3305 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SONATA 2002-2005                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
 (489, 'LP-3305 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SONATA 2002-2005                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
 (490, 'LP-33051L          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI SONATA 2002-2005                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
 (491, 'LP-33051R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR HYUNDAI SONATA 2002-2005                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
-(492, 'LP-3307MPL         ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SONATA 06-10                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, 2, 1602623334),
+(492, 'LP-3307MPL         ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI SONATA 06-10                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (493, 'LP-3307MPR         ', NULL, 'MANIJA EXT.PTA DELANTERO HYUNDAI SONATA 06-10                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (494, 'LP-23070PL         ', NULL, 'MANIJA INT.ABRE PTA.POSTERIOR HYUNDAI SONATA 06-10                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (495, 'LP-23070PR         ', NULL, 'MANIJA INT.ABRE PTA.POSTERIOR HYUNDAI SONATA 06-10                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
@@ -11658,29 +11610,29 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (497, 'LP-2307PR          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI SONATA 06-10                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (498, 'LP-2512AL', '', 'MANIJA INT.HY.PORTER 2005', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
 (499, 'LP-2512AR', '', 'MANIJA INT.HY.PORTER 2005', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1, NULL, NULL, NULL, NULL),
-(500, 'LP-3228AFL', NULL, 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
-(501, 'LP-3228AFR', NULL, 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
+(500, 'LP-3228AFL', NULL, 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
+(501, 'LP-3228AFR', NULL, 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (502, 'LP-3511 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI PORTER 98-03                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
-(503, 'LP-3511 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI PORTER 98-03                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
+(503, 'LP-3511 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI PORTER 98-03                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (504, 'LP-3512 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI PORTER 2006                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (505, 'LP-3512 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO HYUNDAI PORTER 2006                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(506, 'LP-2513AL', '', 'MANIJA INT.HY STAREX 98-04', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1, NULL, NULL, NULL, NULL),
-(507, 'LP-2513AR', '', 'MANIJA INT.HY STAREX 98-04', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
+(506, 'LP-2513AL', '', 'MANIJA INT.HY STAREX 98-04', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
+(507, 'LP-2513AR', '', 'MANIJA INT.HY STAREX 98-04', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (508, 'LP-3513SMR      ', NULL, 'MANIJA EXT.PTA.CORREDIZA HYUNDAI STAREX H1 1995-2006                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
 (509, 'LP-2515 L           ', '', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI STAREX H1 2007....              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
 (510, 'LP-2515 R           ', '', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI STAREX H1 2007...               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
 (511, 'LP-3515PR          ', '', 'MANIJA EXT.PTA.DELANTERO HYUNDAI STAREX H1 2007...                    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
-(512, 'LP-3514SMR', NULL, 'MANIJA EXT.PTA.CORREDIZA HYUNDAI H-1 STAREX 05-07 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, 2, 1602623334),
-(513, 'LP-2515A1M', NULL, 'MANIJA INTERIOR PTA CORREDIZA HYUNDAI H1 2007-2012', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1, NULL, NULL, 2, 1602623334),
+(512, 'LP-3514SMR', NULL, 'MANIJA EXT.PTA.CORREDIZA HYUNDAI H-1 STAREX 05-07 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
+(513, 'LP-2515A1M', NULL, 'MANIJA INTERIOR PTA CORREDIZA HYUNDAI H1 2007-2012', 2, 2, 1, 0, 1, 1, 0, 0, 0, 38, 1, 1, NULL, NULL, NULL, NULL),
 (514, 'LP-2611GL', NULL, 'MANIJA INT.HY.MATRIX-LAVITA 01-10 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
 (515, 'LP-2611GR', NULL, 'MANIJA INT.HY.MATRIX-LAVITA 01-10 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
 (516, 'LP-3234SFL', NULL, 'MANIJA.EXT.PTA DELANT HYUNDAI ACCENT-VERNA 00-06', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
 (517, 'LP-3234SFR', NULL, 'MANIJA.EXT.PTA DELANT HYUNDAI ACCENT-VERNA 00-06', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
 (518, 'LP-3234SRL', NULL, 'MANIJA.EXT.PTA POST HYUNDAI ACCENT-VERNA 00-06', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
 (519, 'LP-3234SRR', NULL, 'MANIJA.EXT.PTA POST HYUNDAI ACCENT-VERNA 00-06', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
-(520, 'LP-3236AFR', '', 'MANIJA EXT.PTA.DELANT HYUNDAI ACCENT 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 46, 1, 1, NULL, NULL, 2, 1602623334),
-(521, 'LP-3236ARL', '', 'MANIJA EXT.PTA POST.HYUNDAI ACCENT 2006/2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
-(522, 'LP-3236ARR', '', 'MANIJA EXT.PTA POST.HYUNDAI ACCENT 2006/2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
+(520, 'LP-3236AFR', '', 'MANIJA EXT.PTA.DELANT HYUNDAI ACCENT 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 50, 1, 1, NULL, NULL, NULL, NULL),
+(521, 'LP-3236ARL', '', 'MANIJA EXT.PTA POST.HYUNDAI ACCENT 2006/2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
+(522, 'LP-3236ARR', '', 'MANIJA EXT.PTA POST.HYUNDAI ACCENT 2006/2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
 (523, 'LP-3237PFLK', '', 'MANIJA EXT.PTA.POST.HY.ACCENT 2012-C ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 42, 1, 1, NULL, NULL, NULL, NULL),
 (524, 'LP-3237PFRK', '', 'MANIJA EXT. PTA. POST. HY. ACCENT 2012-C ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 104, 1, 1, NULL, NULL, NULL, NULL),
 (525, 'LP-2004AFL', '', 'MANIJA INT.PTA DELANT.KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1, NULL, NULL, NULL, NULL),
@@ -11688,12 +11640,12 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (527, 'LP-2004ARR', '', 'MANIJA INT.PTA POST KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (528, 'LP-2009GFL', '', 'MANIJA INT.PTA DELANT KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (529, 'LP-2009GRL', '', 'MANIJA INT.PTA POST.KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
-(530, 'LP-2009GRR', '', 'MANIJA INT.PTA POST.KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, 2, 1602623334),
-(531, 'LP-3009PFL', NULL, 'MANIJA EXT.PTA DELANT.KIA RIO 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
-(532, 'LP-3009PFR', NULL, 'MANIJA EXT.PTA DELANT.KIA RIO 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
-(533, 'LP-3009PRL', NULL, 'MANIJA EXT.PTA POST KIA RIO 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
-(534, 'LP-3009PRR', NULL, 'MANIJA EXT.PTA POST KIA RIO 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
-(535, 'LP-3950PRL', NULL, 'MANIJA EXT.PTA POSTERIOR KIA BONGO , K-2700', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, 2, 1602623334),
+(530, 'LP-2009GRR', '', 'MANIJA INT.PTA POST.KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
+(531, 'LP-3009PFL', NULL, 'MANIJA EXT.PTA DELANT.KIA RIO 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
+(532, 'LP-3009PFR', NULL, 'MANIJA EXT.PTA DELANT.KIA RIO 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
+(533, 'LP-3009PRL', NULL, 'MANIJA EXT.PTA POST KIA RIO 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
+(534, 'LP-3009PRR', NULL, 'MANIJA EXT.PTA POST KIA RIO 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
+(535, 'LP-3950PRL', NULL, 'MANIJA EXT.PTA POSTERIOR KIA BONGO , K-2700', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (536, 'LP-3950PRR', NULL, 'MANIJA EXT.PTA POSTERIOR KIA BONGO , K-2700', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (537, 'LP-2225E2LH', NULL, 'CUBIERTA DE MANIJA INT.MITSUB.GALANT 99-03 BEIGE', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (538, 'LP-2225E2RH', NULL, 'CUBIERTA DE MANIJA INT.MITSUB.GALANT 99-03 BEIGE', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
@@ -11766,9 +11718,9 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (605, 'LP-2544 L           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO NISSAN FRONTIER 98-02 GRIS              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (606, 'LP-2544 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO NISSAN FRONTIER 98-02 GRIS              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (607, 'LP-2905ML          ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO NISSAN FRONTIER 05-09                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
-(608, 'LP-3235 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO NISSAN URVAN CARAVAN 02-08                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL);
+(608, 'LP-3235 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO NISSAN URVAN CARAVAN 02-08                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
+(609, 'LP-3235 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO NISSAN URVAN CARAVAN 02-08                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL);
 INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_prod`, `umed_prod`, `contenido_prod`, `exctoigv_prod`, `compra_prod`, `venta_prod`, `stockini_prod`, `stockmax_prod`, `stockmin_prod`, `stock_prod`, `status_prod`, `sucursal_prod`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
-(609, 'LP-3235 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO NISSAN URVAN CARAVAN 02-08                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (610, 'LP-3801L           ', NULL, 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN PATHFINDER TERRA.05..             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (611, 'LP-3801R           ', NULL, 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN PATHFINDER TERRA.05...            ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (612, 'LP-1002A', NULL, 'MANIJA LEVANTALUNA RENAULT LOGAN 2004-2012(NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
@@ -11781,9 +11733,9 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (619, 'LP-3700ARL', NULL, 'MANIJA EXT.PTA POST.MAZDA SCRUM WAGON 2004-2013', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (620, 'LP-3700ARR', NULL, 'MANIJA EXT.PTA POST.MAZDA SCRUM WAGON 2004-2013', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (621, 'LP-1002G', '', 'MANIJA LEVANTALUNA TOYOTA VIGO 05 / HIACE 5L GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 165, 1, 1, NULL, NULL, NULL, NULL),
-(622, 'LP-2003PBLH', NULL, 'MANIJA INT.TY EHO-00-005(YARIS/VTZ 99-05)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, 2, 1602623334),
-(623, 'LP-2003PBRH', NULL, 'MANIJA INT.TY EHO-00-005(YARIS/VTZ 99-05)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, 2, 1602623334),
-(624, 'LP-1021A', NULL, 'MANIJA LEVANTALUNA TY HILUX VIGO 05-YARIS 2007-2012 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
+(622, 'LP-2003PBLH', NULL, 'MANIJA INT.TY EHO-00-005(YARIS/VTZ 99-05)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
+(623, 'LP-2003PBRH', NULL, 'MANIJA INT.TY EHO-00-005(YARIS/VTZ 99-05)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1, NULL, NULL, NULL, NULL),
+(624, 'LP-1021A', NULL, 'MANIJA LEVANTALUNA TY HILUX VIGO 05-YARIS 2007-2012 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (625, 'LP-2108ALH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
 (626, 'LP-2108ARH', NULL, 'MANIJA PUERTA INT TOYOTA YARIS ENVIDIA 2014', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
 (627, 'LP-2501ALH', NULL, 'MANIJA INT TOYOTA COROLLA 88-91 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -8, 1, 1, NULL, NULL, NULL, NULL),
@@ -11792,23 +11744,23 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (630, 'LP-1001 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
 (631, 'LP-10010 L          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1, NULL, NULL, NULL, NULL),
 (632, 'LP-10010 R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE90,EE90 88-91               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1, NULL, NULL, NULL, NULL),
-(633, 'LP-2522GLH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1372, 1, 1, NULL, NULL, NULL, NULL),
-(634, 'LP-2522GRH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3135, 1, 1, NULL, NULL, NULL, NULL),
-(635, 'LP-3149AFL', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE100,101 92-01              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1, NULL, NULL, 2, 1602623470),
-(636, 'LP-3149AFR', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE100,101 92-01              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1, NULL, NULL, NULL, NULL),
+(633, 'LP-2522GLH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1347, 1, 1, NULL, NULL, NULL, NULL),
+(634, 'LP-2522GRH', NULL, 'MANIJA INT.DELANT.TOYOTA COROLLA AE100 92-98 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3110, 1, 1, NULL, NULL, NULL, NULL),
+(635, 'LP-3149AFL', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE100,101 92-01              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1, NULL, NULL, NULL, NULL),
+(636, 'LP-3149AFR', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE100,101 92-01              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1, NULL, NULL, NULL, NULL),
 (637, 'LP-3149ARL', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE100,101 92-01               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
-(638, 'LP-3149ARR', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE100,101 92-01               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
+(638, 'LP-3149ARR', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA COROLLA AE100,101 92-01               ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (639, 'LP-3197AR          ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE110 96-01                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 38, 1, 1, NULL, NULL, NULL, NULL),
 (640, 'LP-2222L           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO TOYOTA COROLLA 09-13 GRIS         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
 (641, 'LP-2222R           ', NULL, 'MANIJA INT.ABRE PTA.DELANTERO TOYOTA COROLLA 09-13 GRIS         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
-(642, 'LP-2545GLH', NULL, 'MANIJA INT TOYOTA TOYOTA TERCEL 91-99/HILUX 89-98', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
-(643, 'LP-2545GRH', NULL, 'MANIJA INT TOYOTA TOYOTA TERCEL 91-99/HILUX 89-98', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1, NULL, NULL, NULL, NULL),
+(642, 'LP-2545GLH', NULL, 'MANIJA INT TOYOTA TOYOTA TERCEL 91-99/HILUX 89-98', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
+(643, 'LP-2545GRH', NULL, 'MANIJA INT TOYOTA TOYOTA TERCEL 91-99/HILUX 89-98', 2, 2, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1, NULL, NULL, NULL, NULL),
 (644, 'LP-31800SL         ', NULL, 'MANIJA EXT.PTA.DELANT.TOYOTA H.VIGO,ALTIS YARIS,CAMRY 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (645, 'LP-31800SR         ', NULL, 'MANIJA EXT.PTA.DELANT.TOYOTA H.VIGO,ALTIS YARIS,CAMRY 06-12', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
-(646, 'LP-3180MFL', '', 'MANIJA EXT.PTA.DELANT TOYOTA CAMRY,VIGO,YARIS 06-12 (L = R)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 74, 1, 1, NULL, NULL, NULL, NULL),
-(647, 'LP-3180MFRK', '', 'MANIJA EXT.PTA.DELANTERO TOYOTA CAMRY,VIGO,YARIS 06-12 (L = R)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 74, 1, 1, NULL, NULL, NULL, NULL),
+(646, 'LP-3180MFL', '', 'MANIJA EXT.PTA.DELANT TOYOTA CAMRY,VIGO,YARIS 06-12 (L = R)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 72, 1, 1, NULL, NULL, NULL, NULL),
+(647, 'LP-3180MFRK', '', 'MANIJA EXT.PTA.DELANTERO TOYOTA CAMRY,VIGO,YARIS 06-12 (L = R)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 72, 1, 1, NULL, NULL, NULL, NULL),
 (648, 'LP-2567 L           ', NULL, 'MANIJA INT.ABRE PTA.DELANT.TOY.HIACE-HILUX VIGO 2005.....             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 71, 1, 1, NULL, NULL, NULL, NULL),
-(649, 'LP-2567 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANT.TOY.HIACE-HILUX VIGO 2005.....             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 89, 1, 1, NULL, NULL, NULL, NULL),
+(649, 'LP-2567 R           ', NULL, 'MANIJA INT.ABRE PTA.DELANT.TOY.HIACE-HILUX VIGO 2005.....             ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 79, 1, 1, NULL, NULL, NULL, NULL),
 (650, 'LP-3033 L           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN50,55 84-88                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
 (651, 'LP-3033 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN50,55 84-88                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
 (652, 'LP-3105 R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
@@ -11817,16 +11769,16 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (655, 'LP-31070MAR        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
 (656, 'LP-3107MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (657, 'LP-3107MAR         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 87-97 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1, NULL, NULL, NULL, NULL),
-(658, 'LP-3190ATG', NULL, 'MANIJA DE COMPUERTA POSTERIOR TOYOTA HILUX RN50,RN55 84-88            ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 87, 1, 1, NULL, NULL, NULL, NULL),
+(658, 'LP-3190ATG', NULL, 'MANIJA DE COMPUERTA POSTERIOR TOYOTA HILUX RN50,RN55 84-88            ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 82, 1, 1, NULL, NULL, NULL, NULL),
 (659, 'LP-31620MAL        ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN95 98-04 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (660, 'LP-3162MAL         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN95 98-04 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (661, 'LP-3162MAR         ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN95 98-04 CROMO                ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1, NULL, NULL, NULL, NULL),
-(662, 'LP-3239R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA TERCELL 1991-1994                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -1, 1, 1, NULL, NULL, 2, 1602623471),
+(662, 'LP-3239R           ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA TERCELL 1991-1994                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
 (663, 'LP-32390R          ', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA TERCELL 1991-1994                     ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
-(664, 'LP-3184AFL', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 136, 1, 1, NULL, NULL, NULL, NULL),
-(665, 'LP-3184AFR', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 211, 1, 1, NULL, NULL, 2, 1602623471),
-(666, 'LP-3184ARL', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 245, 1, 1, NULL, NULL, NULL, NULL),
-(667, 'LP-3184ARR', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 147, 1, 1, NULL, NULL, NULL, NULL),
+(664, 'LP-3184AFL', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 131, 1, 1, NULL, NULL, NULL, NULL),
+(665, 'LP-3184AFR', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 212, 1, 1, NULL, NULL, NULL, NULL),
+(666, 'LP-3184ARL', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 240, 1, 1, NULL, NULL, NULL, NULL),
+(667, 'LP-3184ARR', NULL, 'MANIJA EXT.PTA.POSTERIOR TOYOTA TERCELL SOLUNA 1995-1999              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 142, 1, 1, NULL, NULL, NULL, NULL),
 (668, 'LP-3215TG    ', NULL, 'REGLA DE COMPUERTA POSTERIOR TY HIACE COMMUTER 91-01                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1, NULL, NULL, NULL, NULL),
 (669, 'LP-3217ATL', NULL, 'MANIJA DE LA REGLA DE COMPUERTA POST.TY HIACE 2005...   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 68, 1, 1, NULL, NULL, NULL, NULL),
 (670, 'LP-32171 L          ', NULL, 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005..                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
@@ -11835,14 +11787,14 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (673, 'LP-7217FR', NULL, 'CERRADURA DE PTA DELANT.TY HIACE H200 05-C', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (674, 'LP-3116TL           ', NULL, 'MANIJA DE LA REGLA DE COMPUERTA POSTERIOR TOYOTA HIACE 1984-1989      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (675, 'LP-B217A', NULL, 'SEGURO DE VENTANA TOY HIACE 2005', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(676, 'LP-31120L          ', '', 'MANIJA EXT.PTA.DELANTERO TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1, NULL, NULL, 2, 1602623471),
+(676, 'LP-31120L          ', '', 'MANIJA EXT.PTA.DELANTERO TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1, NULL, NULL, NULL, NULL),
 (677, 'LP-31120R          ', '', 'MANIJA EXT.PTA.DELANTERO TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1, NULL, NULL, NULL, NULL),
 (678, 'LP-31121L          ', '', 'MANIJA EXT.PTA.POSTERIOR TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
 (679, 'LP-31121R          ', '', 'MANIJA EXT.PTA.POSTERIOR TOYOTA CALDINA 94...                         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
-(680, 'LP-2576ELH', NULL, 'MANIJA INT.PTA DELANT.TOYOTA HIACE 90-94 BEIGE', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(681, 'LP-2576ERH', NULL, 'MANIJA INT.PTA DELANT.TOYOTA HIACE 90-94 BEIGE', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(682, 'LP-2222LMLH', NULL, 'MANIJA INT.TOYOTA COROLLA  2009-2013 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
-(683, 'LP-2222LMRH', NULL, 'MANIJA INT.TOYOTA COROLLA  2009-2013 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
+(680, 'LP-2576ELH', NULL, 'MANIJA INT.PTA DELANT.TOYOTA HIACE 90-94 BEIGE', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
+(681, 'LP-2576ERH', NULL, 'MANIJA INT.PTA DELANT.TOYOTA HIACE 90-94 BEIGE', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
+(682, 'LP-2222LMLH', NULL, 'MANIJA INT.TOYOTA COROLLA  2009-2013 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
+(683, 'LP-2222LMRH', NULL, 'MANIJA INT.TOYOTA COROLLA  2009-2013 CROMADO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
 (684, 'LP-4180', NULL, 'BLOQUEO DE TRONCO TY.CRESSIDA 1989-1995', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1, NULL, NULL, NULL, NULL),
 (685, 'LP-2103A', NULL, 'AGARRADERA DE CABINA UNIVERSAL RUBBER', 2, 2, 1, 0, 1, 1, 0, 0, 0, -4, 1, 1, NULL, NULL, NULL, NULL),
 (686, 'LP-4001', NULL, 'CERRADURA DE PUERTA', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
@@ -11865,14 +11817,14 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (703, 'LP-3301SRL', 'LP-N103PL', 'MANIJA EXT.PTA.POST DAEWOO NUBIRA 98-04 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 52, 1, 1, NULL, NULL, NULL, NULL),
 (704, 'LP-DW5300M-FL', 'LP-DW5300M', 'CREMALLERA LEVATALUNA DAEWO CIELO-RACER FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (705, 'LP-DW5300M-FR', 'LP-DW5300N', 'CREMALLERA LEVATALUNA DAEWO CIELO-RACER FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
-(706, 'LP-GM2003M-LH', 'LP-GM2003M', 'MANIJA INT.CHEV.AVEO CROMADO  07-11LH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, 2, 1602623334),
-(707, 'LP-GM2003M-RH', 'LP-GM2003N', 'MANIJA INT.CHEV.AVEO CROMADO  07-11RH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, 2, 1602623334),
-(708, 'LP-GM3001A-FL', 'LP-GM3001A', 'MANIJA EXT.DELANT.CHEVROLET AVEO 05-11FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1, NULL, NULL, NULL, NULL),
-(709, 'LP-GM3001A-FR', 'LP-GM3001B', 'MANIJA EXT.DELANT.CHEVROLET AVEO 05-11FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1, NULL, NULL, NULL, NULL),
-(710, 'LP-GM3001A-RL', 'LP-GM3001C', 'MANIJA EXT.POST.CHEVROLET AVEO 05-11 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1, NULL, NULL, NULL, NULL),
-(711, 'LP-GM3001A-RR', 'LP-GM3001D', 'MANIJA EXT.POST.CHEVROLET AVEO 05-11RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1, NULL, NULL, NULL, NULL),
-(712, 'LP-GM3003A-F', 'LP-GM3003A', 'MANIJA EXT.DELANT.CHEVROLET AVEO 07-11  R=L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
-(713, 'LP-GM3003A-RER', 'LP-GM3003B', 'MANIJA EXT.POSTERIOR CHEVROLET AVEO 07-11  R=L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
+(706, 'LP-GM2003M-LH', 'LP-GM2003M', 'MANIJA INT.CHEV.AVEO CROMADO  07-11LH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
+(707, 'LP-GM2003M-RH', 'LP-GM2003N', 'MANIJA INT.CHEV.AVEO CROMADO  07-11RH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
+(708, 'LP-GM3001A-FL', 'LP-GM3001A', 'MANIJA EXT.DELANT.CHEVROLET AVEO 05-11FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1, NULL, NULL, NULL, NULL),
+(709, 'LP-GM3001A-FR', 'LP-GM3001B', 'MANIJA EXT.DELANT.CHEVROLET AVEO 05-11FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 31, 1, 1, NULL, NULL, NULL, NULL),
+(710, 'LP-GM3001A-RL', 'LP-GM3001C', 'MANIJA EXT.POST.CHEVROLET AVEO 05-11 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 34, 1, 1, NULL, NULL, NULL, NULL),
+(711, 'LP-GM3001A-RR', 'LP-GM3001D', 'MANIJA EXT.POST.CHEVROLET AVEO 05-11RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 31, 1, 1, NULL, NULL, NULL, NULL),
+(712, 'LP-GM3003A-F', 'LP-GM3003A', 'MANIJA EXT.DELANT.CHEVROLET AVEO 07-11  R=L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
+(713, 'LP-GM3003A-RER', 'LP-GM3003B', 'MANIJA EXT.POSTERIOR CHEVROLET AVEO 07-11  R=L', 2, 2, 1, 0, 1, 1, 0, 0, 0, -1, 1, 1, NULL, NULL, NULL, NULL),
 (714, 'LP-GM3561A-FL', 'LP-GM3561A', 'MANIJA EXT.DELANT ISUZU D-MAX 06-12/CAMIONETA PICK-UP', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
 (715, 'LP-GM3561A-FR', 'LP-GM3561B', 'MANIJA EXT.DELANT ISUZU D-MAX 06-12/CAMIONETA PICK-UP', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
 (716, 'LP-GM3561A-RL', 'LP-GM3561C', 'MANIJA EXT.POST ISUZU D-MAX 06-12/CAMIONETA PICK-UP RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
@@ -11886,10 +11838,10 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (724, 'LP-HY1230G', 'LP-HY1230G', 'MANIJA INT.LEVANTA LUNA HYUNDAI ATOS 97-05 ELANTRA 96-98', 2, 2, 1, 0, 1, 1, 0, 0, 0, 100, 1, 1, NULL, NULL, NULL, NULL),
 (725, 'LP-HY2110A-LH', 'LP-HY2110A', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI I10 2008 LH  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
 (726, 'LP-HY2110A-RH', 'LP-HY2110B', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI I10 2008 RH   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
-(727, 'LP-HY2228G-LH', 'LP-HY2228G', 'MANIJA INT.HYUNDAI GRACE-PORTER 95 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
-(728, 'LP-HY2228G-RH', 'LP-HY2228H', 'MANIJA INT.HYUNDAI GRACE-PORTER 95 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
-(729, 'LP-HY2230G-FL', 'LP-HY2230F', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 95-99 FL         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, 2, 1602623334),
-(730, 'LP-HY2230G-FR', 'LP-HY2230I', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 95-99 FR    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, 2, 1602623334),
+(727, 'LP-HY2228G-LH', 'LP-HY2228G', 'MANIJA INT.HYUNDAI GRACE-PORTER 95 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
+(728, 'LP-HY2228G-RH', 'LP-HY2228H', 'MANIJA INT.HYUNDAI GRACE-PORTER 95 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
+(729, 'LP-HY2230G-FL', 'LP-HY2230F', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 95-99 FL         ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1, NULL, NULL, NULL, NULL),
+(730, 'LP-HY2230G-FR', 'LP-HY2230I', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 95-99 FR    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1, NULL, NULL, NULL, NULL),
 (731, 'LP-HY2301G-LH', 'LP-HY2301G', 'MANIJA INT.HYUNDAI SONATA 95-99 NEGRO LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (732, 'LP-HY2301G-RH', 'LP-HY2301H', 'MANIJA INT.HYUNDAI SONATA 95-99 NEGRO RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (733, 'LP-HY2323A-LH', 'LP-HY2323A', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI ACCENT 00-06 NEGRO LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
@@ -11898,22 +11850,22 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (736, 'LP-HY2334G-RH', 'LP-HY2334H', 'MANIJA INT.HY. ELANTRA 96-00/KIA SPECTRA 2002 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (737, 'LP-HY2503G-LH', 'LP-HY2503G', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI TUCSON 05-09 LH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (738, 'LP-HY2503G-RH', 'LP-HY2503H', 'MANIJA INT.ABRE PTA.DELANTERO HYUNDAI TUCSON 05-09 RH    ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
-(739, 'LP-HY2511A-LH', 'LP-HY2511A', 'MANIJA INT.DELANT.HY PORTER 98-02 / HD 65', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
-(740, 'LP-HY2511A-RH', 'LP-HY2511B', 'MANIJA INT.DELANT.HY PORTER 98-02 / HD 65', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, 2, 1602623334),
+(739, 'LP-HY2511A-LH', 'LP-HY2511A', 'MANIJA INT.DELANT.HY PORTER 98-02 / HD 65', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
+(740, 'LP-HY2511A-RH', 'LP-HY2511B', 'MANIJA INT.DELANT.HY PORTER 98-02 / HD 65', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
 (741, 'LP-HY2513A-MR', 'LP-HY2513A', 'MANIJA INT.DE PUERTA CORREDIZA HYUNDAI STAREX H1 98-06  MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
 (742, 'LP-HY3110A-RL', 'LP-HY3110A', 'MANIJA EXT.PTA.POST.HYUNDAI I10 2008-2013 RL  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (743, 'LP-HY3110A-RR', 'LP-HY3110B', 'MANIJA EXT.PTA.POST.HYUNDAI I10 2008-2013 RR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (744, 'LP-HY3228A-FL', 'LP-HY3228A', 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
 (745, 'LP-HY3228A-FR', 'LP-HY3228B', 'MANIJA.EXT.PTA DELANT HY.PORTER/GRACE 92-97 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
-(746, 'LP-HY3228A-MR', 'LP-HY3228M', 'MANIJA EXT.PUERTA CORREDIZA HY.PORTER/GRACE 92-97 MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
+(746, 'LP-HY3228A-MR', 'LP-HY3228M', 'MANIJA EXT.PUERTA CORREDIZA HY.PORTER/GRACE 92-97 MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (747, 'LP-HY3230A-FL', 'LP-HY3230A', 'MANIJA EXT.DELANT.HYUNDAI ATOS 97-05 FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
 (748, 'LP-HY3230A-FR', 'LP-HY3230B', 'MANIJA EXT.DELANT.HYUNDAI ATOS 97-05 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
 (749, 'LP-HY3230A-RL', 'LP-HY3230C', 'MANIJA EXT.POST.HYUNDAI ATOS 97-05 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1, NULL, NULL, NULL, NULL),
 (750, 'LP-HY3230A-RR', 'LP-HY3230D', 'MANIJA EXT.POST.HYUNDAI ATOS 97-05 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1, NULL, NULL, NULL, NULL),
-(751, 'LP-HY3232A-RL', 'LP-HY3232A', 'MANIJA EXT.PTA.POST.HYUNDAI ACCENT 1998-2000 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1, NULL, NULL, NULL, NULL),
-(752, 'LP-HY3232A-RR', 'LP-HY3232B', 'MANIJA EXT.PTA.POST.HYUNDAI ACCENT 1998-2000 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 32, 1, 1, NULL, NULL, NULL, NULL),
-(753, 'LP-3236AFL', 'LP-A632L', 'MANIJA EXT.PTA.DELANT HYUNDAI ACCENT 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 53, 1, 1, NULL, NULL, 2, 1602623334),
-(754, 'LP-HY3237P', 'LP-HY3237P', 'MANIJA EXT.DELANT HYUNDAI ACCENT 2012-C FL=FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, 2, 1602623334),
+(751, 'LP-HY3232A-RL', 'LP-HY3232A', 'MANIJA EXT.PTA.POST.HYUNDAI ACCENT 1998-2000 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 26, 1, 1, NULL, NULL, NULL, NULL),
+(752, 'LP-HY3232A-RR', 'LP-HY3232B', 'MANIJA EXT.PTA.POST.HYUNDAI ACCENT 1998-2000 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1, NULL, NULL, NULL, NULL),
+(753, 'LP-3236AFL', 'LP-A632L', 'MANIJA EXT.PTA.DELANT HYUNDAI ACCENT 2006-2011', 2, 2, 1, 0, 1, 1, 0, 0, 0, 57, 1, 1, NULL, NULL, NULL, NULL),
+(754, 'LP-HY3237P', 'LP-HY3237P', 'MANIJA EXT.DELANT HYUNDAI ACCENT 2012-C FL=FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (755, 'LP-HY3513S-FL', 'LP-HY3513S', 'MANIJA EXT.DELANT.HY STAREX H1 98-04 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
 (756, 'LP-HY3513S-FR', 'LP-HY3513Z', 'MANIJA EXT.DELANT.HY STAREX H1 98-04 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
 (757, 'LP-HY3513S-ML', 'LP-HY3513M', 'MANIJA EXT.POST.HY STAREX H1 98-04 ML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
@@ -11921,12 +11873,12 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (759, 'LP-HY3515M-FL', 'LP-HY3515M', 'MANIJA EXT.PTA.DELANT.HYUNDAI STAREX H1 2007...CROMADO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
 (760, 'LP-HY3515M-FR', 'LP-HY3515N', 'MANIJA EXT.PTA.DELANT.HYUNDAI STAREX H1 2007...CROMADO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
 (761, 'LP-HY3515M-ML', 'LP-HY3515B', 'MANIJA EXT.PTA CORREDIZA  HYUNDAI STAREX H1 2007...CROMADO ML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
-(762, 'LP-HY3515M-MR', 'LP-HY3515C', 'MANIJA EXT.PTA CORREDIZA  HYUNDAI STAREX H1 2007...CROMADO MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
+(762, 'LP-HY3515M-MR', 'LP-HY3515C', 'MANIJA EXT.PTA CORREDIZA  HYUNDAI STAREX H1 2007...CROMADO MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
 (763, 'LP-3515PL', 'LP-515EL', 'MANIJA EXT.PTA.DELANTERO HYUNDAI STAREX H1 2007...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
 (764, 'LP-HY3515P-ML', 'LP-HY3515P', 'MANIJA EXT.PTA CORREDIZA HYUNDAI STAREX H1 2007 PML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (765, 'LP-HY3515P-MR', 'LP-HY3515D', 'MANIJA EXT.PTA CORREDIZA HYUNDAI STAREX H1 2007 PMR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (766, 'LP-HY3516P-ML', 'LP-HY3516P', 'MANIJA EXT.PTA CORREDIZA  HY.STAREX H1 2007... C/HUECO PML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1, NULL, NULL, NULL, NULL),
-(767, 'LP-HY3516P-MR', 'LP-HY3516D', 'MANIJA EXT.PTA CORREDIZA  HY.STAREX H1 2007... C/HUECO PMR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, 2, 1602623334),
+(767, 'LP-HY3516P-MR', 'LP-HY3516D', 'MANIJA EXT.PTA CORREDIZA  HY.STAREX H1 2007... C/HUECO PMR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1, NULL, NULL, NULL, NULL),
 (768, 'LP-HY5232M-FL', 'LP-HY5232M', 'CREMALLERA LEVANTALUNA HYUNDAI ACCENT DELANT 95 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (769, 'LP-HY5232M-FR', 'LP-HY5232N', 'CREMALLERA LEVANTALUNA HYUNDAI ACCENT DELANT 95 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (770, 'LP-HY5232M-RL', 'LP-HY5232P', 'CREMALLERA LEVANTALUNA HYUNDAI ACCENT POST 95 MRL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
@@ -11943,17 +11895,17 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (781, 'LP-2009GFR', 'LP-K902R', 'MANIJA INT.PTA DELANT KIA RIO 2006-2009', 2, 2, 1, 0, 1, 1, 0, 0, 0, 57, 1, 1, NULL, NULL, NULL, NULL),
 (782, 'LP-KA2010A-LH', 'LP-KA2010A', 'MANIJA INTERIOR KIA CERATO 09-13 LH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
 (783, 'LP-KA2010A-RH', 'LP-KA2010B', 'MANIJA INTERIOR KIA CERATO 09-13 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
-(784, 'LP-KA2013M-LH', 'LP-KA2013M', 'MANIJA INTERIOR KIA CERATO 14-C CROM. MLH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, 2, 1602623334),
-(785, 'LP-KA2013M-RH', 'LP-KA2013N', 'MANIJA INTERIOR KIA CERATO 14-C CROM. MRH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
+(784, 'LP-KA2013M-LH', 'LP-KA2013M', 'MANIJA INTERIOR KIA CERATO 14-C CROM. MLH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
+(785, 'LP-KA2013M-RH', 'LP-KA2013N', 'MANIJA INTERIOR KIA CERATO 14-C CROM. MRH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
 (786, 'LP-KA2500G-LH', 'LP-KA2500G', 'MANIJA DE PTA INT.KIA SPORTAGE 95-02 GLH', 2, 2, 1, 0, 1, 1, 0, 0, 0, -3, 1, 1, NULL, NULL, NULL, NULL),
 (787, 'LP-KA2500G-RH', 'LP-KA2500H', 'MANIJA DE PTA INT.KIA SPORTAGE 95-02 GRH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
 (788, 'LP-KA2900A-FL', 'LP-KA2900A', 'MANIJA INT.DELANT KIA BONGO , K-2700 AFL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
-(789, 'LP-KA2900A-FR', 'LP-KA2900B', 'MANIJA INT.DELANT KIA BONGO , K-2700 AFR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, 2, 1602623334),
+(789, 'LP-KA2900A-FR', 'LP-KA2900B', 'MANIJA INT.DELANT KIA BONGO , K-2700 AFR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
 (790, 'LP-KA3004P-F', 'LP-KA3004P', 'MANIJA EXT.DELANT.KIA PICANTO 11-C C/H PFL=PFR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (791, 'LP-KA3004P-FLK', 'LP-KA3004D', 'MANIJA EXT.DELANT.KIA PICANTO 11-C S/H PFLK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
 (792, 'LP-KA3004P-FRK', 'LP-KA3004R', 'MANIJA EXT.DELANT.KIA PICANTO 11-C S/H PFRK ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1, NULL, NULL, NULL, NULL),
-(793, 'LP-KA3010P-FL', 'LP-KA3010P', 'MANIJA EXT.PTA DELANT KIA CERATO 09-13 PFL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
-(794, 'LP-KA3010P-FRK', 'LP-KA3010D', 'MANIJA EXT.PTA DELANT KIA CERATO 09-13 PFRK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
+(793, 'LP-KA3010P-FL', 'LP-KA3010P', 'MANIJA EXT.PTA DELANT KIA CERATO 09-13 PFL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
+(794, 'LP-KA3010P-FRK', 'LP-KA3010D', 'MANIJA EXT.PTA DELANT KIA CERATO 09-13 PFRK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (795, 'LP-KA3950P-FL', 'LP-KA3950P', 'MANIJA EXT.DELANT.KIA BONGO-K-2700 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (796, 'LP-KA3950P-FR', 'LP-KA3950D', 'MANIJA EXT.DELANT.KIA BONGO-K-2700 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
 (797, 'LP-MB1041A', 'LP-MB1041A', 'MANIJA INT.LEVANTA LUNA MITSUBISHI L300 CANTER 1987 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
@@ -11963,10 +11915,10 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (801, 'LP-MB2508M-1LH', 'LP-MB2508M', 'MANIJA INT.MITS.CANTER ROSA FE444 1986 CROMO 1-LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (802, 'LP-MB2508M-1RH', 'LP-MB2508N', 'MANIJA INT.MITS.CANTER ROSA FE444 1986 CROMO 1-RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (803, 'LP-25090', 'LP-C090', 'MANIJA INT.ABRE PTA.DELANTERO MITSUB.CANTER 86-95 GRIS OSCURO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 36, 1, 1, NULL, NULL, NULL, NULL),
-(804, 'LP-MB3078A-FL', 'LP-MB3078A', 'MANIJA EXT.DELANT.MITSUB.DACKAR L/200 90-04 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL),
-(805, 'LP-MB3078A-FR', 'LP-MB3078B', 'MANIJA EXT.DELANT.MITSUB.DACKAR L/200 90-04 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL),
-(806, 'LP-MB3134A-FL', 'LP-MB3134A', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 80-92 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
-(807, 'LP-MB3134A-FR', 'LP-MB3134B', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 80-92 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
+(804, 'LP-MB3078A-FL', 'LP-MB3078A', 'MANIJA EXT.DELANT.MITSUB.DACKAR L/200 90-04 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
+(805, 'LP-MB3078A-FR', 'LP-MB3078B', 'MANIJA EXT.DELANT.MITSUB.DACKAR L/200 90-04 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
+(806, 'LP-MB3134A-FL', 'LP-MB3134A', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 80-92 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
+(807, 'LP-MB3134A-FR', 'LP-MB3134B', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 80-92 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (808, 'LP-31951     ', 'UNIVERSAL', 'MANIJA EXT.PTA.POSTERIOR MITSUBISHI TRITON L200 2005 L=R        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 31, 1, 1, NULL, NULL, NULL, NULL),
 (809, 'LP-MB3227A-FL', 'LP-MB3227A', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 03...FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
 (810, 'LP-MB3227A-FR', 'LP-MB3227B', 'MANIJA EXT.DELANT.MITSUBISHI CANTER 03...FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
@@ -11975,13 +11927,13 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (813, 'LP-MB3248S-ML', 'LP-MB3248S', 'MANIJA EXT.PUERTA CORREDIZA MITS.VERYCA WAGON 00 S-ML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
 (814, 'LP-MB3248S-MR', 'LP-MB3248Z', 'MANIJA EXT.PUERTA CORREDIZA MITSUBISHI VERYCA WAGON 00 S-MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
 (815, 'LP-MB3515A-TG', 'LP-MB3515A', 'MANIJA DE COMPUERTA POST.MITSUBISHI L200 2015 NEGRO TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
-(816, 'LP-MB3515M-TG', 'LP-MB3515M', 'MANIJA DE COMPUERTA POST.MITSUBISHI L200 2015 CROMO TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, 2, 1602623334),
+(816, 'LP-MB3515M-TG', 'LP-MB3515M', 'MANIJA DE COMPUERTA POST.MITSUBISHI L200 2015 CROMO TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
 (817, 'LP-MB7068-LH', 'LP-MB7068E', 'CHAPA PTA DELANT.MITS.FUSO 84-93 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
 (818, 'LP-MB7068-RH', 'LP-MB7068C', 'CHAPA PTA DELANT.MITS.FUSO 84-93 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (819, 'LP-MB7111LH', 'LP-MB7111A', 'CHAPA DE PUERTA DELANTMITSUBISHI CANTER 86-96 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
-(820, 'LP-NS1091G', 'LP-NS1091G', 'MANIJA LEVANTALUNA NISSAN  SENTRA B-13 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 225, 1, 1, NULL, NULL, NULL, NULL),
+(820, 'LP-NS1091G', 'LP-NS1091G', 'MANIJA LEVANTALUNA NISSAN  SENTRA B-13 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 205, 1, 1, NULL, NULL, NULL, NULL),
 (821, 'LP-NS1104G', 'LP-NS1104G', 'MANIJA INT.LEVANTA LUNA NISSAN B11 1982-1986 GRIS OSCURO              ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 145, 1, 1, NULL, NULL, NULL, NULL),
-(822, 'LP-NS2030G', 'LP-NS2030G', 'MANIJA INTERIOR NISSAN FIERA 86-97 720 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 109, 1, 1, NULL, NULL, NULL, NULL),
+(822, 'LP-NS2030G', 'LP-NS2030G', 'MANIJA INTERIOR NISSAN FIERA 86-97 720 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 99, 1, 1, NULL, NULL, NULL, NULL),
 (823, 'LP-NS2033G-1', 'LP-NS2033G', 'MANIJA INTERIOR DELANT.NISSAN SUNNY 84/CARAVAN', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1, NULL, NULL, NULL, NULL),
 (824, 'LP-NS2301A-LH', 'LP-NS2301A', 'MANIJA INT.NISSAN AD WAGON WINGROAD 2007//TIIDA LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
 (825, 'LP-NS2301A-RH', 'LP-NS2301B', 'MANIJA INT.NISSAN AD WAGON WINGROAD 2007//TIIDA RH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
@@ -11992,24 +11944,24 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (830, 'LP-NS2544A-LH', 'LP-NS2544A', 'MANIJA INT.ABRE PTA.DELANT.NISSAN FRONTIER 98-02 NEGRO LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (831, 'LP-NS2544A-RH', 'LP-NS2544B', 'MANIJA INT.ABRE PTA.DELANT.NISSAN FRONTIER 98-02 NEGRO RH ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (832, 'LP-NS3061M-LH', 'LP-NS3061M', 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN B11 1982-1986 CROMO LH                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(833, 'LP-NS3061M-RH', 'LP-NS3061N', 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN B11 1982-1986 CROMO RH                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, 2, 1602623334),
+(833, 'LP-NS3061M-RH', 'LP-NS3061N', 'MANIJA EXT.PTA.DELANT.Y POST.NISSAN B11 1982-1986 CROMO RH                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (834, 'LP-NS3152M-FL', 'LP-NS3152M', 'MANIJA EXT.NISSAN FRONTIER 97-2004 CROMO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
 (835, 'LP-NS3152M-FR', 'LP-NS3152N', 'MANIJA EXT.NISSAN FRONTIER 97-2004 CROMO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
-(836, 'LP-NS3172A-TG', 'LP-NS3172A', 'MANIJA EXT.PTA DE TOLVA CENTRAL DE NISSAN FIERA 86-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -3, 1, 1, NULL, NULL, 2, 1602623334),
+(836, 'LP-NS3172A-TG', 'LP-NS3172A', 'MANIJA EXT.PTA DE TOLVA CENTRAL DE NISSAN FIERA 86-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
 (837, 'LP-NS3175A-FL', 'LP-NS3175A', 'MANIJA EXT.DELANT.NISSAN SENTRA B15 2000 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
 (838, 'LP-NS3175A-FR', 'LP-NS3175B', 'MANIJA EXT.DELANT.NISSAN SENTRA B15 2000 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
 (839, 'LP-NS3175A-RL', 'LP-NS3175P', 'MANIJA EXT.POST.NISSAN SENTRA B15 2000 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
 (840, 'LP-NS3175A-RR', 'LP-NS3175D', 'MANIJA EXT.POST.NISSAN SENTRA B15 2000 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
 (841, 'LP-NS3193A-FL', 'LP-NS3193A', 'MANIJA EXT.NISSAN FIERA 86-97 NEGRO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (842, 'LP-NS3193A-FR', 'LP-NS3193B', 'MANIJA EXT.NISSAN FIERA 86-97 NEGRO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(843, 'LP-NS3235A-MR', 'LP-NS3235A', 'MANIJA EXT.PTA CORREDIZA NISSAN URVAN CARAVAN 2002-2008', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, 2, 1602623334),
+(843, 'LP-NS3235A-MR', 'LP-NS3235A', 'MANIJA EXT.PTA CORREDIZA NISSAN URVAN CARAVAN 2002-2008', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (844, 'LP-NS3235-TL', 'LP-NS3235T', 'GATILLO COMPUERTA NISSAN E26 NV350 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (845, 'LP-NS3236S-MR', 'LP-NS3236S', 'MANIJA EXT.PTA CORREDIZA NISSAN URVAN E24 88-97', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (846, 'LP-NS3236-TL', 'LP-NS3236T', 'GATILLO COMPUERTA NISSAN URVAN E24  86-01 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (847, 'LP-NS3241A', 'LP-NS3241A', 'MANIJA PUERTA LATERAL NISSAN CONDOR TRUCK   R:L', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
 (848, 'LP-NS3242A-FL', 'LP-NS3242A', 'MANIJA EXT.DELANT.NISSAN FRONTIER 2002-2010 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1, NULL, NULL, NULL, NULL),
 (849, 'LP-NS3242A-FR', 'LP-NS3242B', 'MANIJA EXT.DELANT.NISSAN FRONTIER 2002-2010 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1, NULL, NULL, NULL, NULL),
-(850, 'LP-NS3301A-FL', 'LP-NS3301A', 'MANIJA EXT.DELANT.C/HUECO NISSAN TIIDA O4-11(L)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, 2, 1602623334),
+(850, 'LP-NS3301A-FL', 'LP-NS3301A', 'MANIJA EXT.DELANT.C/HUECO NISSAN TIIDA O4-11(L)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (851, 'LP-NS3301A-FR', 'LP-NS3301B', 'MANIJA EXT.DELANT.S/HUECO NISSAN TIIDA O4-11(R)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
 (852, 'LP-NS3301A-FLK', 'LP-NS3301C', 'MANIJA EXT.POST.NISSAN TIIDA O4-11/VERSA SEDAN FLK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (853, 'LP-NS3301A-FRK', 'LP-NS3301D', 'MANIJA EXT.POST.NISSAN TIIDA O4-11/VERSA SEDAN FRK', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
@@ -12018,13 +11970,13 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (856, 'LP-NS3530A-FRK', 'LP-NS3530K', 'MANIJA EXT.DELANT.NISSAN NV350 2013-2019 FRK ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (857, 'LP-NS3530A-TG', 'LP-NS3530T', 'MANIJA COMPUERTA NISSAN NV350 2013-2019 TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (858, 'LP-NS3903A-TL', 'LP-NS3903A', 'GATILLO DE COMPUERTA NISSAN FRONTIER 2001 2004 TL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
-(859, 'LP-NS3905A-TG', 'LP-NS3905A', 'MANIJA DE COMPUERTA NISSAN FRONTIER 2005 TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, 2, 1602623334),
+(859, 'LP-NS3905A-TG', 'LP-NS3905A', 'MANIJA DE COMPUERTA NISSAN FRONTIER 2005 TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
 (860, 'LP-NS3905A-TL', 'LP-NS3905B', 'GATILLO COMPUERTA NISSAN FRONTIER 04 TL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1, NULL, NULL, NULL, NULL),
 (861, 'LP-NS3962P-FL', 'LP-NS3962P', 'MANIJA EXT.PTA.DELANT.NISSAN FRONTIER 98-02 NEGRO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 44, 1, 1, NULL, NULL, NULL, NULL),
 (862, 'LP-NS3962P-FR', 'LP-NS3962D', 'MANIJA EXT.PTA.DELANT.NISSAN FRONTIER 98-02 NEGRO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 44, 1, 1, NULL, NULL, NULL, NULL),
-(863, 'LP-NS4102-LHD', 'LP-NS4102', 'CHAPA DE CAPOT DATSUN PICK-UP /UNIVERSAL 620 72-79', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1, NULL, NULL, NULL, NULL),
+(863, 'LP-NS4102-LHD', 'LP-NS4102', 'CHAPA DE CAPOT DATSUN PICK-UP /UNIVERSAL 620 72-79', 2, 2, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1, NULL, NULL, NULL, NULL),
 (864, 'LP-NS4205-LHD', 'LP-NS4205', 'CERRADURA DE CAPOT NISSAN SENTRA B13', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
-(865, 'LP-NS4209-LHD', 'LP-NS4209', 'CHAPA DE CAPOT NISSAN FIERA PICK UP 720 93-98 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
+(865, 'LP-NS4209-LHD', 'LP-NS4209', 'CHAPA DE CAPOT NISSAN FIERA PICK UP 720 93-98 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -1, 1, 1, NULL, NULL, NULL, NULL),
 (866, 'LP-NS5235M-FL', 'LP-NS5235M', 'CREMALLERA LEVANTALUNA NISSAN CARAVAN 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (867, 'LP-NS5235M-FR', 'LP-NS5235N', 'CREMALLERA LEVANTALUNA NISSAN CARAVAN 2005...', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (868, 'LP-NS5257M-FL', 'LP-NS5257M', 'CREMALLERA LEVANTALUNA NISSAN SUNNY B-12 87-92 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
@@ -12033,10 +11985,10 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (871, 'LP-NS7047-RH', 'LP-NS7047R', 'CHAPA DE PUERTA DELANTERA NISSAN/DATSUN   720 80-86 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
 (872, 'LP-NS7066-LH', 'LP-NS7066L', 'CHAPA DE PTA DELANT.NISSAN FIERA 720 86-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
 (873, 'LP-NS7066-RH', 'LP-NS7066R', 'CHAPA DE PTA DELANT.NISSAN FIERA 720 86-97 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
-(874, 'LP-NS7132-LH', 'LP-NS7132L', 'CHAPA DE PTA.DELANT.NISSAN CARAVAN HOMMY E24', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
-(875, 'LP-NS7132-RH', 'LP-NS7132R', 'CHAPA DE PTA.DELANT.NISSAN CARAVAN HOMMY E24', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
+(874, 'LP-NS7132-LH', 'LP-NS7132L', 'CHAPA DE PTA.DELANT.NISSAN CARAVAN HOMMY E24', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
+(875, 'LP-NS7132-RH', 'LP-NS7132R', 'CHAPA DE PTA.DELANT.NISSAN CARAVAN HOMMY E24', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
 (876, 'LP-NS7235', 'LP-NS7235', 'SAPITO DE PTA.MALETERA NISSAN CARAVAN  E24 88-97', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
-(877, 'LP-NSC122M', 'LP-NSC122M', 'MANIJA DE PTA TOLVA POSTERIOR NISSAN 720 /PICK-UP', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
+(877, 'LP-NSC122M', 'LP-NSC122M', 'MANIJA DE PTA TOLVA POSTERIOR NISSAN 720 /PICK-UP', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (878, 'LP-NSC132S-TG', 'LP-NSC132S', 'MANIJA DE PTA POST.NISSAN 720 98....', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, NULL, NULL),
 (879, 'LP-OP3002A-FL', 'LP-OP3002A', 'MANIJA PTA0.EXT DELANT.CHEVROLET CORSA 98-03 FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (880, 'LP-OP3002A-FR', 'LP-OP3002B', 'MANIJA PTA0.EXT DELANT.CHEVROLET CORSA 98-03 FR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
@@ -12049,7 +12001,7 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (887, 'LP-RN3505A-MR', 'LP-RN3505A', 'MANIJA EXT.PTA.CORREDIZA RENULT MASTER 2003-10 MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
 (888, 'LP-RN3505A-TG', 'LP-RN3505', 'MANIJA .EXT.PTA DELANT.NISSAN RENAUL MASTER 2003-10 TG', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1, NULL, NULL, NULL, NULL),
 (889, 'LP-RN3505ZA-1M', 'LP-RN3505Z', 'MANIJA PTA.EXT.CORREDIZA  RENAUTL MASTER 2003-10 METAL  1M', 2, 2, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
-(890, 'LP-RN3508A', 'LP-RN3508A', 'MANIJA PTA.EXT RENAULT MASTER 2010', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, 2, 1602623334),
+(890, 'LP-RN3508A', 'LP-RN3508A', 'MANIJA PTA.EXT RENAULT MASTER 2010', 2, 2, 1, 0, 1, 1, 0, 0, 0, 22, 1, 1, NULL, NULL, NULL, NULL),
 (891, 'LP-SK2063A-LH', 'LP-SK2063A', 'MANIJA INTERIOR SUSUKI VITARA NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (892, 'LP-SK2063A-RH', 'LP-SK2063B', 'MANIJA INTERIOR SUSUKI VITARA NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (893, 'LP-SK2063G-LH', 'LP-SK2063G', 'MANIJA INTERIOR SUSUKI VITARA GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
@@ -12069,50 +12021,50 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (907, 'LP-SK3145A-MR', 'LP-SK3145B', 'MANIJA EXT.PTA POST.CORREDIZA DAEWO DAMAS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -1, 1, 1, NULL, NULL, NULL, NULL),
 (908, 'LP-SK3169A-ML', 'LP-SK3169A', 'MANIJA EXT.PTA CORREDIZA SUSUKI EVERY/CARRY', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
 (909, 'LP-SK3169A-MR', 'LP-SK3169B', 'MANIJA EXT.PTA CORREDIZA SUSUKI EVERY/CARRY', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
-(910, 'LP-SK3230A-FL', 'LP-SK3230A', 'MANIJA EXT.PTA DELANT SUSUKI BALENO FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
+(910, 'LP-SK3230A-FL', 'LP-SK3230A', 'MANIJA EXT.PTA DELANT SUSUKI BALENO FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
 (911, 'LP-SK3230A-FR', 'LP-SK3230B', 'MANIJA EXT.PTA DELANT SUSUKI BALENO FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
-(912, 'LP-SK3230A-RL', 'LP-SK3230C', 'MANIJA EXT.PTA POST.SUSUKI BALENO RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(913, 'LP-SK3230A-RR', 'LP-SK3230D', 'MANIJA EXT.PTA POST.SUSUKI BALENO RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, -6, 1, 1, NULL, NULL, NULL, NULL),
+(912, 'LP-SK3230A-RL', 'LP-SK3230C', 'MANIJA EXT.PTA POST.SUSUKI BALENO RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, -1, 1, 1, NULL, NULL, NULL, NULL),
+(913, 'LP-SK3230A-RR', 'LP-SK3230D', 'MANIJA EXT.PTA POST.SUSUKI BALENO RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, -7, 1, 1, NULL, NULL, NULL, NULL),
 (914, 'LP-SK3235A-LH', 'LP-SK3235A', 'MANIJA.EXT.PTA DELANT.SUSUKI APV-04/ALTO NEGRO CLARO LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 21, 1, 1, NULL, NULL, NULL, NULL),
 (915, 'LP-SK3235A-RH', 'LP-SK3235B', 'MANIJA.EXT.PTA DELANT.SUSUKI APV-04/ALTO NEGRO CLARO RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
-(916, 'LP-TY1003G', 'LP-TY1003G', 'MANIJA LEVANTALUNA TOYOTA YARIS 99....', 2, 2, 1, 0, 1, 1, 0, 0, 0, 230, 1, 1, NULL, NULL, NULL, NULL),
+(916, 'LP-TY1003G', 'LP-TY1003G', 'MANIJA LEVANTALUNA TOYOTA YARIS 99....', 2, 2, 1, 0, 1, 1, 0, 0, 0, 224, 1, 1, NULL, NULL, NULL, NULL),
 (917, 'LP-TY1021G', 'LP-TY1021G', 'MANIJA LEVANTALUNA TY HILUX VIGO 05-YARIS 2007-2012 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (918, 'LP-TY1093G', 'LP-TY1093G', 'MANIJA LEVANTALUNA TY CAMRY 97-2001 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 230, 1, 1, NULL, NULL, NULL, NULL),
 (919, 'LP-TY2004G-LH', 'LP-TY2004G', 'MANIJA INTERIOR TOYOTA YARIS 07-12 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 45, 1, 1, NULL, NULL, NULL, NULL),
-(920, 'LP-TY2004G-RH', 'LP-TY2004H', 'MANIJLA INTERIOR TOYOTA YARIS 07-12 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 45, 1, 1, NULL, NULL, NULL, NULL),
+(920, 'LP-TY2004G-RH', 'LP-TY2004H', 'MANIJLA INTERIOR TOYOTA YARIS 07-12 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 43, 1, 1, NULL, NULL, NULL, NULL),
 (921, 'LP-TY2008A-LH', 'LP-TY2008A', 'MANIJA INTERIOR TOYOTA AVANZA 2012-C NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (922, 'LP-TY2008A-RH', 'LP-TY2008B', 'MANIJA INTERIOR TOYOTA AVANZA 2012-C NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (923, 'LP-TY2008MA-LH', 'LP-TY2008M', 'MANIJA INT.TOYOTA AVANZA 2012 -C CROMADO C/NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1, NULL, NULL, NULL, NULL),
 (924, 'LP-TY2008MA-RH', 'LP-TY2008N', 'MANIJA INT.TOYOTA AVANZA 2012 -C CROMADO C/NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1, NULL, NULL, NULL, NULL),
 (925, 'LP-TY2523G-LH', 'LP-TY2523G', 'MANIJA INT.TOY.COROLLA AUTO 93-97 TURING GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
 (926, 'LP-TY2523G-RH', 'LP-TY2523H', 'MANIJA INT.TOY.COROLLA AUTO 93-97 TURING GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1, NULL, NULL, NULL, NULL),
-(927, 'LP-TY2546A-LH', 'LP-TY2546A', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1, NULL, NULL, NULL, NULL),
-(928, 'LP-TY2546A-RH', 'LP-TY2546B', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1, NULL, NULL, NULL, NULL),
-(929, 'LP-TY2546G-LH', 'LP-TY2546G', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
-(930, 'LP-TY2546G-RH', 'LP-TY2546H', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
+(927, 'LP-TY2546A-LH', 'LP-TY2546A', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1, NULL, NULL, NULL, NULL),
+(928, 'LP-TY2546A-RH', 'LP-TY2546B', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 NEGRO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1, NULL, NULL, NULL, NULL),
+(929, 'LP-TY2546G-LH', 'LP-TY2546G', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
+(930, 'LP-TY2546G-RH', 'LP-TY2546H', 'MANIJA INT.TOYOTA COROLLA AE110 95-02 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
 (931, 'LP-TY2560G-LH', 'LP-TY2560L', 'MANIJA INT.DELANT TOYOTA HIACE 90-03', 2, 2, 1, 0, 1, 1, 0, 0, 0, 50, 1, 1, NULL, NULL, NULL, NULL),
 (932, 'LP-TY2560G-RH', 'LP-TY2560R', 'MANIJA INT.DELANT TOYOTA HIACE 90-03', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1, NULL, NULL, NULL, NULL),
 (933, 'LP-TY2565G-RR', 'LP-TY2565G', 'MANIJA INT.DE PUERTA CORREDIZA TOYOTA HIACE 2005 GRIS RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, NULL, NULL),
 (934, 'LP-TY2574G-LH', 'LP-TY2574G', 'MANIJA INT.TOYOTA CALDINA/CORONA 94-97 GRIS LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
-(935, 'LP-TY2574G-RH', 'LP-TY2574H', 'MANIJA INT.TOYOTA CALDINA/CORONA 94-97 GRIS RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
+(935, 'LP-TY2574G-RH', 'LP-TY2574H', 'MANIJA INT.TOYOTA CALDINA/CORONA 94-97 GRIS RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (936, 'LP-TY2575G-LH', 'LP-TY2575G', 'MANIJA INT.TOYOTA CORONA PREMIO 98-01 GRIS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (937, 'LP-TY2575G-RH', 'LP-TY2575H', 'MANIJA INT.TOYOTA CORONA PREMIO 98-01 GRIS ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (938, 'LP-TY2579G-MR', 'LP-TY2579G', 'MANIJA INT.PTA CORREDIZA TOY.HIACE 2L 85-89 GRIS MR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (939, 'LP-3105 L          ', 'LP-3105 L          ', 'MANIJA EXT.PTA.DELANTERO TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
 (940, 'LP-31050R     ', 'LP-31050R     ', 'MANIJA EXT.PTA.POSTERIOR TOYOTA HILUX RN85 89-95                      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
-(941, 'LP-TY3115A-FL', 'LP-TY3115A', 'MANIJA EXT.DELANTERA TOYOTA HIACE 2L 85-89 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, 2, 1602623471),
+(941, 'LP-TY3115A-FL', 'LP-TY3115A', 'MANIJA EXT.DELANTERA TOYOTA HIACE 2L 85-89 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (942, 'LP-TY3115A-FR', 'LP-TY3115B', 'MANIJA EXT.DELANTERA TOYOTA HIACE 2L 85-89 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (943, 'LP-TY3115A-M', 'LP-TY3115M', 'MANIJA EXT.PTA CORREDIZA TOYOTA HIACE 2L 85-89 A-M', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
-(944, 'LP-TY3138A-FL', 'LP-TY3138A', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 93...FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, -3, 1, 1, NULL, NULL, 2, 1602623333);
+(944, 'LP-TY3138A-FL', 'LP-TY3138A', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 93...FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
+(945, 'LP-TY3138A-FR', 'LP-TY3138B', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 93...FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
+(946, 'LP-TY3139A-FL', 'LP-TY3139A', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 85-89 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL);
 INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_prod`, `umed_prod`, `contenido_prod`, `exctoigv_prod`, `compra_prod`, `venta_prod`, `stockini_prod`, `stockmax_prod`, `stockmin_prod`, `stock_prod`, `status_prod`, `sucursal_prod`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
-(945, 'LP-TY3138A-FR', 'LP-TY3138B', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 93...FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, -2, 1, 1, NULL, NULL, NULL, NULL),
-(946, 'LP-TY3139A-FL', 'LP-TY3139A', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 85-89 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, 2, 1602623471),
 (947, 'LP-TY3139A-FR', 'LP-TY3139B', 'MANIJA EXT.PTA DELANT.TOYOTA DYNA 85-89 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (948, 'LP-TY3155A-FL', 'LP-TY3155A', 'MANIJA EXT DELANTERA TOYOTA COROLLA AE-90 88 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (949, 'LP-TY3155A-FR', 'LP-TY3155B', 'MANIJA EXT DELANTERA TOYOTA COROLLA AE-90 88 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (950, 'LP-TY3155A-RL', 'LP-TY3155C', 'MANIJA EXT POSTERIOR TOYOTA COROLLA AE-90 88 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (951, 'LP-TY3155A-RR', 'LP-TY3155D', 'MANIJA EXT POSTERIOR TOYOTA COROLLA AE-90 88 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
-(952, 'LP-TY3176S-FL', 'LP-TY3176S', 'MANIJA EXT.PTA DELANT TOYOTA CAMRY 92-96 NEGRO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
+(952, 'LP-TY3176S-FL', 'LP-TY3176S', 'MANIJA EXT.PTA DELANT TOYOTA CAMRY 92-96 NEGRO FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
 (953, 'LP-TY3180A-FL', 'LP-TY3180', '\"MANIJA EXT.PTA.DELANT.TY.H.VIGO,ALTIS YARIS,CAMRY 06-12 FL\"', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (954, 'LP-TY3180A-FRK', 'LP-TY3180A', '\"MANIJA EXT.PTA.DELANT.TY.H.VIGO,ALTIS YARIS,CAMRY 06-12 FRK\"', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
 (955, 'LP-TY3180A-RER', 'LP-TY3180E', '\"MANIJA EXT.POST.TY.HIGHLAN.01-07/CAMRY,VIGO, YARIS 06-12(L=R)\"', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1, NULL, NULL, NULL, NULL),
@@ -12126,25 +12078,25 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (963, 'LP-TY3196S-FR', 'LP-TY3196Z', 'MANILLA EXTERIOR DELANT.TOYOTA CORONA PREMIO 98-01FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (964, 'LP-TY3196S-RL', 'LP-TY3196L', 'MANILLA EXTERIOR POST.TOYOTA CORONA PREMIO 98-01 RL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (965, 'LP-TY3196S-RR', 'LP-TY3196R', 'MANILLA EXTERIOR POST.TOYOTA CORONA PREMIO 98-01 RR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
-(966, 'LP-3197AL     ', 'LP-C791L', 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE110 96-01                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, 2, 1602623470),
+(966, 'LP-3197AL     ', 'LP-C791L', 'MANIJA EXT.PTA.DELANTERO TOYOTA COROLLA AE110 96-01                   ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
 (967, 'LP-TY3197A-RL', 'LP-TY3197A', 'MANIJA EXT.PTA.POST.TOYOTA COROLLA AE110 96-01 NEGRO RL                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1, NULL, NULL, NULL, NULL),
 (968, 'LP-TY3197A-RR', 'LP-TY3197B', 'MANIJA EXT.PTA.POST.TOYOTA COROLLA AE110 96-01 NEGRO RR                  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1, NULL, NULL, NULL, NULL),
-(969, 'LP-TY3215A-FL', 'LP-TY3215A', 'MANIJA.EXT.DELANT.TOYOTA HIACE 3L 90-03 FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 30, 1, 1, NULL, NULL, 2, 1602623471),
+(969, 'LP-TY3215A-FL', 'LP-TY3215A', 'MANIJA.EXT.DELANT.TOYOTA HIACE 3L 90-03 FL ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 36, 1, 1, NULL, NULL, NULL, NULL),
 (970, 'LP-TY3215A-FR', 'LP-TY3215B', 'MANIJA.EXT.DELANT.TOYOTA HIACE 3L 90-03 FR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 36, 1, 1, NULL, NULL, NULL, NULL),
 (971, 'LP-TY3215A-ML', 'LP-TY3215L', 'MANIJA EXTERIOR PTA CORREDIZA TOY.HIACE 3L 90-97 ML', 2, 2, 1, 0, 1, 1, 0, 0, 0, 38, 1, 1, NULL, NULL, NULL, NULL),
 (972, 'LP-TY3215A-MR', 'LP-TY3215R', 'MANIJA EXTERIOR PTA CORREDIZA TOY.HIACE 3L 90-97 MR ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 66, 1, 1, NULL, NULL, NULL, NULL),
-(973, 'LP-TY3215-TL', 'LP-TY3215T', 'GATILLO DE COMPUERTA TOYOTA HIACE 3L 90-04 TL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 43, 1, 1, NULL, NULL, NULL, NULL),
+(973, 'LP-TY3215-TL', 'LP-TY3215T', 'GATILLO DE COMPUERTA TOYOTA HIACE 3L 90-04 TL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 39, 1, 1, NULL, NULL, NULL, NULL),
 (974, 'LP-32171 R          ', 'LP-32171 R          ', 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005..                          ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
-(975, 'LP-TY3217A-MR', 'LP-TY3217A', 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005 MR                 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, -3, 1, 1, NULL, NULL, 2, 1602623471),
+(975, 'LP-TY3217A-MR', 'LP-TY3217A', 'MANIJA EXT.PTA.CORREDIZA TOYOTA HIACE 2005 MR                 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
 (976, 'LP-TY3217M-FL', 'LP-TY3217M', 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005...CROMO FL        ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
 (977, 'LP-TY3217M-FR', 'LP-TY3217N', 'MANIJA EXT.PTA.DELANTERO TOYOTA HIACE 2005...CROMO FR      ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
 (978, 'LP-TY3240A-FL', 'LP-TY3240A', 'MANIJA EXT.PUERTA DELANTERA TOYOTA DYNA FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
 (979, 'LP-TY3240A-FR', 'LP-TY3240B', 'MANIJA EXT.PUERTA DELANTERA TOYOTA DYNA FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
-(980, 'LP-TY3412A-FL', 'LP-TY3412A', 'MANIJA EXT.DELANT.HILUX REVO 2015 2015 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, 2, 1602623470),
-(981, 'LP-TY3412A-RER', 'LP-TY3412E', 'MANIJA EXT.POST.HILUX REVO 15 (RH=LH)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
-(982, 'LP-TY3412M-FL', 'LP-TY3412M', 'MANIJA EXT.DELANT.HILUX REVO 2015 2015 CROMO M-FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, 2, 1602623471),
-(983, 'LP-TY3412M-RER', 'LP-TY3412N', 'MANIJA EXT.POST.HILUX REVO 15 CROMADO (RH=LH)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
-(984, 'LP-TY4143', 'LP-TY4143', 'CHAPA DE PTA MALETERA TOYOTA COROLLA AE100 SW 88-91', 2, 2, 1, 0, 1, 1, 0, 0, 0, -3, 1, 1, NULL, NULL, 2, 1602623470),
+(980, 'LP-TY3412A-FL', 'LP-TY3412A', 'MANIJA EXT.DELANT.HILUX REVO 2015 2015 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
+(981, 'LP-TY3412A-RER', 'LP-TY3412E', 'MANIJA EXT.POST.HILUX REVO 15 (RH=LH)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
+(982, 'LP-TY3412M-FL', 'LP-TY3412M', 'MANIJA EXT.DELANT.HILUX REVO 2015 2015 CROMO M-FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
+(983, 'LP-TY3412M-RER', 'LP-TY3412N', 'MANIJA EXT.POST.HILUX REVO 15 CROMADO (RH=LH)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
+(984, 'LP-TY4143', 'LP-TY4143', 'CHAPA DE PTA MALETERA TOYOTA COROLLA AE100 SW 88-91', 2, 2, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
 (985, 'LP-TY4163-LHD', 'LP-TY4163D', 'CHAPA DE CAPOT TOYOTA HILUX  2005-12 LHD', 2, 2, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1, NULL, NULL, NULL, NULL),
 (986, 'LP-TY4167-LHD', 'LP-TY4167', 'CHAPA DE CAPOT TOYOTA HILUX  89-98 LHD', 2, 2, 1, 0, 1, 1, 0, 0, 0, -7, 1, 1, NULL, NULL, NULL, NULL),
 (987, 'LP-TY4186', 'LP-TY4186', 'CHAPA DE PUERTA MALETERA TOYOTA COROLLA AE100 93-97', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
@@ -12164,71 +12116,71 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 (1001, 'LP-TY5218M-FR', 'LP-TY5218N', 'CREMALLERA LENTANT.TOYOTA HIACE 2005 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
 (1002, 'LP-TY5265M-FL', 'LP-TY5265M', 'CREMALLERA LEVANT TOYOTA HILUX DLTERA FL 1990-1996 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, -10, 1, 1, NULL, NULL, NULL, NULL),
 (1003, 'LP-TY5265M-FR', 'LP-TY5265N', 'CREMALLERA LEVANT TOYOTA HILUX DLTERA FL 1990-1996 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
-(1004, 'LP-TY5278M-FL', 'LP-TY5278M', 'CREMALLERA LEVANTALUNA TOYOTA HIAC3L 90-99 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
-(1005, 'LP-TY5278M-FR', 'LP-TY5278N', 'CREMALLERA LEVANTALUNA TOYOTA HIAC3L 90-99 FR  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
+(1004, 'LP-TY5278M-FL', 'LP-TY5278M', 'CREMALLERA LEVANTALUNA TOYOTA HIAC3L 90-99 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 12, 1, 1, NULL, NULL, NULL, NULL),
+(1005, 'LP-TY5278M-FR', 'LP-TY5278N', 'CREMALLERA LEVANTALUNA TOYOTA HIAC3L 90-99 FR  ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
 (1006, 'LP-TY6004-LH', 'LP-TY6004L', 'BISAGRA DE CAPOT TOYOTA COROLLA AE110 98-02 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
 (1007, 'LP-TY6004-RH', 'LP-TY6004R', 'BISAGRA DE CAPOT TOYOTA COROLLA AE110 98-02 ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
 (1008, 'LP-TY6017-LH', 'LP-TY6017L', 'BISAGRA DE CAPOT TOYOTA Hilux 98-05', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
 (1009, 'LP-TY6017-RH', 'LP-TY6017R', 'BISAGRA DE CAPOT TOYOTA Hilux 98-05', 2, 2, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
 (1010, 'LP-TY6035-LH', 'LP-TY6035L', 'BISAGRA DE CAPOT TOYOTA TERCEL 95-01 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (1011, 'LP-TY6035-RH', 'LP-TY6035R', 'BISAGRA DE CAPOT TOYOTA TERCEL 95-01 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
-(1012, 'LP-TY6037-LH', 'LP-TY6037L', 'BISAGRA DE CAPOT TOYOTA YARIS 2007-2012 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1, NULL, NULL, NULL, NULL),
-(1013, 'LP-TY6037-RH', 'LP-TY6037R', 'BISAGRA DE CAPOT TOYOTA YARIS 2007-2012 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1, NULL, NULL, NULL, NULL),
+(1012, 'LP-TY6037-LH', 'LP-TY6037L', 'BISAGRA DE CAPOT TOYOTA YARIS 2007-2012 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 31, 1, 1, NULL, NULL, NULL, NULL),
+(1013, 'LP-TY6037-RH', 'LP-TY6037R', 'BISAGRA DE CAPOT TOYOTA YARIS 2007-2012 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 31, 1, 1, NULL, NULL, NULL, NULL),
 (1014, 'LP-TY6163-LH', 'LP-TY6163L', 'BISAGRA DE CAPOT TOYOTA  HILUX VIGO  2005-2013 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1, NULL, NULL, NULL, NULL),
 (1015, 'LP-TY6163-RH', 'LP-TY6163R', 'BISAGRA DE CAPOT TOYOTA  HILUX VIGO  2005-2013 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1, NULL, NULL, NULL, NULL),
 (1016, 'LP-TY6217-LH', 'LP-TY6217L', 'BISAGRA DE CAPOT TOYOTA HIACE 5L 2005-2014 LH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1, NULL, NULL, NULL, NULL),
 (1017, 'LP-TY6217-RH', 'LP-TY6217R', 'BISAGRA DE CAPOT TOYOTA HIACE 5L 2005-2014 RH', 2, 2, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1, NULL, NULL, NULL, NULL),
 (1018, 'LP-TY7054-FL', 'LP-TY7054L', 'CHAPA DE PUERTA DELANTERA TOYOTA HILUX 89/95 FL', 2, 2, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
 (1019, 'LP-TY7054-FR', 'LP-TY7054R', 'CHAPA DE PUERTA DELANTERA TOYOTA HILUX 89/95 FR', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
-(1020, 'LP-TYB032G', 'LP-TYB032G', 'MANIJA DE GUANTERA TOYOTA COROLLA AE100 93-97 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 263, 1, 1, NULL, NULL, NULL, NULL),
+(1020, 'LP-TYB032G', 'LP-TYB032G', 'MANIJA DE GUANTERA TOYOTA COROLLA AE100 93-97 GRIS', 2, 2, 1, 0, 1, 1, 0, 0, 0, 253, 1, 1, NULL, NULL, NULL, NULL),
 (1021, 'LP-TYC001A', 'LP-TYC001A', 'MANIJA DE PUERTA TOLVA TOYOTA HILUX GANCHO( NEGRO)', 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
-(1022, 'LP-TYC001Y', 'LP-TYC001Y', 'MANIJA DE PUERTA TOLVA TOYOTA HILUX GANCHO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
+(1022, 'LP-TYC001Y', 'LP-TYC001Y', 'MANIJA DE PUERTA TOLVA TOYOTA HILUX GANCHO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL),
 (1023, 'LP-3100AL', 'LP-3100AL', 'MANIJA EXTERIOR DE DAEWOO TICO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 105, 1, 1, NULL, NULL, NULL, NULL),
 (1024, 'LP-2004ARL', 'LP-2004ARL', 'MANIJA INT.PTA POST KIA PICANTO 11-C NEGRO ', 2, 2, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1, NULL, NULL, NULL, NULL),
 (1025, 'LP-3230MFR', 'LP-3230MFR', 'MANIJA EXT.PTA DELANT MITSUB.LANCER MIRAGE 97-02 CROMO', 2, 2, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
 (1026, 'LP-SW6', 'CM05-SW2', 'FARO NEBLINERO SUZUKI SWIFT 2005 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
-(1027, 'LP-CO6', 'CM14-TC4', 'FARO NEBLINERO PARACHOQUE TOYOTA COROLLA 2014 (SETL/R)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 2, 1, 1, NULL, NULL, NULL, NULL),
-(1028, 'LP-SC2', 'CM11-SZA2', 'FARO NEBLINERO SUZUKI ALTO CELERIO 2010 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, 2, 1602781128),
-(1181, 'LP-SAL10', 'LP-SAL10', 'FARO NEBLI.CHEV.SAIL 2010-2014(SET2) KIT COMP', 1, 1, 1, 0, 1, 1, 0, 0, 0, 28, 1, 1, NULL, NULL, NULL, NULL),
-(1182, 'LP-SP14', 'LP-SP14', 'FARO NEBLI.CHEV. SPARK 2005 (SET2)(SET2) KIT COMP', 1, 1, 1, 0, 1, 1, 0, 0, 0, 25, 1, 1, NULL, NULL, NULL, NULL),
+(1027, 'LP-CO6', 'CM14-TC4', 'FARO NEBLINERO PARACHOQUE TOYOTA COROLLA 2014 (SETL/R)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL),
+(1028, 'LP-SC2', 'CM11-SZA2', 'FARO NEBLINERO SUZUKI ALTO CELERIO 2010 (SETX2)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
+(1181, 'LP-SAL10', 'LP-SAL10', 'FARO NEBLI.CHEV.SAIL 2010-2014(SET2) KIT COMP', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
+(1182, 'LP-SP14', 'LP-SP14', 'FARO NEBLI.CHEV. SPARK 2005 (SET2)(SET2) KIT COMP', 1, 1, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1, NULL, NULL, NULL, NULL),
 (1183, 'LP-EL8', 'LP-EL8', 'FARO NEBLI.HY ELANTRA 2017...(SETX2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (1184, 'LP-EL6', 'LP-EL6', 'FARO NEBLI.HY ELANTRA 2014-2016 (SETX2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 27, 1, 1, NULL, NULL, NULL, NULL),
 (1185, 'LP-EL4A', 'LP-EL4A', 'FARO NEBLI.HY ELANTRA 2011-2013 (SETX2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 29, 1, 1, NULL, NULL, NULL, NULL),
 (1186, 'LP-AC4A', 'LP-AC4A', 'FARO NEBLI.PARACH. HY ACCENT 2011-2017(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 23, 1, 1, NULL, NULL, NULL, NULL),
-(1187, 'LP-TU6', 'LP-TU6', 'FARO NEBLI.PARACH.HY TUCSON 2014-2015 (SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
+(1187, 'LP-TU6', 'LP-TU6', 'FARO NEBLI.PARACH.HY TUCSON 2014-2015 (SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
 (1188, 'LP-I108', 'LP-I108', 'FARO NEBLI.PARACH.HY.GRAND I10 2018 (SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
 (1189, 'LP-I104D', 'LP-I104D', 'FARO NEBLI.PARACH. HY I10 2012(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
 (1190, 'LP-H12D', 'LP-H12D', 'FARO NEBLI.PARACH. HY H1(SET2)(KIT COMP)   ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 33, 1, 1, NULL, NULL, NULL, NULL),
 (1191, 'LP-SG2D', 'LP-SG2D', 'FARO NEBLI.KIA SPORTAGE 2005 (SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, NULL, NULL),
 (1192, 'LP-RI4H', 'LP-RI4H', 'FARO NEBLI.KIA RIO HATCHBAC 2012 (SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
-(1193, 'LP-CE4D', 'LP-CE4D', 'FARO NEBLI.KIA CERATO  2013 (SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 17, 1, 1, NULL, NULL, 2, 1602781127),
+(1193, 'LP-CE4D', 'LP-CE4D', 'FARO NEBLI.KIA CERATO  2013 (SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
 (1194, 'LP-PI6', 'LP-PI6', 'FARO NEBLI.KIA PICANTO 2015-2016(SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
 (1195, 'LP-PI4K', 'LP-PI4K', 'FARO NEBLI.KIA PICANTO 2012-2014(SETX2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (1196, 'LP-TR2D', 'LP-TR2D', 'FARO NEBLI.MITSUB.TRITON L200 2009-2013..(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 6, 1, 1, NULL, NULL, NULL, NULL),
 (1197, 'LP-NS4', 'LP-NS4', 'FARO NEBLI.NISS.SENTRA 2012-2015(SET2)NEGRO(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
 (1198, 'LP-NA4D', 'LP-NA4D', 'FARO NEBLI.NISS.NAVARA 2014/NP300...(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
-(1199, 'LP-VE2', 'LP-VE2', 'FARO NEBLI.VERSA 2009-2013/TIIDA 2009-2013...(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 20, 1, 1, NULL, NULL, 2, 1602781128),
-(1200, 'LP-TI2A', 'LP-TI2A', 'FARO NEBLI.TIIDA 2005-2008...(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
+(1199, 'LP-VE2', 'LP-VE2', 'FARO NEBLI.VERSA 2009-2013/TIIDA 2009-2013...(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, NULL, NULL),
+(1200, 'LP-TI2A', 'LP-TI2A', 'FARO NEBLI.TIIDA 2005-2008...(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 11, 1, 1, NULL, NULL, NULL, NULL),
 (1201, 'LP-UR4B', 'LP-UR4B', 'FARO NEBLI.NISS.URVAN NV350 2013-2017 (SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
 (1202, 'LP-LC4', 'LP-LC4', 'FARO NEBLI.TOYOTA LAND CRUISER PRADO 2014-2016 (SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
 (1203, 'LP-PD2', 'LP-PD2', 'FARO NEBLI.TOYOTA PRADO FJ120 2003-2004 (SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 14, 1, 1, NULL, NULL, NULL, NULL),
 (1204, 'LP-HR4', 'LP-HR4', 'FARO NEBLI.TY.REVO ROCCO 2018(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
-(1205, 'LP-HX2A', 'LP-HX2A', 'FARO NEBLI.TY HILUX VIGO 2011(SET 2 )(KIT COMP)   ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 51, 1, 1, NULL, NULL, 2, 1602781128),
+(1205, 'LP-HX2A', 'LP-HX2A', 'FARO NEBLI.TY HILUX VIGO 2011(SET 2 )(KIT COMP)   ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 35, 1, 1, NULL, NULL, NULL, NULL),
 (1206, 'LP-YS6', 'LP-YS6', 'FARO NEBLI.TY YARIS SEDAN 2017 (SET2) (KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 15, 1, 1, NULL, NULL, NULL, NULL),
-(1207, 'LP-CO4T', 'LP-CO4T', 'FARO NEBLI.TY.COROLLA 2011-2013 CROMADO(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1, NULL, NULL, 2, 1602781128),
+(1207, 'LP-CO4T', 'LP-CO4T', 'FARO NEBLI.TY.COROLLA 2011-2013 CROMADO(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 40, 1, 1, NULL, NULL, NULL, NULL),
 (1208, 'LP-CO4H', 'LP-CO4H', 'FARO NEBLI.TY.COROLLA 2008-2011 NEGRO(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1, NULL, NULL, NULL, NULL),
-(1209, 'LP-ET4', 'LP-ET4', 'FARO NEBLI.TOYOTA ETIOS SEDAN/HATCHBACK CK2017(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 19, 1, 1, NULL, NULL, 2, 1602781128),
+(1209, 'LP-ET4', 'LP-ET4', 'FARO NEBLI.TOYOTA ETIOS SEDAN/HATCHBACK CK2017(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 18, 1, 1, NULL, NULL, NULL, NULL),
 (1210, 'LP-HX4T', 'LP-HX4T', 'FARO NEBLI.TY.AVANZA 2015(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
 (1211, 'LP-SU8', 'LP-SU8', 'FARO NEBLINERO SUZUKI UNIVERSAL(SET2-KIT)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 13, 1, 1, NULL, NULL, NULL, NULL),
 (1212, 'LP-TH4H', 'LP-TH4H', 'FARO NEBLI.TY HIACE 2011-2013(SET2)(KIT COMP)  ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 16, 1, 1, NULL, NULL, NULL, NULL),
 (1213, 'LP-AM4', 'LP-AM4', 'FARO NEBLI.AMAROK 2014(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 5, 1, 1, NULL, NULL, NULL, NULL),
-(1214, 'LP-FC2', 'LP-FC2', 'FARO NEBLI.CHEV.TRAX/TRACKER`1 2014- 2016...(SET2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
+(1214, 'LP-FC2', 'LP-FC2', 'FARO NEBLI.CHEV.TRAX/TRACKER`1 2014- 2016...(SET2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 9, 1, 1, NULL, NULL, NULL, NULL),
 (1215, 'LP-FTN2', 'LP-FTN2', 'FARO NEBLI.FORTUNER/HILUX/SW4 2012- 2015...(SET2)(KIT COMPL)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, NULL, NULL),
 (1216, 'LP-AF2', 'LP-AF2', 'FARO NEBL.TOY.AXIO FIELDER 2007/COROLLA 2011 CROMO(SET2KIT)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 8, 1, 1, NULL, NULL, NULL, NULL),
-(1217, 'LP-TG2', 'CM-CHT2', 'FARO NEBLINERO CHERRY TIGGO(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 10, 1, 1, NULL, NULL, NULL, NULL),
+(1217, 'LP-TG2', 'CM-CHT2', 'FARO NEBLINERO CHERRY TIGGO(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 7, 1, 1, NULL, NULL, NULL, NULL),
 (1218, 'LP-AT2Z', '', 'FARO NEBLI.TY.ALTIS 2000-2003(SET2)(KIT COMP)', 1, 1, 1, 0, 1, 1, 0, 0, 0, 24, 1, 1, NULL, NULL, NULL, NULL),
 (1220, 'LP-CS2', 'CM08-KCR2', 'FARO NEBLINERO KIA CARENS 2003(SET2)CHINO', 1, 1, 1, 0, 1, 1, 0, 0, 0, 4, 1, 1, NULL, NULL, NULL, NULL),
-(1221, 'LP-TA6S', 'CM08-TA4S', 'FARO NEBLI.PARACH.TY YARIS,COROLLA ALTIS 2007 (VIDRIO)(SET2) S/SOCKET ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 3, 1, 1, NULL, NULL, 2, 1602781375);
+(1221, 'LP-TA6S', 'CM08-TA4S', 'FARO NEBLI.PARACH.TY YARIS,COROLLA ALTIS 2007 (VIDRIO)(SET2) S/SOCKET ', 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -12237,22 +12189,18 @@ INSERT INTO `producto` (`id_prod`, `cod_prod`, `codfab_prod`, `des_prod`, `tipo_
 --
 
 DROP TABLE IF EXISTS `profile`;
-CREATE TABLE IF NOT EXISTS `profile` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
-  `user_id` int(11) NOT NULL DEFAULT 0 COMMENT 'ID USER',
+CREATE TABLE `profile` (
+  `id` int(11) NOT NULL COMMENT 'ID UNICO',
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT 'ID USER',
   `nombre` varchar(50) NOT NULL DEFAULT '' COMMENT 'NOMBRE USUARIO',
   `apellido` varchar(50) NOT NULL DEFAULT '' COMMENT 'APELLIDO USUARIO',
-  `empresa` int(11) NOT NULL DEFAULT 0 COMMENT 'EMPRESA USUARIO',
-  `sucursal` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL USUARIO',
+  `empresa` int(11) NOT NULL DEFAULT '0' COMMENT 'EMPRESA USUARIO',
+  `sucursal` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL USUARIO',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='GUARDA PERFILES DE USUARIOS';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA PERFILES DE USUARIOS';
 
 --
 -- Volcado de datos para la tabla `profile`
@@ -12268,8 +12216,8 @@ INSERT INTO `profile` (`id`, `user_id`, `nombre`, `apellido`, `empresa`, `sucurs
 --
 
 DROP TABLE IF EXISTS `proveedor`;
-CREATE TABLE IF NOT EXISTS `proveedor` (
-  `id_prove` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `proveedor` (
+  `id_prove` int(11) NOT NULL COMMENT 'ID UNICO',
   `dni_prove` varchar(20) NOT NULL COMMENT 'DNI PROVEEDOR',
   `ruc_prove` varchar(20) NOT NULL COMMENT 'RUC PROVEEDOR',
   `nombre_prove` varchar(150) NOT NULL COMMENT 'NOMBRE PROVEEDOR',
@@ -12285,16 +12233,8 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_prove`),
-  KEY `sucursal_prove` (`sucursal_prove`),
-  KEY `pais_prove` (`pais_prove`),
-  KEY `provi_prove` (`provi_prove`),
-  KEY `depto_prove` (`depto_prove`),
-  KEY `dttp_prove` (`dtto_prove`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PROVEEDORES';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PROVEEDORES';
 
 --
 -- Volcado de datos para la tabla `proveedor`
@@ -12310,8 +12250,8 @@ INSERT INTO `proveedor` (`id_prove`, `dni_prove`, `ruc_prove`, `nombre_prove`, `
 --
 
 DROP TABLE IF EXISTS `provincia`;
-CREATE TABLE IF NOT EXISTS `provincia` (
-  `id_prov` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `provincia` (
+  `id_prov` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_prov` varchar(30) NOT NULL COMMENT 'DESCRIPCION PROVINCIA',
   `status_prov` int(11) NOT NULL COMMENT 'ESTATUS PROVINCIA',
   `sucursal_prov` int(11) NOT NULL COMMENT 'SUCURSAL PROVINCIA',
@@ -12319,13 +12259,8 @@ CREATE TABLE IF NOT EXISTS `provincia` (
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
   `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  `pais_prov` int(11) NOT NULL,
-  PRIMARY KEY (`id_prov`),
-  KEY `sucursal_prov` (`sucursal_prov`),
-  KEY `fx_pais_prov_idx` (`pais_prov`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PROVINCIA';
+  `pais_prov` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE PROVINCIA';
 
 --
 -- Volcado de datos para la tabla `provincia`
@@ -12367,7 +12302,7 @@ INSERT INTO `provincia` (`id_prov`, `des_prov`, `status_prov`, `sucursal_prov`, 
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `salidas_ajustes`;
-CREATE TABLE IF NOT EXISTS `salidas_ajustes` (
+CREATE TABLE `salidas_ajustes` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -12397,7 +12332,7 @@ CREATE TABLE IF NOT EXISTS `salidas_ajustes` (
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `salidas_documentos`;
-CREATE TABLE IF NOT EXISTS `salidas_documentos` (
+CREATE TABLE `salidas_documentos` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -12427,7 +12362,7 @@ CREATE TABLE IF NOT EXISTS `salidas_documentos` (
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `salidas_proformas`;
-CREATE TABLE IF NOT EXISTS `salidas_proformas` (
+CREATE TABLE `salidas_proformas` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -12457,20 +12392,16 @@ CREATE TABLE IF NOT EXISTS `salidas_proformas` (
 --
 
 DROP TABLE IF EXISTS `series`;
-CREATE TABLE IF NOT EXISTS `series` (
-  `id_serie` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID SERIE',
+CREATE TABLE `series` (
+  `id_serie` int(11) NOT NULL COMMENT 'ID SERIE',
   `des_serie` varchar(3) DEFAULT '000' COMMENT 'DESCRIPCION SERIE',
-  `status_serie` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS SERIE',
-  `sucursal_serie` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL SERIE',
+  `status_serie` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS SERIE',
+  `sucursal_serie` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL SERIE',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_serie`),
-  KEY `sucursal_serie` (`sucursal_serie`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE SERIES DE DOCUMENTOS';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE SERIES DE DOCUMENTOS';
 
 --
 -- Volcado de datos para la tabla `series`
@@ -12484,40 +12415,21 @@ INSERT INTO `series` (`id_serie`, `des_serie`, `status_serie`, `sucursal_serie`,
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `stock_prod_inicial`
--- (Véase abajo para la vista actual)
---
-DROP VIEW IF EXISTS `stock_prod_inicial`;
-CREATE TABLE IF NOT EXISTS `stock_prod_inicial` (
-`prod_detalle` int(11)
-,`fecha_trans` date
-,`sucursal_trans` int(11)
-,`ope_trans` varchar(1)
-,`stock_inicial` decimal(32,0)
-);
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `sucursal`
 --
 
 DROP TABLE IF EXISTS `sucursal`;
-CREATE TABLE IF NOT EXISTS `sucursal` (
-  `id_suc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `sucursal` (
+  `id_suc` int(11) NOT NULL COMMENT 'ID UNICO',
   `nombre_suc` varchar(50) NOT NULL COMMENT 'NOMBRE SUCURSAL',
   `estatus_suc` int(11) NOT NULL COMMENT 'ESTATUS SUCURSAL',
   `empresa_suc` int(11) NOT NULL COMMENT 'EMPRESA  DE LA SUCURSAL',
-  `impuesto_suc` decimal(7,2) NOT NULL DEFAULT 0.00,
+  `impuesto_suc` decimal(7,2) NOT NULL DEFAULT '0.00',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_suc`),
-  KEY `EMPRESA_SUC` (`empresa_suc`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE SUCURSALES';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE SUCURSALES';
 
 --
 -- Volcado de datos para la tabla `sucursal`
@@ -12533,8 +12445,8 @@ INSERT INTO `sucursal` (`id_suc`, `nombre_suc`, `estatus_suc`, `empresa_suc`, `i
 --
 
 DROP TABLE IF EXISTS `tipo_cambio`;
-CREATE TABLE IF NOT EXISTS `tipo_cambio` (
-  `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `tipo_cambio` (
+  `id_tipoc` int(11) NOT NULL COMMENT 'ID UNICO',
   `fecha_tipoc` date NOT NULL COMMENT 'FECHA TIPO CAMBIO',
   `monedac_tipoc` int(11) DEFAULT NULL COMMENT 'MONEDA A CAMBIAR',
   `moneda_tipoc` int(11) DEFAULT NULL COMMENT 'MONEDA CAMBIADA',
@@ -12545,12 +12457,8 @@ CREATE TABLE IF NOT EXISTS `tipo_cambio` (
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_tipoc`),
-  KEY `sucursal_tipoc` (`sucursal_tipoc`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=194 DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA LOS TIPOS DE CAMBIO';
 
 --
 -- Volcado de datos para la tabla `tipo_cambio`
@@ -12737,17 +12645,21 @@ INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_t
 (180, '2020-10-01', NULL, NULL, '3.597', '3.593', '3.597', 1, NULL, NULL, NULL, NULL),
 (181, '2020-10-02', NULL, NULL, '3.597', '3.593', '3.597', 1, NULL, NULL, NULL, NULL),
 (182, '2020-10-03', NULL, NULL, '3.607', '3.602', '3.607', 1, NULL, NULL, NULL, NULL),
-(183, '2020-10-05', NULL, NULL, '6.620', '3.616', '3.620', 1, NULL, NULL, NULL, NULL),
-(184, '2020-10-06', NULL, NULL, '6.620', '3.616', '3.620', 1, NULL, NULL, NULL, NULL),
-(185, '2020-10-07', NULL, NULL, '6.620', '3.616', '3.620', 1, NULL, NULL, NULL, NULL),
-(186, '2020-10-08', NULL, NULL, '3.586', '3.581', '3.586', 1, 2, 1602165900, NULL, NULL),
-(187, '2020-10-09', NULL, NULL, '3.586', '3.581', '3.586', 1, 2, 1602256256, NULL, NULL),
-(188, '2020-10-12', NULL, NULL, '3.586', '3.581', '3.586', 1, 2, 1602512475, NULL, NULL),
-(189, '2020-10-13', NULL, NULL, '3.586', '3.581', '3.586', 1, 2, 1602595198, NULL, NULL),
-(190, '2020-10-14', NULL, NULL, '3.586', '3.581', '3.586', 1, 2, 1602690788, NULL, NULL),
-(191, '2020-10-15', NULL, NULL, '3.586', '3.581', '3.586', 1, 2, 1602774216, NULL, NULL),
-(192, '2020-10-16', NULL, NULL, '3.586', '3.581', '3.586', 1, 2, 1602854349, NULL, NULL),
-(193, '2020-10-17', NULL, NULL, '3.586', '3.581', '3.586', 1, 2, 1602940367, NULL, NULL);
+(183, '2020-10-05', NULL, NULL, '3.620', '3.616', '3.620', 1, NULL, NULL, NULL, NULL),
+(184, '2020-10-06', NULL, NULL, '3.612', '3.610', '3.612', 1, NULL, NULL, NULL, NULL),
+(185, '2020-10-07', NULL, NULL, '3.612', '3.610', '3.612', 1, NULL, NULL, NULL, NULL),
+(186, '2020-10-08', NULL, NULL, '3.586', '3.581', '3.586', 1, NULL, NULL, NULL, NULL),
+(187, '2020-10-08', NULL, NULL, '3.586', '3.581', '3.586', 1, NULL, NULL, NULL, NULL),
+(188, '2020-10-09', NULL, NULL, '3.581', '3.577', '3.581', 1, NULL, NULL, NULL, NULL),
+(189, '2020-10-10', NULL, NULL, '3.581', '3.577', '3.581', 1, NULL, NULL, NULL, NULL),
+(190, '2020-10-10', NULL, NULL, '3.580', '3.577', '3.580', 1, NULL, NULL, NULL, NULL),
+(191, '2020-10-12', NULL, NULL, '3.580', '3.577', '3.580', 1, NULL, NULL, NULL, NULL),
+(192, '2020-10-13', NULL, NULL, '3.580', '3.577', '3.580', 1, NULL, NULL, NULL, NULL),
+(193, '2020-10-14', NULL, NULL, '3.596', '3.592', '3.596', 1, NULL, NULL, NULL, NULL),
+(194, '2020-10-15', NULL, NULL, '3.596', '3.592', '3.596', 1, NULL, NULL, NULL, NULL),
+(195, '2020-10-15', NULL, NULL, '3.596', '3.592', '3.596', 1, NULL, NULL, NULL, NULL),
+(196, '2020-10-16', NULL, NULL, '3.590', '3.586', '3.590', 1, NULL, NULL, NULL, NULL),
+(197, '2020-10-17', NULL, NULL, '3.590', '3.584', '3.590', 1, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -12756,26 +12668,20 @@ INSERT INTO `tipo_cambio` (`id_tipoc`, `fecha_tipoc`, `monedac_tipoc`, `moneda_t
 --
 
 DROP TABLE IF EXISTS `tipo_documento`;
-CREATE TABLE IF NOT EXISTS `tipo_documento` (
-  `id_tipod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `tipo_documento` (
+  `id_tipod` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_tipod` varchar(100) DEFAULT NULL COMMENT 'DESCRIPCION TIPO DOCUMENTO',
   `abrv_tipod` varchar(4) NOT NULL COMMENT 'ABREVIACION TIPO DOCUMENTO',
   `ope_tipod` varchar(1) DEFAULT 'N' COMMENT 'E = ENTRADA, S = SALIDA, N'' = NINGUNO OPERACION TIPO DOCUMENTO',
-  `tipo_tipod` int(11) NOT NULL DEFAULT 0 COMMENT '1 = ES DOCUMENTO, 0 = ES PEDIDO, 2 = ES GUIA',
+  `tipo_tipod` int(11) NOT NULL DEFAULT '0' COMMENT '1 = ES DOCUMENTO, 0 = ES PEDIDO, 2 = ES GUIA',
   `tipodsunat_tipod` varchar(2) DEFAULT NULL COMMENT 'TIPO DOCUMENTO DE SUNAT ',
-  `sucursal_tipod` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TIPO DOCUMENTO',
+  `sucursal_tipod` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TIPO DOCUMENTO',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
   `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  `status_tipod` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS TIPO DOCUMENTO',
-  PRIMARY KEY (`id_tipod`),
-  KEY `id_tipod` (`id_tipod`),
-  KEY `sucursal_tipod` (`sucursal_tipod`),
-  KEY `doc_doc` (`tipo_tipod`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='ALMACENA TIPOS DE DOCUMENTOS';
+  `status_tipod` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TIPO DOCUMENTO'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA TIPOS DE DOCUMENTOS';
 
 --
 -- Volcado de datos para la tabla `tipo_documento`
@@ -12800,20 +12706,17 @@ INSERT INTO `tipo_documento` (`id_tipod`, `des_tipod`, `abrv_tipod`, `ope_tipod`
 --
 
 DROP TABLE IF EXISTS `tipo_identificacion`;
-CREATE TABLE IF NOT EXISTS `tipo_identificacion` (
-  `id_tipoi` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `tipo_identificacion` (
+  `id_tipoi` int(11) NOT NULL COMMENT 'ID UNICO',
   `cod_tipoi` char(1) NOT NULL DEFAULT '0' COMMENT 'CODIGO DE TIPO DE IDENTIFICACION',
   `des_tipoi` varchar(150) NOT NULL COMMENT 'DESCRIPCION TIPO IDENTIFICACION',
-  `status_tipoi` int(11) NOT NULL DEFAULT 0 COMMENT 'STATUS DE TIPO DE IDENTIFICACION',
-  `sucursal_tipoi` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TIPO DE IDENTIFICACION',
+  `status_tipoi` int(11) NOT NULL DEFAULT '0' COMMENT 'STATUS DE TIPO DE IDENTIFICACION',
+  `sucursal_tipoi` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TIPO DE IDENTIFICACION',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_tipoi`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TIPO DE IDENTIFICACION DE CLIENTES';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TIPO DE IDENTIFICACION DE CLIENTES';
 
 --
 -- Volcado de datos para la tabla `tipo_identificacion`
@@ -12833,20 +12736,16 @@ INSERT INTO `tipo_identificacion` (`id_tipoi`, `cod_tipoi`, `des_tipoi`, `status
 --
 
 DROP TABLE IF EXISTS `tipo_listap`;
-CREATE TABLE IF NOT EXISTS `tipo_listap` (
-  `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `tipo_listap` (
+  `id_lista` int(11) NOT NULL COMMENT 'ID UNICO',
   `desc_lista` varchar(30) NOT NULL DEFAULT '' COMMENT 'DESCRIPCION TIPO LISTA',
   `estatus_lista` int(11) NOT NULL COMMENT 'ESTATUS TIPO LISTA',
-  `sucursal_lista` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TIPO LISTA',
+  `sucursal_lista` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TIPO LISTA',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_lista`),
-  KEY `sucursal_lista` (`sucursal_lista`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='GUARDA TIPOS DE LISTA DE PRECIOS';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA TIPOS DE LISTA DE PRECIOS';
 
 --
 -- Volcado de datos para la tabla `tipo_listap`
@@ -12863,21 +12762,17 @@ INSERT INTO `tipo_listap` (`id_lista`, `desc_lista`, `estatus_lista`, `sucursal_
 --
 
 DROP TABLE IF EXISTS `tipo_movimiento`;
-CREATE TABLE IF NOT EXISTS `tipo_movimiento` (
-  `id_tipom` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `tipo_movimiento` (
+  `id_tipom` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_tipom` varchar(60) NOT NULL COMMENT 'DESCRIPCION TIPO MOVIMIENTO',
-  `status_tipom` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS TIPO MOVIMIENTO',
-  `sucursal_tipom` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TIPO MOVIMIENTO',
+  `status_tipom` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TIPO MOVIMIENTO',
+  `sucursal_tipom` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TIPO MOVIMIENTO',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
   `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  `tipo_tipom` varchar(1) DEFAULT NULL COMMENT 'TIPO E = ENTRADA, S = SALIDA ',
-  PRIMARY KEY (`id_tipom`),
-  KEY `sucursal_tipom` (`sucursal_tipom`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE TIPOS DE MOVIMIENTOS DE ALMACEN';
+  `tipo_tipom` varchar(1) DEFAULT NULL COMMENT 'TIPO E = ENTRADA, S = SALIDA '
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE TIPOS DE MOVIMIENTOS DE ALMACEN';
 
 --
 -- Volcado de datos para la tabla `tipo_movimiento`
@@ -12903,19 +12798,16 @@ INSERT INTO `tipo_movimiento` (`id_tipom`, `des_tipom`, `status_tipom`, `sucursa
 --
 
 DROP TABLE IF EXISTS `tipo_producto`;
-CREATE TABLE IF NOT EXISTS `tipo_producto` (
-  `id_tpdcto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `tipo_producto` (
+  `id_tpdcto` int(11) NOT NULL COMMENT 'ID UNICO',
   `desc_tpdcto` varchar(255) NOT NULL COMMENT 'DESCRIP TIPO PRODUCTO',
   `status_tpdcto` int(11) NOT NULL COMMENT 'ESTATUS TIPO PRODUCTO',
   `sucursal_tpdcto` int(11) NOT NULL COMMENT 'SUCURSAL TIPO PRODUCTO',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_tpdcto`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE TIPO PRODUCTOS';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE TIPO PRODUCTOS';
 
 --
 -- Volcado de datos para la tabla `tipo_producto`
@@ -12932,20 +12824,16 @@ INSERT INTO `tipo_producto` (`id_tpdcto`, `desc_tpdcto`, `status_tpdcto`, `sucur
 --
 
 DROP TABLE IF EXISTS `tipo_proveedor`;
-CREATE TABLE IF NOT EXISTS `tipo_proveedor` (
-  `id_tprov` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tipo_proveedor` (
+  `id_tprov` int(11) NOT NULL,
   `des_tprov` varchar(45) DEFAULT NULL,
   `status_tprov` int(11) NOT NULL,
   `sucursal_tprov` int(11) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_tprov`),
-  KEY `sucursal_tprov` (`sucursal_tprov`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='GUARDA TIPO PROVEEDOR';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA TIPO PROVEEDOR';
 
 --
 -- Volcado de datos para la tabla `tipo_proveedor`
@@ -12964,37 +12852,26 @@ INSERT INTO `tipo_proveedor` (`id_tprov`, `des_tprov`, `status_tprov`, `sucursal
 --
 
 DROP TABLE IF EXISTS `transaccion`;
-CREATE TABLE IF NOT EXISTS `transaccion` (
-  `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `transaccion` (
+  `id_trans` int(11) NOT NULL COMMENT 'ID UNICO',
   `codigo_trans` varchar(10) NOT NULL COMMENT 'CODIGO TRANSACCION',
   `fecha_trans` date DEFAULT NULL COMMENT 'FECHA TRANSACCION',
-  `obsv_trans` text DEFAULT NULL COMMENT 'OBSERVACIONES TRANSACCION',
-  `tipo_trans` int(11) NOT NULL DEFAULT 0 COMMENT 'TIPO TRANSACCION',
+  `obsv_trans` text COMMENT 'OBSERVACIONES TRANSACCION',
+  `tipo_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'TIPO TRANSACCION',
   `numdoc_trans` int(11) NOT NULL COMMENT 'NUMERACION DEL DOCUMENTO QUE GENERA LA TRANSACCION',
   `ope_trans` varchar(1) NOT NULL COMMENT 'OPERACION TRANSACCION',
   `idrefdoc_trans` int(11) DEFAULT NULL COMMENT 'ID DOCUMENTO REFERENCIA TRANSACCION',
   `seriedocref_trans` varchar(4) DEFAULT NULL COMMENT 'SERIE DOC REFERENCIA TRANSACCION',
   `docref_trans` varchar(10) DEFAULT NULL COMMENT 'DOCUMENTO REFERENCIA TRANSACCION',
   `almacen_trans` int(11) NOT NULL COMMENT 'ALMACEN TRANSACCION',
-  `sucursal_trans` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TRANSACCION',
+  `sucursal_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TRANSACCION',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
   `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  `usuario_trans` int(11) NOT NULL DEFAULT 0 COMMENT 'USUARIO TRANSACCION',
-  `status_trans` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS TRANSACCION 0=NO APROBADA, 1 = APROBADA, 2 = ANULADA',
-  PRIMARY KEY (`id_trans`) USING BTREE,
-  UNIQUE KEY `codigo_trans_2` (`codigo_trans`,`tipo_trans`) USING BTREE,
-  KEY `codigo_trans` (`codigo_trans`),
-  KEY `fecha_trans` (`fecha_trans`),
-  KEY `tipo_trans` (`tipo_trans`),
-  KEY `almacen_trans` (`almacen_trans`),
-  KEY `usuario_trans` (`usuario_trans`),
-  KEY `grupo_trans` (`ope_trans`),
-  KEY `idrefdoc_trans` (`idrefdoc_trans`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=302 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TRANSACCIONES';
+  `usuario_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'USUARIO TRANSACCION',
+  `status_trans` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TRANSACCION 0=NO APROBADA, 1 = APROBADA, 2 = ANULADA'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE LOS TRANSACCIONES';
 
 --
 -- Volcado de datos para la tabla `transaccion`
@@ -13279,14 +13156,26 @@ INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_tran
 (291, '0000000073', '2020-10-05', '', 3, 4, 'E', 60, NULL, '', 1, 1, NULL, NULL, NULL, NULL, 2, 1),
 (292, '0000000074', '2020-10-05', '', 5, 5, 'E', NULL, NULL, '', 1, 1, NULL, NULL, NULL, NULL, 2, 1),
 (293, '0000000075', '2020-10-05', NULL, 7, 10, 'E', 332, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
-(294, '0000000076', '2020-10-05', NULL, 7, 10, 'E', 333, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
-(295, '0000000205', '2020-10-05', NULL, 10, 6, 'S', 332, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
-(296, '0000000206', '2020-10-13', NULL, 4, 7, 'S', 354, NULL, NULL, 1, 1, 2, 1602623333, NULL, NULL, 2, 1),
-(297, '0000000207', '2020-10-13', NULL, 4, 7, 'S', 356, NULL, NULL, 1, 1, 2, 1602623470, NULL, NULL, 2, 1),
-(298, '0000000208', '2020-10-14', NULL, 4, 7, 'S', 358, NULL, NULL, 1, 1, 2, 1602691305, NULL, NULL, 2, 1),
-(299, '0000000209', '2020-10-15', NULL, 4, 7, 'S', 359, NULL, NULL, 1, 1, 2, 1602781127, NULL, NULL, 2, 1),
-(300, '0000000210', '2020-10-15', NULL, 4, 7, 'S', 361, NULL, NULL, 1, 1, 2, 1602781208, NULL, NULL, 2, 1),
-(301, '0000000211', '2020-10-15', NULL, 4, 7, 'S', 363, NULL, NULL, 1, 1, 2, 1602781375, NULL, NULL, 2, 1);
+(294, '0000000205', '2020-10-05', NULL, 4, 7, 'S', 334, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(295, '0000000206', '2020-10-05', NULL, 4, 7, 'S', 336, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(296, '0000000207', '2020-10-09', NULL, 4, 7, 'S', 338, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(297, '0000000208', '2020-10-09', NULL, 4, 7, 'S', 340, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(298, '0000000209', '2020-10-09', NULL, 4, 7, 'S', 342, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(299, '0000000210', '2020-10-10', NULL, 4, 7, 'S', 344, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(300, '0000000211', '2020-10-12', NULL, 4, 7, 'S', 346, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(301, '0000000212', '2020-10-13', NULL, 4, 7, 'S', 348, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(302, '0000000213', '2020-10-13', NULL, 4, 7, 'S', 350, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(303, '0000000214', '2020-10-13', NULL, 4, 7, 'S', 352, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(304, '0000000215', '2020-10-13', NULL, 8, 6, 'S', 123, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(305, '0000000216', '2020-10-13', NULL, 8, 6, 'S', 124, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(306, '0000000217', '2020-10-13', NULL, 8, 6, 'S', 157, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(307, '0000000218', '2020-10-13', NULL, 8, 6, 'S', 190, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(308, '0000000219', '2020-10-14', NULL, 4, 7, 'S', 354, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(309, '0000000076', '2020-10-15', NULL, 9, 5, 'E', 354, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(310, '0000000220', '2020-10-15', NULL, 4, 7, 'S', 356, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(311, '0000000221', '2020-10-15', NULL, 4, 7, 'S', 358, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(312, '0000000077', '2020-10-16', '', 3, 4, 'E', 63, NULL, '', 1, 1, NULL, NULL, NULL, NULL, 2, 1),
+(313, '0000000222', '2020-10-16', NULL, 4, 7, 'S', 360, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -13295,22 +13184,17 @@ INSERT INTO `transaccion` (`id_trans`, `codigo_trans`, `fecha_trans`, `obsv_tran
 --
 
 DROP TABLE IF EXISTS `transportista`;
-CREATE TABLE IF NOT EXISTS `transportista` (
-  `id_transp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `transportista` (
+  `id_transp` int(11) NOT NULL COMMENT 'ID UNICO',
   `ruc_transp` varchar(12) NOT NULL COMMENT 'RUC TRANSPORTISTA',
   `des_transp` varchar(150) DEFAULT NULL COMMENT 'DESCRIPCION TRANSPORTISTA',
-  `status_transp` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS TRANSPORTISTA',
-  `sucursal_transp` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL TRANSPORTISTA',
+  `status_transp` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS TRANSPORTISTA',
+  `sucursal_transp` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL TRANSPORTISTA',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_transp`),
-  KEY `status_transp` (`status_transp`),
-  KEY `sucursal_transp` (`sucursal_transp`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LOS TRANSPORTISTAS';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LOS TRANSPORTISTAS';
 
 --
 -- Volcado de datos para la tabla `transportista`
@@ -13335,15 +13219,12 @@ INSERT INTO `transportista` (`id_transp`, `ruc_transp`, `des_transp`, `status_tr
 --
 
 DROP TABLE IF EXISTS `trans_detalle`;
-CREATE TABLE IF NOT EXISTS `trans_detalle` (
-  `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
-  `trans_detalle` int(11) NOT NULL DEFAULT 0 COMMENT 'TRANSACCION DETALLE',
-  `prod_detalle` int(11) NOT NULL DEFAULT 0 COMMENT 'PRODUCTO DETALLE',
-  `cant_detalle` int(11) NOT NULL DEFAULT 0 COMMENT 'CANTIDAD DETALLE',
-  PRIMARY KEY (`id_detalle`),
-  KEY `trans_detalle` (`trans_detalle`),
-  KEY `prod_detalle` (`prod_detalle`)
-) ENGINE=InnoDB AUTO_INCREMENT=3536 DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE TRANSACCIONES';
+CREATE TABLE `trans_detalle` (
+  `id_detalle` int(11) NOT NULL COMMENT 'ID UNICO',
+  `trans_detalle` int(11) NOT NULL DEFAULT '0' COMMENT 'TRANSACCION DETALLE',
+  `prod_detalle` int(11) NOT NULL DEFAULT '0' COMMENT 'PRODUCTO DETALLE',
+  `cant_detalle` int(11) NOT NULL DEFAULT '0' COMMENT 'CANTIDAD DETALLE'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DETALLE DE TRANSACCIONES';
 
 --
 -- Volcado de datos para la tabla `trans_detalle`
@@ -16589,80 +16470,186 @@ INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `can
 (3459, 291, 1028, 10),
 (3460, 291, 140, 15),
 (3461, 292, 1221, 3),
-(3462, 293, 956, 250),
-(3463, 294, 531, 1),
-(3464, 294, 532, 1),
-(3465, 294, 533, 1),
-(3466, 294, 534, 1),
-(3467, 294, 784, 1),
-(3468, 294, 785, 1),
-(3469, 294, 740, 3),
-(3470, 294, 739, 2),
-(3471, 294, 503, 3),
-(3472, 295, 956, 250),
-(3473, 296, 944, 6),
-(3474, 296, 975, 6),
-(3475, 296, 706, 6),
-(3476, 296, 707, 6),
-(3477, 296, 468, 6),
-(3478, 296, 729, 6),
-(3479, 296, 730, 6),
-(3480, 296, 753, 6),
-(3481, 296, 520, 6),
-(3482, 296, 754, 6),
-(3483, 296, 477, 6),
-(3484, 296, 480, 6),
-(3485, 296, 492, 6),
-(3486, 296, 740, 6),
-(3487, 296, 512, 6),
-(3488, 296, 767, 6),
-(3489, 296, 513, 6),
-(3490, 296, 530, 6),
-(3491, 296, 535, 6),
-(3492, 296, 789, 6),
-(3493, 296, 784, 6),
-(3494, 296, 816, 6),
-(3495, 296, 836, 6),
-(3496, 296, 833, 6),
-(3497, 296, 859, 6),
-(3498, 296, 843, 6),
-(3499, 296, 850, 6),
-(3500, 296, 890, 6),
-(3501, 296, 623, 6),
-(3502, 296, 622, 6),
-(3503, 297, 984, 6),
-(3504, 297, 635, 6),
-(3505, 297, 966, 6),
-(3506, 297, 980, 6),
-(3507, 297, 982, 6),
-(3508, 297, 662, 6),
-(3509, 297, 665, 6),
-(3510, 297, 941, 6),
-(3511, 297, 969, 6),
-(3512, 297, 975, 6),
-(3513, 297, 946, 6),
-(3514, 297, 676, 6),
-(3515, 298, 82, 1),
-(3516, 299, 22, 1),
-(3517, 299, 56, 1),
-(3518, 299, 1193, 1),
-(3519, 299, 103, 2),
-(3520, 299, 104, 2),
-(3521, 299, 1199, 1),
-(3522, 299, 1209, 1),
-(3523, 299, 133, 1),
-(3524, 299, 147, 1),
-(3525, 299, 1205, 2),
-(3526, 299, 88, 1),
-(3527, 299, 117, 1),
-(3528, 299, 1028, 3),
-(3529, 299, 140, 1),
-(3530, 299, 1207, 1),
-(3531, 299, 1221, 3),
-(3532, 300, 56, 20),
-(3533, 301, 1221, 5),
-(3534, 301, 140, 8),
-(3535, 301, 136, 15);
+(3462, 293, 443, 20),
+(3463, 294, 443, 20),
+(3464, 295, 56, 20),
+(3465, 296, 22, 1),
+(3466, 296, 56, 1),
+(3467, 296, 1193, 1),
+(3468, 296, 1199, 1),
+(3469, 296, 1209, 1),
+(3470, 296, 133, 1),
+(3471, 296, 147, 1),
+(3472, 296, 1205, 2),
+(3473, 296, 88, 1),
+(3474, 296, 117, 1),
+(3475, 296, 1028, 2),
+(3476, 296, 140, 2),
+(3477, 296, 1207, 1),
+(3478, 296, 1221, 6),
+(3479, 297, 1221, 5),
+(3480, 297, 140, 8),
+(3481, 297, 136, 15),
+(3482, 298, 1217, 2),
+(3483, 298, 9, 1),
+(3484, 298, 1181, 2),
+(3485, 298, 44, 2),
+(3486, 298, 48, 2),
+(3487, 298, 49, 2),
+(3488, 298, 69, 2),
+(3489, 298, 80, 2),
+(3490, 298, 1200, 1),
+(3491, 298, 127, 2),
+(3492, 298, 147, 1),
+(3493, 298, 1205, 3),
+(3494, 298, 149, 1),
+(3495, 298, 150, 1),
+(3496, 298, 169, 2),
+(3497, 299, 1181, 6),
+(3498, 300, 147, 5),
+(3499, 300, 150, 3),
+(3500, 300, 149, 3),
+(3501, 300, 1205, 10),
+(3502, 301, 633, 10),
+(3503, 301, 634, 10),
+(3504, 302, 646, 2),
+(3505, 302, 647, 2),
+(3506, 302, 980, 2),
+(3507, 302, 981, 2),
+(3508, 302, 982, 2),
+(3509, 302, 983, 2),
+(3510, 303, 1205, 2),
+(3511, 304, 708, 1),
+(3512, 304, 709, 1),
+(3513, 304, 710, 1),
+(3514, 304, 711, 1),
+(3515, 304, 712, 4),
+(3516, 304, 713, 4),
+(3517, 304, 445, 1),
+(3518, 304, 446, 1),
+(3519, 304, 447, 1),
+(3520, 304, 448, 1),
+(3521, 304, 459, 2),
+(3522, 304, 460, 2),
+(3523, 304, 751, 2),
+(3524, 304, 752, 2),
+(3525, 304, 753, 2),
+(3526, 304, 520, 2),
+(3527, 304, 521, 2),
+(3528, 304, 522, 2),
+(3529, 304, 754, 3),
+(3530, 304, 477, 1),
+(3531, 304, 478, 1),
+(3532, 304, 479, 1),
+(3533, 304, 480, 1),
+(3534, 304, 487, 10),
+(3535, 304, 486, 5),
+(3536, 304, 500, 10),
+(3537, 304, 501, 10),
+(3538, 304, 746, 5),
+(3539, 304, 727, 5),
+(3540, 304, 728, 5),
+(3541, 304, 506, 5),
+(3542, 304, 507, 5),
+(3543, 304, 762, 2),
+(3544, 304, 793, 1),
+(3545, 304, 794, 1),
+(3546, 304, 806, 5),
+(3547, 304, 807, 5),
+(3548, 304, 822, 10),
+(3549, 304, 865, 3),
+(3550, 304, 863, 3),
+(3551, 304, 877, 3),
+(3552, 304, 874, 1),
+(3553, 304, 875, 2),
+(3554, 304, 910, 4),
+(3555, 304, 912, 1),
+(3556, 304, 913, 1),
+(3557, 304, 920, 2),
+(3558, 304, 1013, 2),
+(3559, 304, 1012, 2),
+(3560, 304, 633, 10),
+(3561, 304, 634, 10),
+(3562, 304, 635, 5),
+(3563, 304, 636, 5),
+(3564, 304, 638, 5),
+(3565, 304, 1020, 10),
+(3566, 304, 927, 5),
+(3567, 304, 928, 5),
+(3568, 304, 929, 5),
+(3569, 304, 930, 5),
+(3570, 304, 966, 2),
+(3571, 304, 1022, 4),
+(3572, 304, 649, 10),
+(3573, 304, 642, 5),
+(3574, 304, 643, 5),
+(3575, 304, 658, 5),
+(3576, 304, 664, 5),
+(3577, 304, 665, 5),
+(3578, 304, 666, 5),
+(3579, 304, 667, 5),
+(3580, 304, 952, 3),
+(3581, 304, 973, 4),
+(3582, 304, 1004, 1),
+(3583, 304, 1005, 1),
+(3584, 304, 935, 5),
+(3585, 305, 624, 20),
+(3586, 305, 820, 20),
+(3587, 305, 1187, 1),
+(3588, 305, 69, 1),
+(3589, 305, 1193, 1),
+(3590, 305, 45, 2),
+(3591, 305, 140, 1),
+(3592, 305, 169, 1),
+(3593, 305, 170, 1),
+(3594, 306, 633, 5),
+(3595, 306, 634, 5),
+(3596, 307, 1217, 1),
+(3597, 307, 17, 1),
+(3598, 307, 18, 1),
+(3599, 307, 1214, 1),
+(3600, 307, 28, 1),
+(3601, 307, 53, 1),
+(3602, 307, 88, 1),
+(3603, 307, 1199, 1),
+(3604, 307, 1200, 1),
+(3605, 307, 1028, 2),
+(3606, 307, 120, 1),
+(3607, 307, 122, 1),
+(3608, 307, 123, 1),
+(3609, 307, 1209, 1),
+(3610, 307, 127, 3),
+(3611, 307, 140, 1),
+(3612, 307, 136, 1),
+(3613, 307, 1027, 2),
+(3614, 307, 152, 1),
+(3615, 307, 151, 1),
+(3616, 307, 172, 1),
+(3617, 307, 42, 1),
+(3618, 308, 58, 4),
+(3619, 309, 58, 4),
+(3620, 310, 58, 4),
+(3621, 311, 1205, 1),
+(3622, 311, 1182, 1),
+(3623, 312, 944, 10),
+(3624, 312, 945, 10),
+(3625, 312, 680, 7),
+(3626, 312, 681, 7),
+(3627, 313, 727, 5),
+(3628, 313, 728, 5),
+(3629, 313, 739, 2),
+(3630, 313, 740, 2),
+(3631, 313, 805, 1),
+(3632, 313, 804, 1),
+(3633, 313, 865, 2),
+(3634, 313, 916, 6),
+(3635, 313, 952, 4),
+(3636, 313, 682, 5),
+(3637, 313, 683, 5),
+(3638, 313, 944, 2),
+(3639, 313, 945, 2),
+(3640, 313, 680, 5),
+(3641, 313, 681, 5);
 
 -- --------------------------------------------------------
 
@@ -16671,8 +16658,8 @@ INSERT INTO `trans_detalle` (`id_detalle`, `trans_detalle`, `prod_detalle`, `can
 --
 
 DROP TABLE IF EXISTS `unidad_medida`;
-CREATE TABLE IF NOT EXISTS `unidad_medida` (
-  `id_und` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `unidad_medida` (
+  `id_und` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_und` varchar(50) NOT NULL COMMENT 'DESCRIPCION UNIDAD MEDIDA',
   `status_und` int(11) NOT NULL COMMENT 'ESTATUS UNIDAD MEDIDA',
   `sunatm_und` varchar(10) DEFAULT NULL COMMENT 'UNIDAD DE MEDIDA DE LA SUNAT',
@@ -16680,12 +16667,8 @@ CREATE TABLE IF NOT EXISTS `unidad_medida` (
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_und`),
-  KEY `sucursal_und` (`sucursal_und`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS UNIDAD MEDIDA';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS UNIDAD MEDIDA';
 
 --
 -- Volcado de datos para la tabla `unidad_medida`
@@ -16702,21 +16685,16 @@ INSERT INTO `unidad_medida` (`id_und`, `des_und`, `status_und`, `sunatm_und`, `s
 --
 
 DROP TABLE IF EXISTS `unidad_transporte`;
-CREATE TABLE IF NOT EXISTS `unidad_transporte` (
-  `id_utransp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `unidad_transporte` (
+  `id_utransp` int(11) NOT NULL COMMENT 'ID UNICO',
   `des_utransp` varchar(150) DEFAULT NULL COMMENT 'DESCRIPCION UNIDAD TRANSPORTISTA',
-  `status_utransp` int(11) NOT NULL DEFAULT 0 COMMENT 'ESTATUS UNIDAD TRANSPORTISTA',
-  `sucursal_utransp` int(11) NOT NULL DEFAULT 0 COMMENT 'SUCURSAL UNIDAD TRANSPORTISTA',
+  `status_utransp` int(11) NOT NULL DEFAULT '0' COMMENT 'ESTATUS UNIDAD TRANSPORTISTA',
+  `sucursal_utransp` int(11) NOT NULL DEFAULT '0' COMMENT 'SUCURSAL UNIDAD TRANSPORTISTA',
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_utransp`),
-  KEY `status_utransp` (`status_utransp`),
-  KEY `sucursal_utransp` (`sucursal_utransp`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LAS UNIDADES TRANSPORTISTAS';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ALMACENA DATOS DE LAS UNIDADES TRANSPORTISTAS';
 
 --
 -- Volcado de datos para la tabla `unidad_transporte`
@@ -16732,22 +16710,19 @@ INSERT INTO `unidad_transporte` (`id_utransp`, `des_utransp`, `status_utransp`, 
 --
 
 DROP TABLE IF EXISTS `user`;
-CREATE TABLE IF NOT EXISTS `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL,
   `username` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `auth_key` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password_reset_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `status` smallint(6) NOT NULL DEFAULT 10,
+  `status` smallint(6) NOT NULL DEFAULT '10',
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL,
-  `empresa` int(11) DEFAULT 0,
-  `sucursal` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `empresa` (`empresa`),
-  KEY `sucursal` (`sucursal`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `empresa` int(11) DEFAULT '0',
+  `sucursal` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `user`
@@ -16763,8 +16738,8 @@ INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `password_res
 --
 
 DROP TABLE IF EXISTS `vendedor`;
-CREATE TABLE IF NOT EXISTS `vendedor` (
-  `id_vendedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `vendedor` (
+  `id_vendedor` int(11) NOT NULL COMMENT 'ID UNICO',
   `dni_vend` varchar(11) NOT NULL COMMENT 'DNI VENDEDOR',
   `nombre_vend` varchar(50) NOT NULL COMMENT 'NOMBRE VENDEDOR',
   `tlf_vend` varchar(20) NOT NULL COMMENT 'TELEFONO VENDEDOR',
@@ -16774,13 +16749,8 @@ CREATE TABLE IF NOT EXISTS `vendedor` (
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
   `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  `zona_vend` int(11) NOT NULL COMMENT 'ZONA VENDEDOR',
-  PRIMARY KEY (`id_vendedor`),
-  KEY `zona_vend` (`zona_vend`),
-  KEY `sucursal_vend` (`sucursal_vend`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE VENDEDORES';
+  `zona_vend` int(11) NOT NULL COMMENT 'ZONA VENDEDOR'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE VENDEDORES';
 
 --
 -- Volcado de datos para la tabla `vendedor`
@@ -16801,7 +16771,7 @@ INSERT INTO `vendedor` (`id_vendedor`, `dni_vend`, `nombre_vend`, `tlf_vend`, `e
 -- (Véase abajo para la vista actual)
 --
 DROP VIEW IF EXISTS `v_productos`;
-CREATE TABLE IF NOT EXISTS `v_productos` (
+CREATE TABLE `v_productos` (
 `id_prod` int(11)
 ,`cod_prod` varchar(25)
 ,`des_prod` text
@@ -16816,7 +16786,6 @@ CREATE TABLE IF NOT EXISTS `v_productos` (
 ,`des_und` varchar(50)
 ,`stock_prod` decimal(41,2)
 ,`stock_prod_bruto` int(11)
-,`stock_asignado` decimal(40,2)
 );
 
 -- --------------------------------------------------------
@@ -16826,8 +16795,8 @@ CREATE TABLE IF NOT EXISTS `v_productos` (
 --
 
 DROP TABLE IF EXISTS `zona`;
-CREATE TABLE IF NOT EXISTS `zona` (
-  `id_zona` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO',
+CREATE TABLE `zona` (
+  `id_zona` int(11) NOT NULL COMMENT 'ID UNICO',
   `nombre_zona` varchar(150) NOT NULL COMMENT 'NOMBRE ZONA',
   `desc_zona` text NOT NULL COMMENT 'DESCRIPCION ZONA',
   `estatus_zona` int(11) NOT NULL COMMENT 'ESTATUS ZONA',
@@ -16835,12 +16804,8 @@ CREATE TABLE IF NOT EXISTS `zona` (
   `created_by` int(11) DEFAULT NULL COMMENT 'CREADO POR',
   `created_at` int(11) DEFAULT NULL COMMENT 'CREADO EN',
   `updated_by` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO POR',
-  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN',
-  PRIMARY KEY (`id_zona`),
-  KEY `sucursal_zona` (`sucursal_zona`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE ZONAS';
+  `updated_at` int(11) DEFAULT NULL COMMENT 'ACTUALIZADO EN'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='GUARDA DATOS DE ZONAS';
 
 --
 -- Volcado de datos para la tabla `zona`
@@ -16859,7 +16824,7 @@ INSERT INTO `zona` (`id_zona`, `nombre_zona`, `desc_zona`, `estatus_zona`, `sucu
 --
 DROP TABLE IF EXISTS `entradas_ajustes`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `entradas_ajustes`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`t`.`docref_trans` AS `docref_trans`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`t`.`codigo_trans`,4,8)) AS `nro_doc`,'ENTRADA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,`td`.`cant_detalle` AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_soles`,'' AS `ingreso_valorizado_nacional`,'' AS `salidas_unidades`,'' AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans`,`t`.`id_trans` AS `id_trans` from (((((`transaccion` `t` join `trans_detalle` `td` on(`t`.`id_trans` = `td`.`trans_detalle`)) join `producto` `p` on(`p`.`id_prod` = `td`.`prod_detalle` and `t`.`sucursal_trans` = `p`.`sucursal_prod`)) join `tipo_movimiento` `tm` on(`tm`.`id_tipom` = `t`.`tipo_trans` and `t`.`sucursal_trans` = `tm`.`sucursal_tipom`)) join `numeracion` `nd` on(`t`.`numdoc_trans` = `nd`.`id_num` and `t`.`sucursal_trans` = `nd`.`sucursal_num`)) join `tipo_documento` `tds` on(`nd`.`tipo_num` = `tds`.`id_tipod` and `t`.`sucursal_trans` = `tds`.`sucursal_tipod`)) where `t`.`tipo_trans` in (1,5,9,11) group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`t`.`docref_trans`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`t`.`codigo_trans`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`td`.`cant_detalle`,`t`.`sucursal_trans`,`t`.`id_trans` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `entradas_ajustes`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`t`.`docref_trans` AS `docref_trans`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`t`.`codigo_trans`,4,8)) AS `nro_doc`,'ENTRADA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,`td`.`cant_detalle` AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_soles`,'' AS `ingreso_valorizado_nacional`,'' AS `salidas_unidades`,'' AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans`,`t`.`id_trans` AS `id_trans` from (((((`transaccion` `t` join `trans_detalle` `td` on((`t`.`id_trans` = `td`.`trans_detalle`))) join `producto` `p` on(((`p`.`id_prod` = `td`.`prod_detalle`) and (`t`.`sucursal_trans` = `p`.`sucursal_prod`)))) join `tipo_movimiento` `tm` on(((`tm`.`id_tipom` = `t`.`tipo_trans`) and (`t`.`sucursal_trans` = `tm`.`sucursal_tipom`)))) join `numeracion` `nd` on(((`t`.`numdoc_trans` = `nd`.`id_num`) and (`t`.`sucursal_trans` = `nd`.`sucursal_num`)))) join `tipo_documento` `tds` on(((`nd`.`tipo_num` = `tds`.`id_tipod`) and (`t`.`sucursal_trans` = `tds`.`sucursal_tipod`)))) where (`t`.`tipo_trans` in (1,5,9,11)) group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`t`.`docref_trans`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`t`.`codigo_trans`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`td`.`cant_detalle`,`t`.`sucursal_trans`,`t`.`id_trans` ;
 
 -- --------------------------------------------------------
 
@@ -16868,7 +16833,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `entradas_compras`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `entradas_compras`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`pr`.`nombre_prove` AS `nombre_prove`,concat(`tds`.`abrv_tipod`,`numeracion`.`serie_num`,'-',substr(`c`.`cod_compra`,4,8)) AS `nro_doc`,'ENTRADA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,`td`.`cant_detalle` AS `ingreso_unidades`,`m`.`des_moneda` AS `des_moneda`,round(`compra_detalle`.`precio_cdetalle` / `tipo_cambio`.`cambioc_tipoc`,2) AS `precio_compra_ext`,`compra_detalle`.`precio_cdetalle` AS `precio_soles`,`compra_detalle`.`precio_cdetalle` * `compra_detalle`.`cant_cdetalle` AS `ingreso_valorizado_nacional`,'' AS `salidas_unidades`,'' AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans`,`t`.`id_trans` AS `id_trans` from ((((((((((`transaccion` `t` join `trans_detalle` `td` on(`t`.`id_trans` = `td`.`trans_detalle`)) join `compra` `c` on(`c`.`id_compra` = `t`.`idrefdoc_trans` and `c`.`sucursal_compra` = `t`.`sucursal_trans`)) join `producto` `p` on(`p`.`id_prod` = `td`.`prod_detalle` and `t`.`sucursal_trans` = `p`.`sucursal_prod`)) join `proveedor` `pr` on(`pr`.`id_prove` = `c`.`provee_compra` and `pr`.`sucursal_prove` = `t`.`sucursal_trans`)) join `tipo_movimiento` `tm` on(`tm`.`id_tipom` = `t`.`tipo_trans` and `tm`.`sucursal_tipom` = `t`.`sucursal_trans`)) join `moneda` `m` on(`c`.`moneda_compra` = `m`.`id_moneda` and `t`.`sucursal_trans` = `c`.`sucursal_compra`)) join `tipo_cambio` on(`c`.`fecha_compra` = `tipo_cambio`.`fecha_tipoc` and `t`.`sucursal_trans` = `tipo_cambio`.`sucursal_tipoc`)) join `compra_detalle` on(`c`.`id_compra` = `compra_detalle`.`compra_cdetalle` and `p`.`id_prod` = `compra_detalle`.`prod_cdetalle`)) join `numeracion` on(`t`.`numdoc_trans` = `numeracion`.`id_num` and `t`.`sucursal_trans` = `numeracion`.`sucursal_num`)) join `tipo_documento` `tds` on(`numeracion`.`tipo_num` = `tds`.`id_tipod` and `t`.`sucursal_trans` = `tds`.`sucursal_tipod`)) where `t`.`ope_trans` = 'E' group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`pr`.`nombre_prove`,`tds`.`abrv_tipod`,`numeracion`.`serie_num`,`c`.`cod_compra`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`td`.`cant_detalle`,`m`.`des_moneda`,`compra_detalle`.`precio_cdetalle`,`tipo_cambio`.`cambioc_tipoc`,`compra_detalle`.`precio_cdetalle`,`compra_detalle`.`precio_cdetalle`,`compra_detalle`.`cant_cdetalle`,`t`.`sucursal_trans`,`t`.`id_trans` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `entradas_compras`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`pr`.`nombre_prove` AS `nombre_prove`,concat(`tds`.`abrv_tipod`,`numeracion`.`serie_num`,'-',substr(`c`.`cod_compra`,4,8)) AS `nro_doc`,'ENTRADA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,`td`.`cant_detalle` AS `ingreso_unidades`,`m`.`des_moneda` AS `des_moneda`,round((`compra_detalle`.`precio_cdetalle` / `tipo_cambio`.`cambioc_tipoc`),2) AS `precio_compra_ext`,`compra_detalle`.`precio_cdetalle` AS `precio_soles`,(`compra_detalle`.`precio_cdetalle` * `compra_detalle`.`cant_cdetalle`) AS `ingreso_valorizado_nacional`,'' AS `salidas_unidades`,'' AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans`,`t`.`id_trans` AS `id_trans` from ((((((((((`transaccion` `t` join `trans_detalle` `td` on((`t`.`id_trans` = `td`.`trans_detalle`))) join `compra` `c` on(((`c`.`id_compra` = `t`.`idrefdoc_trans`) and (`c`.`sucursal_compra` = `t`.`sucursal_trans`)))) join `producto` `p` on(((`p`.`id_prod` = `td`.`prod_detalle`) and (`t`.`sucursal_trans` = `p`.`sucursal_prod`)))) join `proveedor` `pr` on(((`pr`.`id_prove` = `c`.`provee_compra`) and (`pr`.`sucursal_prove` = `t`.`sucursal_trans`)))) join `tipo_movimiento` `tm` on(((`tm`.`id_tipom` = `t`.`tipo_trans`) and (`tm`.`sucursal_tipom` = `t`.`sucursal_trans`)))) join `moneda` `m` on(((`c`.`moneda_compra` = `m`.`id_moneda`) and (`t`.`sucursal_trans` = `c`.`sucursal_compra`)))) join `tipo_cambio` on(((`c`.`fecha_compra` = `tipo_cambio`.`fecha_tipoc`) and (`t`.`sucursal_trans` = `tipo_cambio`.`sucursal_tipoc`)))) join `compra_detalle` on(((`c`.`id_compra` = `compra_detalle`.`compra_cdetalle`) and (`p`.`id_prod` = `compra_detalle`.`prod_cdetalle`)))) join `numeracion` on(((`t`.`numdoc_trans` = `numeracion`.`id_num`) and (`t`.`sucursal_trans` = `numeracion`.`sucursal_num`)))) join `tipo_documento` `tds` on(((`numeracion`.`tipo_num` = `tds`.`id_tipod`) and (`t`.`sucursal_trans` = `tds`.`sucursal_tipod`)))) where (`t`.`ope_trans` = 'E') group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`pr`.`nombre_prove`,`tds`.`abrv_tipod`,`numeracion`.`serie_num`,`c`.`cod_compra`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`td`.`cant_detalle`,`m`.`des_moneda`,`compra_detalle`.`precio_cdetalle`,`tipo_cambio`.`cambioc_tipoc`,`compra_detalle`.`precio_cdetalle`,`compra_detalle`.`precio_cdetalle`,`compra_detalle`.`cant_cdetalle`,`t`.`sucursal_trans`,`t`.`id_trans` ;
 
 -- --------------------------------------------------------
 
@@ -16877,16 +16842,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `entradas_documentos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `entradas_documentos`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`cliente`.`nombre_clte` AS `nombre_clte`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`d`.`cod_doc`,4,8)) AS `nro_doc`,'ENTRADA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,`td`.`cant_detalle` AS `ingreso_unidades`,`moneda`.`des_moneda` AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_soles`,'' AS `ingreso_valorizado_nacional`,'' AS `salidas_unidades`,'' AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans`,`t`.`id_trans` AS `id_trans` from ((((((((((`transaccion` `t` join `trans_detalle` `td` on(`t`.`id_trans` = `td`.`trans_detalle`)) join `producto` `p` on(`p`.`id_prod` = `td`.`prod_detalle` and `t`.`sucursal_trans` = `p`.`sucursal_prod`)) join `tipo_movimiento` `tm` on(`tm`.`id_tipom` = `t`.`tipo_trans` and `t`.`sucursal_trans` = `tm`.`sucursal_tipom`)) join `numeracion` `nd` on(`t`.`numdoc_trans` = `nd`.`id_num` and `t`.`sucursal_trans` = `nd`.`sucursal_num`)) join `tipo_documento` `tds` on(`nd`.`tipo_num` = `tds`.`id_tipod` and `t`.`sucursal_trans` = `tds`.`sucursal_tipod`)) join `documento` `d` on(`d`.`id_doc` = `t`.`idrefdoc_trans` and `t`.`sucursal_trans` = `d`.`sucursal_doc`)) join `documento` `dp` on(`dp`.`id_doc` = `d`.`docref_doc` and `dp`.`sucursal_doc` = `t`.`sucursal_trans`)) join `pedido` on(`dp`.`pedido_doc` = `pedido`.`id_pedido` and `pedido`.`sucursal_pedido` = `t`.`sucursal_trans`)) join `moneda` on(`moneda`.`id_moneda` = `pedido`.`moneda_pedido` and `t`.`sucursal_trans` = `moneda`.`sucursal_moneda`)) join `cliente` on(`pedido`.`clte_pedido` = `cliente`.`id_clte` and `t`.`sucursal_trans` = `cliente`.`sucursal_clte`)) where `t`.`tipo_trans` = 7 group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`cliente`.`nombre_clte`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`d`.`cod_doc`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`td`.`cant_detalle`,`moneda`.`des_moneda`,`t`.`sucursal_trans`,`t`.`id_trans` ;
-
--- --------------------------------------------------------
-
---
--- Estructura para la vista `movimiento_producto`
---
-DROP TABLE IF EXISTS `movimiento_producto`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `movimiento_producto`  AS  select `t`.`id_prod` AS `id_prod`,`t`.`cod_prod` AS `cod_prod`,`t`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`t`.`docref_trans` AS `docref_trans`,`t`.`codigo_trans` AS `codigo_trans`,`t`.`ope_trans` AS `ope_trans`,`t`.`id_tipom` AS `id_tipom`,`t`.`des_tipom` AS `des_tipom`,`t`.`id_tipod` AS `id_tipod`,`t`.`des_tipod` AS `des_tipod`,`t`.`ingreso_unidades` AS `ingreso_unidades`,`t`.`moneda` AS `moneda`,`t`.`precio_compra_ext` AS `precio_compra_ext`,`t`.`precio_compra_soles` AS `precio_compra_soles`,`t`.`ingreso_valorizados` AS `ingreso_valorizados`,`t`.`salidas_unidades` AS `salidas_unidades`,`t`.`tipo` AS `tipo`,`t`.`sucursal_trans` AS `sucursal_trans` from (select `salidas_ajustes`.`id_prod` AS `id_prod`,`salidas_ajustes`.`cod_prod` AS `cod_prod`,`salidas_ajustes`.`des_prod` AS `des_prod`,`salidas_ajustes`.`fecha_trans` AS `fecha_trans`,`salidas_ajustes`.`docref_trans` AS `docref_trans`,`salidas_ajustes`.`codigo_trans` AS `codigo_trans`,`salidas_ajustes`.`ope_trans` AS `ope_trans`,`salidas_ajustes`.`id_tipom` AS `id_tipom`,`salidas_ajustes`.`des_tipom` AS `des_tipom`,`salidas_ajustes`.`id_tipod` AS `id_tipod`,`salidas_ajustes`.`des_tipod` AS `des_tipod`,`salidas_ajustes`.`ingreso_unidades` AS `ingreso_unidades`,`salidas_ajustes`.`moneda` AS `moneda`,`salidas_ajustes`.`precio_compra_ext` AS `precio_compra_ext`,`salidas_ajustes`.`precio_compra_soles` AS `precio_compra_soles`,`salidas_ajustes`.`ingreso_valorizados` AS `ingreso_valorizados`,`salidas_ajustes`.`salidas_unidades` AS `salidas_unidades`,`salidas_ajustes`.`tipo` AS `tipo`,`salidas_ajustes`.`sucursal_trans` AS `sucursal_trans` from `salidas_ajustes` union select `salidas_documentos`.`id_prod` AS `id_prod`,`salidas_documentos`.`cod_prod` AS `cod_prod`,`salidas_documentos`.`des_prod` AS `des_prod`,`salidas_documentos`.`fecha_trans` AS `fecha_trans`,`salidas_documentos`.`nombre_clte` AS `nombre_clte`,`salidas_documentos`.`nro_documento` AS `nro_documento`,`salidas_documentos`.`ope_trans` AS `ope_trans`,`salidas_documentos`.`id_tipom` AS `id_tipom`,`salidas_documentos`.`des_tipom` AS `des_tipom`,`salidas_documentos`.`id_tipod` AS `id_tipod`,`salidas_documentos`.`des_tipod` AS `des_tipod`,`salidas_documentos`.`ingreso_unidades` AS `ingreso_unidades`,`salidas_documentos`.`moneda` AS `moneda`,`salidas_documentos`.`precio_compra_ext` AS `precio_compra_ext`,`salidas_documentos`.`precio_compra_soles` AS `precio_compra_soles`,`salidas_documentos`.`ingreso_valorizados` AS `ingreso_valorizados`,`salidas_documentos`.`salidas_unidades` AS `salidas_unidades`,`salidas_documentos`.`tipo_pedido` AS `tipo_pedido`,`salidas_documentos`.`sucursal_trans` AS `sucursal_trans` from `salidas_documentos` union select `salidas_proformas`.`id_prod` AS `id_prod`,`salidas_proformas`.`cod_prod` AS `cod_prod`,`salidas_proformas`.`des_prod` AS `des_prod`,`salidas_proformas`.`fecha_trans` AS `fecha_trans`,`salidas_proformas`.`nombre_clte` AS `nombre_clte`,`salidas_proformas`.`codigo_trans` AS `codigo_trans`,`salidas_proformas`.`OPE_TRANS` AS `OPE_TRANS`,`salidas_proformas`.`id_tipom` AS `id_tipom`,`salidas_proformas`.`des_tipom` AS `des_tipom`,`salidas_proformas`.`id_tipod` AS `id_tipod`,`salidas_proformas`.`des_tipod` AS `des_tipod`,`salidas_proformas`.`ingreso_unidades` AS `ingreso_unidades`,`salidas_proformas`.`moneda` AS `moneda`,`salidas_proformas`.`precio_compra_ext` AS `precio_compra_ext`,`salidas_proformas`.`precio_compra_soles` AS `precio_compra_soles`,`salidas_proformas`.`ingreso_valorizados` AS `ingreso_valorizados`,`salidas_proformas`.`salidas_unidades` AS `salidas_unidades`,`salidas_proformas`.`tipo_pedido` AS `tipo_pedido`,`salidas_proformas`.`sucursal_trans` AS `sucursal_trans` from `salidas_proformas` union select `entradas_ajustes`.`id_prod` AS `id_prod`,`entradas_ajustes`.`cod_prod` AS `cod_prod`,`entradas_ajustes`.`des_prod` AS `des_prod`,`entradas_ajustes`.`fecha_trans` AS `fecha_trans`,`entradas_ajustes`.`docref_trans` AS `docref_trans`,`entradas_ajustes`.`nro_doc` AS `nro_doc`,`entradas_ajustes`.`ope_trans` AS `ope_trans`,`entradas_ajustes`.`id_tipom` AS `id_tipom`,`entradas_ajustes`.`des_tipom` AS `des_tipom`,`entradas_ajustes`.`id_tipod` AS `id_tipod`,`entradas_ajustes`.`des_tipod` AS `des_tipod`,`entradas_ajustes`.`ingreso_unidades` AS `ingreso_unidades`,`entradas_ajustes`.`moneda` AS `moneda`,`entradas_ajustes`.`precio_compra_ext` AS `precio_compra_ext`,`entradas_ajustes`.`precio_soles` AS `precio_soles`,`entradas_ajustes`.`ingreso_valorizado_nacional` AS `ingreso_valorizado_nacional`,`entradas_ajustes`.`salidas_unidades` AS `salidas_unidades`,`entradas_ajustes`.`tipo_pedido` AS `tipo_pedido`,`entradas_ajustes`.`sucursal_trans` AS `sucursal_trans` from `entradas_ajustes` union select `entradas_compras`.`id_prod` AS `id_prod`,`entradas_compras`.`cod_prod` AS `cod_prod`,`entradas_compras`.`des_prod` AS `des_prod`,`entradas_compras`.`fecha_trans` AS `fecha_trans`,`entradas_compras`.`nombre_prove` AS `nombre_prove`,`entradas_compras`.`nro_doc` AS `nro_doc`,`entradas_compras`.`ope_trans` AS `ope_trans`,`entradas_compras`.`id_tipom` AS `id_tipom`,`entradas_compras`.`des_tipom` AS `des_tipom`,`entradas_compras`.`id_tipod` AS `id_tipod`,`entradas_compras`.`des_tipod` AS `des_tipod`,`entradas_compras`.`ingreso_unidades` AS `ingreso_unidades`,`entradas_compras`.`des_moneda` AS `des_moneda`,`entradas_compras`.`precio_compra_ext` AS `precio_compra_ext`,`entradas_compras`.`precio_soles` AS `precio_soles`,`entradas_compras`.`ingreso_valorizado_nacional` AS `ingreso_valorizado_nacional`,`entradas_compras`.`salidas_unidades` AS `salidas_unidades`,`entradas_compras`.`tipo_pedido` AS `tipo_pedido`,`entradas_compras`.`sucursal_trans` AS `sucursal_trans` from `entradas_compras` union select `entradas_documentos`.`id_prod` AS `id_prod`,`entradas_documentos`.`cod_prod` AS `cod_prod`,`entradas_documentos`.`des_prod` AS `des_prod`,`entradas_documentos`.`fecha_trans` AS `fecha_trans`,`entradas_documentos`.`nombre_clte` AS `nombre_clte`,`entradas_documentos`.`nro_doc` AS `nro_doc`,`entradas_documentos`.`ope_trans` AS `ope_trans`,`entradas_documentos`.`id_tipom` AS `id_tipom`,`entradas_documentos`.`des_tipom` AS `des_tipom`,`entradas_documentos`.`id_tipod` AS `id_tipod`,`entradas_documentos`.`des_tipod` AS `des_tipod`,`entradas_documentos`.`ingreso_unidades` AS `ingreso_unidades`,`entradas_documentos`.`moneda` AS `moneda`,`entradas_documentos`.`precio_compra_ext` AS `precio_compra_ext`,`entradas_documentos`.`precio_soles` AS `precio_soles`,`entradas_documentos`.`ingreso_valorizado_nacional` AS `ingreso_valorizado_nacional`,`entradas_documentos`.`salidas_unidades` AS `salidas_unidades`,`entradas_documentos`.`tipo_pedido` AS `tipo_pedido`,`entradas_documentos`.`sucursal_trans` AS `sucursal_trans` from `entradas_documentos`) `t` where `t`.`id_prod` = 5 order by `t`.`fecha_trans` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `entradas_documentos`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`cliente`.`nombre_clte` AS `nombre_clte`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`d`.`cod_doc`,4,8)) AS `nro_doc`,'ENTRADA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,`td`.`cant_detalle` AS `ingreso_unidades`,`moneda`.`des_moneda` AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_soles`,'' AS `ingreso_valorizado_nacional`,'' AS `salidas_unidades`,'' AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans`,`t`.`id_trans` AS `id_trans` from ((((((((((`transaccion` `t` join `trans_detalle` `td` on((`t`.`id_trans` = `td`.`trans_detalle`))) join `producto` `p` on(((`p`.`id_prod` = `td`.`prod_detalle`) and (`t`.`sucursal_trans` = `p`.`sucursal_prod`)))) join `tipo_movimiento` `tm` on(((`tm`.`id_tipom` = `t`.`tipo_trans`) and (`t`.`sucursal_trans` = `tm`.`sucursal_tipom`)))) join `numeracion` `nd` on(((`t`.`numdoc_trans` = `nd`.`id_num`) and (`t`.`sucursal_trans` = `nd`.`sucursal_num`)))) join `tipo_documento` `tds` on(((`nd`.`tipo_num` = `tds`.`id_tipod`) and (`t`.`sucursal_trans` = `tds`.`sucursal_tipod`)))) join `documento` `d` on(((`d`.`id_doc` = `t`.`idrefdoc_trans`) and (`t`.`sucursal_trans` = `d`.`sucursal_doc`)))) join `documento` `dp` on(((`dp`.`id_doc` = `d`.`docref_doc`) and (`dp`.`sucursal_doc` = `t`.`sucursal_trans`)))) join `pedido` on(((`dp`.`pedido_doc` = `pedido`.`id_pedido`) and (`pedido`.`sucursal_pedido` = `t`.`sucursal_trans`)))) join `moneda` on(((`moneda`.`id_moneda` = `pedido`.`moneda_pedido`) and (`t`.`sucursal_trans` = `moneda`.`sucursal_moneda`)))) join `cliente` on(((`pedido`.`clte_pedido` = `cliente`.`id_clte`) and (`t`.`sucursal_trans` = `cliente`.`sucursal_clte`)))) where (`t`.`tipo_trans` = 7) group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`cliente`.`nombre_clte`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`d`.`cod_doc`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`td`.`cant_detalle`,`moneda`.`des_moneda`,`t`.`sucursal_trans`,`t`.`id_trans` ;
 
 -- --------------------------------------------------------
 
@@ -16895,7 +16851,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `salidas_ajustes`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `salidas_ajustes`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`t`.`docref_trans` AS `docref_trans`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`t`.`codigo_trans`,4,8)) AS `codigo_trans`,'SALIDA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,'' AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_compra_soles`,'' AS `ingreso_valorizados`,`td`.`cant_detalle` AS `salidas_unidades`,'' AS `tipo`,`t`.`sucursal_trans` AS `sucursal_trans`,`t`.`id_trans` AS `id_trans` from (((((`transaccion` `t` join `trans_detalle` `td` on(`t`.`id_trans` = `td`.`trans_detalle`)) join `producto` `p` on(`p`.`id_prod` = `td`.`prod_detalle` and `t`.`sucursal_trans` = `p`.`sucursal_prod`)) join `tipo_movimiento` `tm` on(`tm`.`id_tipom` = `t`.`tipo_trans` and `t`.`sucursal_trans` = `tm`.`sucursal_tipom`)) join `numeracion` `nd` on(`t`.`numdoc_trans` = `nd`.`id_num` and `t`.`sucursal_trans` = `nd`.`sucursal_num`)) join `tipo_documento` `tds` on(`nd`.`tipo_num` = `tds`.`id_tipod` and `t`.`sucursal_trans` = `tds`.`sucursal_tipod`)) where `t`.`tipo_trans` in (2,6,10) group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`t`.`docref_trans`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`t`.`codigo_trans`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`t`.`fecha_trans`,`td`.`cant_detalle`,`t`.`sucursal_trans`,`t`.`id_trans` order by `t`.`id_trans` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `salidas_ajustes`  AS  select `p`.`id_prod` AS `id_prod`,`p`.`cod_prod` AS `cod_prod`,`p`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`t`.`docref_trans` AS `docref_trans`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`t`.`codigo_trans`,4,8)) AS `codigo_trans`,'SALIDA' AS `ope_trans`,`tm`.`id_tipom` AS `id_tipom`,`tm`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,'' AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_compra_soles`,'' AS `ingreso_valorizados`,`td`.`cant_detalle` AS `salidas_unidades`,'' AS `tipo`,`t`.`sucursal_trans` AS `sucursal_trans`,`t`.`id_trans` AS `id_trans` from (((((`transaccion` `t` join `trans_detalle` `td` on((`t`.`id_trans` = `td`.`trans_detalle`))) join `producto` `p` on(((`p`.`id_prod` = `td`.`prod_detalle`) and (`t`.`sucursal_trans` = `p`.`sucursal_prod`)))) join `tipo_movimiento` `tm` on(((`tm`.`id_tipom` = `t`.`tipo_trans`) and (`t`.`sucursal_trans` = `tm`.`sucursal_tipom`)))) join `numeracion` `nd` on(((`t`.`numdoc_trans` = `nd`.`id_num`) and (`t`.`sucursal_trans` = `nd`.`sucursal_num`)))) join `tipo_documento` `tds` on(((`nd`.`tipo_num` = `tds`.`id_tipod`) and (`t`.`sucursal_trans` = `tds`.`sucursal_tipod`)))) where (`t`.`tipo_trans` in (2,6,10)) group by `p`.`id_prod`,`p`.`cod_prod`,`p`.`des_prod`,`t`.`fecha_trans`,`t`.`docref_trans`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`t`.`codigo_trans`,`tm`.`id_tipom`,`tm`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`t`.`fecha_trans`,`td`.`cant_detalle`,`t`.`sucursal_trans`,`t`.`id_trans` order by `t`.`id_trans` ;
 
 -- --------------------------------------------------------
 
@@ -16904,7 +16860,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `salidas_documentos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `salidas_documentos`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`cliente`.`nombre_clte` AS `nombre_clte`,concat(`tipo_documento`.`abrv_tipod`,`numeracion`.`serie_num`,'-',substr(`documento`.`cod_doc`,4,8)) AS `nro_documento`,'SALIDA' AS `ope_trans`,`tipo_movimiento`.`id_tipom` AS `id_tipom`,`tipo_movimiento`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,'' AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_compra_soles`,'' AS `ingreso_valorizados`,`td`.`cant_detalle` AS `salidas_unidades`,`pedido`.`tipo_pedido` AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans`,`t`.`id_trans` AS `id_trans` from ((((((((((`transaccion` `t` join `trans_detalle` `td` on(`t`.`id_trans` = `td`.`trans_detalle`)) join `producto` on(`td`.`prod_detalle` = `producto`.`id_prod` and `producto`.`status_prod` = 1 and `t`.`sucursal_trans` = `producto`.`sucursal_prod`)) join `tipo_movimiento` on(`t`.`tipo_trans` = `tipo_movimiento`.`id_tipom` and `tipo_movimiento`.`status_tipom` = 1 and `tipo_movimiento`.`id_tipom` not in (8,6) and `t`.`sucursal_trans` = `tipo_movimiento`.`sucursal_tipom`)) join `documento` on(`t`.`idrefdoc_trans` = `documento`.`id_doc` and `documento`.`status_doc` in (2,3) and `t`.`sucursal_trans` = `documento`.`sucursal_doc`)) join `pedido` on(`documento`.`pedido_doc` = `pedido`.`id_pedido` and `pedido`.`estatus_pedido` in (2,3,4) and `t`.`sucursal_trans` = `pedido`.`sucursal_pedido`)) join `cliente` on(`pedido`.`clte_pedido` = `cliente`.`id_clte` and `t`.`sucursal_trans` = `cliente`.`sucursal_clte`)) join `numeracion` on(`documento`.`numeracion_doc` = `numeracion`.`id_num` and `t`.`sucursal_trans` = `numeracion`.`sucursal_num`)) join `numeracion` `nd` on(`t`.`numdoc_trans` = `nd`.`id_num` and `t`.`sucursal_trans` = `nd`.`sucursal_num`)) join `tipo_documento` on(`numeracion`.`tipo_num` = `tipo_documento`.`id_tipod` and `t`.`sucursal_trans` = `tipo_documento`.`sucursal_tipod`)) join `tipo_documento` `tds` on(`nd`.`tipo_num` = `tds`.`id_tipod` and `t`.`sucursal_trans` = `tds`.`sucursal_tipod`)) where `t`.`ope_trans` = 'S' group by `producto`.`id_prod`,`producto`.`cod_prod`,`producto`.`des_prod`,`t`.`fecha_trans`,`cliente`.`nombre_clte`,`tipo_documento`.`abrv_tipod`,`numeracion`.`serie_num`,`documento`.`cod_doc`,`tipo_movimiento`.`id_tipom`,`tipo_movimiento`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`pedido`.`tipo_pedido`,`td`.`cant_detalle`,`t`.`sucursal_trans`,`t`.`id_trans` order by `documento`.`cod_doc`,`producto`.`id_prod` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `salidas_documentos`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`cliente`.`nombre_clte` AS `nombre_clte`,concat(`tipo_documento`.`abrv_tipod`,`numeracion`.`serie_num`,'-',substr(`documento`.`cod_doc`,4,8)) AS `nro_documento`,'SALIDA' AS `ope_trans`,`tipo_movimiento`.`id_tipom` AS `id_tipom`,`tipo_movimiento`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,'' AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_compra_soles`,'' AS `ingreso_valorizados`,`td`.`cant_detalle` AS `salidas_unidades`,`pedido`.`tipo_pedido` AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans`,`t`.`id_trans` AS `id_trans` from ((((((((((`transaccion` `t` join `trans_detalle` `td` on((`t`.`id_trans` = `td`.`trans_detalle`))) join `producto` on(((`td`.`prod_detalle` = `producto`.`id_prod`) and (`producto`.`status_prod` = 1) and (`t`.`sucursal_trans` = `producto`.`sucursal_prod`)))) join `tipo_movimiento` on(((`t`.`tipo_trans` = `tipo_movimiento`.`id_tipom`) and (`tipo_movimiento`.`status_tipom` = 1) and (`tipo_movimiento`.`id_tipom` not in (8,6)) and (`t`.`sucursal_trans` = `tipo_movimiento`.`sucursal_tipom`)))) join `documento` on(((`t`.`idrefdoc_trans` = `documento`.`id_doc`) and (`documento`.`status_doc` in (2,3)) and (`t`.`sucursal_trans` = `documento`.`sucursal_doc`)))) join `pedido` on(((`documento`.`pedido_doc` = `pedido`.`id_pedido`) and (`pedido`.`estatus_pedido` in (2,3,4)) and (`t`.`sucursal_trans` = `pedido`.`sucursal_pedido`)))) join `cliente` on(((`pedido`.`clte_pedido` = `cliente`.`id_clte`) and (`t`.`sucursal_trans` = `cliente`.`sucursal_clte`)))) join `numeracion` on(((`documento`.`numeracion_doc` = `numeracion`.`id_num`) and (`t`.`sucursal_trans` = `numeracion`.`sucursal_num`)))) join `numeracion` `nd` on(((`t`.`numdoc_trans` = `nd`.`id_num`) and (`t`.`sucursal_trans` = `nd`.`sucursal_num`)))) join `tipo_documento` on(((`numeracion`.`tipo_num` = `tipo_documento`.`id_tipod`) and (`t`.`sucursal_trans` = `tipo_documento`.`sucursal_tipod`)))) join `tipo_documento` `tds` on(((`nd`.`tipo_num` = `tds`.`id_tipod`) and (`t`.`sucursal_trans` = `tds`.`sucursal_tipod`)))) where (`t`.`ope_trans` = 'S') group by `producto`.`id_prod`,`producto`.`cod_prod`,`producto`.`des_prod`,`t`.`fecha_trans`,`cliente`.`nombre_clte`,`tipo_documento`.`abrv_tipod`,`numeracion`.`serie_num`,`documento`.`cod_doc`,`tipo_movimiento`.`id_tipom`,`tipo_movimiento`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`pedido`.`tipo_pedido`,`td`.`cant_detalle`,`t`.`sucursal_trans`,`t`.`id_trans` order by `documento`.`cod_doc`,`producto`.`id_prod` ;
 
 -- --------------------------------------------------------
 
@@ -16913,16 +16869,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `salidas_proformas`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `salidas_proformas`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`cliente`.`nombre_clte` AS `nombre_clte`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`t`.`codigo_trans`,4,8)) AS `codigo_trans`,'SALIDA' AS `OPE_TRANS`,`tipo_movimiento`.`id_tipom` AS `id_tipom`,`tipo_movimiento`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,'' AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_compra_soles`,'' AS `ingreso_valorizados`,`td`.`cant_detalle` AS `salidas_unidades`,`pedido`.`tipo_pedido` AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans`,`t`.`id_trans` AS `id_trans` from (((((((`transaccion` `t` join `trans_detalle` `td` on(`t`.`id_trans` = `td`.`trans_detalle`)) join `producto` on(`td`.`prod_detalle` = `producto`.`id_prod` and `producto`.`status_prod` = 1 and `t`.`sucursal_trans` = `producto`.`sucursal_prod`)) left join `tipo_movimiento` on(`t`.`tipo_trans` = `tipo_movimiento`.`id_tipom` and `tipo_movimiento`.`status_tipom` = 1 and `t`.`sucursal_trans` = `tipo_movimiento`.`sucursal_tipom`)) left join `pedido` on(`pedido`.`id_pedido` = `t`.`idrefdoc_trans` and `pedido`.`estatus_pedido` = 3 and `t`.`sucursal_trans` = `pedido`.`sucursal_pedido`)) join `cliente` on(`pedido`.`clte_pedido` = `cliente`.`id_clte` and `t`.`sucursal_trans` = `cliente`.`sucursal_clte`)) join `numeracion` `nd` on(`t`.`numdoc_trans` = `nd`.`id_num` and `t`.`sucursal_trans` = `nd`.`sucursal_num`)) join `tipo_documento` `tds` on(`nd`.`tipo_num` = `tds`.`id_tipod` and `t`.`sucursal_trans` = `tds`.`sucursal_tipod`)) where `t`.`ope_trans` = 'S' and `tipo_movimiento`.`id_tipom` = 8 group by `producto`.`id_prod`,`producto`.`cod_prod`,`producto`.`des_prod`,`t`.`fecha_trans`,`cliente`.`id_clte`,`cliente`.`nombre_clte`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`t`.`codigo_trans`,`t`.`id_trans`,`t`.`idrefdoc_trans`,`pedido`.`cod_pedido`,`tipo_movimiento`.`id_tipom`,`tipo_movimiento`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`pedido`.`tipo_pedido`,`td`.`cant_detalle`,`t`.`sucursal_trans`,`t`.`id_trans` order by `pedido`.`cod_pedido`,`producto`.`id_prod` ;
-
--- --------------------------------------------------------
-
---
--- Estructura para la vista `stock_prod_inicial`
---
-DROP TABLE IF EXISTS `stock_prod_inicial`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `stock_prod_inicial`  AS  select `td`.`prod_detalle` AS `prod_detalle`,`t`.`fecha_trans` AS `fecha_trans`,`t`.`sucursal_trans` AS `sucursal_trans`,`t`.`ope_trans` AS `ope_trans`,coalesce(sum(`td`.`cant_detalle`),0) AS `stock_inicial` from (`transaccion` `t` join `trans_detalle` `td` on(`t`.`id_trans` = `td`.`trans_detalle`)) where `t`.`fecha_trans` < (select min(`t1`.`fecha_trans`) from (`transaccion` `t1` join `trans_detalle` `td1` on(`t1`.`id_trans` = `td1`.`trans_detalle`)) where `t1`.`ope_trans` = 'E' and `td1`.`prod_detalle` = `td`.`prod_detalle`) and `t`.`ope_trans` = 'S' group by `td`.`prod_detalle`,`t`.`fecha_trans`,`t`.`sucursal_trans`,`t`.`ope_trans` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `salidas_proformas`  AS  select `producto`.`id_prod` AS `id_prod`,`producto`.`cod_prod` AS `cod_prod`,`producto`.`des_prod` AS `des_prod`,`t`.`fecha_trans` AS `fecha_trans`,`cliente`.`nombre_clte` AS `nombre_clte`,concat(`tds`.`abrv_tipod`,`nd`.`serie_num`,'-',substr(`t`.`codigo_trans`,4,8)) AS `codigo_trans`,'SALIDA' AS `OPE_TRANS`,`tipo_movimiento`.`id_tipom` AS `id_tipom`,`tipo_movimiento`.`des_tipom` AS `des_tipom`,`tds`.`id_tipod` AS `id_tipod`,`tds`.`des_tipod` AS `des_tipod`,'' AS `ingreso_unidades`,'' AS `moneda`,'' AS `precio_compra_ext`,'' AS `precio_compra_soles`,'' AS `ingreso_valorizados`,`td`.`cant_detalle` AS `salidas_unidades`,`pedido`.`tipo_pedido` AS `tipo_pedido`,`t`.`sucursal_trans` AS `sucursal_trans`,`t`.`id_trans` AS `id_trans` from (((((((`transaccion` `t` join `trans_detalle` `td` on((`t`.`id_trans` = `td`.`trans_detalle`))) join `producto` on(((`td`.`prod_detalle` = `producto`.`id_prod`) and (`producto`.`status_prod` = 1) and (`t`.`sucursal_trans` = `producto`.`sucursal_prod`)))) left join `tipo_movimiento` on(((`t`.`tipo_trans` = `tipo_movimiento`.`id_tipom`) and (`tipo_movimiento`.`status_tipom` = 1) and (`t`.`sucursal_trans` = `tipo_movimiento`.`sucursal_tipom`)))) left join `pedido` on(((`pedido`.`id_pedido` = `t`.`idrefdoc_trans`) and (`pedido`.`estatus_pedido` = 3) and (`t`.`sucursal_trans` = `pedido`.`sucursal_pedido`)))) join `cliente` on(((`pedido`.`clte_pedido` = `cliente`.`id_clte`) and (`t`.`sucursal_trans` = `cliente`.`sucursal_clte`)))) join `numeracion` `nd` on(((`t`.`numdoc_trans` = `nd`.`id_num`) and (`t`.`sucursal_trans` = `nd`.`sucursal_num`)))) join `tipo_documento` `tds` on(((`nd`.`tipo_num` = `tds`.`id_tipod`) and (`t`.`sucursal_trans` = `tds`.`sucursal_tipod`)))) where ((`t`.`ope_trans` = 'S') and (`tipo_movimiento`.`id_tipom` = 8)) group by `producto`.`id_prod`,`producto`.`cod_prod`,`producto`.`des_prod`,`t`.`fecha_trans`,`cliente`.`id_clte`,`cliente`.`nombre_clte`,`tds`.`abrv_tipod`,`nd`.`serie_num`,`t`.`codigo_trans`,`t`.`id_trans`,`t`.`idrefdoc_trans`,`pedido`.`cod_pedido`,`tipo_movimiento`.`id_tipom`,`tipo_movimiento`.`des_tipom`,`tds`.`id_tipod`,`tds`.`des_tipod`,`pedido`.`tipo_pedido`,`td`.`cant_detalle`,`t`.`sucursal_trans`,`t`.`id_trans` order by `pedido`.`cod_pedido`,`producto`.`id_prod` ;
 
 -- --------------------------------------------------------
 
@@ -16931,7 +16878,719 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_productos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `pr`.`id_prod` AS `id_prod`,`pr`.`cod_prod` AS `cod_prod`,`pr`.`des_prod` AS `des_prod`,`pr`.`compra_prod` AS `compra_prod`,`pr`.`venta_prod` AS `venta_prod`,`pr`.`status_prod` AS `status_prod`,`suc`.`id_suc` AS `sucursal_prod`,`pr`.`tipo_prod` AS `tipo_prod`,concat(`pr`.`cod_prod`,' ',`pr`.`des_prod`,' - ',`um`.`des_und`) AS `texto`,`suc`.`impuesto_suc` AS `impuesto_suc`,`um`.`id_und` AS `id_und`,`um`.`des_und` AS `des_und`,`pr`.`stock_prod` - (select coalesce(sum(`pedido_detalle`.`cant_pdetalle`),0) AS `cant_pedido` from (`pedido_detalle` join `pedido` on(`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`)) where `pedido_detalle`.`prod_pdetalle` = `pr`.`id_prod` and `pedido`.`sucursal_pedido` = `suc`.`id_suc` and `pedido`.`estatus_pedido` = 0) AS `stock_prod`,`pr`.`stock_prod` AS `stock_prod_bruto`,(select coalesce(sum(`pedido_detalle`.`cant_pdetalle`),0) AS `cant_pedido` from (`pedido_detalle` join `pedido` on(`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`)) where `pedido_detalle`.`prod_pdetalle` = `pr`.`id_prod` and `pedido`.`sucursal_pedido` = `suc`.`id_suc` and `pedido`.`estatus_pedido` = 0) AS `stock_asignado` from ((`producto` `pr` join `unidad_medida` `um` on(`um`.`id_und` = `pr`.`umed_prod`)) join `sucursal` `suc` on(`pr`.`sucursal_prod` = `suc`.`id_suc`)) group by `pr`.`id_prod`,`pr`.`cod_prod`,`pr`.`des_prod`,`pr`.`compra_prod`,`pr`.`venta_prod`,`pr`.`status_prod`,`pr`.`stock_prod`,`suc`.`id_suc`,`pr`.`tipo_prod`,`suc`.`impuesto_suc`,`um`.`id_und`,`um`.`des_und`,`pr`.`stock_prod` order by `pr`.`cod_prod` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productos`  AS  select `pr`.`id_prod` AS `id_prod`,`pr`.`cod_prod` AS `cod_prod`,`pr`.`des_prod` AS `des_prod`,`pr`.`compra_prod` AS `compra_prod`,`pr`.`venta_prod` AS `venta_prod`,`pr`.`status_prod` AS `status_prod`,`suc`.`id_suc` AS `sucursal_prod`,`pr`.`tipo_prod` AS `tipo_prod`,concat(`pr`.`cod_prod`,' ',`pr`.`des_prod`,' - ',`um`.`des_und`) AS `texto`,`suc`.`impuesto_suc` AS `impuesto_suc`,`um`.`id_und` AS `id_und`,`um`.`des_und` AS `des_und`,(`pr`.`stock_prod` - (select coalesce(sum(`pedido_detalle`.`cant_pdetalle`),0) AS `cant_pedido` from (`pedido_detalle` join `pedido` on((`pedido`.`id_pedido` = `pedido_detalle`.`pedido_pdetalle`))) where ((`pedido_detalle`.`prod_pdetalle` = `pr`.`id_prod`) and (`pedido`.`sucursal_pedido` = `suc`.`id_suc`) and (`pedido`.`estatus_pedido` = 0)))) AS `stock_prod`,`pr`.`stock_prod` AS `stock_prod_bruto` from ((`producto` `pr` join `unidad_medida` `um` on((`um`.`id_und` = `pr`.`umed_prod`))) join `sucursal` `suc` on((`pr`.`sucursal_prod` = `suc`.`id_suc`))) group by `pr`.`id_prod`,`pr`.`cod_prod`,`pr`.`des_prod`,`pr`.`compra_prod`,`pr`.`venta_prod`,`pr`.`status_prod`,`pr`.`stock_prod`,`suc`.`id_suc`,`pr`.`tipo_prod`,`suc`.`impuesto_suc`,`um`.`id_und`,`um`.`des_und` order by `pr`.`cod_prod` ;
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `almacen`
+--
+ALTER TABLE `almacen`
+  ADD PRIMARY KEY (`id_almacen`),
+  ADD KEY `sucursal_almacen` (`sucursal_almacen`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `auth_assignment`
+--
+ALTER TABLE `auth_assignment`
+  ADD PRIMARY KEY (`item_name`,`user_id`),
+  ADD KEY `idx-auth_assignment-user_id` (`user_id`);
+
+--
+-- Indices de la tabla `auth_item`
+--
+ALTER TABLE `auth_item`
+  ADD PRIMARY KEY (`name`),
+  ADD KEY `rule_name` (`rule_name`),
+  ADD KEY `idx-auth_item-type` (`type`);
+
+--
+-- Indices de la tabla `auth_item_child`
+--
+ALTER TABLE `auth_item_child`
+  ADD PRIMARY KEY (`parent`,`child`),
+  ADD KEY `child` (`child`);
+
+--
+-- Indices de la tabla `auth_rule`
+--
+ALTER TABLE `auth_rule`
+  ADD PRIMARY KEY (`name`);
+
+--
+-- Indices de la tabla `cliente`
+--
+ALTER TABLE `cliente`
+  ADD PRIMARY KEY (`id_clte`),
+  ADD KEY `sucursal_clte` (`sucursal_clte`),
+  ADD KEY `cliente_ibfk_1` (`vendedor_clte`),
+  ADD KEY `pais_cte` (`pais_cte`),
+  ADD KEY `provi_cte` (`provi_cte`),
+  ADD KEY `depto_cte` (`depto_cte`),
+  ADD KEY `dtto_cte` (`dtto_clte`),
+  ADD KEY `lista_clte` (`lista_clte`),
+  ADD KEY `tipoid_clte` (`tipoid_clte`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `compra`
+--
+ALTER TABLE `compra`
+  ADD PRIMARY KEY (`id_compra`),
+  ADD UNIQUE KEY `cod_compra` (`cod_compra`),
+  ADD KEY `fecha_compra` (`fecha_compra`),
+  ADD KEY `provee_compra` (`provee_compra`),
+  ADD KEY `moneda_compra` (`moneda_compra`),
+  ADD KEY `usuario_compra` (`usuario_compra`),
+  ADD KEY `sucursal_compra` (`sucursal_compra`),
+  ADD KEY `condp_compra` (`condp_compra`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `compra_detalle`
+--
+ALTER TABLE `compra_detalle`
+  ADD PRIMARY KEY (`id_cdetalle`),
+  ADD KEY `prod_cdetalle` (`prod_cdetalle`),
+  ADD KEY `compra_cdetalle` (`compra_cdetalle`);
+
+--
+-- Indices de la tabla `cond_pago`
+--
+ALTER TABLE `cond_pago`
+  ADD PRIMARY KEY (`id_condp`),
+  ADD KEY `sucursal_condp` (`sucursal_condp`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `departamento`
+--
+ALTER TABLE `departamento`
+  ADD PRIMARY KEY (`id_depto`),
+  ADD KEY `sucursal_depto` (`sucursal_depto`),
+  ADD KEY `prov_depto` (`prov_depto`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `distrito`
+--
+ALTER TABLE `distrito`
+  ADD PRIMARY KEY (`id_dtto`),
+  ADD KEY `sucursal_dtto` (`sucursal_dtto`),
+  ADD KEY `depto_dtto` (`depto_dtto`),
+  ADD KEY `pais_dtto` (`pais_dtto`),
+  ADD KEY `prov_dtto` (`prov_dtto`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `documento`
+--
+ALTER TABLE `documento`
+  ADD PRIMARY KEY (`id_doc`),
+  ADD KEY `cod_doc` (`cod_doc`),
+  ADD KEY `tipo_doc` (`tipo_doc`),
+  ADD KEY `pedido_doc` (`pedido_doc`),
+  ADD KEY `fecha_doc` (`fecha_doc`),
+  ADD KEY `status_doc` (`status_doc`),
+  ADD KEY `sucursal_doc` (`sucursal_doc`),
+  ADD KEY `transp_doc` (`transp_doc`),
+  ADD KEY `utransp_doc` (`utransp_doc`),
+  ADD KEY `almacen_doc` (`almacen_doc`),
+  ADD KEY `almacen_doc_2` (`almacen_doc`),
+  ADD KEY `serie_doc` (`numeracion_doc`),
+  ADD KEY `condpago_doc` (`condpago_doc`),
+  ADD KEY `motivosunat_doc` (`motivosunat_doc`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `documento_detalle`
+--
+ALTER TABLE `documento_detalle`
+  ADD PRIMARY KEY (`id_ddetalle`),
+  ADD KEY `prod_pdetalle` (`prod_ddetalle`),
+  ADD KEY `pedido_pdetalle` (`documento_ddetalle`);
+
+--
+-- Indices de la tabla `empresa`
+--
+ALTER TABLE `empresa`
+  ADD PRIMARY KEY (`id_empresa`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `inventario`
+--
+ALTER TABLE `inventario`
+  ADD PRIMARY KEY (`id_inv`),
+  ADD KEY `sucursal_inv` (`sucursal_inv`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `lista_precios`
+--
+ALTER TABLE `lista_precios`
+  ADD PRIMARY KEY (`id_lista`),
+  ADD UNIQUE KEY `lista` (`prod_lista`,`tipo_lista`),
+  ADD KEY `tipo_lista` (`tipo_lista`),
+  ADD KEY `prod_lista` (`prod_lista`),
+  ADD KEY `sucursal_lista` (`sucursal_lista`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `menu`
+--
+ALTER TABLE `menu`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `parent` (`parent`);
+
+--
+-- Indices de la tabla `migration`
+--
+ALTER TABLE `migration`
+  ADD PRIMARY KEY (`version`);
+
+--
+-- Indices de la tabla `moneda`
+--
+ALTER TABLE `moneda`
+  ADD PRIMARY KEY (`id_moneda`),
+  ADD KEY `sucursal_moneda` (`sucursal_moneda`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `motivo_ncredito`
+--
+ALTER TABLE `motivo_ncredito`
+  ADD PRIMARY KEY (`id_motivo`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `motivo_traslado`
+--
+ALTER TABLE `motivo_traslado`
+  ADD PRIMARY KEY (`id_motivo`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `numeracion`
+--
+ALTER TABLE `numeracion`
+  ADD PRIMARY KEY (`id_num`),
+  ADD KEY `sucursal_num` (`sucursal_num`),
+  ADD KEY `tipo_num` (`tipo_num`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `pais`
+--
+ALTER TABLE `pais`
+  ADD PRIMARY KEY (`id_pais`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `pedido`
+--
+ALTER TABLE `pedido`
+  ADD PRIMARY KEY (`id_pedido`,`cod_pedido`,`tipo_pedido`),
+  ADD UNIQUE KEY `cod_pedido` (`cod_pedido`,`tipo_pedido`),
+  ADD KEY `fecha_pedido` (`fecha_pedido`),
+  ADD KEY `clte_pedido` (`clte_pedido`),
+  ADD KEY `vend_pedido` (`vend_pedido`),
+  ADD KEY `moneda_pedido` (`moneda_pedido`),
+  ADD KEY `almacen_pedido` (`almacen_pedido`),
+  ADD KEY `usuario_pedido` (`usuario_pedido`),
+  ADD KEY `sucursal_pedido` (`sucursal_pedido`),
+  ADD KEY `condp_pedido` (`condp_pedido`),
+  ADD KEY `tipo_pedido` (`tipo_pedido`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `pedido_detalle`
+--
+ALTER TABLE `pedido_detalle`
+  ADD PRIMARY KEY (`id_pdetalle`),
+  ADD KEY `prod_pdetalle` (`prod_pdetalle`),
+  ADD KEY `pedido_pdetalle` (`pedido_pdetalle`);
+
+--
+-- Indices de la tabla `precios`
+--
+ALTER TABLE `precios`
+  ADD PRIMARY KEY (`codigo`);
+
+--
+-- Indices de la tabla `producto`
+--
+ALTER TABLE `producto`
+  ADD PRIMARY KEY (`id_prod`),
+  ADD UNIQUE KEY `cod_prod` (`cod_prod`),
+  ADD KEY `tipo_prod` (`tipo_prod`),
+  ADD KEY `sucursal_prod` (`sucursal_prod`),
+  ADD KEY `umed_prod` (`umed_prod`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `profile`
+--
+ALTER TABLE `profile`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `proveedor`
+--
+ALTER TABLE `proveedor`
+  ADD PRIMARY KEY (`id_prove`),
+  ADD KEY `sucursal_prove` (`sucursal_prove`),
+  ADD KEY `pais_prove` (`pais_prove`),
+  ADD KEY `provi_prove` (`provi_prove`),
+  ADD KEY `depto_prove` (`depto_prove`),
+  ADD KEY `dttp_prove` (`dtto_prove`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `provincia`
+--
+ALTER TABLE `provincia`
+  ADD PRIMARY KEY (`id_prov`),
+  ADD KEY `sucursal_prov` (`sucursal_prov`),
+  ADD KEY `fx_pais_prov_idx` (`pais_prov`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `series`
+--
+ALTER TABLE `series`
+  ADD PRIMARY KEY (`id_serie`),
+  ADD KEY `sucursal_serie` (`sucursal_serie`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `sucursal`
+--
+ALTER TABLE `sucursal`
+  ADD PRIMARY KEY (`id_suc`),
+  ADD KEY `EMPRESA_SUC` (`empresa_suc`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `tipo_cambio`
+--
+ALTER TABLE `tipo_cambio`
+  ADD PRIMARY KEY (`id_tipoc`),
+  ADD KEY `sucursal_tipoc` (`sucursal_tipoc`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `tipo_documento`
+--
+ALTER TABLE `tipo_documento`
+  ADD PRIMARY KEY (`id_tipod`),
+  ADD KEY `id_tipod` (`id_tipod`),
+  ADD KEY `sucursal_tipod` (`sucursal_tipod`),
+  ADD KEY `doc_doc` (`tipo_tipod`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `tipo_identificacion`
+--
+ALTER TABLE `tipo_identificacion`
+  ADD PRIMARY KEY (`id_tipoi`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `tipo_listap`
+--
+ALTER TABLE `tipo_listap`
+  ADD PRIMARY KEY (`id_lista`),
+  ADD KEY `sucursal_lista` (`sucursal_lista`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `tipo_movimiento`
+--
+ALTER TABLE `tipo_movimiento`
+  ADD PRIMARY KEY (`id_tipom`),
+  ADD KEY `sucursal_tipom` (`sucursal_tipom`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `tipo_producto`
+--
+ALTER TABLE `tipo_producto`
+  ADD PRIMARY KEY (`id_tpdcto`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `tipo_proveedor`
+--
+ALTER TABLE `tipo_proveedor`
+  ADD PRIMARY KEY (`id_tprov`),
+  ADD KEY `sucursal_tprov` (`sucursal_tprov`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `transaccion`
+--
+ALTER TABLE `transaccion`
+  ADD PRIMARY KEY (`id_trans`) USING BTREE,
+  ADD UNIQUE KEY `codigo_trans_2` (`codigo_trans`,`tipo_trans`) USING BTREE,
+  ADD KEY `codigo_trans` (`codigo_trans`),
+  ADD KEY `fecha_trans` (`fecha_trans`),
+  ADD KEY `tipo_trans` (`tipo_trans`),
+  ADD KEY `almacen_trans` (`almacen_trans`),
+  ADD KEY `usuario_trans` (`usuario_trans`),
+  ADD KEY `grupo_trans` (`ope_trans`),
+  ADD KEY `idrefdoc_trans` (`idrefdoc_trans`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `transportista`
+--
+ALTER TABLE `transportista`
+  ADD PRIMARY KEY (`id_transp`),
+  ADD KEY `status_transp` (`status_transp`),
+  ADD KEY `sucursal_transp` (`sucursal_transp`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `trans_detalle`
+--
+ALTER TABLE `trans_detalle`
+  ADD PRIMARY KEY (`id_detalle`),
+  ADD KEY `trans_detalle` (`trans_detalle`),
+  ADD KEY `prod_detalle` (`prod_detalle`);
+
+--
+-- Indices de la tabla `unidad_medida`
+--
+ALTER TABLE `unidad_medida`
+  ADD PRIMARY KEY (`id_und`),
+  ADD KEY `sucursal_und` (`sucursal_und`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `unidad_transporte`
+--
+ALTER TABLE `unidad_transporte`
+  ADD PRIMARY KEY (`id_utransp`),
+  ADD KEY `status_utransp` (`status_utransp`),
+  ADD KEY `sucursal_utransp` (`sucursal_utransp`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `empresa` (`empresa`),
+  ADD KEY `sucursal` (`sucursal`);
+
+--
+-- Indices de la tabla `vendedor`
+--
+ALTER TABLE `vendedor`
+  ADD PRIMARY KEY (`id_vendedor`),
+  ADD KEY `zona_vend` (`zona_vend`),
+  ADD KEY `sucursal_vend` (`sucursal_vend`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `zona`
+--
+ALTER TABLE `zona`
+  ADD PRIMARY KEY (`id_zona`),
+  ADD KEY `sucursal_zona` (`sucursal_zona`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `almacen`
+--
+ALTER TABLE `almacen`
+  MODIFY `id_almacen` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `cliente`
+--
+ALTER TABLE `cliente`
+  MODIFY `id_clte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=795;
+
+--
+-- AUTO_INCREMENT de la tabla `compra`
+--
+ALTER TABLE `compra`
+  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=64;
+
+--
+-- AUTO_INCREMENT de la tabla `compra_detalle`
+--
+ALTER TABLE `compra_detalle`
+  MODIFY `id_cdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=972;
+
+--
+-- AUTO_INCREMENT de la tabla `cond_pago`
+--
+ALTER TABLE `cond_pago`
+  MODIFY `id_condp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `departamento`
+--
+ALTER TABLE `departamento`
+  MODIFY `id_depto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=217;
+
+--
+-- AUTO_INCREMENT de la tabla `distrito`
+--
+ALTER TABLE `distrito`
+  MODIFY `id_dtto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=218;
+
+--
+-- AUTO_INCREMENT de la tabla `documento`
+--
+ALTER TABLE `documento`
+  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=361;
+
+--
+-- AUTO_INCREMENT de la tabla `documento_detalle`
+--
+ALTER TABLE `documento_detalle`
+  MODIFY `id_ddetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=1872;
+
+--
+-- AUTO_INCREMENT de la tabla `empresa`
+--
+ALTER TABLE `empresa`
+  MODIFY `id_empresa` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `inventario`
+--
+ALTER TABLE `inventario`
+  MODIFY `id_inv` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO';
+
+--
+-- AUTO_INCREMENT de la tabla `lista_precios`
+--
+ALTER TABLE `lista_precios`
+  MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=811;
+
+--
+-- AUTO_INCREMENT de la tabla `menu`
+--
+ALTER TABLE `menu`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `moneda`
+--
+ALTER TABLE `moneda`
+  MODIFY `id_moneda` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `motivo_ncredito`
+--
+ALTER TABLE `motivo_ncredito`
+  MODIFY `id_motivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `motivo_traslado`
+--
+ALTER TABLE `motivo_traslado`
+  MODIFY `id_motivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT de la tabla `numeracion`
+--
+ALTER TABLE `numeracion`
+  MODIFY `id_num` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `pais`
+--
+ALTER TABLE `pais`
+  MODIFY `id_pais` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=243;
+
+--
+-- AUTO_INCREMENT de la tabla `pedido`
+--
+ALTER TABLE `pedido`
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=309;
+
+--
+-- AUTO_INCREMENT de la tabla `pedido_detalle`
+--
+ALTER TABLE `pedido_detalle`
+  MODIFY `id_pdetalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3423;
+
+--
+-- AUTO_INCREMENT de la tabla `producto`
+--
+ALTER TABLE `producto`
+  MODIFY `id_prod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=1222;
+
+--
+-- AUTO_INCREMENT de la tabla `profile`
+--
+ALTER TABLE `profile`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `proveedor`
+--
+ALTER TABLE `proveedor`
+  MODIFY `id_prove` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `provincia`
+--
+ALTER TABLE `provincia`
+  MODIFY `id_prov` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT de la tabla `series`
+--
+ALTER TABLE `series`
+  MODIFY `id_serie` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID SERIE', AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `sucursal`
+--
+ALTER TABLE `sucursal`
+  MODIFY `id_suc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_cambio`
+--
+ALTER TABLE `tipo_cambio`
+  MODIFY `id_tipoc` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=198;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_documento`
+--
+ALTER TABLE `tipo_documento`
+  MODIFY `id_tipod` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_identificacion`
+--
+ALTER TABLE `tipo_identificacion`
+  MODIFY `id_tipoi` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_listap`
+--
+ALTER TABLE `tipo_listap`
+  MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_movimiento`
+--
+ALTER TABLE `tipo_movimiento`
+  MODIFY `id_tipom` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_producto`
+--
+ALTER TABLE `tipo_producto`
+  MODIFY `id_tpdcto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_proveedor`
+--
+ALTER TABLE `tipo_proveedor`
+  MODIFY `id_tprov` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `transaccion`
+--
+ALTER TABLE `transaccion`
+  MODIFY `id_trans` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=314;
+
+--
+-- AUTO_INCREMENT de la tabla `transportista`
+--
+ALTER TABLE `transportista`
+  MODIFY `id_transp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `trans_detalle`
+--
+ALTER TABLE `trans_detalle`
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3642;
+
+--
+-- AUTO_INCREMENT de la tabla `unidad_medida`
+--
+ALTER TABLE `unidad_medida`
+  MODIFY `id_und` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `unidad_transporte`
+--
+ALTER TABLE `unidad_transporte`
+  MODIFY `id_utransp` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `vendedor`
+--
+ALTER TABLE `vendedor`
+  MODIFY `id_vendedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `zona`
+--
+ALTER TABLE `zona`
+  MODIFY `id_zona` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID UNICO', AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
@@ -17003,7 +17662,7 @@ ALTER TABLE `documento`
   ADD CONSTRAINT `documento_ibfk_2` FOREIGN KEY (`pedido_doc`) REFERENCES `pedido` (`id_pedido`) ON DELETE NO ACTION ON UPDATE CASCADE,
   ADD CONSTRAINT `documento_ibfk_3` FOREIGN KEY (`numeracion_doc`) REFERENCES `numeracion` (`id_num`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `documento_ibfk_4` FOREIGN KEY (`condpago_doc`) REFERENCES `cond_pago` (`id_condp`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT `documento_ibfk_5` FOREIGN KEY (`motivosunat_doc`) REFERENCES `motivo_ncredito` (`id_motivo`);
+  ADD CONSTRAINT `documento_ibfk_5` FOREIGN KEY (`motivosunat_doc`) REFERENCES `motivo_ncredito` (`id_motivo`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `documento_detalle`

@@ -591,41 +591,43 @@ $( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ) {
 });
 
 $( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ) {
-    let row = $( this ).attr( "id" ).split( "-" );
-    row = row[ 1 ];
-    let descu = +$( this ).val();
-    let precioLista = +$( "#pedidodetalle-" + row + "-plista_pdetalle").val();
-    let precio = +$( "#pedidodetalle-" + row + "-precio_pdetalle").val();
-    let cant = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
-    let precioDetalle = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
-    let total = 0.00;
-    let descuento = 0;
-    let precioVenta = 0.00;
+    if ( e.keyCode !== 13 ) {
+      let row = $( this ).attr( "id" ).split( "-" );
+      row = row[ 1 ];
+      let descu = +$( this ).val();
+      let precioLista = +$( "#pedidodetalle-" + row + "-plista_pdetalle").val();
+      let precio = +$( "#pedidodetalle-" + row + "-precio_pdetalle").val();
+      let cant = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
+      let precioDetalle = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
+      let total = 0.00;
+      let descuento = 0;
+      let precioVenta = 0.00;
 
-    if ( precioLista !== precio && precio === 0 ) {
-      precio = precioLista;
-    }
-
-    if ( cant ) {
-
-      if ( descu ) {
-        total = ( cant * ( precio - ( precio * ( descu / 100 ) ) ) );
-        precioVenta = precio - ( precio * ( descu / 100 ) );
-        descuento = ( precio * ( descu / 100 ) );
-      } else {
-        total = cant * precio;
-        precioVenta = precioLista;
+      if ( precioLista !== precio && precio === 0 ) {
+        precio = precioLista;
       }
 
-      descuento = parseFloat( descuento ).toFixed( 2 );
-      precioVenta = parseFloat(  precioVenta  ).toFixed( 2 );
-      total = parseFloat(  total  ).toFixed( 2 );
+      if ( cant ) {
 
-      $( "#pedidodetalle-" + row + "-descu_pdetalle").data( "descuento", descuento);
-      $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioVenta );
-      $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
+        if ( descu ) {
+          total = ( cant * ( precio - ( precio * ( descu / 100 ) ) ) );
+          precioVenta = precio - ( precio * ( descu / 100 ) );
+          descuento = ( precio * ( descu / 100 ) );
+        } else {
+          total = cant * precio;
+          precioVenta = precioLista;
+        }
 
-      calculateTotals( IMPUESTO );
+        descuento = parseFloat( descuento ).toFixed( 2 );
+        precioVenta = parseFloat(  precioVenta  ).toFixed( 2 );
+        total = parseFloat(  total  ).toFixed( 2 );
+
+        $( "#pedidodetalle-" + row + "-descu_pdetalle").data( "descuento", descuento);
+        $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioVenta );
+        $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
+
+        calculateTotals( IMPUESTO );
+      }
     }
 });
 
@@ -738,7 +740,7 @@ JS
 , VIEW::POS_END);
 
   $jsSave = "
-  function setPrices( value = null, row, tipo_lista ) {    
+  function setPrices( value = null, row, tipo_lista ) {
     if ( value && +tipo_lista ) {
       $.ajax({
           url:'".Url::to(['producto/product-price'])."',

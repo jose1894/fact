@@ -58,9 +58,9 @@ $(".dynamicform_wrapper").on("limitReached", function(e, item) {
 $this->registerJs($js,View::POS_LOAD);
 ?>
 <div class="empresa-form">
-      <?php $form = ActiveForm::begin([ 
-        'id' => $model->formName(), 
-        'enableClientScript' => true, 
+      <?php $form = ActiveForm::begin([
+        'id' => $model->formName(),
+        'enableClientScript' => true,
         'options' => ['enctype' => 'multipart/form-data']
       ]); ?>
 
@@ -118,7 +118,7 @@ $this->registerJs($js,View::POS_LOAD);
             ],
             ['custom' => true, 'prompt' => Yii::t('app','Select...')]) ?>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">  
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
           <?= $form->field($model, 'tlf_empresa',[
             'addClass' => 'form-control ',
             'addon' => ['prepend'=> ['content'=>'<i class="fa fa-phone"></i>']]
@@ -147,11 +147,7 @@ $this->registerJs($js,View::POS_LOAD);
       </div>
       <div class="row">
           <div class="col-lg-12">
-            <?=  $form->field($model, 'image')->widget(FileInput::classname(), [
-                  'options'=>['accept'=>'image/*'],
-                  'pluginOptions'=>['allowedFileExtensions'=>['jpg','gif','png']],
-            ]);                
-            /*form->field($model, 'image')->fileInput()*/?>
+            <?= $form->field($model, 'image')->fileInput()?>
           </div>
       </div>
 
