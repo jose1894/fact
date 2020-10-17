@@ -30,23 +30,23 @@ class Empresa extends \yii\db\ActiveRecord
         return 'empresa';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -91,6 +91,16 @@ class Empresa extends \yii\db\ActiveRecord
              'imageFiles' => Yii::t('empresa', 'Imag'),
          ];
      }
+
+    public function upload()
+    {
+        if ($this->validate()) {
+            $this->image->saveAs(Yii::getAlias('@webroot/uploads/')  . $this->image->baseName . '.' . $this->image->extension);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
      public function getSucursales()
     {

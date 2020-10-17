@@ -184,6 +184,15 @@ class EmpresaController extends Controller
             Model::loadMultiple($modelsSucursal, Yii::$app->request->post());
             $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsSucursal, 'id_suc', 'id_suc')));
 
+            $model->image = UploadedFile::getInstance($model, 'image');
+             if ($model->upload()) {
+                 // el archivo se subió exitosamente
+                 return;
+             }
+            // store the source file name
+            //$model->filename = $image->name;
+            $ext = end((explode(".", $image->name)));
+
             $valid = $model->validate();
             $valid = Model::validateMultiple($modelsSucursal) && $valid;
 
