@@ -78,18 +78,26 @@ class EmpresaController extends Controller
     public function actionCreate()
     {
         $model = new Empresa();
-        Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/uploads/';
+        Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/img/uploads/';
 
         $modelsSucursal = [new Sucursal];
         $this->layout = "justStuff";
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->image = UploadedFile::getInstance($model, 'image');
+            $imageNew = UploadedFile::getInstance($model, 'image');            
+            $fileName = $imageNew->name;
+            $model->image = $fileName;
+            $ext = explode(".", $fileName);
+            $ext = end($ext);
+            // generate a unique file name
+            $avatar = Yii::$app->security->generateRandomString().".{$ext}";
+            $path = Yii::$app->params['uploadPath']. $avatar;
+            
+            //echo $path . 'url';
+            $imageNew->saveAs($path);
 
-            //exit( $model->imageFile);
-            echo "<pre>";
-            print_r($model->imageFile);
-            echo "</pre>";
+            exit( $imageNew);
+            
             $modelsSucursal = Model::createMultiple(Sucursal::classname(),[],'id_suc');
             Model::loadMultiple($modelsSucursal, Yii::$app->request->post());
 

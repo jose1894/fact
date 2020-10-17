@@ -55,7 +55,7 @@ class Empresa extends \yii\db\ActiveRecord
     /**
      * @var UploadedFile
      */
-    public $imageFile;
+    public $image;
      public function rules()
      {
          return [

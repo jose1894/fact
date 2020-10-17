@@ -147,11 +147,11 @@ $this->registerJs($js,View::POS_LOAD);
       </div>
       <div class="row">
           <div class="col-lg-12">
-            <?=  $form->field($model, 'image')->widget(FileInput::classname(), [
-                  'options'=>['accept'=>'image/*'],
-                  'pluginOptions'=>['allowedFileExtensions'=>['jpg','gif','png']],
-            ]);                
-            /*form->field($model, 'image')->fileInput()*/?>
+            <?= $form->field($model, 'image')->widget(FileInput::classname(), [
+                  /*'options'=>['accept'=>'image/*'],
+                  'pluginOptions'=>['allowedFileExtensions'=>['jpg','gif','png']],*/
+            ]);               
+            /*$form->field($model, 'image')->fileInput()*/?>
           </div>
       </div>
 
