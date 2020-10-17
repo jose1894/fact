@@ -84,7 +84,7 @@ class EmpresaController extends Controller
         $this->layout = "justStuff";
 
         if ($model->load(Yii::$app->request->post())) {
-            $imageNew = UploadedFile::getInstance($model, 'image');            
+            /*$imageNew = UploadedFile::getInstance($model, 'image');            
             $fileName = $imageNew->name;
             $model->image = $fileName;
             $ext = explode(".", $fileName);
@@ -96,7 +96,7 @@ class EmpresaController extends Controller
             //echo $path . 'url';
             $imageNew->saveAs($path);
 
-            exit( $imageNew);
+            exit('ss');*/
             
             $modelsSucursal = Model::createMultiple(Sucursal::classname(),[],'id_suc');
             Model::loadMultiple($modelsSucursal, Yii::$app->request->post());

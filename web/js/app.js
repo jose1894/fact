@@ -22,9 +22,10 @@ $( document ).ready( function( e ) {
       e.preventDefault();
       e.stopPropagation();
       let $form = $( frame ).contents().find('form');
+      console.log(form)
       //let $form = window.frames[ 0 ].$( 'form' );
-      debugger;
       let formData = new FormData($form[0]);
+      console.log(formData)
 
         $.ajax( {
           'url'    : $( $form ).attr( 'action' ),
