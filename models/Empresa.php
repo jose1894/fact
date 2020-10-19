@@ -88,7 +88,10 @@ class Empresa extends \yii\db\ActiveRecord
              'movil_empresa' => Yii::t('empresa', 'Mobile'),
              'correo_empresa' => Yii::t('empresa', 'Email'),
              'direcc_empresa' => Yii::t('empresa', 'Address'),
-             'imageFiles' => Yii::t('empresa', 'Imag'),
+             'image' => Yii::t('empresa', 'Logo'),
+             'usuariosol_empresa' => Yii::t('empresa','SUNAT user'),
+             'passsol_empresa' => Yii::t('empresa','SUNAT password'),
+             'passcrtsol_empresa' => Yii::t('empresa','SUNAT certificate password'),
          ];
      }
 

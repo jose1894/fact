@@ -83,16 +83,8 @@ class EmpresaController extends Controller
         $this->layout = "justStuff";
 
         if ($model->load(Yii::$app->request->post())) {
-            $id = $model->id_empresa;
-            $nombreEmpresa = str_replace(' ', '_', $model->nombre_empresa);
-            $carpeta = $id.'_'.$nombreEmpresa;
-            Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/uploads/companies/'.$carpeta.'/';
             $imageNew = UploadedFile::getInstance($model, 'image');
 
-            $fileName = $imageNew->name;
-            $model->image = $fileName;
-            $ext = explode(".", $fileName);
-            $ext = end($ext);
             $modelsSucursal = Model::createMultiple(Sucursal::classname(),[],'id_suc');
             Model::loadMultiple($modelsSucursal, Yii::$app->request->post());
 
@@ -115,17 +107,33 @@ class EmpresaController extends Controller
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
                     if ($flag = $model->save(false)) {
-                        /**Se verifica si existe el directorio donde se guardara la iamgen */
-                        if (!is_dir(Yii::$app->params['uploadPath'])) {
-                            /**se crea el directorio donde se guardara la imagen y se da permiso de acceso */
-                            FileHelper::createDirectory(Yii::$app->params['uploadPath'],0777,true);
+                        if ($imageNew) {
+                            $id = $model->id_empresa;
+                            $nombreEmpresa = str_replace(' ', '_', $model->nombre_empresa);
+                            $carpeta = $id.'_'.$nombreEmpresa;
+                            Yii::$app->params['uploadPath'] = Yii::$app->basePath.'/web/uploads/companies/'.$carpeta.'/';
+
+                            $fileName = $imageNew->name;
+                            $model->image = $fileName;
+                            $ext = explode(".", $fileName);
+                            $ext = end($ext);
+
+                            /**Se verifica si existe el directorio donde se guardara la iamgen */
+                            if (!is_dir(Yii::$app->params['uploadPath'])) {
+                                /**se crea el directorio donde se guardara la imagen y se da permiso de acceso */
+                                if ( !FileHelper::createDirectory(Yii::$app->params['uploadPath'],0777,true)) {
+                                  $transaction->rollBack();
+                                  throw new \Exception("Error creating folder ". Yii::$app->params['uploadPath'], 1);
+                                }
+                            }
+
+                            // generate a unique file name
+                            $avatar = Yii::$app->security->generateRandomString().".{$ext}";
+                            $path = Yii::$app->params['uploadPath']. $avatar;
+                            $imageNew->saveAs($path);
+                            $model->image_empresa = $avatar;
+                            $flag = $model->save(false) && $flag;
                         }
-                        // generate a unique file name
-                        $avatar = Yii::$app->security->generateRandomString().".{$ext}";
-                        $path = Yii::$app->params['uploadPath']. $avatar;
-                        $imageNew->saveAs($path);
-                        $model->image_empresa = $avatar;
-                        $flag = $model->save(false) && $flag;
 
                         foreach ($modelsSucursal as $modelSucursal) {
                             $modelSucursal->empresa_suc = $model->id_empresa;
@@ -191,14 +199,7 @@ class EmpresaController extends Controller
             Model::loadMultiple($modelsSucursal, Yii::$app->request->post());
             $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsSucursal, 'id_suc', 'id_suc')));
 
-            $model->image = UploadedFile::getInstance($model, 'image');
-             if ($model->upload()) {
-                 // el archivo se subió exitosamente
-                 return;
-             }
-            // store the source file name
-            //$model->filename = $image->name;
-            $ext = end((explode(".", $image->name)));
+            $imageNew = UploadedFile::getInstance($model, 'image');
 
             $valid = $model->validate();
             $valid = Model::validateMultiple($modelsSucursal) && $valid;
@@ -219,9 +220,10 @@ class EmpresaController extends Controller
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
                     if ($flag = $model->save(false)) {
-                      if (!empty($deletedIDs)) {
-                          Sucursal::deleteAll(['id_suc' => $deletedIDs]);
-                      }
+
+                        if (!empty($deletedIDs)) {
+                            Sucursal::deleteAll(['id_suc' => $deletedIDs]);
+                        }
 
                         foreach ($modelsSucursal as $modelSucursal) {
                             $modelSucursal->empresa_suc = $model->id_empresa;
@@ -229,6 +231,37 @@ class EmpresaController extends Controller
                                 $transaction->rollBack();
                                 break;
                             }
+                        }
+
+                        // si carga nueva imagen
+                        if ($imageNew) {
+
+                          //Si carga imagen nueva
+                          $id = $model->id_empresa;
+                          $nombreEmpresa = str_replace(' ', '_', $model->nombre_empresa);
+                          $carpeta = $id.'_'.$nombreEmpresa;
+                          Yii::$app->params['uploadPath'] = Yii::$app->basePath.'/web/uploads/companies/'.$carpeta.'/';
+
+                          $fileName = $imageNew->name;
+                          $model->image = $fileName;
+                          $ext = explode(".", $fileName);
+                          $ext = end($ext);
+
+                          /**Se verifica si existe el directorio donde se guardara la iamgen */
+                          if (!is_dir(Yii::$app->params['uploadPath'])) {
+                              /**se crea el directorio donde se guardara la imagen y se da permiso de acceso */
+                              if ( !FileHelper::createDirectory(Yii::$app->params['uploadPath'],0777,true)) {
+                                $transaction->rollBack();
+                                throw new \Exception("Error creating folder ". Yii::$app->params['uploadPath'], 1);
+                              }
+                          }
+
+                          // generate a unique file name
+                          $avatar = Yii::$app->security->generateRandomString().".{$ext}";
+                          $path = Yii::$app->params['uploadPath']. $avatar;
+                          $imageNew->saveAs($path);
+                          $model->image_empresa = $avatar;
+                          $flag = $model->save(false) && $flag;
                         }
                     }
                     if ($flag) {

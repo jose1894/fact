@@ -6,6 +6,8 @@ use yii\web\View ;
 use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
 use app\components\AutoIncrement;
 use wbraganca\dynamicform\DynamicFormWidget;
+use kartik\widgets\FileInput;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Empresa */
@@ -145,8 +147,56 @@ $this->registerJs($js,View::POS_LOAD);
           </div>
       </div>
       <div class="row">
-          <div class="col-lg-12">
-            <?= $form->field($model, 'image')->fileInput()?>
+          <div class="col-lg-6">
+            <?php
+                $id = $model->id_empresa;
+                $nombreEmpresa = str_replace(' ', '_', $model->nombre_empresa);
+                $carpeta = $id.'_'.$nombreEmpresa;
+                $realpath = Yii::$app->basePath.'/web/uploads/companies/'.$carpeta.'/';
+                $url = Url::to('@web/uploads/companies/'.$carpeta.'/');
+                $url = !realpath($realpath.$model->image_empresa) ?  Url::to('@web/uploads/companies/no-logo.jpg') : $url.$model->image_empresa;
+            ?>
+            <?= $form->field($model, 'image')->widget( FileInput::classname(),[
+                'pluginOptions' => [
+                  'initialPreview'=>[
+                      $url,
+                    ],
+                    'initialPreviewAsData'=>true,
+                    'showUpload' => false,
+                    'browseLabel' => '',
+                    'removeLabel' => '',
+                    'mainClass' => 'input-group-lg'
+                ]
+            ])?>
+          </div>
+          <div class="col-lg-6">
+              <div class="row">
+                <div class="col-lg-12">
+                  <?= $form->field($model, 'usuariosol_empresa',[
+                    'addClass' => 'form-control ',
+                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-user"></i>']]
+                    ])->input(['placeholder' => Yii::t("empresa","Input a SUNAT user ")."..."]) ?>
+                </div>
+                <div class="col-lg-12">
+                  <?= $form->field($model, 'passsol_empresa',[
+                    'addClass' => 'form-control ',
+                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-key"></i>']]
+                    ])->input(['placeholder' => Yii::t("empresa","Input a SUNAT password ")."..."]) ?>
+                </div>
+                <div class="col-lg-12">
+                  <?= $form->field($model, 'cert_empresa',[
+                    'addClass' => 'form-control ',
+                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-certificate"></i>']]
+                    ])->input(['placeholder' => Yii::t("empresa","Input a SUNAT certificate ")."..."]) ?>
+                </div>
+                <div class="col-lg-12">
+                  <?= $form->field($model, 'passcrtsol_empresa',[
+                    'addClass' => 'form-control ',
+                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-key"></i>']]
+                    ])->input(['placeholder' => Yii::t("empresa","Input a SUNAT certificate password ")."..."]) ?>
+                </div>
+
+              </div>
           </div>
       </div>
 
