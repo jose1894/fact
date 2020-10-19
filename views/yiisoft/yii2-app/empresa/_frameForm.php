@@ -148,6 +148,7 @@ $this->registerJs($js,View::POS_LOAD);
       <div class="row">
           <div class="col-lg-12">
             <?= $form->field($model, 'image')->fileInput()?>
+            
           </div>
       </div>
 
