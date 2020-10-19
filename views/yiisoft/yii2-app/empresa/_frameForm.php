@@ -6,7 +6,6 @@ use yii\web\View ;
 use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
 use app\components\AutoIncrement;
 use wbraganca\dynamicform\DynamicFormWidget;
-use kartik\widgets\FileInput;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Empresa */
@@ -148,7 +147,6 @@ $this->registerJs($js,View::POS_LOAD);
       <div class="row">
           <div class="col-lg-12">
             <?= $form->field($model, 'image')->fileInput()?>
-            
           </div>
       </div>
 

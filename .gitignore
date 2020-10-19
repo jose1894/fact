@@ -18,6 +18,9 @@ vendor
 # web assets
 /web/assets/*
 
+# uploads
+uploads/companies/*
+
 #config
 config
 

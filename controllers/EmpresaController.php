@@ -86,12 +86,13 @@ class EmpresaController extends Controller
             $id = $model->id_empresa;
             $nombreEmpresa = str_replace(' ', '_', $model->nombre_empresa);
             $carpeta = $id.'_'.$nombreEmpresa;
-            Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/uploads/empresas/'.$carpeta.'/';
-            $imageNew = UploadedFile::getInstance($model, 'image');            
+            Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/uploads/companies/'.$carpeta.'/';
+            $imageNew = UploadedFile::getInstance($model, 'image');
+
             $fileName = $imageNew->name;
             $model->image = $fileName;
             $ext = explode(".", $fileName);
-            $ext = end($ext); 
+            $ext = end($ext);
             $modelsSucursal = Model::createMultiple(Sucursal::classname(),[],'id_suc');
             Model::loadMultiple($modelsSucursal, Yii::$app->request->post());
 
@@ -117,12 +118,15 @@ class EmpresaController extends Controller
                         /**Se verifica si existe el directorio donde se guardara la iamgen */
                         if (!is_dir(Yii::$app->params['uploadPath'])) {
                             /**se crea el directorio donde se guardara la imagen y se da permiso de acceso */
-                            @mkdir(Yii::$app->params['uploadPath'],0777,true);        
+                            FileHelper::createDirectory(Yii::$app->params['uploadPath'],0777,true);
                         }
                         // generate a unique file name
                         $avatar = Yii::$app->security->generateRandomString().".{$ext}";
                         $path = Yii::$app->params['uploadPath']. $avatar;
                         $imageNew->saveAs($path);
+                        $model->image_empresa = $avatar;
+                        $flag = $model->save(false) && $flag;
+
                         foreach ($modelsSucursal as $modelSucursal) {
                             $modelSucursal->empresa_suc = $model->id_empresa;
                             if (! ($flag = $modelSucursal->save(false))) {
