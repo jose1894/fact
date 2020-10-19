@@ -15,11 +15,10 @@ Thumbs.db
 # composer vendor dir
 vendor
 
-# web assets
+# web
 /web/assets/*
+/web/uploads/*
 
-# uploads
-uploads/companies/*
 
 #config
 config
