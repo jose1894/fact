@@ -16,16 +16,16 @@ Thumbs.db
 vendor
 
 # web
-/web/assets/*
-/web/uploads/*
+/web/assets/**
+/web/uploads/**
 
 
 #config
 config
 
 #xml
-xml/response/*
-xml/sent/*
+xml/response/**
+xml/sent/**
 
 # composer itself is not needed
 composer.phar
