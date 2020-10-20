@@ -44,9 +44,20 @@ class RptsController extends Controller
     public function actionKardex()
     {
       $searchModel = new TransaccionSearch();
+      $searchModel->kardex = true;
       $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
       return $this->render('_kardex', [
+          'searchModel' => $searchModel,
+          'dataProvider' => $dataProvider,
+      ]);
+    }
+
+    public function actionInventory()
+    {
+      $searchModel = new TransaccionSearch();
+      $searchModel->inventory = true;
+      $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+      return $this->render('_inventory', [
           'searchModel' => $searchModel,
           'dataProvider' => $dataProvider,
       ]);

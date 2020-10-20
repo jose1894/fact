@@ -44,7 +44,7 @@ class PedidoSearch extends Pedido
      */
     public function search($params)
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+				$sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Pedido::find()
                  ->where('sucursal_pedido = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);
@@ -71,12 +71,12 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
             return $dataProvider;
         }
 
-		if ( $this->pendientes ) {
-			$query->andFilterWhere(['in','estatus_pedido',[Pedido::STATUS_INACTIVO,Pedido::GUIA_GENERADA]])
-                 ->andFilterWhere(['like','tipo_pedido',[Pedido::PEDIDO]]);
-			//echo $query->createCommand()->sql;
-			return $dataProvider;
-		}
+				if ( $this->pendientes ) {
+					$query->andFilterWhere(['in','estatus_pedido',[Pedido::STATUS_INACTIVO,Pedido::GUIA_GENERADA]])
+		                 ->andFilterWhere(['like','tipo_pedido',[Pedido::PEDIDO]]);
+					//echo $query->createCommand()->sql;
+					return $dataProvider;
+				}
 
 
         // grid filtering conditions
