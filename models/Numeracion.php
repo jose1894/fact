@@ -28,23 +28,23 @@ class Numeracion extends \yii\db\ActiveRecord
         return 'numeracion';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     public function scenarios()
@@ -64,7 +64,7 @@ class Numeracion extends \yii\db\ActiveRecord
             [['tipo_num','serie_num','numero_num', 'status_num'], 'required'],
             [['numero_num'], 'string', 'max' => 10],
             [['serie_num'], 'string', 'max' => 2],
-            [['tipo_num','serie_num'], 'unique'],
+            [['tipo_num','serie_num'], 'unique', 'targetAttribute' => ['tipo_num', 'serie_num']],
             [['numero_num'], 'required', 'on' => 'numerar'],
             [['tipo_num'], 'exist', 'skipOnError' => true, 'targetClass' => TipoDocumento::className(), 'targetAttribute' => ['tipo_num' => 'id_tipod']],
         ];
@@ -128,22 +128,22 @@ class Numeracion extends \yii\db\ActiveRecord
 
       if ( $serie ){
         $condicion = [
-            'status_num = :status and sucursal_num = :sucursal and 
+            'status_num = :status and sucursal_num = :sucursal and
 			tipo_documento.abrv_tipod like :tipo and serie_num = :serie ',
             [
-				':status' => self::STATUS_ACTIVE, 
-				':sucursal' => $sucursal, 
-				':tipo' => $tipo, 
+				':status' => self::STATUS_ACTIVE,
+				':sucursal' => $sucursal,
+				':tipo' => $tipo,
 				':serie' => $serie
 			]
           ];
-      } else {		
+      } else {
         $condicion = [
-          'status_num = :status and sucursal_num = :sucursal and 
+          'status_num = :status and sucursal_num = :sucursal and
 		  tipo_documento.abrv_tipod like :tipo',
           [
-			':status' => self::STATUS_ACTIVE, 
-			':sucursal' => $sucursal, 
+			':status' => self::STATUS_ACTIVE,
+			':sucursal' => $sucursal,
 			':tipo' => $tipo,
 		  ]
         ];
@@ -154,7 +154,7 @@ class Numeracion extends \yii\db\ActiveRecord
                  ->where( $condicion[0], $condicion[1] )
                 ->orderBy('serie_num')
                 ->all();
-				
+
 		//echo $query->createCommand()->sql;
       $numeracion = [];
       foreach ($numeraciones as $value) {        // code...

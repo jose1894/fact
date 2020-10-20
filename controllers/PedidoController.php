@@ -106,7 +106,7 @@ class PedidoController extends Controller
                 }
             } else {
                 $num = Numeracion::getNumeracion( $model->tipo_pedido );
-
+                
                 $codigo = intval( $num[0]['numero_num'] ) + 1;
                 $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
                 $model->cod_pedido = $codigo;
@@ -132,6 +132,7 @@ class PedidoController extends Controller
                         //return $this->redirect(['view', 'id' => $model->id_empresa]);
                         if ($flag) {
                           $numeracion = Numeracion::findOne($num[0]['id_num']);
+                          $numeracion->scenario = 'numerar';
                           $numeracion->numero_num = $codigo;
                           $numeracion->save();
                           $transaction->commit();
@@ -294,8 +295,8 @@ class PedidoController extends Controller
      */
     public function actionAnular($id)
     {
-      
-      $model = $this->findModel($id);      
+
+      $model = $this->findModel($id);
       if (Yii::$app->request->isAjax) {
         $transaction = \Yii::$app->db->beginTransaction();
         try {
@@ -322,7 +323,7 @@ class PedidoController extends Controller
           ];
           return $return;
         }
-      }      
+      }
     }
 
     /**

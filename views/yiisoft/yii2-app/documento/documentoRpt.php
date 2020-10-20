@@ -50,7 +50,7 @@ $impuesto = $IMPUESTO/ 100;
   <br>
   <div class="" style="width:100%">
 
-      <div class="gradient" style="float: right; width: 100%; margin-bottom: 0pt; ">        
+      <div class="gradient" style="float: right; width: 100%; margin-bottom: 0pt; ">
         <b>SON : <?= NumerosEnLetras::convertir( $total ,$documento->pedidoDoc->monedaPedido->des_moneda, false, 'centimos') ?></b>
       </div>
       <div class="gradient" style="float: left; width: 15%; margin-top: 5pt;margin-bottom: 1pt">
@@ -118,108 +118,4 @@ $impuesto = $IMPUESTO/ 100;
         </div>
       </div>
   </div>
-   <?php /*
-      <table>
-        <tr>
-          <td colspan="3">
-            <b>SON : <?= NumerosEnLetras::convertir( $total ,$documento->pedidoDoc->monedaPedido->des_moneda, false, 'centimos') ?></b>
-            <hr>
-        </td>
-        </tr>
-        <tr>
-          <td colspan="3">
-
-          </td>
-        </tr>
-        <tr>
-          <td width="15%">
-            <?php
-
-              $tipoDoc = ($documento->tipo_doc == 3) ? 1 : 3;
-
-              if ( $documento->pedidoDoc->cltePedido->tipoIdentificacion->cod_tipoi == TipoIdentificacion::TIPO_RUC ){
-                $tipoDocClte = TipoIdentificacion::TIPO_RUC;
-                $docClte = $documento->pedidoDoc->cltePedido->ruc_clte;
-              } else {
-                $tipoDocClte = TipoIdentificacion::TIPO_DNI;
-                $docClte = $documento->pedidoDoc->cltePedido->dni_clte;
-              }
-
-              $code = $rucEmpresa ."|". $tipoDoc ."|". $documento->numeracion->serie_num . "|" . substr($documento->cod_doc,-8) . "|" . $documento->totalimp_doc . "|" . $documento->total_doc ."|";
-              $code .= $documento->fecha_doc . "|" . $tipoDocClte . "|" . $docClte;
-
-            ?>
-
-            <barcode code="<?= $code ?>" type="QR" class="barcode" size="1" error="M" disableborder="1" style="width:100%" />
-              <br>
-              <br>
-            <span style="font-size:8px;margin-top:25px;">Representaci&oacute;n impresa del documento electr&oacute;nico</span>
-          </td>
-          <td width="48%">
-            <table class="detalle_documento">
-              <tr>
-                <td width="50%"><b>Recibido por</b></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td><b>DNI</b></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td><b>Firma</b></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td><b>Fecha</b></td>
-                <td></td>
-              </tr>
-            </table>
-          </td>
-          <td width="33%">
-            <div style="border:1px solid black;">
-              <?= '
-              <table  class="sumatoria_documento">
-                <tr>
-                  <td width="60%" class="right">
-                  Op. GRAVADA
-                  </td>
-                  <td class="right">
-                  ' . Yii::$app->formatter->asDecimal($subtotal2) . '
-                  </td>
-                </tr>
-                <tr>
-                  <td class="right">
-                    Op. INAFECTA
-                  </td>
-                  <td class="right">
-                    0.00
-                  </td>
-                </tr>
-                <tr>
-                  <td class="right">
-                  ' . Yii::t('pedido','Tax'). ' ' . $IMPUESTO .'%
-                  </td>
-                  <td class="right">
-                  '.Yii::$app->formatter->asDecimal($totalImp).'
-                  </td>
-                </tr>
-                <tr>
-                  <td class="right">
-                  Total
-                  </td>
-                  <td class="right">
-                  '.Yii::$app->formatter->asDecimal($total).'
-                  </td>
-                </tr>
-              </table>'
-              ?>
-            </div>
-          </td>
-        </tr>
-      </table>
-  </div> -->
-<?php
-// $this->registerCssFile("@rptcss/rptCss.css", [
-//     'depends' => [\yii\bootstrap\BootstrapAsset::className()],
-//     'media' => 'print',
-// ], 'css-print-theme');
+  

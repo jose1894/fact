@@ -55,7 +55,8 @@ class Empresa extends \yii\db\ActiveRecord
     /**
      * @var UploadedFile
      */
-    public $image;
+     public $image;
+     public $cert;
      public function rules()
      {
          return [
@@ -63,12 +64,14 @@ class Empresa extends \yii\db\ActiveRecord
              [['id_empresa', 'estatus_empresa', 'tipopers_empresa'], 'integer'],
              [['direcc_empresa'], 'string'],
              [['nombre_empresa', 'tlf_empresa','movil_empresa'], 'string', 'max' => 150],
+             [['usuariosol_empresa', 'passsol_empresa','passcrtsol_empresa','cert_empresa'], 'string', 'max' => 255],
              [['dni_empresa'], 'string', 'max' => 20],
              [['correo_empresa'], 'string', 'max' => 70],
              [['ruc_empresa'], 'string', 'max' => 11],
              [['dni_empresa'], 'unique'],
-             [['image'], 'safe'],
+             [['image','cert'], 'safe'],
              [['image'], 'file', 'extensions'=>'jpg, gif, png'],
+             [['cert'], 'file', 'extensions'=>'pem, crt, der'],
          ];
      }
 
@@ -89,21 +92,12 @@ class Empresa extends \yii\db\ActiveRecord
              'correo_empresa' => Yii::t('empresa', 'Email'),
              'direcc_empresa' => Yii::t('empresa', 'Address'),
              'image' => Yii::t('empresa', 'Logo'),
+             'cert' => Yii::t('empresa', 'SUNAT certificate'),
              'usuariosol_empresa' => Yii::t('empresa','SUNAT user'),
              'passsol_empresa' => Yii::t('empresa','SUNAT password'),
              'passcrtsol_empresa' => Yii::t('empresa','SUNAT certificate password'),
          ];
      }
-
-    public function upload()
-    {
-        if ($this->validate()) {
-            $this->image->saveAs(Yii::getAlias('@webroot/uploads/')  . $this->image->baseName . '.' . $this->image->extension);
-            return true;
-        } else {
-            return false;
-        }
-    }
 
      public function getSucursales()
     {
