@@ -655,7 +655,7 @@ class DocumentoController extends Controller
         <table class="documento_enc" style="border-collapse: collapse;">
             <tr>
                 <td width="25%">
-                  <div class="rounded"> <img src="'.Url::to('img/logo.jpg').'" width="180px"/> </div>
+                  <div class="rounded"> <img src="'.Url::to([SiteController::getEmpresa()->image_empresa]).'" width="180px"/> </div>
                 </td>
                 <td width="50%" align="center" >
                   <div class="titulo-emp" style="font-size:20px;font-weight:bold;">' . SiteController::getEmpresa()->nombre_empresa . '</div><br>

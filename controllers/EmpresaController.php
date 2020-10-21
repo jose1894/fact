@@ -132,7 +132,7 @@ class EmpresaController extends Controller
                             $avatar = Yii::$app->security->generateRandomString().".{$ext}";
                             $path = Yii::$app->params['uploadPath']. $avatar;
                             $imageNew->saveAs($path);
-                            $model->image_empresa = '/web/uploads/companies/'.$carpeta.'/'. $avatar;
+                            $model->image_empresa = '/uploads/companies/'.$carpeta.'/'.$avatar;
                             $flag = $model->save(false) && $flag;
                         }
 
@@ -140,7 +140,7 @@ class EmpresaController extends Controller
                             $id = $model->id_empresa;
                             $nombreEmpresa = str_replace(' ', '_', $model->nombre_empresa);
                             $carpeta = $id.'_'.$nombreEmpresa;
-                            Yii::$app->params['uploadPath'] = Yii::$app->basePath.'/web/uploads/companies/'.$carpeta.'/certs/';
+                            Yii::$app->params['uploadPath'] = '/uploads/companies/'.$carpeta.'/certs/';
 
                             $fileName = $cert->name;
                             $model->cert = $fileName;
@@ -297,7 +297,7 @@ class EmpresaController extends Controller
                           $avatar = Yii::$app->security->generateRandomString().".{$ext}";
                           $path = Yii::$app->params['uploadPath']. $avatar;
                           $imageNew->saveAs($path);
-                          $model->image_empresa = $avatar;
+                          $model->image_empresa = '/uploads/companies/'.$carpeta.'/'.$avatar;
                           $flag = $model->save(false) && $flag;
                         }
 
