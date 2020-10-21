@@ -50,7 +50,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
     <table class="" style="">
         <tr>
             <td width="25%">
-              <div class="rounded"> <img src="'.Url::to('img/logo.jpg').'" width="180px"/> </div>
+              <div class="rounded"> <img src="'.Url::to([SiteController::getEmpresa()->image_empresa]).'" width="180px" height="100px"/> </div>
             </td>
             <td width="50%" align="center" >
               <div class="titulo-emp" style="font-size:20px;font-weight:bold;">' . SiteController::getEmpresa()->nombre_empresa . '</div><br>
@@ -160,16 +160,42 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
         				'exportConfig' => $exportConfig,
         				'panel' => [
         					'heading'=>'<h3 class="panel-title"><i class="fa fa-book"></i> ' . Yii::t('rpts','Product movement') . '</h3>',
-        					// 'type'=>'success',
-        					// 'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> Create Country', ['create'], ['class' => 'btn btn-success']),
-        					// 'after'=>Html::a('<i class="fa fa-refresh"></i> ' . Yii::t('app','Refresh '), ['listado-factura'], ['class' => 'btn btn-success']),
-        					// 'footer'=>true,
         				],
                 'showPageSummary' => true,
                 'columns' => [
                           [
-
-							'label' => Yii::t('app', 'Date'),
+                            'attribute' => 'cod_prod',
+                            'value' => function( $data ) {
+                              return $data['cod_prod'].'-'.$data['des_prod'];
+                            },
+                            'group' => true,  // enable grouping
+                            'groupedRow' => true,                    // move grouped column to a single grouped row
+                            'groupOddCssClass' => 'kv-grouped-row',  // configure odd group cell css class
+                            'groupEvenCssClass' => 'kv-grouped-row', // configure even group cell css class
+                            'groupFooter' => function ($model, $key, $index, $widget) { // Closure method
+                                return [
+                                    'mergeColumns' => [[1,2,3,4,5,6,7]], // columns to merge in summary
+                                    'content' => [             // content to show in each summary cell
+                                        1 => 'Summary (' . trim($model['cod_prod']).'-'.trim($model['des_prod']) . ')',
+                                        8 => GridView::F_SUM,
+                                        9 => GridView::F_SUM,
+                                    ],
+                                    'contentFormats' => [      // content reformatting for each summary cell
+                                        8 => ['format' => 'number', 'decimals' => 0],
+                                        9 => ['format' => 'number', 'decimals' => 0],
+                                    ],
+                                    'contentOptions' => [      // content html attributes for each summary cell
+                                        1 => ['style' => 'font-variant:small-caps'],
+                                        8 => ['style' => 'text-align:right'],
+                                        9 => ['style' => 'text-align:right'],
+                                    ],
+                                    // html attributes for group summary row
+                                    'options' => ['class' => 'info table-info','style' => 'font-weight:bold;']
+                                ];
+                            },
+                          ],
+                          [
+							              'label' => Yii::t('app', 'Date'),
                             'attribute' => 'fecha_trans',
                             'format' => ['date', 'php:d/m/Y']
                           ],
@@ -206,7 +232,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                             'width' => '5%',
                             'format' => ['decimal',0],
                             'hAlign' => 'right',
-                            'pageSummary' => true,
+                            //'pageSummary' => true,
                           ],
                           // 'moneda',
                           // [
@@ -231,7 +257,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                             'width' => '5%',
                             'format' => ['decimal',0],
                             'hAlign' => 'right',
-                            'pageSummary' => true,
+                            //'pageSummary' => true,
             						  ],
             						  [
             							  'attribute' => 'saldo',

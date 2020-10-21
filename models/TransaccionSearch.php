@@ -38,6 +38,7 @@ class TransaccionSearch extends Transaccion
     public $saldo;
     public $kardex = false;
     public $inventory = false;
+    public $tipo_prod;
     /**
      * {@inheritdoc}
      */
@@ -67,7 +68,8 @@ class TransaccionSearch extends Transaccion
                 'tipo',
                 'sucursal_trans',
                 'saldo',
-                'kardex'
+                'kardex',
+                'tipo_prod'
               ], 'safe'],
         ];
     }
@@ -147,25 +149,71 @@ class TransaccionSearch extends Transaccion
     {
       $sucursal = Yii::$app->user->identity->profiles->sucursal;
       $query = new Query;
-      $query->select('id_prod,
+      $query->select('
+              id_prod,
               cod_prod,
               des_prod,
+              desc_tpdcto,
+              tipo_prod,
               stock_prod_bruto as stock_total,
               stock_asignado,
               stock_prod stock_disponible
             ')
       ->from(['v_productos'])
+      ->join('inner join','tipo_producto','id_tpdcto = tipo_prod and sucursal_prod = sucursal_tpdcto')
       ->where(['=','sucursal_prod',$sucursal]);
 
-      return $dataProvider = new ActiveDataProvider([
+
+      $dataProvider = new ActiveDataProvider([
         'query' => $query,
-        // 'sort'=> [
-        //       'defaultOrder' => [
-        //                 'fecha_trans'=>SORT_ASC
-        //               ]
-        //     ],
         'pagination' => false,
       ]);
+
+      $dataProvider->sort->attributes['cod_prod'] = [
+        'asc' => ['cod_prod' => SORT_ASC],
+        'desc' => ['cod_prod' => SORT_DESC],
+      ];
+
+      $dataProvider->sort->attributes['des_prod'] = [
+        'asc' => ['des_prod' => SORT_ASC],
+        'desc' => ['des_prod' => SORT_DESC],
+      ];
+
+      $dataProvider->sort->attributes['tipo_prod'] = [
+        'asc' => ['tipo_prod' => SORT_ASC],
+        'desc' => ['tipo_prod' => SORT_DESC],
+      ];
+
+      $dataProvider->sort->attributes['stock_disponible'] = [
+        'asc' => ['stock_disponible' => SORT_ASC],
+        'desc' => ['stock_disponible' => SORT_DESC],
+      ];
+
+      $dataProvider->sort->attributes['stock_asignado'] = [
+        'asc' => ['stock_asignado' => SORT_ASC],
+        'desc' => ['stock_asignado' => SORT_DESC],
+      ];
+
+      $dataProvider->sort->attributes['stock_total'] = [
+        'asc' => ['stock_total' => SORT_ASC],
+        'desc' => ['stock_total' => SORT_DESC],
+      ];
+
+      $this->load($params);
+
+      if (!$this->validate()) {
+          // uncomment the following line if you do not want to return any records when validation fails
+          $query->where('0=1');
+          return $dataProvider;
+      }
+
+      $query->andFilterWhere(['=', 'id_prod', $this->id_prod])
+              ->andFilterWhere(['like', 'des_prod', $this->des_prod])
+              ->andFilterWhere(['=', 'tipo_prod', $this->tipo_prod]);
+      //         ->andFilterWhere(['like', 'seriedocref_trans', $this->seriedocref_trans])
+      //         ->andFilterWhere(['like', 'docref_trans', $this->docref_trans]);
+
+      return $dataProvider;
     }
 
 

@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use yii\helpers\ArrayHelper;
 /**
  * This is the model class for table "tipo_producto".
  *
@@ -16,6 +16,8 @@ use Yii;
  */
 class TipoProducto extends \yii\db\ActiveRecord
 {
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
     /**
      * {@inheritdoc}
      */
@@ -24,23 +26,23 @@ class TipoProducto extends \yii\db\ActiveRecord
         return 'tipo_producto';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -74,5 +76,21 @@ class TipoProducto extends \yii\db\ActiveRecord
     public function getProductos()
     {
         return $this->hasMany(Producto::className(), ['tipo_pdcto' => 'id_tpdcto']);
+    }
+
+    public static function getTipoProductoList( )
+    {
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
+
+        $condicion = ['status_tpdcto = :status and sucursal_tpdcto = :sucursal', [':status' => self::STATUS_ACTIVE, ':sucursal' => $sucursal]];
+
+
+        $tipoProd = self::find()
+            ->select(['id_tpdcto','desc_tpdcto'])
+            ->where($condicion[0], $condicion[1])
+            ->orderBy('desc_tpdcto')
+            ->all();
+
+        return  ArrayHelper::map( $tipoProd, 'id_tpdcto', 'desc_tpdcto');
     }
 }

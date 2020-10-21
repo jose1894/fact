@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'value' => function($data){
                    return $data->tipoProd->desc_tpdcto;
               },
-              'filter'=>ArrayHelper::map(TipoProducto::find()->where(['status_tpdcto' => 1])->asArray()->all(), 'id_tpdcto', 'desc_tpdcto'),
+              'filter'=> TipoProducto::getTipoProductoList(),
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,
@@ -113,7 +113,7 @@ $this->params['breadcrumbs'][] = $this->title;
                       return $url;
                   }
                   if ($action === 'delete') {
-                      $url = Url::to(['producto/delete','id'=>$model->id_prod]);                                            
+                      $url = Url::to(['producto/delete','id'=>$model->id_prod]);
                       return $url;
                   }
 
