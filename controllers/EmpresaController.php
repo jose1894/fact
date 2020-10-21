@@ -132,7 +132,7 @@ class EmpresaController extends Controller
                             $avatar = Yii::$app->security->generateRandomString().".{$ext}";
                             $path = Yii::$app->params['uploadPath']. $avatar;
                             $imageNew->saveAs($path);
-                            $model->image_empresa = $avatar;
+                            $model->image_empresa = '/web/uploads/companies/'.$carpeta.'/'. $avatar;
                             $flag = $model->save(false) && $flag;
                         }
 
