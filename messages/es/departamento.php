@@ -4,11 +4,11 @@ return [
     'Name' => 'Nombre',
     'Status' => 'Estatus',
     'Name' => 'Nombre',
-    'Department / County / Municipality' => 'Departamento / Condado / Municipalidad',
+    'Estate / Department' => 'Estado / Departamento',
     'Input a name' => 'Ingrese un nombre',
     'Input a code' => 'Ingrese un código',
-    'Create department / county / municipality' => 'Crear departamento / condado / municipalidad',
-    'Department / County / Municipality: {number} / {name}' => 'Departamento / Condado / Municipalidad: {number} / {name}',
-    'Department / County / Municipality' => 'Departamento / Condado / Municipalidad',
-    'Update department / county / municipality: {{number} / {name}' => 'Actualizar departamento / condado / municipalidad: {number} / {name}'
+    'Create estate / department' => 'Crear estado / departamento',
+    'Estate / Department: {number} / {name}' => 'Estado / Departamento: {number} / {name}',
+    'Estate / Department' => 'Estado / Departamento',
+    'Update estate / department: {number} / {name}' => 'Actualizar estado / departamento: {number} / {name}'
 ];

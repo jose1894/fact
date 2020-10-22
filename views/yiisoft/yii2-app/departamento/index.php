@@ -16,16 +16,15 @@ use kartik\depdrop\DepDrop;
 /* @var $searchModel app\models\DepartamentoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('departamento', 'Department / County / Municipality');
+$this->title = Yii::t('departamento', 'Estate / Department');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="departamento-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(['id' => 'grid']); ?>
-
     <p>
-        <?= Html::a(Yii::t('departamento', 'Create department / county / municipality'), ['create', 'asDialog' => 1], ['id'=>'create','class' => 'btn btn-flat btn-success']) ?>
+        <?= Html::a(Yii::t('departamento', 'Create estate / department'), ['create', 'asDialog' => 1], ['id'=>'create','class' => 'btn btn-flat btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -34,6 +33,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             [
               'attribute'=>'id_depto',
+              'width' => '5%'
+            ],
+            [
+              'attribute'=>'cod_depto',
               'width' => '5%'
             ],
             'des_depto',
@@ -52,22 +55,6 @@ $this->params['breadcrumbs'][] = $this->title;
                   'options' => ['prompt' => ''],
               ],
               'width' => '20%'
-            ],
-            [
-              'attribute'=>'prov_depto',
-              'value' => function($data){
-                   return $data->provDepto->des_prov;
-              },
-              'filter'=>Provincia::getProvinciaList($searchModel->pais_depto),
-              'filterType' => GridView::FILTER_SELECT2,
-              'filterWidgetOptions' => [
-                  'language' => Yii::$app->language,
-                  'theme' => Select2::THEME_DEFAULT,
-                  'pluginOptions' => ['allowClear' => true],
-                  'pluginEvents' =>[],
-                  'options' => ['prompt' => ''],
-              ],
-              'width' => '10%'
             ],
             [
                 'class' => 'kartik\grid\BooleanColumn',
@@ -109,7 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'method' => 'post',
                                     'pjax' => 0,
                                     'icon' => 'warning',
-                                    'title' => Yii::t('departamento', 'Department / County / Municipality'),
+                                    'title' => Yii::t('departamento', 'Estate / Department'),
                                     'ok' => Yii::t('app', 'Confirm'),
                                     'cancel' => Yii::t('app', 'Cancel'),
                                     'id' => $model->id_depto
@@ -129,7 +116,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $url;
                 }
                 if ($action === 'delete') {
-                    $url = Url::to(['departamento/delete', 'id' => $model->id_depto]);                    
+                    $url = Url::to(['departamento/delete', 'id' => $model->id_depto]);
                     return $url;
                 }
 

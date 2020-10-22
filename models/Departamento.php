@@ -9,13 +9,12 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "departamento".
  *
  * @property int $id_depto ID UNICO
+ * @property int $cod_depto CODIGO UBIGEO
  * @property string $des_depto DESCRIPCION DEPARTAMENTO
- * @property int $prov_depto PROVINCIA DEPARTAMENTO
  * @property int $status_depto ESTATUS DEPARTAMENTO
  * @property int $sucursal_depto SUCURSAL DEPARTAMENTO
  *
- * @property Provincia $provDepto
- * @property Distrito[] $distritos
+ * @property Provincia[] $provincias
  */
 class Departamento extends \yii\db\ActiveRecord
 {
@@ -27,23 +26,23 @@ class Departamento extends \yii\db\ActiveRecord
         return 'departamento';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -52,12 +51,11 @@ class Departamento extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['des_depto', 'pais_depto', 'prov_depto', 'status_depto'], 'required'],
-            [['prov_depto', 'status_depto', 'sucursal_depto'], 'integer'],
+            [['des_depto', 'pais_depto', 'status_depto'], 'required'],
+            [['status_depto', 'sucursal_depto'], 'integer'],
             [['des_depto'], 'string', 'max' => 30],
-            [['prov_depto' , 'pais_depto'], 'string'],
+            [['pais_depto'], 'string'],
             [['pais_depto'], 'exist', 'skipOnError' => true, 'targetClass' => Pais::className(), 'targetAttribute' => ['pais_depto' => 'id_pais']],
-            [['prov_depto'], 'exist', 'skipOnError' => true, 'targetClass' => Provincia::className(), 'targetAttribute' => ['prov_depto' => 'id_prov']],
         ];
     }
 
@@ -68,8 +66,9 @@ class Departamento extends \yii\db\ActiveRecord
     {
         return [
             'id_depto' => Yii::t('departamento', 'Id'),
+            'cod_depto' => Yii::t('departamento', 'Code'),
             'des_depto' => Yii::t('departamento', 'Name'),
-            'prov_depto' => Yii::t('provincia', 'Estate / Province'),
+            'prov_depto' => Yii::t('departamento', 'Estate / Department'),
             'pais_depto' => Yii::t('pais', 'Country'),
             'status_depto' => Yii::t('departamento', 'Status'),
             'sucursal_depto' => Yii::t('departamento', 'Sucursal Depto'),
@@ -87,27 +86,19 @@ class Departamento extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProvDepto()
+    public function getProvincias()
     {
-        return $this->hasOne(Provincia::className(), ['id_prov' => 'prov_depto']);
+        return $this->hasMany(Provincia::className(), ['depto_prov' => 'id_depto']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getDistritos()
+    public static function getDeptoList( $pais )
     {
-        return $this->hasMany(Distrito::className(), ['depto_dtto' => 'id_depto']);
-    }
-
-    public static function getDeptoList( $pais, $provincia )
-    {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+      $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condiciones = Departamento::find()
                      ->where(
-                       'status_depto = :status and sucursal_depto = :sucursal and pais_depto = :pais and prov_depto = :provincia',
-                       [':status' => 1, ':sucursal' => $sucursal, ':pais' => $pais, ':provincia' => $provincia])
+                       'status_depto = :status and sucursal_depto = :sucursal and pais_depto = :pais',
+                       [':status' => 1, ':sucursal' => $sucursal, ':pais' => $pais])
                      ->orderBy('des_depto')
                      ->all();
       return ArrayHelper::map( $condiciones, 'id_depto', 'des_depto');

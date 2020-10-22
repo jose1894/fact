@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Departamento */
 
-$this->title = Yii::t('departamento', 'Create department / county / municipality');
+$this->title = Yii::t('departamento', 'Create estate / department');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('departamento', 'Departamentos'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

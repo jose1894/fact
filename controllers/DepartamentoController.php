@@ -98,7 +98,7 @@ class DepartamentoController extends Controller
                       Yii::$app->response->format = Response::FORMAT_JSON;
                       $return = [
                         'success' => true,
-                        'title' => Yii::t('departamento', 'Department / County / Municipality'),
+                        'title' => Yii::t('departamento', 'Estate / Department'),
                         'message' => Yii::t('app','Record has been saved successfully!'),
                         'type' => 'success'
                       ];
@@ -109,7 +109,7 @@ class DepartamentoController extends Controller
                   Yii::$app->response->format = Response::FORMAT_JSON;
                   $return = [
                     'success' => false,
-                    'title' => Yii::t('departamento', 'Department / County / Municipality'),
+                    'title' => Yii::t('departamento', 'Estate / Department'),
                     'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
                     'type' => 'error'
 
@@ -161,7 +161,7 @@ class DepartamentoController extends Controller
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         $return = [
                           'success' => true,
-                          'title' => Yii::t('departamento', 'Department / County / Municipality'),
+                          'title' => Yii::t('departamento', 'Estate / Department'),
                           'message' => Yii::t('app','Record has been saved successfully!'),
                           'type' => 'success'
                         ];
@@ -171,7 +171,7 @@ class DepartamentoController extends Controller
                     Yii::$app->response->format = Response::FORMAT_JSON;
                     $return = [
                       'success' => false,
-                      'title' => Yii::t('departamento', 'Department / County / Municipality'),
+                      'title' => Yii::t('departamento', 'Estate / Department'),
                       'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
                       'type' => 'error'
 
