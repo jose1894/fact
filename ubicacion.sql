@@ -69,3 +69,35 @@ ALTER TABLE `departamento` DROP `prov_depto`;
 ALTER TABLE `departamento` ADD `cod_depto` VARCHAR(2) NULL COMMENT 'CODIGO UBIGEO DEPARTAMENTO' AFTER `id_depto`, ADD UNIQUE (`cod_depto`);
 ALTER TABLE `departamento` CHANGE `pais_depto` `pais_depto` INT(11) NULL;
 ALTER TABLE `departamento` ADD FOREIGN KEY (`pais_depto`) REFERENCES `pais`(`id_pais`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- Limpio la tabla de departamento
+set foreign_key_checks = 0;
+truncate table departamento;
+insert into departamento (cod_depto,des_depto,pais_depto,status_depto,sucursal_depto) (
+	select substr(u.ubigeo,1,2) cod_dpto,u.departamento, 241,1,1
+	from ubigeo u
+	group by departamento, cod_dpto
+);
+set foreign_key_checks = 1;
+select * from ubigeo;
+
+select substr(u.ubigeo,1,4) cod_prov,u.provincia,  241, substr(u.ubigeo,1,2) depto_prov,1,1
+	from ubigeo u
+	group by u.ubigeo,u.provincia;
+    
+ALTER TABLE `leophard_dev`.`provincia` 
+DROP FOREIGN KEY `fx_pais_prov`;
+ALTER TABLE `leophard_dev`.`provincia` 
+DROP COLUMN `pais_prov`,
+ADD COLUMN `cod_prov` VARCHAR(4) NULL DEFAULT 'null' AFTER `id_prov`,
+ADD COLUMN `depto_prov` INT(11) NULL AFTER `des_prov`,
+ADD INDEX `depto_prov` (`depto_prov` ASC),
+ADD INDEX `cod_prov_UNIQUE` (`cod_prov` ASC),
+DROP INDEX `fx_pais_prov_idx` ;
+;
+ALTER TABLE `leophard_dev`.`provincia` 
+ADD CONSTRAINT `fk_depto_prov`
+  FOREIGN KEY (`depto_prov`)
+  REFERENCES `leophard_dev`.`departamento` (`id_depto`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;

@@ -8,6 +8,7 @@ use yii\web\View;
 use kartik\grid\GridView;
 use yii\web\JqueryAsset;
 use yii\helpers\ArrayHelper;
+use app\models\Departamento;
 use app\models\Pais;
 use kartik\select2\Select2;
 use kartik\depdrop\DepDrop;
@@ -21,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="provincia-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(['id' => 'grid']); ?>
+    <?php Pjax::begin(['id' => 'grid','timeout' => 3000]); ?>
 
     <p>
         <?= Html::a(Yii::t('provincia', 'Create estate / province'), ['create','asDialog' => 1], [ 'id' => 'create', 'class' => 'btn btn-flat btn-success']) ?>
@@ -32,26 +33,43 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             [
+              'attribute'=>'pais',
+              'value' => function($data){
+                return $data->deptoProv->paisDepto->des_pais;
+              },
+              'filter'=>Pais::getPaisList(),
+              'label' => Yii::t('pais','Country'),
+              'filterType' => GridView::FILTER_SELECT2,
+              'filterWidgetOptions' => [
+                'language' => Yii::$app->language,
+                'theme' => Select2::THEME_DEFAULT,
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' =>[],
+                'options' => ['prompt' => ''],
+              ],
+              'width' => '20%'
+            ],
+            [
+              'attribute'=>'depto_prov',
+              'value' => function($data){
+                return $data->deptoProv->des_depto;
+              },
+              'filter'=>Departamento::getDeptoList((empty($searchModel->deptoProv->pais_depto)) ? null : $searchModel->deptoProv->pais_depto),
+              'filterType' => GridView::FILTER_SELECT2,
+              'filterWidgetOptions' => [
+                'language' => Yii::$app->language,
+                'theme' => Select2::THEME_DEFAULT,
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' =>[],
+                'options' => ['prompt' => ''],
+              ],
+              'width' => '20%'
+            ],
+            [
               'attribute'=>'id_prov',
               'width' => '5%'
             ],
             'des_prov',
-            [
-              'attribute'=>'pais_prov',
-              'value' => function($data){
-                   return $data->paisProv->des_pais;
-              },
-              'filter'=>Pais::getPaisList(),
-              'filterType' => GridView::FILTER_SELECT2,
-              'filterWidgetOptions' => [
-                  'language' => Yii::$app->language,
-                  'theme' => Select2::THEME_DEFAULT,
-                  'pluginOptions' => ['allowClear' => true],
-                  'pluginEvents' =>[],
-                  'options' => ['prompt' => ''],
-              ],
-              'width' => '20%'
-            ],
             [
                 'class' => 'kartik\grid\BooleanColumn',
                 'attribute' => 'status_prov',
@@ -112,7 +130,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $url;
                 }
                 if ($action === 'delete') {
-                    $url = Url::to(['provincia/delete','id'=>$model->id_prov]);                    
+                    $url = Url::to(['provincia/delete','id'=>$model->id_prov]);
                     return $url;
                 }
 
@@ -120,9 +138,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
         'pjax'=>true,
-        'pjaxSettings'=>[
-           'neverTimeout'=>true,
-        ],
         'krajeeDialogSettings' => ['overrideYiiConfirm' => false]
     ]); ?>
     <?php Pjax::end(); ?>

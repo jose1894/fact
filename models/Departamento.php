@@ -91,14 +91,24 @@ class Departamento extends \yii\db\ActiveRecord
         return $this->hasMany(Provincia::className(), ['depto_prov' => 'id_depto']);
     }
 
-    public static function getDeptoList( $pais )
+    public static function getDeptoList( $pais = null )
     {
       $sucursal = Yii::$app->user->identity->profiles->sucursal;
+      // var_dump($pais);exit();
+      $where = [
+          'status_depto = :status and sucursal_depto = :sucursal',
+          [':status' => 1, ':sucursal' => $sucursal]
+      ];
+
+      if ( $pais ) {
+        $where = [
+            'status_depto = :status and sucursal_depto = :sucursal and pais_depto = :pais',
+            [':status' => 1, ':sucursal' => $sucursal, ':pais' => $pais]
+        ];
+      }
 
       $condiciones = Departamento::find()
-                     ->where(
-                       'status_depto = :status and sucursal_depto = :sucursal and pais_depto = :pais',
-                       [':status' => 1, ':sucursal' => $sucursal, ':pais' => $pais])
+                     ->where($where[0],$where[1])
                      ->orderBy('des_depto')
                      ->all();
       return ArrayHelper::map( $condiciones, 'id_depto', 'des_depto');

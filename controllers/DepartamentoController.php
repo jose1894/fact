@@ -278,4 +278,12 @@ class DepartamentoController extends Controller
 
         return [];
     }
+
+    public function actionAjaxDepartamentos($id) {
+
+      Yii::$app->response->format = Response::FORMAT_JSON;
+      if (Yii::$app->request->isAjax) {
+        return Departamento::getDeptoList($id);
+      }
+    }
 }

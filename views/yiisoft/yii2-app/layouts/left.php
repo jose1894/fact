@@ -66,8 +66,8 @@
                             ['label' => Yii::t('app', 'Ubication tables'), 'icon' => 'globe',
                                 'items' =>[
                                             ['label' => Yii::t('pais','Country'), 'url' => ['/pais'], 'icon' => 'ticket', 'visible' => Yii::$app->user->can('/pais/index')],
-                                            ['label' => Yii::t('provincia','Estate / Province'), 'url' => ['/provincia'], 'icon' => 'ticket', 'visible' => Yii::$app->user->can('/provincia/index')],
-                                            ['label' => Yii::t('departamento','Department / County / Municipality'), 'url' => ['/departamento'], 'icon' => 'ticket', 'visible' => Yii::$app->user->can('/departamento/index')],
+                                            ['label' => Yii::t('departamento','Estate / Department'), 'url' => ['/departamento'], 'icon' => 'ticket', 'visible' => Yii::$app->user->can('/departamento/index')],
+                                            ['label' => Yii::t('provincia','Municipality / Province'), 'url' => ['/provincia'], 'icon' => 'ticket', 'visible' => Yii::$app->user->can('/provincia/index')],
                                             ['label' => Yii::t('distrito','Disctrit / Parish'), 'url' => ['/distrito'], 'icon' => 'ticket', 'visible' => Yii::$app->user->can('/distrito/index')],
                                           ]
                             ]

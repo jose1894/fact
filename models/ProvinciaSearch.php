@@ -15,12 +15,13 @@ class ProvinciaSearch extends Provincia
     /**
      * {@inheritdoc}
      */
+     public $pais;
 
     public function rules()
     {
         return [
-            [['id_prov', 'status_prov', 'sucursal_prov','pais_prov'], 'integer'],
-            [['des_prov','pais_prov'], 'safe'],
+            [['id_prov', 'status_prov', 'sucursal_prov','depto_prov'], 'integer'],
+            [['pais','des_prov','depto_prov'], 'safe'],
         ];
     }
 
@@ -42,14 +43,16 @@ class ProvinciaSearch extends Provincia
      */
     public function search($params)
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Provincia::find()
+
                  ->where('sucursal_prov = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
 
-        $query->joinWith(['paisProv']);
+        $query->join('left join','departamento','depto_prov = id_depto');
+        $query->join('inner join','pais', 'pais.id_pais = departamento.pais_depto');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -64,12 +67,18 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
             return $dataProvider;
         }
 
+        $dataProvider->sort->attributes['pais'] = [
+            'asc' => ['pais.des_pais' => SORT_ASC],
+            'desc' => ['pais.des_pais' => SORT_DESC],
+        ];
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id_prov' => $this->id_prov,
             'status_prov' => $this->status_prov,
             'sucursal_prov' => $this->sucursal_prov,
-            'pais_prov' => $this->pais_prov,
+            'depto_prov' => $this->depto_prov,
+            'pais.id_pais' => $this->pais,
         ]);
 
         $query->andFilterWhere(['like', 'des_prov', $this->des_prov]);
