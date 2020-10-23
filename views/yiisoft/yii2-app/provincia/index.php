@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'width' => '20%'
             ],
             [
-              'attribute'=>'id_prov',
+              'attribute'=>'cod_prov',
               'width' => '5%'
             ],
             'des_prov',

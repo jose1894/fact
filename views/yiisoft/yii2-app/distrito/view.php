@@ -27,7 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
           'model' => $model,
           'attributes' => [
               'id_dtto',
-              'des_dtto',
+              'cod_dtto',
+              'des_dtto',              
               [
                 'attribute' => 'pais_dtto',
                 'value' => $model->paisDtto->des_pais

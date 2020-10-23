@@ -249,7 +249,7 @@ class DistritoController extends Controller
     public static function getDistritos($cat_id) {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $out = [];
-        $list = Distrito::find()->andWhere(['depto_dtto' => $cat_id])->asArray()->all();
+        $list = Distrito::find()->andWhere(['prov_dtto' => $cat_id])->asArray()->all();
       //  echo $list->createCommand()->getRawSql();
         if (count($list) > 0) {
             foreach ($list as $i => $distrito) {
@@ -264,7 +264,7 @@ class DistritoController extends Controller
     public static function getSelectedDttos($cat_id,$param1) {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $selected = [];
-        $list = Distrito::find()->andWhere(['depto_dtto' => $cat_id,'id_dtto' => $param1 ])->asArray()->all();
+        $list = Distrito::find()->andWhere(['prov_dtto' => $cat_id,'id_dtto' => $param1 ])->asArray()->all();
 
         if (count($list) > 0) {
             foreach ($list as $i => $distrito) {

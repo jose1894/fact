@@ -60,7 +60,9 @@ class Empresa extends \yii\db\ActiveRecord
      public function rules()
      {
          return [
-             [['id_empresa', 'nombre_empresa', 'estatus_empresa',  'ruc_empresa', 'tipopers_empresa'], 'required'],
+             [['id_empresa', 'nombre_empresa', 'estatus_empresa', 'ruc_empresa',
+               'tipopers_empresa','pais_empresa','depto_empresa', 'prov_empresa',
+               'dtto_empresa'], 'required'],
              [['id_empresa', 'estatus_empresa', 'tipopers_empresa'], 'integer'],
              [['direcc_empresa'], 'string'],
              [['nombre_empresa', 'tlf_empresa','movil_empresa'], 'string', 'max' => 150],
@@ -90,6 +92,10 @@ class Empresa extends \yii\db\ActiveRecord
              'tlf_empresa' => Yii::t('empresa', 'Phone'),
              'movil_empresa' => Yii::t('empresa', 'Mobile'),
              'correo_empresa' => Yii::t('empresa', 'Email'),
+             'pais_empresa' => Yii::t('pais', 'Country'),
+             'depto_empresa' => Yii::t('departamento', 'Estate / Department'),
+             'prov_empresa' => Yii::t('provincia', 'Municipality / Province'),
+             'dtto_empresa' => Yii::t('distrito', 'District / Parish'),
              'direcc_empresa' => Yii::t('empresa', 'Address'),
              'image' => Yii::t('empresa', 'Logo'),
              'cert' => Yii::t('empresa', 'SUNAT certificate'),
@@ -102,6 +108,26 @@ class Empresa extends \yii\db\ActiveRecord
      public function getSucursales()
     {
         return $this->hasMany(Sucursal::className(), ['empresa_suc' => 'id_empresa']);
+    }
+
+    public function getPaisEmpresa()
+    {
+       return $this->hasOne(Pais::className(), ['pais_empresa' => 'id_pais']);
+    }
+
+    public function getDeptoEmpresa()
+    {
+       return $this->hasOne(Departamento::className(), ['dpto_empresa' => 'id_depto']);
+    }
+
+    public function getProvEmpresa()
+    {
+       return $this->hasOne(Provincia::className(), ['prov_empresa' => 'id_prov']);
+    }
+
+    public function getDttoEmpresa()
+    {
+       return $this->hasOne(Distrito::className(), ['dtto_empresa' => 'id_dtto']);
     }
 
     public static function empresaList()

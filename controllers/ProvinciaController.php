@@ -227,8 +227,10 @@ class ProvinciaController extends Controller
     public function actionProvincias() {
       Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
       $out = [];
-      if (isset($_POST['depdrop_parents'])) {
-          $parents = $_POST['depdrop_parents'];
+      $parents = Yii::$app->request->post();
+
+      if (isset($parents['depdrop_parents'])) {
+          $parents = $parents['depdrop_parents'];
           if ($parents != null) {
               $cat_id = $parents[0];
               $param1 = null;
@@ -256,7 +258,7 @@ class ProvinciaController extends Controller
     public static function getProvincias($cat_id) {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $out = [];
-        $list = Provincia::find()->andWhere(['pais_prov' => $cat_id])->asArray()->all();
+        $list = Provincia::find()->andWhere(['depto_prov' => $cat_id])->asArray()->all();
 
         if (count($list) > 0) {
             foreach ($list as $i => $provincias) {
@@ -271,7 +273,7 @@ class ProvinciaController extends Controller
     public static function getSelectedProv($cat_id,$param1) {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $out = [];
-        $list = Provincia::find()->andWhere(['pais_prov' => $cat_id, 'id_prov' => $param1])->asArray()->all();
+        $list = Provincia::find()->andWhere(['depto_prov' => $cat_id, 'id_prov' => $param1])->asArray()->all();
 
         if (count($list) > 0) {
             foreach ($list as $i => $provincias) {

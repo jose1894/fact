@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="distrito-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(['id'=>'grid']); ?>
+    <?php Pjax::begin(['id'=>'grid', 'timeout' => 3000]); ?>
 
     <p>
         <?= Html::a(Yii::t('distrito', 'Create district / parish'), ['create' ,'asDialog'=>1], ['id'=>'create','class' => 'btn btn-flat btn-success']) ?>
@@ -34,60 +34,60 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             [
-              'attribute'=>'id_dtto',
+              'attribute'=>'pais_dtto',
+              'value' => function($data){
+                return $data->paisDtto->des_pais;
+              },
+              'filter'=>Pais::getPaisList(),
+              'filterType' => GridView::FILTER_SELECT2,
+              'filterWidgetOptions' => [
+                'language' => Yii::$app->language,
+                'theme' => Select2::THEME_DEFAULT,
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' =>[],
+                'options' => ['prompt' => ''],
+              ],
+              'width' => '20%'
+            ],
+            [
+              'attribute'=>'depto_dtto',
+              'value' => function($data){
+                return $data->deptoDtto->des_depto;
+              },
+              'filter'=>Departamento::getDeptoList($searchModel->pais_dtto),
+              'filterType' => GridView::FILTER_SELECT2,
+              'filterWidgetOptions' => [
+                'language' => Yii::$app->language,
+                'theme' => Select2::THEME_DEFAULT,
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' =>[],
+                'options' => ['prompt' => ''],
+              ],
+              'width' => '5%'
+            ],
+            [
+              'attribute'=>'prov_dtto',
+              'value' => function($data){
+                return $data->provDtto->des_prov;
+              },
+              'filter'=>Provincia::getProvinciaList( $searchModel->pais_dtto, $searchModel->depto_dtto ) ,
+              'filterType' => GridView::FILTER_SELECT2,
+              'filterWidgetOptions' => [
+                'language' => Yii::$app->language,
+                'theme' => Select2::THEME_DEFAULT,
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' =>[],
+                'options' => ['prompt' => ''],
+              ],
+              'width' => '10%'
+            ],
+            [
+              'attribute'=>'cod_dtto',
               'width' => '5%'
             ],
             [
               'attribute'=>'des_dtto',
               'width' => '20%'
-            ],
-            [
-              'attribute'=>'pais_dtto',
-              'value' => function($data){
-                   return $data->paisDtto->des_pais;
-              },
-              'filter'=>Pais::getPaisList(),
-              'filterType' => GridView::FILTER_SELECT2,
-              'filterWidgetOptions' => [
-                  'language' => Yii::$app->language,
-                  'theme' => Select2::THEME_DEFAULT,
-                  'pluginOptions' => ['allowClear' => true],
-                  'pluginEvents' =>[],
-                  'options' => ['prompt' => ''],
-              ],
-              'width' => '20%'
-            ],
-            [
-              'attribute'=>'prov_dtto',
-              'value' => function($data){
-                   return $data->provDtto->des_prov;
-              },
-              'filter'=>Provincia::getProvinciaList( $searchModel->pais_dtto ) ,
-              'filterType' => GridView::FILTER_SELECT2,
-              'filterWidgetOptions' => [
-                  'language' => Yii::$app->language,
-                  'theme' => Select2::THEME_DEFAULT,
-                  'pluginOptions' => ['allowClear' => true],
-                  'pluginEvents' =>[],
-                  'options' => ['prompt' => ''],
-              ],
-              'width' => '10%'
-            ],
-            [
-              'attribute'=>'depto_dtto',
-              'value' => function($data){
-                   return $data->deptoDtto->des_depto;
-              },
-              'filter'=>Departamento::getDeptoList($searchModel->pais_dtto, $searchModel->prov_dtto),
-              'filterType' => GridView::FILTER_SELECT2,
-              'filterWidgetOptions' => [
-                  'language' => Yii::$app->language,
-                  'theme' => Select2::THEME_DEFAULT,
-                  'pluginOptions' => ['allowClear' => true],
-                  'pluginEvents' =>[],
-                  'options' => ['prompt' => ''],
-              ],
-              'width' => '5%'
             ],
             [
                 'class' => 'kartik\grid\BooleanColumn',

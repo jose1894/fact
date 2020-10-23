@@ -26,23 +26,23 @@ class Distrito extends \yii\db\ActiveRecord
         return 'distrito';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -51,7 +51,7 @@ class Distrito extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['des_dtto', 'depto_dtto', 'status_dtto'], 'required'],
+            [['des_dtto', 'depto_dtto', 'status_dtto','pais_dtto', 'prov_dtto'], 'required'],
             [['depto_dtto', 'status_dtto', 'sucursal_dtto'], 'integer'],
             [['des_dtto'], 'string', 'max' => 30],
             [['prov_dtto' , 'pais_dtto', 'depto_dtto'], 'string'],
@@ -68,10 +68,11 @@ class Distrito extends \yii\db\ActiveRecord
     {
         return [
             'id_dtto' => Yii::t('distrito', 'Id'),
+            'cod_dtto' => Yii::t('distrito', 'Code'),
             'des_dtto' => Yii::t('distrito', 'Name'),
             'pais_dtto' => Yii::t('pais', 'Country'),
-            'depto_dtto' => Yii::t('departamento', 'Department / County / Municipality'),
-            'prov_dtto' => Yii::t('provincia', 'Estate / Province'),
+            'depto_dtto' => Yii::t('departamento', 'Estate / Department'),
+            'prov_dtto' => Yii::t('provincia', 'Municipality / Province'),
             'status_dtto' => Yii::t('distrito', 'Status'),
             'sucursal_dtto' => Yii::t('distrito', 'Sucursal Dtto'),
         ];
@@ -98,7 +99,7 @@ class Distrito extends \yii\db\ActiveRecord
         return $this->hasOne(Departamento::className(), ['id_depto' => 'depto_dtto']);
     }
 
-    public static function getDttoList( $pais, $provincia, $departamento )
+    public static function getDttoList( $pais, $departamento, $provincia )
     {
       $sucursal = Yii::$app->user->identity->profiles->sucursal;
 

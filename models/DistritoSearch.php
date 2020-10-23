@@ -19,8 +19,8 @@ class DistritoSearch extends Distrito
     {
         return [
             [['id_dtto', 'status_dtto', 'sucursal_dtto','pais_dtto','prov_dtto','depto_dtto'], 'integer'],
-            [['des_dtto','prov_dtto','pais_dtto'], 'safe'],
-            //[['prov_dtto','pais_dtto','depto_dtto'], 'string'],
+            [['des_dtto','prov_dtto','pais_dtto','cod_dtto'], 'safe'],
+            [['cod_dtto'], 'string'],
         ];
     }
 

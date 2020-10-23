@@ -7,6 +7,12 @@ use kartik\form\ActiveForm; // or kartik\widgets\ActiveForm
 use app\components\AutoIncrement;
 use wbraganca\dynamicform\DynamicFormWidget;
 use kartik\widgets\FileInput;
+use app\models\Pais;
+use app\models\Departamento;
+use app\models\Provincia;
+use app\models\Distrito;
+use kartik\select2\Select2;
+use kartik\depdrop\DepDrop;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
@@ -139,7 +145,108 @@ $this->registerJs($js,View::POS_LOAD);
         </div>
       </div>
       <div class="row">
-          <div class="col-lg-12">
+          <div class="col-lg-6">
+              <div class="row">
+
+
+                <div class="col-lg-6 col-sm-3 col-xs-12">
+                  <?php
+                  $paises=Pais::getPaisList();
+                  ?>
+                  <?= $form->field($model, 'pais_empresa',[
+                    'addClass' => 'form-control'
+                    ])->widget(Select2::classname(), [
+                              'data' => $paises,
+                              'language' => Yii::$app->language,
+                              'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                              'options' => ['placeholder' => Yii::t('pais','Select a country').'...'],
+                              'theme' => Select2::THEME_DEFAULT,
+                              'pluginOptions' => [
+                                  'allowClear' => true
+                              ],
+                      ])?>
+                </div>
+
+                <div class="col-lg-6 col-sm-3 col-xs-12">
+                  <?php
+                  echo Html::hiddenInput('empresa-selected_depatamento', $model->depto_empresa, ['id' => 'empresa-selected_depatamento']);
+                  ?>
+                  <?= $form->field($model, 'depto_empresa',[
+                    'addClass' => 'form-control'
+                    ])->widget(DepDrop::classname(), [
+                        'options' => ['placeholder' => Yii::t('app','Select...')],
+                        'type' => DepDrop::TYPE_SELECT2,
+                        'select2Options' => [
+                            'language' => Yii::$app->language,
+                            'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                            'theme' => Select2::THEME_DEFAULT,
+                            'pluginOptions' => ['allowClear' => true],
+                            'pluginEvents' =>[]
+                        ],
+                        'pluginOptions' => [
+                            'initialize' => true,
+                            'depends' => ['empresa-pais_empresa'],
+                            'url' => Url::to(['/departamento/departamentos']),
+                            'loadingText' => Yii::t('departamento','Loading departments').'...',
+                            'params' => ['empresa-selected_depatamento']
+                        ]
+                    ])?>
+                </div>
+
+                <div class="col-lg-6 col-sm-3 col-xs-12">
+                  <?php
+                  echo Html::hiddenInput('empresa-selected_provincia', $model->prov_empresa, ['id' => 'empresa-selected_provincia']);
+                  ?>
+                  <?= $form->field($model, 'prov_empresa',[
+                    'addClass' => 'form-control'
+                    ])->widget(DepDrop::classname(), [
+                        'options' => ['placeholder' => Yii::t('app','Select...')],
+                        'type' => DepDrop::TYPE_SELECT2,
+                        'select2Options' => [
+                            'language' => Yii::$app->language,
+                            'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                            'theme' => Select2::THEME_DEFAULT,
+                            'pluginOptions' => ['allowClear' => true],
+                            'pluginEvents' =>[]
+                        ],
+                        'pluginOptions' => [
+                            'initialize' => true,
+                            'depends' => ['empresa-depto_empresa'],
+                            'url' => Url::to(['/provincia/provincias']),
+                            'loadingText' => Yii::t('provincia','Loading provinces').'...',
+                            'params' => ['empresa-selected_provincia']
+                        ]
+                    ]) ?>
+                </div>
+
+                <div class="col-lg-6 col-sm-3 col-xs-12">
+                  <?php
+                  echo Html::hiddenInput('empresa-selected_dtto', $model->dtto_empresa, ['id' => 'empresa-selected_dtto']);
+                  ?>
+                  <?= $form->field($model, 'dtto_empresa',[
+                    'addClass' => 'form-control'
+                    ])->widget(DepDrop::classname(), [
+                        'options' => ['placeholder' => Yii::t('app','Select...')],
+                        'type' => DepDrop::TYPE_SELECT2,
+                        'select2Options' => [
+                            'language' => Yii::$app->language,
+                            'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                            'theme' => Select2::THEME_DEFAULT,
+                            'pluginOptions' => ['allowClear' => true],
+                            'pluginEvents' =>[]
+                        ],
+                        'pluginOptions' => [
+                            'initialize' => true,
+                            'depends' => ['empresa-prov_empresa'],
+                            'url' => Url::to(['/distrito/distritos']),
+                            'loadingText' => Yii::t('distrito','Loading districts').'...',
+                            'params' => ['empresa-selected_dtto']
+                        ]
+                    ]) ?>
+                </div>
+              </div>
+          </div>
+          <div class="col-lg-6">
             <?= $form->field($model, 'direcc_empresa',[
               'addClass' => 'form-control ',
               'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-file-text"></i>']]
@@ -154,8 +261,9 @@ $this->registerJs($js,View::POS_LOAD);
                 $carpeta = $id.'_'.$nombreEmpresa;
                 $realpath = Yii::$app->basePath.'/web/uploads/companies/'.$carpeta.'/';
                 $url = Url::to('@web/uploads/companies/'.$carpeta.'/');
-                // var_dump($realpath.$model->image_empresa);exit();
-                $url = !realpath($realpath.$model->image_empresa) ?  Url::to('@web/uploads/companies/no-logo.jpg') : $url.$model->image_empresa;
+                //var_dump($realpath.$model->image_empresa);exit();
+                $url = $model->image_empresa;
+                //$url = !realpath($realpath.$model->image_empresa) ?  Url::to('@web/uploads/companies/no-logo.jpg') : $url.$model->image_empresa;
             ?>
             <?= $form->field($model, 'image',[
                   'addClass' => 'form-control ',
@@ -204,7 +312,7 @@ $this->registerJs($js,View::POS_LOAD);
                     'addon' => [
                       'prepend' => [
                           ['content' => '<i class="fa fa-certificate"></i>'],
-                          ['content' => ($hint) ? '<i class="fa fa-check"></i>' : ''],                        
+                          ['content' => ($hint) ? '<i class="fa fa-check"></i>' : ''],
                       ],
                     ]
                     //   'prepend' => [

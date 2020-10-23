@@ -118,7 +118,29 @@ update provincia set pais_prov = 241;
 set foreign_key_checks = 1;
 
 
+-- Limpio la tabla de distrito
+set foreign_key_checks = 0;
+truncate table distrito;
 
-select substr(u.ubigeo,1,4) cod_prov,u.provincia,substr(u.ubigeo,1,2) depto_prov,1,1
+-- Modifico la tabla distrito
+ALTER TABLE `distrito` ADD `cod_dtto` VARCHAR(6) NOT NULL COMMENT 'CODIGO DISTRITO' AFTER `id_dtto`, ADD INDEX (`cod_dtto`);
+ALTER TABLE `distrito` CHANGE `des_dtto` `des_dtto` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'DESCRIPCION DISTRITO';
+
+-- Inserto los datos en la tabla distrito
+insert into distrito (cod_dtto, des_dtto, pais_dtto, depto_dtto,prov_dtto,status_dtto,sucursal_dtto) (
+		select 
+    u.ubigeo cod_dtto,
+    u.distrito,
+    241,
+    substr(u.ubigeo,1,2) depto_dtto,
+    p.id_prov,
+    1,
+    1
 	from ubigeo u
-	group by substr(u.ubigeo,1,4),u.provincia,substr(u.ubigeo,1,2) ;
+    inner join provincia p on p.cod_prov = substr(u.ubigeo,1,4) 
+	group by u.ubigeo,u.distrito,substr(u.ubigeo,1,2),substr(u.ubigeo,3,2),p.id_prov limit 1, 2000
+);
+set foreign_key_checks = 1;
+
+ALTER TABLE `empresa` ADD `pais_empresa` INT(11) NULL COMMENT 'PAIS EMPRESA' AFTER `correo_empresa`, ADD `depto_empresa` INT(11) NULL COMMENT 'DEPARTAMENTO EMPRESA' AFTER `pais_empresa`, ADD `prov_empresa` INT(11) NULL COMMENT 'PROVINCIA EMPRESA' AFTER `depto_empresa`, ADD `dtto_empresa` INT(11) NULL COMMENT 'DISTRITO EMPRESA' AFTER `prov_empresa`, ADD INDEX (`pais_empresa`), ADD INDEX (`depto_empresa`), ADD INDEX (`prov_empresa`), ADD INDEX (`dtto_empresa`);
+ALTER TABLE `empresa` ADD FOREIGN KEY (`pais_empresa`) REFERENCES `pais`(`id_pais`) ON DELETE RESTRICT ON UPDATE CASCADE; ALTER TABLE `empresa` ADD FOREIGN KEY (`depto_empresa`) REFERENCES `departamento`(`id_depto`) ON DELETE RESTRICT ON UPDATE CASCADE; ALTER TABLE `empresa` ADD FOREIGN KEY (`prov_empresa`) REFERENCES `provincia`(`id_prov`) ON DELETE RESTRICT ON UPDATE CASCADE; ALTER TABLE `empresa` ADD FOREIGN KEY (`dtto_empresa`) REFERENCES `distrito`(`id_dtto`) ON DELETE RESTRICT ON UPDATE CASCADE;

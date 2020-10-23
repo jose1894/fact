@@ -20,7 +20,7 @@ use yii\helpers\Url;
 
     <?php $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientScript' => true]); ?>
     <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
           <?php
           $paises=Pais::getPaisList();
           ?>
@@ -37,36 +37,9 @@ use yii\helpers\Url;
                       ],
               ])?>
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-          <?php
-          $provs = Provincia::getProvinciaList( $model->pais_dtto );
-          echo Html::hiddenInput('distrito-selected_provincia', $model->prov_dtto, ['id' => 'distrito-selected_provincia']);
-          ?>
-          <?= $form->field($model, 'prov_dtto',[
-            'addClass' => 'form-control'
-            ])->widget(DepDrop::classname(), [
-                'options' => ['placeholder' => Yii::t('app','Select...')],
-                'type' => DepDrop::TYPE_SELECT2,
-                'select2Options' => [
-                    'language' => Yii::$app->language,
-                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
-                    'theme' => Select2::THEME_DEFAULT,
-                    'pluginOptions' => ['allowClear' => true],
-                    'pluginEvents' =>[]
-                ],
-                'pluginOptions' => [
-                    'initialize' => true,
-                    'depends' => ['distrito-pais_dtto'],
-                    'url' => Url::to(['/provincia/provincias']),
-                    'loadingText' => Yii::t('provincia','Loading provinces').'...',
-                    'params' => ['distrito-selected_provincia']
-                ]
-            ])?>
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-          <?php
 
-          $deptos = Departamento::getDeptoList($model->pais_dtto, $model->prov_dtto);
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+          <?php
           echo Html::hiddenInput('distrito-selected_depatamento', $model->depto_dtto, ['id' => 'distrito-selected_depatamento']);
           ?>
           <?= $form->field($model, 'depto_dtto',[
@@ -83,14 +56,46 @@ use yii\helpers\Url;
                 ],
                 'pluginOptions' => [
                     'initialize' => true,
-                    'depends' => ['distrito-prov_dtto'],
-                    'initDepends' => ['pais_dtto'],
+                    'depends' => ['distrito-pais_dtto'],
                     'url' => Url::to(['/departamento/departamentos']),
                     'loadingText' => Yii::t('departamento','Loading departments').'...',
                     'params' => ['distrito-selected_depatamento']
                 ]
             ])?>
         </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+          <?php
+          echo Html::hiddenInput('distrito-selected_provincia', $model->prov_dtto, ['id' => 'distrito-selected_provincia']);
+          ?>
+          <?= $form->field($model, 'prov_dtto',[
+            'addClass' => 'form-control'
+            ])->widget(DepDrop::classname(), [
+                'options' => ['placeholder' => Yii::t('app','Select...')],
+                'type' => DepDrop::TYPE_SELECT2,
+                'select2Options' => [
+                    'language' => Yii::$app->language,
+                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                    'theme' => Select2::THEME_DEFAULT,
+                    'pluginOptions' => ['allowClear' => true],
+                    'pluginEvents' =>[]
+                ],
+                'pluginOptions' => [
+                    'initialize' => true,
+                    'depends' => ['distrito-depto_dtto'],
+                    'url' => Url::to(['/provincia/provincias']),
+                    'loadingText' => Yii::t('provincia','Loading provinces').'...',
+                    'params' => ['distrito-selected_provincia']
+                ]
+            ]) ?>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+          <?= $form->field($model, 'cod_dtto',[
+            'addClass' => 'form-control'
+            ])->textInput(['maxlength' => true]) ?>
+        </div>
+
     </div>
     <div class="row">
 

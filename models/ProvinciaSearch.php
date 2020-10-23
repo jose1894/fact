@@ -20,7 +20,7 @@ class ProvinciaSearch extends Provincia
     {
         return [
             [['id_prov', 'status_prov', 'sucursal_prov','depto_prov', 'pais_prov'], 'integer'],
-            [['pais_prov','des_prov','depto_prov'], 'safe'],
+            [['pais_prov','des_prov','depto_prov','cod_prov'], 'safe'],
         ];
     }
 
@@ -72,6 +72,7 @@ class ProvinciaSearch extends Provincia
         // grid filtering conditions
         $query->andFilterWhere([
             'id_prov' => $this->id_prov,
+            'cod_prov' => $this->cod_prov,
             'status_prov' => $this->status_prov,
             'sucursal_prov' => $this->sucursal_prov,
             'depto_prov' => $this->depto_prov,
