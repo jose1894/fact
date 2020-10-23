@@ -93,19 +93,13 @@ class Departamento extends \yii\db\ActiveRecord
 
     public static function getDeptoList( $pais = null )
     {
-      $sucursal = Yii::$app->user->identity->profiles->sucursal;
-      // var_dump($pais);exit();
-      $where = [
-          'status_depto = :status and sucursal_depto = :sucursal',
-          [':status' => 1, ':sucursal' => $sucursal]
-      ];
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
-      if ( $pais ) {
         $where = [
             'status_depto = :status and sucursal_depto = :sucursal and pais_depto = :pais',
             [':status' => 1, ':sucursal' => $sucursal, ':pais' => $pais]
         ];
-      }
+
 
       $condiciones = Departamento::find()
                      ->where($where[0],$where[1])

@@ -73,18 +73,16 @@ ALTER TABLE `departamento` ADD FOREIGN KEY (`pais_depto`) REFERENCES `pais`(`id_
 -- Limpio la tabla de departamento
 set foreign_key_checks = 0;
 truncate table departamento;
+
+-- Inserto los datos en la tabla departamento
 insert into departamento (cod_depto,des_depto,pais_depto,status_depto,sucursal_depto) (
 	select substr(u.ubigeo,1,2) cod_dpto,u.departamento, 241,1,1
 	from ubigeo u
 	group by departamento, cod_dpto
 );
 set foreign_key_checks = 1;
-select * from ubigeo;
 
-select substr(u.ubigeo,1,4) cod_prov,u.provincia,  241, substr(u.ubigeo,1,2) depto_prov,1,1
-	from ubigeo u
-	group by u.ubigeo,u.provincia;
-    
+-- Modifico la tabla de provincia
 ALTER TABLE `leophard_dev`.`provincia` 
 DROP FOREIGN KEY `fx_pais_prov`;
 ALTER TABLE `leophard_dev`.`provincia` 
@@ -101,3 +99,26 @@ ADD CONSTRAINT `fk_depto_prov`
   REFERENCES `leophard_dev`.`departamento` (`id_depto`)
   ON DELETE RESTRICT
   ON UPDATE CASCADE;
+  
+ALTER TABLE `provincia` ADD `pais_prov` INT(11) NULL COMMENT 'PAIS PROVINCIA' AFTER `des_prov`, ADD INDEX (`pais_prov`);
+ALTER TABLE `provincia` ADD FOREIGN KEY (`pais_prov`) REFERENCES `pais`(`id_pais`) ON DELETE RESTRICT ON UPDATE CASCADE;
+  
+-- Limpio la tabla de provincia
+set foreign_key_checks = 0;
+truncate table provincia;
+
+-- Inserto los datos a la tabla de provincias
+insert into provincia (cod_prov,des_prov,depto_prov,sucursal_prov,status_prov) (
+select substr(u.ubigeo,1,4) cod_prov,u.provincia,substr(u.ubigeo,1,2) depto_prov,1,1
+	from ubigeo u
+	group by substr(u.ubigeo,1,4),u.provincia,substr(u.ubigeo,1,2));
+
+update provincia set pais_prov = 241;
+    
+set foreign_key_checks = 1;
+
+
+
+select substr(u.ubigeo,1,4) cod_prov,u.provincia,substr(u.ubigeo,1,2) depto_prov,1,1
+	from ubigeo u
+	group by substr(u.ubigeo,1,4),u.provincia,substr(u.ubigeo,1,2) ;

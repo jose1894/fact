@@ -50,11 +50,12 @@ class Provincia extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['des_prov', 'status_prov', 'depto_prov'], 'required'],
-            [['status_prov', 'sucursal_prov'], 'integer'],
+            [['des_prov', 'status_prov', 'depto_prov', 'pais_prov'], 'required'],
+            [['status_prov', 'sucursal_prov', 'pais_prov'], 'integer'],
             // [['pais_prov'],'string'],
             [['des_prov'], 'string', 'max' => 30],
             [['depto_prov'], 'exist', 'skipOnError' => true, 'targetClass' => Departamento::className(), 'targetAttribute' => ['depto_prov' => 'id_depto']],
+            [['pais_prov'], 'exist', 'skipOnError' => true, 'targetClass' => Pais::className(), 'targetAttribute' => ['pais_prov' => 'id_pais']],
 
         ];
     }
@@ -68,6 +69,7 @@ class Provincia extends \yii\db\ActiveRecord
             'id_prov' => Yii::t('provincia', 'Id'),
             'cod_prov' => Yii::t('provincia', 'Code'),
             'des_prov' => Yii::t('provincia', 'Name'),
+            'pais_prov' => Yii::t('pais', 'Country'),
             'status_prov' => Yii::t('provincia', 'Status'),
             'sucursal_prov' => Yii::t('provincia', 'Sucursal Prov'),
             'depto_prov' => Yii::t('departamento', 'Estate / Department'),
@@ -85,17 +87,27 @@ class Provincia extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getPaisProv()
+    {
+        return $this->hasOne(Pais::className(), ['id_pais' => 'pais_prov']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getDeptoProv()
     {
         return $this->hasOne(Departamento::className(), ['id_depto' => 'depto_prov']);
     }
 
-    public static function getProvinciaList( $depto )
+    public static function getProvinciaList( $pais, $depto )
     {
       $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
       $condiciones = Provincia::find()
-                     ->where('status_prov = :status and sucursal_prov = :sucursal and depto_prov = :depto',[':status' => 1, ':sucursal' => $sucursal, ':depto' => $depto])
+                     ->where(
+                       'status_prov = :status and sucursal_prov = :sucursal and pais_prov = :pais and depto_prov = :depto',
+                       [':status' => 1, ':sucursal' => $sucursal, ':depto' => $depto, ':pais' => $pais])
                      ->orderBy('des_prov')
                      ->all();
       return ArrayHelper::map( $condiciones, 'id_prov', 'des_prov');

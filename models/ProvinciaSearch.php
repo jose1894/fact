@@ -15,13 +15,12 @@ class ProvinciaSearch extends Provincia
     /**
      * {@inheritdoc}
      */
-     public $pais;
 
     public function rules()
     {
         return [
-            [['id_prov', 'status_prov', 'sucursal_prov','depto_prov'], 'integer'],
-            [['pais','des_prov','depto_prov'], 'safe'],
+            [['id_prov', 'status_prov', 'sucursal_prov','depto_prov', 'pais_prov'], 'integer'],
+            [['pais_prov','des_prov','depto_prov'], 'safe'],
         ];
     }
 
@@ -50,9 +49,7 @@ class ProvinciaSearch extends Provincia
                  ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
-
-        $query->join('left join','departamento','depto_prov = id_depto');
-        $query->join('inner join','pais', 'pais.id_pais = departamento.pais_depto');
+        $query->joinWith(['paisProv', 'deptoProv']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -67,7 +64,7 @@ class ProvinciaSearch extends Provincia
             return $dataProvider;
         }
 
-        $dataProvider->sort->attributes['pais'] = [
+        $dataProvider->sort->attributes['pais_prov'] = [
             'asc' => ['pais.des_pais' => SORT_ASC],
             'desc' => ['pais.des_pais' => SORT_DESC],
         ];
@@ -78,7 +75,7 @@ class ProvinciaSearch extends Provincia
             'status_prov' => $this->status_prov,
             'sucursal_prov' => $this->sucursal_prov,
             'depto_prov' => $this->depto_prov,
-            'pais.id_pais' => $this->pais,
+            'pais.id_pais' => $this->pais_prov,
         ]);
 
         $query->andFilterWhere(['like', 'des_prov', $this->des_prov]);

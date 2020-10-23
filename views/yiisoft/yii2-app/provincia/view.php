@@ -6,11 +6,11 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Provincia */
 
-$this->title = Yii::t('provincia','Estate / Province: {number} / {name}',[
+$this->title = Yii::t('provincia','Municipality / Province: {number} / {name}',[
   'number' => $model->id_prov,
   'name' => $model->des_prov
 ]);;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('provincia', 'Estate / Province'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('provincia', 'Municipality / Province'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -31,6 +31,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                   'attribute' => 'pais_prov',
                   'value' => $model->paisProv->des_pais
+                ],
+                [
+                  'attribute' => 'depto_prov',
+                  'value' => $model->deptoProv->des_depto
                 ],
                 [
                   'attribute' => 'status_prov',

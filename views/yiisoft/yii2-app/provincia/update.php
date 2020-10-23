@@ -5,11 +5,11 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Provincia */
 
-$this->title = Yii::t('provincia', 'Update estate / province: {number} / {name}', [
+$this->title = Yii::t('provincia', 'Update municipality / province: {number} / {name}', [
     'number' => $model->id_prov,
     'name' => $model->des_prov
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('provincia', 'Estate / pronvice'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('provincia', 'Municipality / Pronvice'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id_prov, 'url' => ['view', 'id' => $model->id_prov]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>

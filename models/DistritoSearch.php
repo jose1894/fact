@@ -42,7 +42,7 @@ class DistritoSearch extends Distrito
      */
     public function search($params)
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Distrito::find()
                  ->where('sucursal_dtto= :sucursal')
                  ->addParams([':sucursal' => $sucursal]);

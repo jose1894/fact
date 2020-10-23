@@ -16,7 +16,7 @@ use kartik\depdrop\DepDrop;
 /* @var $searchModel app\models\ProvinciaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('provincia', 'Estate / Province');
+$this->title = Yii::t('provincia', 'Municipality / Province');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="provincia-index">
@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php Pjax::begin(['id' => 'grid','timeout' => 3000]); ?>
 
     <p>
-        <?= Html::a(Yii::t('provincia', 'Create estate / province'), ['create','asDialog' => 1], [ 'id' => 'create', 'class' => 'btn btn-flat btn-success']) ?>
+        <?= Html::a(Yii::t('provincia', 'Create municipality / province'), ['create','asDialog' => 1], [ 'id' => 'create', 'class' => 'btn btn-flat btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             [
-              'attribute'=>'pais',
+              'attribute'=>'pais_prov',
               'value' => function($data){
                 return $data->deptoProv->paisDepto->des_pais;
               },
@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'value' => function($data){
                 return $data->deptoProv->des_depto;
               },
-              'filter'=>Departamento::getDeptoList((empty($searchModel->deptoProv->pais_depto)) ? null : $searchModel->deptoProv->pais_depto),
+              'filter'=>Departamento::getDeptoList($searchModel->pais_prov),
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                 'language' => Yii::$app->language,

@@ -252,7 +252,7 @@ class DepartamentoController extends Controller
     public static function getDepartamentos($cat_id) {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $out = [];
-        $list = Departamento::find()->andWhere(['prov_depto' => $cat_id])->asArray()->all();
+        $list = Departamento::find()->andWhere(['pais_depto' => $cat_id])->asArray()->all();
       //  echo $list->createCommand()->getRawSql();
         if (count($list) > 0) {
             foreach ($list as $i => $departamentos) {
@@ -267,7 +267,7 @@ class DepartamentoController extends Controller
     public static function getSelectedDeptos($cat_id,$param1) {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $selected = [];
-        $list = Departamento::find()->andWhere(['prov_depto' => $cat_id,'id_depto' => $param1 ])->asArray()->all();
+        $list = Departamento::find()->andWhere(['pais_depto' => $cat_id,'id_depto' => $param1 ])->asArray()->all();
         $selected['params'] = ['prov_depto' => $cat_id,'id_depto' => $param1 ];
         if (count($list) > 0) {
             foreach ($list as $i => $departamentos) {
@@ -279,11 +279,11 @@ class DepartamentoController extends Controller
         return [];
     }
 
-    public function actionAjaxDepartamentos($id) {
-
-      Yii::$app->response->format = Response::FORMAT_JSON;
-      if (Yii::$app->request->isAjax) {
-        return Departamento::getDeptoList($id);
-      }
-    }
+    // public function actionDepartamentos($id) {
+    //
+    //   Yii::$app->response->format = Response::FORMAT_JSON;
+    //   if (Yii::$app->request->isAjax) {
+    //     return Departamento::getDeptoList($id);
+    //   }
+    // }
 }
