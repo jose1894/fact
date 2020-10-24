@@ -103,8 +103,9 @@
                       'items' =>[
                             [ 'label' => Yii::t('ingreso','Entry note'), 'url' => ['/nota-ingreso'],'icon' => 'download', 'visible' => Yii::$app->user->can('/nota-ingreso/index')],
                             [ 'label' => Yii::t('salida','Exit note'), 'url' => ['/nota-salida'],'icon' => 'upload', 'visible' => Yii::$app->user->can('/nota-salida/index')],
-                            [ 'label' => Yii::t('rpts','Product movement'), 'url' => ['/rpts/kardex'],'icon' => 'random', /*'visible' => Yii::$app->user->can('/site/kardex')*/],
-                            [ 'label' => Yii::t('rpts','Inventory'), 'url' => ['/rpts/inventory'],'icon' => 'archive', /*'visible' => Yii::$app->user->can('/site/kardex')*/],
+                            [ 'label' => Yii::t('rpts','Product movement'), 'url' => ['/rpts/kardex'],'icon' => 'random', 'visible' => Yii::$app->user->can('/rpts/kardex')],
+                            [ 'label' => Yii::t('rpts','Inventory'), 'url' => ['/rpts/inventory'],'icon' => 'archive', 'visible' => Yii::$app->user->can('/rpts/inventory')],
+                            [ 'label' => Yii::t('rpts','Referal guide'), 'url' => ['/documento/guia'],'icon' => 'archive', 'visible' => Yii::$app->user->can('/documento/guia')],
                           ]
                     ],
                 ],

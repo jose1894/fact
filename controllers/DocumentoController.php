@@ -98,7 +98,7 @@ class DocumentoController extends Controller
     {
       //$this->layout = "justStuff";
       $searchModel = new PedidoSearch();
-	  $searchModel->pendientes = true;
+	    $searchModel->pendientes = true;
       $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
       return $this->render('listado-generar', [
@@ -727,6 +727,10 @@ class DocumentoController extends Controller
       $sunatPass = "moddatos";
       $endPoint  = SunatEndpoints::FE_BETA;
 
+      if( Yii::$app->request->isAjax ) {
+        throw new \Exception("Error Processing Request");        
+      }
+
 
       if (YII_ENV === "prod") {
         $sunatUser = '20604954241LEOPHARD';
@@ -1188,6 +1192,18 @@ class DocumentoController extends Controller
             ];
             return $return;
         }
+    }
+
+    public function actionGuia() {
+      $searchModel = new DocumentoSearch();
+	    $params = Yii::$app->request->queryParams;
+      $params['DocumentoSearch']['listadoGuia'] = true;
+      $dataProvider = $searchModel->search($params);
+
+      return $this->render('listado-guia', [
+          'searchModel' => $searchModel,
+          'dataProvider' => $dataProvider,
+      ]);
     }
 
 }

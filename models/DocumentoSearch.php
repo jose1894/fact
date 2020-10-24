@@ -16,6 +16,7 @@ class DocumentoSearch extends Documento
     public $docNoEsGuia = true;
     public $anulado = false;
     public $listado = false;
+    public $listadoGuia = false;
     /**
      * {@inheritdoc}
      */
@@ -23,7 +24,7 @@ class DocumentoSearch extends Documento
     {
         return [
             [['id_doc', 'tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc'], 'integer'],
-            [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc','cliente','tipo_doc','tipoDocumento','docNoEsGuia'], 'safe'],
+            [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc','cliente','tipo_doc','tipoDocumento','docNoEsGuia', 'listadoGuia'], 'safe'],
             //[['cliente'], 'string'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
         ];
@@ -56,6 +57,7 @@ class DocumentoSearch extends Documento
                  ->groupBy(['tipo_doc','id_doc','cod_doc','numeracion_doc','fecha_doc','pedido_doc','status_doc','statussunat_doc','totalimp_doc','totaldsc_doc','total_doc','transp_doc'])
                  ->orderBy('tipo_doc');
 
+
         // add conditions that should always apply here
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -82,10 +84,11 @@ class DocumentoSearch extends Documento
 
         $this->load($params);
         $this->sucursal_doc = $sucursal;
-         //print_r(empty($params)); exit();
+        //print_r(empty($params)); exit();
 
         if (!$this->validate() || empty($params) ) {
             // uncomment the following line if you do not want to return any records when validation fails
+
             $query->where('0=1');
             return $dataProvider;
         }
@@ -109,7 +112,10 @@ class DocumentoSearch extends Documento
             // ->andFilterWhere(['in', 'tipo_doc', $this->tipoDocumento]);
             // ->andFilterWhere(['in', 'pedido.clte_pedido', $this->cliente]);
 
-
+        if ( $this->listadoGuia ) {
+          $query->andFilterWhere(['=', 'tipo_doc', Documento::TIPODOC_GUIA]);
+          return $dataProvider;
+        }
 
         if ( $this->docNoEsGuia ) {
           $query->andFilterWhere(['not in', 'tipo_doc', Documento::TIPODOC_GUIA]);

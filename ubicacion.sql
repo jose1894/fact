@@ -8,7 +8,7 @@ create table ubigeo (
 
 drop table ubigeo;
 
-LOAD DATA INFILE 'C://Users//Marvig//Desktop//distritos.csv' INTO TABLE ubigeo
+LOAD DATA INFILE 'C://distritos.csv' INTO TABLE ubigeo
   FIELDS TERMINATED BY ',' 
   LINES TERMINATED BY '\r\n'
   IGNORE 1 LINES;

@@ -98,9 +98,9 @@ class NotaCreditoController extends Controller
     public function actionCreate()
     {
         $model = new NotaCredito();
-        
+
         $post = Yii::$app->request->post();
-        
+
         if ( !empty($post) ) {
 
           $documentoAnt = NotaCredito::findOne([
@@ -141,9 +141,9 @@ class NotaCreditoController extends Controller
                 $codigoDoc       = (int) $numDoc->numero_num + 1;
                 $id_num          = $numDoc->id_num;
                 $model->tipo_doc = $numDoc->tipo_num;
-                
+
                 $codigoDoc             = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
-                
+
                 if ( $documentoAnt->pedidoDoc->cltePedido->tipoIdentificacion->cod_tipoi == TipoIdentificacion::TIPO_RUC ){
                   $tipoDocClte         = TipoIdentificacion::TIPO_RUC;
                   $docClte             = $documentoAnt->pedidoDoc->cltePedido->ruc_clte;
@@ -151,22 +151,22 @@ class NotaCreditoController extends Controller
                   $tipoDocClte         = TipoIdentificacion::TIPO_DNI;
                   $docClte             = $documentoAnt->pedidoDoc->cltePedido->dni_clte;
                 }
-                
+
                 $model->cod_doc        = $codigoDoc;
                 $model->numeracion_doc = $id_num;
                 $model->sucursal_doc   = $sucursal;
                 $model->status_doc     = Documento::DOCUMENTO_GENERADO;
-                
+
                 if ( !($flag = $model->save()) ) {
                   $transaction->rollBack();
                   throw new \Exception("Error Processing Request", 1);
                 }
-                
+
                 $tipoDoc               = $model->numeracion->tipoDocumento->tipodsunat_tipod;
-                
+
                 $model->valorr_doc     = SiteController::getEmpresa()->ruc_empresa ."|". $tipoDoc ."|".$model->tipoDoc->abrv_tipod . $model->numeracion->serie_num . "|";
                 $model->valorr_doc     .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ;
-                
+
                 if ( $post['NotaCredito']['tipom_doc'] == $model::REPONER_STOCK ){
                   $modelNotaIngreso                 = new NotaIngreso();
                   $modelNotaIngreso->sucursal_trans = $sucursal;
@@ -184,7 +184,7 @@ class NotaCreditoController extends Controller
                   $modelNotaIngreso->status_trans   = $modelNotaIngreso::STATUS_APPROVED;
                   $flag = $modelNotaIngreso->save() && $flag;
                 }
-                
+
                 if ( $flag ) {
                   foreach ($post['NotaCredito-Detalle'] as $key => $value) {
                     // code...
@@ -199,28 +199,28 @@ class NotaCreditoController extends Controller
                       $modelsDetalles->documento_ddetalle = $model['id_doc'];
                       $modelsDetalles->plista_ddetalle    = $value['plista_ddetalle'];
                       $modelsDetalles->total_ddetalle     = $value['total_ddetalle'];
-                      
+
                       if ( !($flag = $modelsDetalles->save()) ) {
                         $transaction->rollBack();
                         throw new \Exception("Error Processing Request", 1);
                         break;
                       }
-                      
+
                       if ( $post['NotaCredito']['tipom_doc'] == $model::REPONER_STOCK ) {
                         $modelNotaIngresoDetalle = new NotaIngresoDetalle();
                         $modelNotaIngresoDetalle->trans_detalle = $modelNotaIngreso->id_trans;
                         $modelNotaIngresoDetalle->prod_detalle = $value['prod_ddetalle'];
                         $modelNotaIngresoDetalle->cant_detalle = $value['cant_ddetalle'];
-                        
+
                         if ( !($flag = $modelNotaIngresoDetalle->save()) ) {
                           $transaction->rollBack();
                           throw new \Exception("Error Processing Request", 1);
                           break;
                         }
-                        
+
                         $producto = Producto::findOne(['id_prod' => $value['prod_ddetalle']]);
                         $producto->stock_prod += $value['cant_ddetalle'];
-                        
+
                         if (! ($flag = $producto->save(false))) {
                           $transaction->rollBack();
                           throw new \Exception("Error Processing Request", 1);
@@ -230,16 +230,16 @@ class NotaCreditoController extends Controller
                     }
                   }
                 }
-                
+
               $numeracion = Numeracion::findOne($num[0]['id_num']);
               $numeracion->scenario = 'numerar';
               $numeracion->numero_num = $codigo;
               $flag = $numeracion->save() && $flag;
-              
+
               $numeracion = Numeracion::findOne($id_num);
               $numeracion->numero_num = $codigoDoc;
               $flag = $numeracion->save() && $flag;
-              
+
               if ( $flag ) {
                 $model->save();
                 $transaction->commit();
@@ -253,8 +253,8 @@ class NotaCreditoController extends Controller
                 ];
                 return $return;
               }
-              
-              
+
+
           } catch ( Exception $e) {
                 $transaction->rollBack();
                 Yii::$app->response->format = Response::FORMAT_JSON;
@@ -372,7 +372,7 @@ class NotaCreditoController extends Controller
       <table class="documento_enc" style="border-collapse: collapse;">
           <tr>
               <td width="25%">
-                <div class="rounded"> <img src="'.Url::base().'/img/logo.jpg'.'" width="180px"/> </div>
+                <div class="rounded"> <img src="'.Url::to([SiteController::getEmpresa()->image_empresa]).'" width="180px"/> </div>
               </td>
               <td width="50%" align="center" >
                 <div class="titulo-emp" style="font-size:20px;font-weight:bold;">' . SiteController::getEmpresa()->nombre_empresa . '</div><br>
