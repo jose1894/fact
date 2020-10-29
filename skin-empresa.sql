@@ -1,0 +1,1 @@
+ALTER TABLE `empresa` ADD `skin_empresa` VARCHAR(30) NOT NULL COMMENT 'SKIN DE BARRA PARA DIFERENCIAR EMPRESA' AFTER `passcrtsol_empresa`;

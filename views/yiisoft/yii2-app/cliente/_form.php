@@ -72,26 +72,62 @@ use yii\helpers\Url;
     </div>
 
     <div class="row">
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-          <?php
-            $paises = Pais::find()->where(['status_pais' => 1])
-            ->orderBy('des_pais')
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <?php
+              $paises = Pais::find()->where(['status_pais' => 1])
+              ->orderBy('des_pais')
+              ->all();
+              $paises=ArrayHelper::map($paises,'id_pais','des_pais');
+            ?>
+            <?= $form->field($model, 'pais_cte',[
+              'addClass' => 'form-control'
+              ])->widget(Select2::classname(), [
+                        'data' => $paises,
+                        'language' => Yii::$app->language,
+                        'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                        'options' => ['placeholder' => Yii::t('pais','Select a country').'...'],
+                        'theme' => Select2::THEME_DEFAULT,
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                ]) ?>
+          </div>
+
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <?php
+            $provs = Departamento::find()->where(['status_depto' => 1])
+            ->orderBy('des_depto')
             ->all();
-            $paises=ArrayHelper::map($paises,'id_pais','des_pais');
-          ?>
-          <?= $form->field($model, 'pais_cte',[
-            'addClass' => 'form-control'
-            ])->widget(Select2::classname(), [
-                      'data' => $paises,
+            $deptos = ArrayHelper::map($provs,'id_depto','des_depto');
+            echo Html::hiddenInput('cliente-selected_depatamento', $model->depto_cte, ['id' => 'cliente-selected_depatamento']);
+            ?>
+            <?= $form->field($model, 'depto_cte',[
+              'addClass' => 'form-control'
+              ])->widget(DepDrop::classname(), [
+                  'options' => ['placeholder' => Yii::t('app','Select...')],
+                  'type' => DepDrop::TYPE_SELECT2,
+                  'select2Options' => [
                       'language' => Yii::$app->language,
                       'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
-                      'options' => ['placeholder' => Yii::t('pais','Select a country').'...'],
+                      'options' => ['placeholder' => Yii::t('app','Select')],
                       'theme' => Select2::THEME_DEFAULT,
-                      'pluginOptions' => [
-                          'allowClear' => true
-                      ],
-              ]) ?>
-        </div>
+                      'pluginOptions' => ['allowClear' => true],
+                      'pluginEvents' =>[]
+                  ],
+                  'pluginOptions' => [
+                      'initialize' => true,
+                      'depends' => ['cliente-pais_cte'],
+                      'initDepends' => ['pais_cte'],
+                      'url' => Url::to(['/departamento/departamentos']),
+                      'loadingText' => Yii::t('departamento','Loading departments').'...',
+                      'params' => ['cliente-selected_depatamento']
+                  ]
+              ])?>
+          </div>
+
+      </div>
+
+      <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
           <?php
             $provs = Provincia::find()->where(['status_prov' => 1])
@@ -115,78 +151,45 @@ use yii\helpers\Url;
                 ],
                 'pluginOptions' => [
                     'initialize' => true,
-                    'depends' => ['cliente-pais_cte'],
+                    'depends' => ['cliente-depto_cte'],
                     'url' => Url::to(['/provincia/provincias']),
                     'loadingText' => Yii::t('provincia','Loading provinces').'...',
                     'params' => ['cliente-selected_provincia']
                 ]
             ]) ?>
-      </div>
-    </div>
+        </div>
 
-    <div class="row">
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-        <?php
-        $provs = Departamento::find()->where(['status_depto' => 1])
-        ->orderBy('des_depto')
-        ->all();
-        $deptos = ArrayHelper::map($provs,'id_depto','des_depto');
-        echo Html::hiddenInput('cliente-selected_depatamento', $model->depto_cte, ['id' => 'cliente-selected_depatamento']);
-        ?>
-        <?= $form->field($model, 'depto_cte',[
-          'addClass' => 'form-control'
-          ])->widget(DepDrop::classname(), [
-              'options' => ['placeholder' => Yii::t('app','Select...')],
-              'type' => DepDrop::TYPE_SELECT2,
-              'select2Options' => [
-                  'language' => Yii::$app->language,
-                  'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
-                  'options' => ['placeholder' => Yii::t('app','Select')],
-                  'theme' => Select2::THEME_DEFAULT,
-                  'pluginOptions' => ['allowClear' => true],
-                  'pluginEvents' =>[]
-              ],
-              'pluginOptions' => [
-                  'initialize' => true,
-                  'depends' => ['cliente-provi_cte'],
-                  'initDepends' => ['pais_cte'],
-                  'url' => Url::to(['/departamento/departamentos']),
-                  'loadingText' => Yii::t('departamento','Loading departments').'...',
-                  'params' => ['cliente-selected_depatamento']
-              ]
-          ])?>
-      </div>
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-          <?php
-            $dttos = Distrito::find()->where(['status_dtto' => 1])
-            ->orderBy('des_dtto')
-            ->all();
-            $dttos = ArrayHelper::map($dttos,'id_dtto','des_dtto');
-            echo Html::hiddenInput('cliente-selected_distrito', $model->dtto_clte, ['id' => 'cliente-selected_distrito']);
-          ?>
-          <?= $form->field($model, 'dtto_clte',[
-            'addClass' => 'form-control'
-            ])->widget(DepDrop::classname(), [
-                'options' => ['placeholder' => Yii::t('app','Select...')],
-                'type' => DepDrop::TYPE_SELECT2,
-                'select2Options' => [
-                    'language' => Yii::$app->language,
-                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
-                    'options' => ['placeholder' => Yii::t('app','Select')],
-                    'theme' => Select2::THEME_DEFAULT,
-                    'pluginOptions' => ['allowClear' => true],
-                    'pluginEvents' =>[]
-                ],
-                'pluginOptions' => [
-                    'initialize' => true,
-                    'depends' => ['cliente-depto_cte'],
-                    'initDepends' => ['pais_dtto'],
-                    'url' => Url::to(['/distrito/distritos']),
-                    'loadingText' => Yii::t('departamento','Loading districts').'...',
-                    'params' => ['cliente-selected_distrito']
-                ]
-            ]) ?>
-      </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <?php
+              $dttos = Distrito::find()->where(['status_dtto' => 1])
+              ->orderBy('des_dtto')
+              ->all();
+              $dttos = ArrayHelper::map($dttos,'id_dtto','des_dtto');
+              echo Html::hiddenInput('cliente-selected_distrito', $model->dtto_clte, ['id' => 'cliente-selected_distrito']);
+            ?>
+            <?= $form->field($model, 'dtto_clte',[
+              'addClass' => 'form-control'
+              ])->widget(DepDrop::classname(), [
+                  'options' => ['placeholder' => Yii::t('app','Select...')],
+                  'type' => DepDrop::TYPE_SELECT2,
+                  'select2Options' => [
+                      'language' => Yii::$app->language,
+                      'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                      'options' => ['placeholder' => Yii::t('app','Select')],
+                      'theme' => Select2::THEME_DEFAULT,
+                      'pluginOptions' => ['allowClear' => true],
+                      'pluginEvents' =>[]
+                  ],
+                  'pluginOptions' => [
+                      'initialize' => true,
+                      'depends' => ['cliente-provi_cte'],
+                      'initDepends' => ['pais_dtto'],
+                      'url' => Url::to(['/distrito/distritos']),
+                      'loadingText' => Yii::t('departamento','Loading districts').'...',
+                      'params' => ['cliente-selected_distrito']
+                  ]
+              ]) ?>
+        </div>
     </div>
 
 

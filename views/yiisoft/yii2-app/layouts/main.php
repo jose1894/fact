@@ -1,5 +1,7 @@
 <?php
 use yii\helpers\Html;
+use app\controllers\SiteController;
+
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -15,7 +17,6 @@ if ( Yii::$app->controller->action->id === 'login' ||
         ['content' => $content]
     );
 } else {
-
 
     if (class_exists('backend\assets\AppAsset')) {
         backend\assets\AppAsset::register($this);
@@ -36,7 +37,7 @@ if ( Yii::$app->controller->action->id === 'login' ||
         <meta charset="<?= Yii::$app->charset ?>"/>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?= Html::csrfMetaTags() ?>
-        <title><?= Html::encode($this->title) ?></title>
+        <title><?= SiteController::getEmpresa()->nombre_empresa ?> - <?= Html::encode($this->title) ?></title>
         <style>
         .lds-roller {
           display: inline-block;
@@ -147,7 +148,8 @@ if ( Yii::$app->controller->action->id === 'login' ||
         <?php $this->head() ?>
 
     </head>
-    <body class=" hold-transition  sidebar-mini <?= \dmstr\helpers\AdminLteHelper::skinClass() ?> ">
+    
+    <body class=" hold-transition  sidebar-mini <?= SiteController::getEmpresa()->skin_empresa?> ">
 
     <!-- The Modal -->
     <div id="modal-spinner" class="modal-spinner">

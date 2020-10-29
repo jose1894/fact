@@ -5,6 +5,7 @@ use mdm\admin\components\Helper;
 use yii\helpers\Url;
 use yii\web\View;
 use yii\web\JsExpression;
+use app\controllers\SiteController;
 use app\models\PedidoSearch;
 use app\models\DocumentoSearch;
 use app\models\CompraSearch;
@@ -13,17 +14,21 @@ use app\models\User;
 
 $this->title = 'Resumen';
 
-//echo "ak";
-// echo Helper::checkRoute('/empresa/create');
 
 $date = DateTime::createFromFormat("d/m/Y", date("d/m/Y"));
 $mes = Yii::t('app',strftime("%B",$date->getTimestamp()))
 ?>
-<div class="site-index">
 
+
+<div class="site-index" >
         <section class="content">
           <!-- Small boxes (Stat box) -->
-            <div class="row">
+              <div class="col-lg-12" style="text-align:center; margin-bottom:10px; border-bottom: 1px solid grey;">
+                <div class="img" style=""></div>
+                <h1 style="font-weigth:bold"><?= SiteController::getEmpresa()->nombre_empresa?></h1>
+                <h2><?= Yii::t('empresa','RUC') .' - ' . SiteController::getEmpresa()->ruc_empresa?></h2>
+              </div>
+              <hr>
               <div class="col-lg-4 col-xs-6">
                 <!-- small box -->
                 <div class="small-box bg-aqua">
@@ -220,3 +225,34 @@ $this->registerJs("
   //Create the line chart
   areaChart.Line(areaChartData, areaChartOptions)
 ");
+
+$this->registerCss('
+.img{
+  margin:10px auto;
+  border-radius:5px;
+  padding:13px;
+  width: 100%;
+  background:url('. Url::to([ '@web/' .  SiteController::getEmpresa()->image_empresa]) .');
+  height: 220px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: relative;
+}
+
+@media all and (min-width: 500px) and (max-width: 1000px)
+{
+.img{
+  margin:10px auto;
+  border-radius:5px;
+  padding:13px;
+  width: 100%;
+  background:url('. Url::to([ '@web/' .  SiteController::getEmpresa()->image_empresa]) .');
+  height: 140px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: relative;
+  }
+}
+');

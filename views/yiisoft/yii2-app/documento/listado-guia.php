@@ -22,6 +22,11 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="pedido-index">
     <h4><?= Html::encode($this->title) ?></h4>
+
+    <p>
+        <?= Html::a(Yii::t('documento', 'Create referal guide'), ['guia-create' ,'asDialog'=>1], ['id'=>'create','class' => 'btn btn-flat btn-success']) ?>
+    </p>
+
     <?php Pjax::begin(['id' => 'grid', 'timeout' => 3000]); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -100,18 +105,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php Pjax::end(); ?>
 </div>
 <?php
-//Maestro
-$this->registerJsVar( "buttonCreate", "#create" );
-$this->registerJsVar( "buttonSubmit", "#submit" );
-$this->registerJsVar( "buttonCancel", ".close-btn" );
-$this->registerJsVar( "frame", "#frame" );
-$this->registerJsVar( "modal", "#modal" );
-//Detalles
-echo   $this->render('//site/_modalForm',[]);
-
-$this->registerJsVar( "frameRpt", "#frame-rpt" );
-$this->registerJsVar( "modalRpt", "#modal-rpt" );
-echo   $this->render('//site/_modalRpt',[]);
+//Guia
+$this->registerJsVar( "buttonGuide", ".pjax-guide" );
+$this->registerJsVar( "frameGuide", "#frame-guide" );
+$this->registerJsVar( "modalGuide", "#modal-guide" );
+$this->registerJsVar( "submitGuide", "#submitGuia" );
+echo   $this->render('//site/_modalGuide',[]);
 
 $js = '
   $( ".pjax-invoice" ).on( "click", function( e ){

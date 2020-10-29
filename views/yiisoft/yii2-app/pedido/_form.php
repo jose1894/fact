@@ -776,8 +776,15 @@ JS
   $( '.table-body' ).on( 'keyup', 'input[id$=\"cant_pdetalle\"]', function( e ) {
 
     if ( e.keyCode === 13 && $( this ).val() ) {
+      $( this ).trigger( 'blur' );
+    }
 
-      if ( $( this ).val() > $( this ).data( 'stock') ) {
+
+  });
+
+  $( '.table-body' ).on( 'blur', 'input[id$=\"cant_pdetalle\"]', function( e ) {
+
+      if ( +$( this ).val() > +$( this ).data( 'stock') ) {
         swal( 'Oops!', '" . Yii::t( 'pedido', 'You can´t input a value greather than the avalaible stock'). "', 'warning');
         $( this ).val('');
         $( this ).focus();
@@ -788,8 +795,7 @@ JS
       let row = $( this ).attr( \"id\" ).split( \"-\" );
       row = row[ 1 ];
       $( '#pedidodetalle-' + row + '-descu_pdetalle' ).focus();
-      $( '#pedidodetalle-' + row + '-descu_pdetalle' ).select();
-    }
+      $( '#pedidodetalle-' + row + '-descu_pdetalle' ).select();    
 
   });
 

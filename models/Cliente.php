@@ -35,23 +35,23 @@ class Cliente extends \yii\db\ActiveRecord
         return 'cliente';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -90,8 +90,8 @@ class Cliente extends \yii\db\ActiveRecord
             'nombre_clte' => Yii::t('cliente', 'Name'),
             'direcc_clte' => Yii::t('cliente', 'Address'),
             'pais_cte' => Yii::t('pais', 'Country'),
-            'depto_cte' => Yii::t('departamento', 'Department / County / Municipality'),
-            'provi_cte' => Yii::t('provincia', 'Estate / Province'),
+            'depto_cte' => Yii::t('departamento', 'Estate / Department'),
+            'provi_cte' => Yii::t('provincia', 'Municipality / Province'),
             'dtto_clte' => Yii::t('distrito', 'District / Parish'),
             'tlf_ctle' => Yii::t('cliente', 'Phone'),
             'vendedor_clte' => Yii::t('vendedor', 'Seller'),

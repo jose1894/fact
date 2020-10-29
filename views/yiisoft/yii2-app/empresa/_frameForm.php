@@ -337,6 +337,18 @@ $this->registerJs($js,View::POS_LOAD);
                     'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-key"></i>']]
                     ])->input(['placeholder' => Yii::t("empresa","Input a SUNAT certificate password ")."..."]) ?>
                 </div>
+                <div class="col-lg-12">
+                  <?= $form->field($model, 'skin_empresa',[
+                    'addClass' => 'form-control ',
+                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-key"></i>']]
+                    ])->dropDownList([
+                                      'skin-red' => 'Red',
+                                      'skin-blue' => 'Blue',
+                                      'skin-green' => 'Green',
+                                      'skin-black' => 'Black',
+                                      'skin-purple' => 'Purple',
+                                    ],['prompt' => Yii::t("empresa","Select a skin ")."..."]) ?>
+                </div>
 
               </div>
           </div>

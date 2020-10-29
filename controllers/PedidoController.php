@@ -106,7 +106,7 @@ class PedidoController extends Controller
                 }
             } else {
                 $num = Numeracion::getNumeracion( $model->tipo_pedido );
-                
+
                 $codigo = intval( $num[0]['numero_num'] ) + 1;
                 $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
                 $model->cod_pedido = $codigo;
@@ -300,7 +300,7 @@ class PedidoController extends Controller
       if (Yii::$app->request->isAjax) {
         $transaction = \Yii::$app->db->beginTransaction();
         try {
-          $model->estatus_pedido = 1;
+          $model->estatus_pedido = Pedido::PEDIDO_ANULADO;
           $model->save();
           $transaction->commit();
           Yii::$app->response->format = Response::FORMAT_JSON;

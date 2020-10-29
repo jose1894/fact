@@ -114,6 +114,12 @@ class DocumentoSearch extends Documento
 
         if ( $this->listadoGuia ) {
           $query->andFilterWhere(['=', 'tipo_doc', Documento::TIPODOC_GUIA]);
+
+          $dataProvider->sort->defaultOrder = [
+    					'fecha_doc' => SORT_DESC,
+              'cod_doc' => SORT_DESC,
+          ];
+          
           return $dataProvider;
         }
 

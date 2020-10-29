@@ -325,14 +325,14 @@ if ( $model->isNewRecord ) {
                   <label><?= Yii::t('tipo_movimiento','Movement type')?></label>
                   <?php
                     $tipoMovimiento = TipoMovimiento::getTipoMovList(TipoMovimiento::TIPO_SALIDA);
-
+                    echo Html::hiddenInput("Documento[tipo_movimiento]", $model::TIPO_FACTURA,['id'=>'Documento-tipo_movimiento']); 
                   ?>
                   <?= Select2::widget([
                         'name' => 'tipo_movimiento',
                         'language' => Yii::$app->language,
                         'data' => $tipoMovimiento,
                         'value' => $model->almacen_doc,
-                        //'theme' => Select2::THEME_DEFAULT,
+                        'theme' => Select2::THEME_DEFAULT,
                         'size' => Select2::SMALL,
                         'disabled' => true,
                         'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-archive"></i>']],

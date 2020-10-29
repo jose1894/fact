@@ -411,6 +411,8 @@ class DocumentoController extends Controller
         if ($model->load($post)) {
           $modelDocumentoDetalle = [new DocumentoDetalle()];
 
+          var_dump($post);exit();
+
           $documentoDetalle = [];
           foreach ($post['PedidoDetalle'] as $key => $value) {
             $documentoDetalle[$key] = ['prod_detalle' => $value['prod_pdetalle'],'cant_detalle' => $value['cant_pdetalle']];
@@ -423,6 +425,7 @@ class DocumentoController extends Controller
           $model->status_doc   = $model::GUIA_GENERADA;
           $model->almacen_doc  = $modelPedido->almacen_pedido;
           $model->sucursal_doc = SiteController::getSucursal();
+          $model->tipomov_doc  =
 
           // validate all models
           $valid = $model->validate();
@@ -728,7 +731,7 @@ class DocumentoController extends Controller
       $endPoint  = SunatEndpoints::FE_BETA;
 
       if( Yii::$app->request->isAjax ) {
-        throw new \Exception("Error Processing Request");        
+        throw new \Exception("Error Processing Request");
       }
 
 

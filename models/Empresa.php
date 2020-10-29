@@ -70,8 +70,9 @@ class Empresa extends \yii\db\ActiveRecord
              [['dni_empresa'], 'string', 'max' => 20],
              [['correo_empresa'], 'string', 'max' => 70],
              [['ruc_empresa'], 'string', 'max' => 11],
+             [['skin_empresa'], 'string', 'max' => 30],
              [['dni_empresa'], 'unique'],
-             [['image','cert'], 'safe'],
+             [['image','cert','skin_empresa'], 'safe'],
              [['image'], 'file', 'extensions'=>'jpg, gif, png'],
              [['cert'], 'file', 'extensions'=>'pem, crt, der'],
          ];
@@ -102,6 +103,7 @@ class Empresa extends \yii\db\ActiveRecord
              'usuariosol_empresa' => Yii::t('empresa','SUNAT user'),
              'passsol_empresa' => Yii::t('empresa','SUNAT password'),
              'passcrtsol_empresa' => Yii::t('empresa','SUNAT certificate password'),
+             'skin_empresa' => Yii::t('empresa','Skin'),
          ];
      }
 
