@@ -6,7 +6,7 @@ return [
     'Input a name' => 'Ingrese un nombre',
     'Currencies' => 'Monedas',
     'Type' => 'Tipo',
-    'Select a type' => 'Seleccione un tipo',
+    'Select a currency' => 'Seleccione una moneda',
     'Currency' => 'Moneda',
     'Currency: {number} / {name}' => 'Moneda: {number} / {name}',
     'Create currency' => 'Crear moneda',

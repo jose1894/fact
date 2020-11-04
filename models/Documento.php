@@ -53,23 +53,23 @@ class Documento extends \yii\db\ActiveRecord
         return 'documento';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -80,7 +80,7 @@ class Documento extends \yii\db\ActiveRecord
         return [
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc'], 'required', 'on' => self::SCENARIO_FACTURA],
             [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','cod_doc','transp_doc','utransp_doc','motivo_doc',], 'required', 'on' => self::SCENARIO_GUIA],
-            [['tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','numeracion_doc','statussunat_doc'], 'integer'],
+            [['tipo_doc', 'pedido_doc', 'status_doc', 'tipomov_doc','sucursal_doc','numeracion_doc','statussunat_doc'], 'integer'],
             [['fecha_doc','clte_nombre','status_doc','tipo_doc','cliente', 'tipoDocumento'], 'safe'],
             [['obsv_doc','valorr_doc','hash_doc','cliente'], 'string'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
@@ -116,6 +116,7 @@ class Documento extends \yii\db\ActiveRecord
             'cliente' => Yii::t('cliente', 'Customer'),
             'statussunat_doc' => Yii::t('documento','SUNAT'),
             'tipoDocumento' => Yii::t('tipo_documento', 'Document type'),
+            'tipomov_doc' => Yii::t('tipo_movimiento', 'Movement type'),
         ];
     }
 
@@ -198,5 +199,10 @@ class Documento extends \yii\db\ActiveRecord
     public function getCondPago()
     {
         return $this->hasOne(CondPago::className(),['id_condp' => 'condpago_doc']);
+    }
+
+    public function getTipoMovDoc()
+    {
+        return $this->hasOne(TipoMovimiento::className(),['id_tipom' => 'tipomov_doc']);
     }
 }

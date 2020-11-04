@@ -87,7 +87,7 @@ class NotaSalidaController extends Controller
           Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
 
           $model->sucursal_trans = SiteController::getSucursal();
-          $model->usuario_trans = Yii::$app->user->id;
+          // $model->usuario_trans = Yii::$app->user->id;
           $model->ope_trans = $model::OPE_TRANS;
           $num = Numeracion::getNumeracion( $model::NOTA_SALIDA );
           $codigo = intval( $num[0]['numero_num'] ) + 1;
@@ -163,7 +163,7 @@ class NotaSalidaController extends Controller
 
 
         $model->almacen_trans = Almacen::findOne(['status_almacen' => 1]);
-        $model->usuario_trans = Yii::$app->user->id;
+        // $model->usuario_trans = Yii::$app->user->id;
         return $this->render('create', [
             'model' => $model,
             'modelsDetalles' => (empty($modelsDetalles)) ? [new NotaSalidaDetalle] : $modelsDetalles,

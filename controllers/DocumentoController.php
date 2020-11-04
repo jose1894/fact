@@ -248,7 +248,7 @@ class DocumentoController extends Controller
           $notaSalidaDetalle = [];
 
           foreach ($post['PedidoDetalle'] as $key => $value) {
-            $notaSalidaDetalle[$key] = ['prod_detalle' => $value['prod_pdetalle'],'cant_detalle' => $value['cant_pdetalle']];
+            $notaSalidaDetalle[$key] = ['prod_detalle' => $value['prod_pdetalle'],'cant_detalle' => $value['cant_pdetalle'],'precio_detalle' => $value['precio_pdetalle']];
           }
 
           if ( $model->pedidoDoc->cltePedido->tipoIdentificacion->cod_tipoi == TipoIdentificacion::TIPO_RUC ){
@@ -280,7 +280,8 @@ class DocumentoController extends Controller
           $model->totalimp_doc             = $post['impuesto'];
           $model->total_doc                = $post['total'];
           $model->status_doc               = $model::DOCUMENTO_GENERADO;
-
+          $modelGuia                       = $model->guiaRem;
+          $modelGuia->status_doc           = $model::DOCUMENTO_GENERADO;
           // validate all models
           $valid                           = $model->validate();
           $valid                           = $modelNotaSalida->validate() && $valid;
@@ -307,7 +308,7 @@ class DocumentoController extends Controller
             $model->numeracion_doc           = $id_num;
 
             $flag            = $model->save();
-            $flag            = $modelPedido->save() && $flag;
+            $flag            = $modelPedido->save() && $modelGuia->save() && $flag;
             $tipoDoc         = $model->numeracion->tipoDocumento->tipodsunat_tipod;
             $model->valorr_doc = SiteController::getEmpresa()->ruc_empresa ."|". $tipoDoc ."|".$model->tipoDoc->abrv_tipod . $model->numeracion->serie_num . "|";
             $model->valorr_doc .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ;
@@ -324,6 +325,7 @@ class DocumentoController extends Controller
                       $modelNotaSalidaDetalle->trans_detalle = $modelNotaSalida->id_trans;
                       $modelNotaSalidaDetalle->prod_detalle = $notaSalidaDetalle[$i]['prod_detalle'];
                       $modelNotaSalidaDetalle->cant_detalle = $notaSalidaDetalle[$i]['cant_detalle'];
+                      $modelNotaSalidaDetalle->costo_detalle = $notaSalidaDetalle[$i]['precio_detalle'];
 
                       if ( !($flag = $modelNotaSalidaDetalle->save()) ) {
                           $transaction->rollBack();
@@ -406,12 +408,10 @@ class DocumentoController extends Controller
         }
 
         $post = Yii::$app->request->post();
-
+        // var_dump($post);exit();
 
         if ($model->load($post)) {
           $modelDocumentoDetalle = [new DocumentoDetalle()];
-
-          var_dump($post);exit();
 
           $documentoDetalle = [];
           foreach ($post['PedidoDetalle'] as $key => $value) {
@@ -425,7 +425,6 @@ class DocumentoController extends Controller
           $model->status_doc   = $model::GUIA_GENERADA;
           $model->almacen_doc  = $modelPedido->almacen_pedido;
           $model->sucursal_doc = SiteController::getSucursal();
-          $model->tipomov_doc  =
 
           // validate all models
           $valid = $model->validate();
@@ -472,8 +471,8 @@ class DocumentoController extends Controller
               $numeracion = Numeracion::findOne($id_num);
               $numeracion->scenario = 'numerar';
               $numeracion->numero_num = $codigoDoc;
-              // var_dump($numeracion->validate());exit();
               $flag = $numeracion->save() && $flag;
+              // var_dump($numeracion->errors);exit();
 
               if ( $flag ) {
                 $transaction->commit();
@@ -487,7 +486,7 @@ class DocumentoController extends Controller
                 ];
                 return $return;
               } else {
-                throw new \Exception("Error Processing Request", 1);
+                throw new \Exception("Error numering the document");
               }
             } catch (Exception $e) {
                 $transaction->rollBack();
@@ -509,6 +508,20 @@ class DocumentoController extends Controller
             'modelPedido' => $modelPedido,
             'IMPUESTO' => SiteController::getImpuesto(),
         ]);
+    }
+
+    public function actionGuiaNew()
+    {
+      $model = new Documento();
+      $model->scenario = Documento::SCENARIO_GUIA;
+      $modelPedido = new Pedido();
+
+      $this->layout = 'justStuff';
+      return $this->render('_formGuia', [
+          'model' => $model,
+          'modelPedido' => $modelPedido,
+          'IMPUESTO' => SiteController::getImpuesto(),
+      ]);
     }
 
     public function actionListadoFactura()

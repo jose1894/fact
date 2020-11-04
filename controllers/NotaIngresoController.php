@@ -89,16 +89,16 @@ class NotaIngresoController extends Controller
           Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
 
           $model->sucursal_trans = SiteController::getSucursal();
-          $model->usuario_trans = Yii::$app->user->id;
+          // $model->usuario_trans = Yii::$app->user->id;
           $model->ope_trans = $model::OPE_TRANS;
           $num = Numeracion::getNumeracion( $model::NOTA_INGRESO );
           $codigo = intval( $num[0]['numero_num'] ) + 1;
           $codigo = str_pad($codigo,10,'0',STR_PAD_LEFT);
-          $model->codigo_trans = $codigo;	  
+          $model->codigo_trans = $codigo;
           $model->numdoc_trans = $num[0]['id_num'];
-		  
+
 		  if ( $model->tipo_trans == Compra::TIPO_MOVIMIENTO ){
-			  $numCompra = Numeracion::getNumeracion(Compra::ORDEN_COMPRA);			  
+			  $numCompra = Numeracion::getNumeracion(Compra::ORDEN_COMPRA);
 			  $model->numdoc_trans = $numCompra[0]['id_num'];
 		  }
 
@@ -169,7 +169,7 @@ class NotaIngresoController extends Controller
         }
 
         $model->almacen_trans = Almacen::findOne(['status_almacen' => 1]);
-        $model->usuario_trans = Yii::$app->user->id;
+        // $model->usuario_trans = Yii::$app->user->id;
         return $this->render('create', [
             'model' => $model,
             'modelsDetalles' => (empty($modelsDetalles)) ? [new NotaIngresoDetalle] : $modelsDetalles,

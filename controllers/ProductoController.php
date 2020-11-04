@@ -273,7 +273,7 @@ class ProductoController extends Controller
         if ( !is_null( $desc ) && (is_null( $tipo_listap ) || trim($tipo_listap) === '' ) ) {
 
             $query = new Query;
-            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','des_und','stock_prod'])
+            $query->select(['p.id_prod as id','p.cod_prod as cod_prod', 'p.des_prod as des_prod', 'p.texto AS text','des_und','stock_prod', 'ult_precio_compra'])
                 ->from(['v_productos as p'])
                 ->where('p.status_prod = 1')
                 ->andWhere(['like', 'p.texto', $desc])
@@ -281,13 +281,14 @@ class ProductoController extends Controller
                 ->andWhere(['=', 'p.compra_prod', 1])
                 ->andWhere(['=', 'p.status_prod', 1])
                 ->andWhere('p.sucursal_prod = :sucursal',[':sucursal' => $sucursal])
-                ->groupBy(['p.id_prod','p.cod_prod','p.des_prod', 'p.texto', 'des_und','stock_prod'])
+                ->groupBy(['p.id_prod','p.cod_prod','p.des_prod', 'p.texto', 'des_und','stock_prod','ult_precio_compra'])
                 ->orderBy('p.cod_prod ASC');
                 //->limit(20);
 
             $command = $query->createCommand();
             $data = $command->queryAll();
             $out['results'] = array_values( $data );
+            $out['sql'] = $query->createCommand()->sql;
 
         } elseif ( !is_null( $desc ) && (!is_null( $tipo_listap ) || trim($tipo_listap) !== '' )) {
 
@@ -311,7 +312,6 @@ class ProductoController extends Controller
             $command = $query->createCommand();
             $data = $command->queryAll();
             $ret = [];
-
             foreach ( $data as $key => $value){
                 $ret[$key] = [
                     'id' => $value['id'],

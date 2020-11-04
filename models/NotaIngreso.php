@@ -21,7 +21,7 @@ class NotaIngreso extends \yii\db\ActiveRecord
     const STATUS_APPROVED = 1;
     const STATUS_CANCELED = 2;
     const OPE_TRANS = 'E';
-    const NOTA_INGRESO = 'NI';       
+    const NOTA_INGRESO = 'NI';
     /**
      * {@inheritdoc}
      */
@@ -30,23 +30,23 @@ class NotaIngreso extends \yii\db\ActiveRecord
         return 'transaccion';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -57,11 +57,13 @@ class NotaIngreso extends \yii\db\ActiveRecord
         return [
             [['fecha_trans'], 'safe'],
             [['obsv_trans'], 'string'],
-            [['tipo_trans', 'almacen_trans', 'sucursal_trans', 'usuario_trans', 'status_trans', 'idrefdoc_trans'], 'integer'],
-            [['almacen_trans','tipo_trans','sucursal_trans', 'usuario_trans'], 'required'],
-            [['codigo_trans', 'docref_trans'], 'string', 'max' => 10],
+            [['tipo_trans', 'almacen_trans', 'sucursal_trans', 'status_trans', 'idrefdoc_trans'], 'integer'],
+            [['almacen_trans','tipo_trans','sucursal_trans','moneda_trans'], 'required'],
+            [['codigo_trans',], 'string', 'max' => 10],
+            [['docref_trans',], 'string', 'max' => 25],
             [['tipo_trans'], 'exist', 'skipOnError' => true, 'targetClass' => TipoMovimiento::className(), 'targetAttribute' => ['tipo_trans' => 'id_tipom']],
             [['almacen_trans'], 'exist', 'skipOnError' => true, 'targetClass' => Almacen::className(), 'targetAttribute' => ['almacen_trans' => 'id_almacen']],
+            [['moneda_trans'], 'exist', 'skipOnError' => true, 'targetClass' => Moneda::className(), 'targetAttribute' => ['moneda_trans' => 'id_moneda']],
         ];
     }
 
@@ -82,7 +84,8 @@ class NotaIngreso extends \yii\db\ActiveRecord
             'iddocref_trans' => Yii::t( 'compra', 'Purchase order'),
             'usuario_trans' => Yii::t('ingreso', 'usuario'),
             'status_trans' => Yii::t('ingreso', 'Status'),
-            'idrefdoc_trans' => Yii::t('compra','Purchase order')
+            'idrefdoc_trans' => Yii::t('compra','Purchase order'),
+            'moneda_trans' => Yii::t('moneda','Currency')
         ];
     }
 

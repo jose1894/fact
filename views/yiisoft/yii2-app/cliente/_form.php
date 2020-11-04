@@ -117,7 +117,7 @@ use yii\helpers\Url;
                   'pluginOptions' => [
                       'initialize' => true,
                       'depends' => ['cliente-pais_cte'],
-                      'initDepends' => ['pais_cte'],
+                      'initDepends' => ['cliente-pais_cte'],
                       'url' => Url::to(['/departamento/departamentos']),
                       'loadingText' => Yii::t('departamento','Loading departments').'...',
                       'params' => ['cliente-selected_depatamento']

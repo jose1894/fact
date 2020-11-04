@@ -23,8 +23,8 @@ class DocumentoSearch extends Documento
     public function rules()
     {
         return [
-            [['id_doc', 'tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc'], 'integer'],
-            [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc','cliente','tipo_doc','tipoDocumento','docNoEsGuia', 'listadoGuia'], 'safe'],
+            [['id_doc', 'tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','tipomov_doc'], 'integer'],
+            [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc','cliente','tipo_doc','tipomov_doc','tipoDocumento','docNoEsGuia', 'listadoGuia'], 'safe'],
             //[['cliente'], 'string'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
         ];
@@ -50,11 +50,13 @@ class DocumentoSearch extends Documento
     {
         $sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Documento::find()
-                 ->select(['tipo_doc','id_doc','cod_doc','numeracion_doc','fecha_doc','pedido_doc','status_doc','statussunat_doc','totalimp_doc','totaldsc_doc','total_doc'])
+                 ->select(['tipo_doc','id_doc','cod_doc','numeracion_doc','fecha_doc','pedido_doc','status_doc','statussunat_doc','totalimp_doc',
+                 'totaldsc_doc','total_doc','tipomov_doc',])
                  ->joinWith(['pedidoDoc'])
                  ->joinWith('pedidoDoc.cltePedido')
                  ->joinWith('tipoDoc')
-                 ->groupBy(['tipo_doc','id_doc','cod_doc','numeracion_doc','fecha_doc','pedido_doc','status_doc','statussunat_doc','totalimp_doc','totaldsc_doc','total_doc','transp_doc'])
+                 ->groupBy(['tipo_doc','id_doc','cod_doc','numeracion_doc','fecha_doc','pedido_doc','status_doc','statussunat_doc','totalimp_doc',
+                 'totaldsc_doc','total_doc','transp_doc','tipomov_doc'])
                  ->orderBy('tipo_doc');
 
 
@@ -119,7 +121,7 @@ class DocumentoSearch extends Documento
     					'fecha_doc' => SORT_DESC,
               'cod_doc' => SORT_DESC,
           ];
-          
+
           return $dataProvider;
         }
 

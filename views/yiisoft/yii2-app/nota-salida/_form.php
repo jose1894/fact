@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use app\models\TipoMovimiento;
 use app\models\Almacen;
+use app\models\Moneda;
 use app\models\Producto;
 use yii\web\View ;
 use wbraganca\dynamicform\DynamicFormWidget;
@@ -100,6 +101,20 @@ if ( !$model->status_trans ) {
 
                 ]) ?>
           </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <?php
+                $monedas = Moneda::getMonedasList();
+              ?>
+              <?= $form->field($model, 'moneda_trans',[
+              'addClass' => 'form-control ',
+                ])->widget(Select2::classname(), [
+                          'data' => $monedas,
+                          'language' => Yii::$app->language,
+                          'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-money"></i>']],
+                          'options' => ['placeholder' => Yii::t('moneda','Select a currency').'...'],
+                          'theme' => Select2::THEME_DEFAULT,
+                  ])?>
+            </div>
         </div>
 
         <!-- Articulos -->
@@ -123,8 +138,9 @@ if ( !$model->status_trans ) {
               ]); ?>
 
               <div class="row">
-                  <div class="col-sm-8 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
-                  <div class="col-sm-3 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
+                  <div class="col-sm-7 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
+                  <div class="col-sm-2 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
+                  <div class="col-sm-2 col-xs-12"><?= Yii::t( 'salida', 'Cost')?></div>
                   <div class="col-sm-1 col-xs-12">
                     <button type="button" class="add-item btn btn-success btn-flat btn-md"
                     style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"
@@ -137,7 +153,7 @@ if ( !$model->status_trans ) {
               <div class="table-body"><!-- widgetContainer -->
               <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
                       <div class="row detalle-item"><!-- widgetBody -->
-                        <div class="col-sm-8 col-xs-12">
+                        <div class="col-sm-7 col-xs-12">
                         <?php
                           // necessary for update action.
                           if (!$modelDetalle->isNewRecord) {
@@ -218,9 +234,19 @@ if ( !$model->status_trans ) {
                           ?>
                         </div>
 
-                        <div class="col-sm-3 col-xs-12">
+                        <div class="col-sm-2 col-xs-12">
                           <?= $form
                           ->field($modelDetalle,"[{$index}]cant_detalle",[ 'addClass' => 'form-control number-decimals'])
+                          ->textInput([
+                            'type' => 'number',
+                            'min' => 1,
+                            'pattern' => "\d*",
+                            'disabled' => $disabled
+                          ])->label(false)?>
+                        </div>
+                        <div class="col-sm-2 col-xs-12">
+                          <?= $form
+                          ->field($modelDetalle,"[{$index}]costo_detalle",[ 'addClass' => 'form-control number-decimals'])
                           ->textInput([
                             'type' => 'number',
                             'min' => 1,
@@ -325,10 +351,19 @@ $( ".table-body" ).on("select2:select","select[id$=\'prod_detalle\']",function()
 });
 
 $( ".table-body" ).on( "keyup","input[id$=\'cant_detalle\']",function( e ) {
-  if ( e.keyCode === 13 && $( this ).val() ) {
-    let row = $( this ).attr( "id" ).split( "-" );
-    row = row[ 1 ];
+  let row = $( this ).attr( "id" ).split( "-" );
+  row = row[ 1 ];
 
+  if ( e.keyCode === 13 && $( this ).val() ) {
+    $( "#notaingresodetalle-" + row + "-costo_detalle" ).focus();
+  }
+
+});
+$( ".table-body" ).on( "keyup","input[id$=\'costo_detalle\']",function( e ) {
+  let row = $( this ).attr( "id" ).split( "-" );
+  row = row[ 1 ];
+
+  if ( e.keyCode === 13 && $( this ).val() ) {
     swal({
       title: "' . Yii::t( 'app','Do you want to add a new item?') . '",
       icon: "info",
@@ -343,7 +378,6 @@ $( ".table-body" ).on( "keyup","input[id$=\'cant_detalle\']",function( e ) {
       }
     });
   }
-
 });
 
 

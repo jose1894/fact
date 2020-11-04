@@ -8,6 +8,7 @@ use app\models\CondPago;
 use app\models\Producto;
 use app\models\TipoDocumento;
 use app\models\Transportista;
+use app\models\PedidoDetalle;
 use app\models\UnidadTransporte;
 use app\models\TipoMovimiento;
 use app\models\MotivoTraslado;
@@ -29,6 +30,7 @@ $disabledPedido = true;
 
 if ( $model->isNewRecord ) {
   $model->cod_doc = "0000000000";
+  $disabledPedido = false;
 } else {
   $disabled = true;
 }
@@ -245,12 +247,16 @@ if ( $model->isNewRecord ) {
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <label for=""><?= Yii::t('documento','Arrival point') ?></label>
-                    <?= Html::textArea('pedido',$cliente->direcc_clte,[
-                      'id'=>'pedido-direccion_pedido',
-                      'class' => 'form-control input-sm',
-                      'rows' => 2,
-                      'readonly' => $disabledPedido
-                    ]); ?>
+                    <?php
+                      // var_dump($cliente);exit();
+                      $cte = !empty($cliente) ? $cliente->direcc_clte : "";
+                      echo Html::textArea('pedido',$cte,[
+                              'id'=>'pedido-direccion_pedido',
+                              'class' => 'form-control input-sm',
+                              'rows' => 2,
+                              'readonly' => $disabledPedido
+                            ]);
+                   ?>
                 </div>
               </div>
               <div class="row">
@@ -325,7 +331,7 @@ if ( $model->isNewRecord ) {
                   <label><?= Yii::t('tipo_movimiento','Movement type')?></label>
                   <?php
                     $tipoMovimiento = TipoMovimiento::getTipoMovList(TipoMovimiento::TIPO_SALIDA);
-                    echo Html::hiddenInput("Documento[tipo_movimiento]", $model::TIPO_FACTURA,['id'=>'Documento-tipo_movimiento']); 
+                    echo Html::hiddenInput("Documento[tipomov_doc]", $model::TIPO_FACTURA,['id'=>'Documento-tipo_movimiento']);
                   ?>
                   <?= Select2::widget([
                         'name' => 'tipo_movimiento',
@@ -375,7 +381,7 @@ if ( $model->isNewRecord ) {
 
 
       <?php
-        $modelsDetalles = $modelPedido->detalles;
+        $modelsDetalles = !empty($modelPedido->detalles) ? $modelPedido->detalles : [new PedidoDetalle()];
       ?>
       <!-- Articulos -->
       <div class="row">

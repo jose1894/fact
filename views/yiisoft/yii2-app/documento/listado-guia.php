@@ -6,7 +6,7 @@ use yii\helpers\Url;
 use yii\web\View;
 use kartik\grid\GridView;
 use yii\web\JqueryAsset;
-use app\models\Cliente;
+use app\models\Documento;
 use app\models\Pedido;
 use app\models\Vendedor;
 use yii\helpers\ArrayHelper;
@@ -19,16 +19,21 @@ use kartik\select2\Select2;
 
 $this->title = Yii::t('documento', 'Referal guide');
 $this->params['breadcrumbs'][] = $this->title;
+$status = [
+  Documento::GUIA_GENERADA => 'GUIA GENERADA',
+  Documento::DOCUMENTO_GENERADO => 'DOCUMENTO GENERADO',
+  Documento::DOCUMENTO_ANULADO => 'ANULADO'
+];
 ?>
 <div class="pedido-index">
     <h4><?= Html::encode($this->title) ?></h4>
 
     <p>
-        <?= Html::a(Yii::t('documento', 'Create referal guide'), ['guia-create' ,'asDialog'=>1], ['id'=>'create','class' => 'btn btn-flat btn-success']) ?>
+        <?= Html::a(Yii::t('documento', 'Create referal guide'), ['documento/guia-new' ,'asDialog'=>1], ['id'=>'create','class' => 'btn btn-flat btn-success']) ?>
     </p>
 
     <?php Pjax::begin(['id' => 'grid', 'timeout' => 3000]); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]);     ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -46,6 +51,25 @@ $this->params['breadcrumbs'][] = $this->title;
               //      return Yii::$app->formatter->asDate($data->fecha_pedido, 'dd/MM/yyyy');
               // },
               'width' => '8%'
+            ],
+            [
+              'attribute'=>'tipomov_doc',
+              'value' => 'tipoMovDoc.des_tipom'
+            ],
+            [
+                'attribute' => 'status_doc',
+                'filter' => $status,
+                'value' => function($data){
+                    $status = [
+                      Documento::GUIA_GENERADA => 'GUIA GENERADA',
+                      Documento::DOCUMENTO_GENERADO => 'DOCUMENTO GENERADO',
+                      Documento::DOCUMENTO_ANULADO => 'ANULADO'
+                    ];
+                    return $status[$data->status_doc];
+                },
+                'hAlign' => 'left',
+                'vAlign' => 'middle',
+                //'width' => '10%',
             ],
             // [
             //   'attribute'=>'clte_pedido',
@@ -74,25 +98,28 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],
-                'template' => ' {factura} ',
+                'template' => ' {rpt} ',
                 'buttons' => [
-                  'factura' => function ($url, $model) {
-                      return Html::a('<button class="btn btn-flat btn-success">'.Yii::t('app','Generate invoice').'&nbsp; &nbsp;<i class="fa fa-play-circle"></i></button>', "#", [
-                                  'title' => Yii::t('app', 'Generate invoice'),
-                                  'class' => 'pjax-invoice',
+                  'rpt' =>  function ($url, $model) {
+                      return
+                          Html::a('<button class="btn btn-flat btn-xs btn-primary"><i class="fa fa-print"></i></button>',
+                              $url,
+                              [
+                                  'title' => Yii::t('app', 'Print'),
+                                  'class' => 'pjax-rpt',
                                   'data' => [
-                                    // 'id' => $model->id_pedido,
+                                      'id' => $model->id_doc,
                                   ]
-                      ]);
+                              ]) ;
                   },
 
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
-                  if ($action === 'factura') {
-                      $url = "#";
-                      // $url = Url::to(['pedido/pedido-rpt','id' => $model->id_pedido]);
-                      return $url;
+                  if ($action === 'rpt') {
+                      $id = $model->guiaRem->id_doc;
+                      return Url::to(['documento/guia-rpt','id' => $id]);
                   }
+
                 }
               ],
           ],
@@ -112,11 +139,26 @@ $this->registerJsVar( "modalGuide", "#modal-guide" );
 $this->registerJsVar( "submitGuide", "#submitGuia" );
 echo   $this->render('//site/_modalGuide',[]);
 
-$js = '
-  $( ".pjax-invoice" ).on( "click", function( e ){
+$js = <<<JS
+$( 'body' ).on( 'click', '.pjax-rpt', function( e ){
     e.preventDefault();
-    console.log("Click");
-  })
-';
+    let url = $( this ).prop( 'href' );
+    window.open( url,'_blank');
+});
+
+$( 'body' ).on( 'click', '#create', function( e ) {
+  e.preventDefault();
+  e.stopPropagation();
+  $( submitGuide ).css( 'display', 'block' );
+  $( submitGuide ).css( 'float', 'right' );
+  $( frameGuide ).attr( "src", $( this ).attr( 'href' ));
+  $( modalGuide ).modal({
+    backdrop: 'static',
+    keyboard: false,
+  });
+  $( modalGuide ).modal("show");
+});
+
+JS;
 
 $this->registerJs($js,View::POS_END);

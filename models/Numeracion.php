@@ -50,7 +50,7 @@ class Numeracion extends \yii\db\ActiveRecord
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios['numerar'] = ['numero_num'];
+        $scenarios['numerar'] = ['numero_num','required'];
         return $scenarios;
     }
 

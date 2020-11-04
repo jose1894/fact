@@ -33,7 +33,7 @@ class NotaIngresoDetalle extends \yii\db\ActiveRecord
         return [
             [['prod_detalle', 'cant_detalle'], 'required'],
             [['trans_detalle', 'prod_detalle'], 'integer'],
-            [['cant_detalle'],'number','min'=>1],
+            [['cant_detalle','costo_detalle'],'number','min'=>1],
             [['trans_detalle'], 'exist', 'skipOnError' => true, 'targetClass' => NotaIngreso::className(), 'targetAttribute' => ['trans_detalle' => 'id_trans']],
             [['prod_detalle'], 'exist', 'skipOnError' => true, 'targetClass' => Producto::className(), 'targetAttribute' => ['prod_detalle' => 'id_prod']],
         ];
@@ -49,6 +49,7 @@ class NotaIngresoDetalle extends \yii\db\ActiveRecord
             'trans_detalle' => Yii::t('tipo_movimiento', 'Trans Detalle'),
             'prod_detalle' => Yii::t('producto', 'Product'),
             'cant_detalle' => Yii::t('app', 'Quantity'),
+            'costo_detalle' => Yii::t('app', 'Cost'),
         ];
     }
 
