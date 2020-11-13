@@ -30,6 +30,7 @@ class NotaCredito extends \yii\db\ActiveRecord
     const DOCUMENTO_ANULADO  = 3;
     const MOTIVO_GUIAFACTURA = 1; //MOTIVO DE LA GUIA
     const TIPODOC_NCREDITO   = 10;
+    const TIPODOC_BNCREDITO  = 11;
     const NOTA_CREDITO_DOC   = 'NC';
     const REPONER_STOCK      = 1;
 
@@ -43,23 +44,23 @@ class NotaCredito extends \yii\db\ActiveRecord
         return 'documento';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     /**

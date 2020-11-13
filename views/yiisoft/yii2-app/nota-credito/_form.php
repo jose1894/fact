@@ -199,11 +199,11 @@ use app\base\Model;
                         ])  ?>
                   </div>
                 </div>
-				
+
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                   <div class="form-group">
                     <label class="control-label" for="motivo_doc"><?= Yii::t('cliente','Motivo')?></label>
-					<?php 
+					<?php
 						$motivosNcredito = MotivoNcredito::getMotivos();
 					?>
                     <?= Html::dropDownList('NotaCredito[motivo_doc]', null,$motivosNcredito,
@@ -705,28 +705,31 @@ $js = '
               selects.trigger( "change" );
             }
 
-			window.open(
-			  "'.Url::to(['nota-credito/nota-rpt']).'/" + data.id,
-			  "'. Yii::t('documento','Credit note').'",
-			  "toolbar=no," +
-			  "location=no," +
-			  "statusbar=no," +
-			  "menubar=no," +
-			  "resizable=0," +
-			  "width=800," +
-			  "height=600," +
-			  "left = 490," +
-			  "top=300");
-			swal(data.title, data.message, data.type);
+      			window.open(
+      			  "'.Url::to(['nota-credito/nota-rpt']).'/" + data.id,
+      			  "'. Yii::t('documento','Credit note').'",
+      			  "toolbar=no," +
+      			  "location=no," +
+      			  "statusbar=no," +
+      			  "menubar=no," +
+      			  "resizable=0," +
+      			  "width=800," +
+      			  "height=600," +
+      			  "left = 490," +
+      			  "top=300");
+      			swal(data.title, data.message, data.type);
 
 
             $( ".table-body" ).empty();
-			$( "#documento" ).css( "display", "none" );
+			      $( "#documento" ).css( "display", "none" );
 
             return;
           }
-
-		  return swal("Oops!", data, "error");
+          if (data.message) {
+		        return swal(data.title, data.message, data.type);
+          } else {
+		        return swal("Oops!", JSON.stringify(data), "error");
+          }
        },
        error   : function (data) {
          let message;

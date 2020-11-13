@@ -16,5 +16,7 @@ return [
     'Exchange' => 'Tipo de cambio',
     'Change to bill' => 'Cambio a facturar',
     'Buy' => 'Compra',
-    'Sell' => 'Venta'
+    'Sell' => 'Venta',
+    'Change' => 'Cambio',
+    'to' => 'a'
 ];

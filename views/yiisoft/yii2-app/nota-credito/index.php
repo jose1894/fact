@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
     <div class="pedido-index">
         <h1><?= Html::encode($this->title) ?></h1>
-        <?php Pjax::begin(['id' => 'grid']); ?>
+        <?php Pjax::begin(['id' => 'grid', 'timeout' => 3000]); ?>
         <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
 
@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
-            'columns' => [                
+            'columns' => [
                   [
                       'attribute' => 'cod_doc',
                       'hAlign' => 'center',
@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
                       'width' => '25%',
                       'hAlign' => 'left',
                       'vAlign' => 'middle',
-  
+
                   ],
                   [
                       'attribute' => 'tipoDocumento',
@@ -89,7 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                             if ($data->tipo_doc === NotaCredito::TIPODOC_NCREDITO) {
                                 $return = -1 * $data->totalimp_doc;
-                            } 
+                            }
 
                             return $return;
                     },
@@ -108,7 +108,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'pageSummary' => true,
                     'format' => ['decimal', 2],
                   ],
-                
+
                 [
                     'class' => '\kartik\grid\ActionColumn',
                     'headerOptions' => ['style' => 'color:#337ab7'],

@@ -147,6 +147,7 @@ if ( $model->isNewRecord ) {
                       'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-money"></i>']],
                       'options' => ['placeholder' => Yii::t('moneda','Select a currency').'...'],
                       'theme' => Select2::THEME_DEFAULT,
+                      'disabled' => $disabled
               ])?>
         </div>
 
@@ -167,6 +168,7 @@ if ( $model->isNewRecord ) {
                       'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-archive"></i>']],
                       'options' => ['placeholder' => Yii::t('almacen','Select a warehouse').'...'],
                       'theme' => Select2::THEME_DEFAULT,
+                      'disabled' => $disabled,
                       // 'pluginOptions' => [
                       //     'allowClear' => true
                       // ],
@@ -795,7 +797,7 @@ JS
       let row = $( this ).attr( \"id\" ).split( \"-\" );
       row = row[ 1 ];
       $( '#pedidodetalle-' + row + '-descu_pdetalle' ).focus();
-      $( '#pedidodetalle-' + row + '-descu_pdetalle' ).select();    
+      $( '#pedidodetalle-' + row + '-descu_pdetalle' ).select();
 
   });
 

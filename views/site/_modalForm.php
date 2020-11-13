@@ -49,7 +49,7 @@ use yii\helpers\Url;
           <span aria-hidden="true">×</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body iframe-container">
         <iframe src="" id="frame-tipoc" width="100%" height="600" frameBorder="0"></iframe>
       </div>
       <div class="modal-footer">
@@ -67,6 +67,23 @@ $this->registerJsVar('consultaTipoC',Url::to(['tipo-cambio/consulta-tipo']));
 $this->registerJsVar('fecha', date('Y-m-d'));
 $this->registerJsVar('frameTipoC',Url::to(['tipo-cambio/diario']));
 //$this->registerJsVar('fechaTipoC',date('Y-m-d'));
+
+$this->registerCss("
+.iframe-container {
+  overflow: hidden;
+  padding-top: 56.25%; /* 16:9*/
+  position: relative;
+}
+
+.iframe-container iframe {
+   border: 0;
+   height: 100%;
+   left: 0;
+   position: absolute;
+   top: 0;
+   width: 100%;
+}
+");
 $js = <<<JS
   // Consulta si el tipo de cambio ha sido seteado al dia
 
@@ -77,6 +94,7 @@ $js = <<<JS
     success : function( data ){
       data = JSON.parse(data);
       if ( !data.success ) {
+        $( '#modal-tipoc' ).modal( {backdrop: 'static', keyboard: false} );
         $( '#modal-tipoc' ).modal( 'show' );
         $( '#frame-tipoc' ).prop( 'src', frameTipoC);
       }
@@ -141,4 +159,5 @@ $this->registerJs($js, View::POS_LOAD);
 
 $this->registerJsFile(
     '@web/js/app.js',
-    ['depends' => [\yii\web\JqueryAsset::className()]]);
+    ['depends' => [\yii\web\JqueryAsset::className()]]
+);

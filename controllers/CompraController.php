@@ -139,7 +139,7 @@ class CompraController extends Controller
                       Yii::$app->response->format = Response::FORMAT_JSON;
                       $return = [
                         'success' => true,
-                        'title' => Yii::t('compra', 'Order'),
+                        'title' => Yii::t('compra', 'Purchase order'),
                         'id' => $model->id_compra,
                         'message' => Yii::t('app','Record saved successfully!'),
                         'type' => 'success'
@@ -244,7 +244,7 @@ class CompraController extends Controller
                       Yii::$app->response->format = Response::FORMAT_JSON;
                       $return = [
                         'success' => true,
-                        'title' => Yii::t('compra', 'Order'),
+                        'title' => Yii::t('compra', 'Purchase order'),
                         'message' => Yii::t('app','Record saved successfully!'),
                         'type' => 'success'
                       ];

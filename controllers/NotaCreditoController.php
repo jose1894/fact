@@ -115,8 +115,8 @@ class NotaCreditoController extends Controller
                 throw new NotFoundHttpException(Yii::t('documento', 'The requested page does not exist.'));
           }
           try{
-            $transaction = \Yii::$app->db->beginTransaction();
-            $sucursal               = SiteController::getSucursal();
+                $transaction = \Yii::$app->db->beginTransaction();
+                $sucursal               = SiteController::getSucursal();
                 $model->pedido_doc      = $documentoAnt->pedidoDoc->id_pedido;
                 $model->docref_doc      = $documentoAnt->id_doc;
                 $model->fecha_doc       = date("Y") . "-" . date("m") . "-" . date("d");
@@ -159,7 +159,7 @@ class NotaCreditoController extends Controller
 
                 if ( !($flag = $model->save()) ) {
                   $transaction->rollBack();
-                  throw new \Exception("Error Processing Request", 1);
+                  throw new \Exception("Error saving credit note");
                 }
 
                 $tipoDoc               = $model->numeracion->tipoDocumento->tipodsunat_tipod;
@@ -170,7 +170,7 @@ class NotaCreditoController extends Controller
                 if ( $post['NotaCredito']['tipom_doc'] == $model::REPONER_STOCK ){
                   $modelNotaIngreso                 = new NotaIngreso();
                   $modelNotaIngreso->sucursal_trans = $sucursal;
-                  $modelNotaIngreso->usuario_trans  = Yii::$app->user->id;
+                  // $modelNotaIngreso->usuario_trans  = Yii::$app->user->id;
                   $modelNotaIngreso->ope_trans      = $modelNotaIngreso::OPE_TRANS;
                   $num                              = Numeracion::getNumeracion( $modelNotaIngreso::NOTA_INGRESO );
                   $codigo                           = intval( $num[0]['numero_num'] ) + 1;
@@ -181,9 +181,16 @@ class NotaCreditoController extends Controller
                   $modelNotaIngreso->almacen_trans  = $post['NotaCredito']['almacen_doc'];
                   $modelNotaIngreso->fecha_trans    = $model->fecha_doc;
                   $modelNotaIngreso->idrefdoc_trans = $model->id_doc;
+                  $modelNotaIngreso->moneda_trans   = $model->pedidoDoc->moneda_pedido;
                   $modelNotaIngreso->status_trans   = $modelNotaIngreso::STATUS_APPROVED;
-                  $flag = $modelNotaIngreso->save() && $flag;
+
+                  if ( !$modelNotaIngreso->validate() ) {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ActiveForm::validate($modelNotaIngreso);
+                  }
+
                 }
+                $flag = $modelNotaIngreso->save() && $flag;
 
                 if ( $flag ) {
                   foreach ($post['NotaCredito-Detalle'] as $key => $value) {
@@ -229,12 +236,16 @@ class NotaCreditoController extends Controller
                       }
                     }
                   }
+                } else {
+                    throw new \Exception("Error credit note");
                 }
+
 
               $numeracion = Numeracion::findOne($num[0]['id_num']);
               $numeracion->scenario = 'numerar';
               $numeracion->numero_num = $codigo;
               $flag = $numeracion->save() && $flag;
+
 
               $numeracion = Numeracion::findOne($id_num);
               $numeracion->numero_num = $codigoDoc;
@@ -252,8 +263,17 @@ class NotaCreditoController extends Controller
                   'type' => 'success'
                 ];
                 return $return;
+              } else {
+                $transaction->rollBack();
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $return = [
+                  'success' => false,
+                  'title' => Yii::t('documento', 'Document'),
+                  'message' => Yii::t('app','Record couldn´t be saved!'),
+                  'type' => 'error'
+                ];
+                return $return;
               }
-
 
           } catch ( Exception $e) {
                 $transaction->rollBack();
@@ -266,10 +286,7 @@ class NotaCreditoController extends Controller
                 ];
                 return $return;
           }
-        //
-        //
-        //
-          return;
+
         }
 
         return $this->render('create', [
@@ -344,7 +361,7 @@ class NotaCreditoController extends Controller
       Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
       $modelNotaCredito = NotaCredito::find()
                                    ->where('id_doc = :id',[':id' => $id])
-                                   ->andWhere(['tipo_doc' => [NotaCredito::TIPODOC_NCREDITO]])->one();
+                                   ->andWhere(['tipo_doc' => [NotaCredito::TIPODOC_NCREDITO,NotaCredito::TIPODOC_BNCREDITO]])->one();
 	  //var_dump($modelNotaCredito);exit();
       if ( is_null($modelNotaCredito) ){
         throw new NotFoundHttpException(Yii::t('empresa', 'The requested page does not exist.'));
@@ -393,12 +410,21 @@ class NotaCreditoController extends Controller
         <tr>
           <td width="20%" align="right" style="font-weight:bold;">'.Yii::t('cliente','Customer').'</td>
           <td> &nbsp;' . $modelNotaCredito->pedidoDoc->cltePedido->nombre_clte . '</td>
-        </tr>
-        <tr>
-          <td align="right" style="font-weight:bold;">'.Yii::t('cliente','R.U.C.').'</td>
-          <td> &nbsp;' . $modelNotaCredito->pedidoDoc->cltePedido->ruc_clte . '</td>
-        </tr>
-        <tr>
+        </tr>';
+
+        if ( $modelNotaCredito === NotaCredito::TIPODOC_NCREDITO ) {
+            $header .= '<tr>
+                      <td align="right" style="font-weight:bold;">'.Yii::t('cliente','R.U.C.').'</td>
+                      <td> &nbsp;' . $modelNotaCredito->pedidoDoc->cltePedido->ruc_clte . '</td>
+                    </tr>';
+        } else {
+          $header .= '<tr>
+                    <td align="right" style="font-weight:bold;">'.Yii::t('cliente','D.N.I').'</td>
+                    <td> &nbsp;' . $modelNotaCredito->pedidoDoc->cltePedido->dni_clte . '</td>
+                    </tr>';
+        }
+
+$header .= '<tr>
           <td align="right" style="font-weight:bold;border:1px solid black">'.Yii::t('cliente','Address').'</td>
           <td> &nbsp;' . $modelNotaCredito->pedidoDoc->cltePedido->direcc_clte . '</td>
         </tr>

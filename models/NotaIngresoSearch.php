@@ -41,7 +41,7 @@ class NotaIngresoSearch extends NotaIngreso
      */
     public function search($params)
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = NotaIngreso::find()
                  ->where('sucursal_trans = :sucursal')
                  ->addParams([':sucursal' => $sucursal]);
@@ -60,10 +60,17 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
             return $dataProvider;
         }
 
+        if ( !empty($this->fecha_trans) ) {
+          $fechaTrans = explode(" - ", $this->fecha_trans);
+          $fechaInicio = \DateTime::createFromFormat('d/m/Y', trim($fechaTrans[0]))->format('Y-m-d');
+          $fechaFin = \DateTime::createFromFormat('d/m/Y', trim($fechaTrans[1]))->format('Y-m-d');
+          $query->andFilterWhere(['between', 'fecha_trans', $fechaInicio, $fechaFin]);
+        }
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id_trans' => $this->id_trans,
-            'fecha_trans' => $this->fecha_trans,
+            // 'fecha_trans' => $this->fecha_trans,
             'tipo_trans' => $this->tipo_trans,
             'ope_trans' => $this->ope_trans,
             'status_trans' => $this->status_trans,

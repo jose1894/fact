@@ -372,6 +372,7 @@ $exportConfig = [
                               case Documento::TIPODOC_FACTURA:
                               case Documento::TIPODOC_BOLETA:
                                                         $url = 'documento/documento-rpt'; break;
+                              case NotaCredito::TIPODOC_BNCREDITO:
                               case NotaCredito::TIPODOC_NCREDITO:
                                                         $url = 'nota-credito/nota-rpt'; break;
                             }
@@ -382,7 +383,7 @@ $exportConfig = [
             							if ($model->tipo_doc === Documento::TIPODOC_FACTURA || $model->tipo_doc === Documento::TIPODOC_BOLETA) {
             								return Url::to(['documento/ajax-gen-fact-xml','id' => $model->id_doc]);
             							}
-            							if ($model->tipo_doc === Documento::TIPODOC_NCREDITO ) {
+            							if ($model->tipo_doc === NotaCredito::TIPODOC_NCREDITO || $model->tipo_doc === NotaCredito::TIPODOC_BNCREDITO ) {
             								return Url::to(['documento/ajax-gen-note-xml','id' => $model->id_doc]);
             							}
                         }

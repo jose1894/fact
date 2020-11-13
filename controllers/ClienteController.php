@@ -229,14 +229,16 @@ class ClienteController extends Controller
         if ( !is_null( $q ) ) {
             $query = new Query;
 
-            $query->select(['c.id_clte as id', 'c.nombre_clte AS text'])
+            $query->select(['c.id_clte as id', 'concat(ruc_clte," - ",c.nombre_clte) AS text'])
                 ->from(['cliente as c'])
-                ->join('inner join ', ['distrito as dt'],' c.dtto_clte = dt.id_dtto and dt.status_dtto = 1 and sucursal_dtto = '.$sucursal)
-                ->join('inner join ', ['provincia as pr'] ,' c.provi_cte = pr.id_prov and pr.status_prov = 1 and sucursal_prov = '.$sucursal)
-                ->join('inner join ',['departamento as dp'],' c.depto_cte = dp.id_depto and dp.status_depto = 1 and sucursal_depto = '. $sucursal)
-                ->join('inner join ',['pais as p'],' c.pais_cte = p.id_pais and p.status_pais = 1 and sucursal_pais = '.$sucursal)
+                ->join('left join ', ['distrito as dt'],' c.dtto_clte = dt.id_dtto and dt.status_dtto = 1 and sucursal_dtto = '.$sucursal)
+                ->join('left join ', ['provincia as pr'] ,' c.provi_cte = pr.id_prov and pr.status_prov = 1 and sucursal_prov = '.$sucursal)
+                ->join('left join ', ['departamento as dp'],' c.depto_cte = dp.id_depto and dp.status_depto = 1 and sucursal_depto = '. $sucursal)
+                ->join('left join ', ['pais as p'],' c.pais_cte = p.id_pais and p.status_pais = 1 and sucursal_pais = '.$sucursal)
                 ->where('c.estatus_ctle = 1')
                 ->andWhere(['like', 'c.nombre_clte', $q])
+                ->orWhere(['like', 'c.ruc_clte', $q])
+                ->orWhere(['like', 'c.dni_clte', $q])
                 ->andWhere('c.sucursal_clte = :sucursal', [':sucursal' => $sucursal])
                 ->limit(20);
 
@@ -250,10 +252,10 @@ class ClienteController extends Controller
           $query->select(['c.id_clte as id','c.vendedor_clte as vendedor', 'c.nombre_clte AS text','c.direcc_clte', 'condp_clte as condp',
                           'CONCAT(dt.des_dtto,\' - \', dp.des_depto,\' - \',pr.des_prov, \' - \',p.des_pais) as \'geo\'','lista_clte as tpl','dni_clte','ruc_clte', 'tipoid_clte'])
               ->from(['cliente as c'])
-              ->join('inner join ', ['distrito as dt'],' c.dtto_clte = dt.id_dtto and dt.status_dtto = 1 and sucursal_dtto = '.$sucursal)
-              ->join('inner join ', ['provincia as pr'] ,' c.provi_cte = pr.id_prov and pr.status_prov = 1 and sucursal_prov = '.$sucursal)
-              ->join('inner join ',['departamento as dp'],' c.depto_cte = dp.id_depto and dp.status_depto = 1 and sucursal_depto = '. $sucursal)
-              ->join('inner join ',['pais as p'],' c.pais_cte = p.id_pais and p.status_pais = 1 and sucursal_pais = '.$sucursal)
+              ->join('left join ', ['distrito as dt'],' c.dtto_clte = dt.id_dtto and dt.status_dtto = 1 and sucursal_dtto = '.$sucursal)
+              ->join('left join ', ['provincia as pr'] ,' c.provi_cte = pr.id_prov and pr.status_prov = 1 and sucursal_prov = '.$sucursal)
+              ->join('left join ',['departamento as dp'],' c.depto_cte = dp.id_depto and dp.status_depto = 1 and sucursal_depto = '. $sucursal)
+              ->join('left join ',['pais as p'],' c.pais_cte = p.id_pais and p.status_pais = 1 and sucursal_pais = '.$sucursal)
               ->andWhere('c.id_clte = :id_clte and c.sucursal_clte = :sucursal', [':id_clte' => $id, ':sucursal' => $sucursal ] )
               ->limit(1);
         			 //echo $query->createCommand()->sql;

@@ -25,23 +25,23 @@ class TipoCambio extends \yii\db\ActiveRecord
         return 'tipo_cambio';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -65,8 +65,8 @@ class TipoCambio extends \yii\db\ActiveRecord
         return [
             'id_tipoc' => Yii::t('tipo_cambio', 'Id Tipoc'),
             'fecha_tipoc' => Yii::t('tipo_cambio', 'Date'),
-            'monedac_tipoc' => Yii::t('tipo_cambio', 'Monedac Tipoc'),
-            'moneda_tipoc' => Yii::t('tipo_cambio', 'Moneda Tipoc'),
+            'monedac_tipoc' => Yii::t('tipo_cambio', 'Change'),
+            'moneda_tipoc' => Yii::t('tipo_cambio', 'to'),
             'cambioc_tipoc' => Yii::t('tipo_cambio', 'Change to bill'),
             'venta_tipoc' => Yii::t('tipo_cambio', 'Buy'),
             'valorf_tipoc' => Yii::t('tipo_cambio', 'Sell'),
@@ -79,6 +79,8 @@ class TipoCambio extends \yii\db\ActiveRecord
             $fecha = date('Y-m-d' );
         }
 
-        return TipoCambio::find()->where(['fecha_tipoc' => $fecha])->one();
+        return TipoCambio::find()
+                           ->select(["id_tipoc","fecha_tipoc","monedac_tipoc","moneda_tipoc","cambioc_tipoc","venta_tipoc","valorf_tipoc"])
+                           ->where(['fecha_tipoc' => $fecha])->asArray()->one();
     }
 }

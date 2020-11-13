@@ -11,6 +11,7 @@ use app\models\Vendedor;
 use app\models\TipoMovimiento;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
+use kartik\daterange\DateRangePicker;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\NotaIngresoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -37,11 +38,20 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
               'attribute'=>'fecha_trans',
-              'value' => function($data){
-                   return Yii::$app->formatter->asDate($data->fecha_trans, 'dd/MM/yyyy');
-              },
-              'width' => '8%'
-
+              'format' => ['date', 'php:d/m/Y'],
+              'filterType' => GridView::FILTER_DATE_RANGE,
+              'filterWidgetOptions' => ([
+                  'useWithAddon'=>true,
+                  'presetDropdown'=>true,
+                  'convertFormat'=>true,
+                  'includeMonthsFilter'=>true,
+                  'pluginOptions' => [
+                        'locale' => ['format' => 'd/m/Y'],
+                        'maxDate' => date('d/m/Y'),
+                        'showDropdowns'=>true
+                  ],
+                  'options' => ['placeholder' => Yii::t( 'app', 'Select range' )."..." ],
+                ])
             ],
             [
               'attribute'=>'docref_trans',

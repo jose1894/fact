@@ -381,3 +381,4 @@ inner join trans_detalle td on t.id_trans = td.trans_detalle
 inner join v_productos vp on vp.id_prod = td.prod_detalle
 where prod_detalle = 633;
 
+

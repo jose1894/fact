@@ -33,23 +33,23 @@ class TipoDocumento extends \yii\db\ActiveRecord
         return 'tipo_documento';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -109,7 +109,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
         //->joinWith('numeracions')
         ->where($condicion[0], $condicion[1])
         ->orderBy('des_tipod')
-        ->all();        
+        ->all();
 
         $tipoDoc = [];
         foreach ($tipom as $value) {
@@ -166,6 +166,7 @@ class TipoDocumento extends \yii\db\ActiveRecord
 
       // if ( !is_null($esDoc) || $esDoc != 0 ){
         $tipom = TipoDocumento::find()
+        ->select(['id_tipod','concat(abrv_tipod, " - ", des_tipod) as des_tipod'])
         //->joinWith('numeracions')
         ->where($condicion[0], $condicion[1])
         ->orderBy('des_tipod')

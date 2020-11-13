@@ -140,7 +140,7 @@ class DocumentoController extends Controller
 
         $sucursal = SiteController::getSucursal();
         $modelNotaSalida->sucursal_trans = $sucursal;
-        $modelNotaSalida->usuario_trans = Yii::$app->user->id;
+        // $modelNotaSalida->usuario_trans = Yii::$app->user->id;
         $modelNotaSalida->ope_trans = $modelNotaSalida::OPE_TRANS;
         $num = Numeracion::getNumeracion( NotaSalida::NOTA_SALIDA );
         $codigo = intval( $num[0]['numero_num'] ) + 1;
@@ -263,7 +263,7 @@ class DocumentoController extends Controller
           $modelNotaSalida->sucursal_trans = $sucursal;
           $model->sucursal_doc             = $sucursal;
           $model->status_doc               = 1;
-          $modelNotaSalida->usuario_trans  = Yii::$app->user->id;
+          // $modelNotaSalida->usuario_trans  = Yii::$app->user->id;
           $modelNotaSalida->ope_trans      = $modelNotaSalida::OPE_TRANS;
           $num                             = Numeracion::getNumeracion( $modelNotaSalida::NOTA_SALIDA );
           $codigo                          = intval( $num[0]['numero_num'] ) + 1;
@@ -275,6 +275,7 @@ class DocumentoController extends Controller
           $fecha                           = $fecha[2]."-".$fecha[1]."-".$fecha[0];
           $model->fecha_doc                = $fecha;
           $modelNotaSalida->fecha_trans    = $fecha;
+          $modelNotaSalida->moneda_trans  = $modelPedido->moneda_pedido;
           $modelPedido->estatus_pedido     = $modelPedido::DOCUMENTO_GENERADO;
           $model->almacen_doc              = $modelPedido->almacen_pedido;
           $model->totalimp_doc             = $post['impuesto'];
@@ -743,7 +744,7 @@ class DocumentoController extends Controller
       $sunatPass = "moddatos";
       $endPoint  = SunatEndpoints::FE_BETA;
 
-      if( Yii::$app->request->isAjax ) {
+      if( !Yii::$app->request->isAjax ) {
         throw new \Exception("Error Processing Request");
       }
 
@@ -897,7 +898,8 @@ class DocumentoController extends Controller
       $model = Documento::find()
                            ->where('id_doc = :id',[':id' => $id])
                            ->andWhere(['tipo_doc' => [
-														Documento::TIPODOC_NCREDITO,
+														NotaCredito::TIPODOC_NCREDITO,
+														NotaCredito::TIPODOC_BNCREDITO,
 													]])
                            ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
                            ->one();
@@ -914,9 +916,15 @@ class DocumentoController extends Controller
 
       // Cliente
       $client = new Client();
-      $client->setTipoDoc('6')
-          ->setNumDoc($model->pedidoDoc->cltePedido->ruc_clte)
-          ->setRznSocial($model->pedidoDoc->cltePedido->nombre_clte);
+      if ( NotaCredito::TIPODOC_BNCREDITO ) {
+        $client->setTipoDoc('1')
+                ->setNumDoc($model->pedidoDoc->cltePedido->dni_clte)
+                ->setRznSocial($model->pedidoDoc->cltePedido->nombre_clte);
+      } else if ( NotaCredito::TIPODOC_NCREDITO ) {
+        $client->setTipoDoc('6')
+            ->setNumDoc($model->pedidoDoc->cltePedido->ruc_clte)
+            ->setRznSocial($model->pedidoDoc->cltePedido->nombre_clte);
+      }
 
       // Emisor
       $address = new Address();
@@ -938,7 +946,6 @@ class DocumentoController extends Controller
       $impuesto = $model->total_doc - $subtotal;
       $impuesto = floatval(number_format( $impuesto,2,'.',''));
 
-	  //print_r($model->tipoDoc->abrv_tipod.$model->numeracion->serie_num);exit();
       // Venta
       $note = (new Note())
           		->setUblVersion('2.1')
@@ -948,7 +955,7 @@ class DocumentoController extends Controller
           		->setFechaEmision(new DateTime($model->fecha_doc))
           		->setTipDocAfectado($model->docAfectado->tipoDoc->tipodsunat_tipod) // Tipo Doc: Factura
           		->setNumDocfectado( $model->docAfectado->tipoDoc->abrv_tipod.$model->docAfectado->numeracion->serie_num."-".intval($model->docAfectado->cod_doc)) // Factura: Serie-Correlativo
-          		->setCodMotivo($model->motivosunat_doc) // Catalogo. 09
+          		->setCodMotivo($model->motivoNcredito->cod_motivo) // Catalogo. 09
           		->setDesMotivo($model->motivoNcredito->des_motivo)
           		->setTipoMoneda($model->pedidoDoc->monedaPedido->sunatm_moneda)
           		->setCompany($company)
@@ -964,10 +971,7 @@ class DocumentoController extends Controller
         $totalIGV = number_format($totalSIGV * ($value->impuesto_pdetalle / 100), 2, '.','');// Total de igv por item por cantidad
         $precioUnitarioSIGV = $value->precio_pdetalle /(1 + ($value->impuesto_pdetalle / 100 )); //Precio unitario sin IGV por item
         $cantidad = number_format($value->cant_pdetalle, 3, '.', '');
-		$descuento = $value->descu_pdetalle / 100;
-
-		//var_dump($totalSIGV);exit();
-
+		    // $descuento = $value->descu_pdetalle / 100;
 
         $item[] = (new SaleDetail())
             ->setCodProducto(trim($value->productoPdetalle->cod_prod))
@@ -1109,7 +1113,7 @@ class DocumentoController extends Controller
 
           $sucursal = SiteController::getSucursal();
           $modelAjuste->sucursal_trans = $sucursal;
-          $modelAjuste->usuario_trans = Yii::$app->user->id;
+          // $modelAjuste->usuario_trans = Yii::$app->user->id;
           $modelAjuste->ope_trans = $modelAjuste::OPE_TRANS;
 
           if ( $model->tipo_doc === Documento::TIPODOC_BOLETA  ||  $model->tipo_doc === Documento::TIPODOC_FACTURA ) {

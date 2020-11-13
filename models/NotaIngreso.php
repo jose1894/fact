@@ -58,7 +58,7 @@ class NotaIngreso extends \yii\db\ActiveRecord
             [['fecha_trans'], 'safe'],
             [['obsv_trans'], 'string'],
             [['tipo_trans', 'almacen_trans', 'sucursal_trans', 'status_trans', 'idrefdoc_trans'], 'integer'],
-            [['almacen_trans','tipo_trans','sucursal_trans','moneda_trans'], 'required'],
+            [['almacen_trans','tipo_trans','sucursal_trans','moneda_trans'], 'required'],            
             [['codigo_trans',], 'string', 'max' => 10],
             [['docref_trans',], 'string', 'max' => 25],
             [['tipo_trans'], 'exist', 'skipOnError' => true, 'targetClass' => TipoMovimiento::className(), 'targetAttribute' => ['tipo_trans' => 'id_tipom']],

@@ -33,11 +33,32 @@ alter table transaccion
 ALTER TABLE `leophard_dev`.`transaccion` 
 CHANGE COLUMN `docref_trans` `docref_trans` VARCHAR(25) NULL DEFAULT NULL COMMENT 'DOCUMENTO REFERENCIA TRANSACCION' ;
 
-create view v_prod_ult_precio as
-select prod_cdetalle,max(fecha_compra),precio_cdetalle,sucursal_compra
-from compra c
-inner join compra_detalle cd on c.id_compra = cd.compra_cdetalle
-group by prod_cdetalle,precio_cdetalle,sucursal_compra;
+alter table moneda
+	add column abrv_moneda varchar(3) null default null comment 'ABREVIACION DE MONEDA' after sunatm_moneda;
+    
+update tipo_cambio set monedac_tipoc = 2, moneda_tipoc = 1;
+
+CREATE 
+     OR REPLACE ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `v_prod_ult_precio` AS
+    SELECT 
+        `cd`.`prod_cdetalle` AS `id_prod`,
+        MAX(`c`.`fecha_compra`) AS `fecha_compra`,
+        `c`.`moneda_compra` AS `moneda_compra`,
+        `m`.`tipo_moneda` AS `tipo_moneda`,
+        sum(`cd`.`precio_cdetalle`) AS `costo`,
+        `c`.`sucursal_compra` AS `sucursal`,
+        `m`.`abrv_moneda` AS `abrv_moneda`
+    FROM
+        (((`compra` `c`
+        JOIN `compra_detalle` `cd` ON (`c`.`id_compra` = `cd`.`compra_cdetalle`))
+        JOIN `moneda` `m` ON (`c`.`moneda_compra` = `m`.`id_moneda`
+            AND `m`.`sucursal_moneda` = `c`.`sucursal_compra`))
+        JOIN `tipo_cambio` `tc` ON (`tc`.`fecha_tipoc` = `c`.`fecha_compra`
+            AND `c`.`sucursal_compra` = `tc`.`sucursal_tipoc`))
+    GROUP BY `cd`.`prod_cdetalle` , `c`.`moneda_compra` , `m`.`tipo_moneda` , `c`.`sucursal_compra` , `m`.`abrv_moneda`;
 
 alter view v_productos as
 SELECT 
@@ -76,16 +97,22 @@ CONCAT(`pr`.`cod_prod`,
 			AND `pedido`.`sucursal_pedido` = `suc`.`id_suc`
 			AND `pedido`.`estatus_pedido` = 0) AS `stock_asignado`,
 `pr`.`stock_prod` AS `stock_prod_bruto`,
-coalesce(up.precio_cdetalle,0) ult_precio_compra
+coalesce(up.costo,0) ult_precio_compra,up.moneda_compra,up.tipo_moneda,abrv_moneda
 FROM
 `producto` `pr`
 JOIN `unidad_medida` `um` ON (`um`.`id_und` = `pr`.`umed_prod`)
 JOIN `sucursal` `suc` ON (`pr`.`sucursal_prod` = `suc`.`id_suc` and um.sucursal_und = `suc`.`id_suc`)
-LEFT JOIN v_prod_ult_precio up on pr.id_prod = up.prod_cdetalle and up.sucursal_compra = suc.id_suc        
-GROUP BY `pr`.`id_prod` , `pr`.`cod_prod` , `pr`.`des_prod` , `pr`.`compra_prod` , `pr`.`venta_prod` , `pr`.`status_prod` , `pr`.`stock_prod` , `suc`.`id_suc` , `pr`.`tipo_prod` , `suc`.`impuesto_suc` , `um`.`id_und` , `um`.`des_und`, up.precio_cdetalle 
+LEFT JOIN v_prod_ult_precio up on pr.id_prod = up.id_prod and up.sucursal = suc.id_suc        
+GROUP BY `pr`.`id_prod` , `pr`.`cod_prod` , `pr`.`des_prod` , `pr`.`compra_prod` , `pr`.`venta_prod` , `pr`.`status_prod` , `pr`.`stock_prod` , `suc`.`id_suc` , `pr`.`tipo_prod` , `suc`.`impuesto_suc` , `um`.`id_und` , `um`.`des_und`, up.costo, ult_precio_compra,up.moneda_compra,up.tipo_moneda, abrv_moneda
 ORDER BY `pr`.`cod_prod`;
     
+    
+select * from v_productos;
 
+
+
+
+select * from tipo_cambio order by id_tipoc desc;
     
     
     

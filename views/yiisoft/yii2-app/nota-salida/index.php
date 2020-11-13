@@ -38,11 +38,23 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
               'attribute'=>'fecha_trans',
-              'value' => function($data){
-                   return Yii::$app->formatter->asDate($data->fecha_trans, 'dd/MM/yyyy');
-              },
-              'width' => '8%'
-
+              // 'value' => function($data){
+              //      return Yii::$app->formatter->asDate($data->fecha_trans, 'dd/MM/yyyy');
+              // },
+              'format' => ['date', 'php:d/m/Y'],
+              'filterType' => GridView::FILTER_DATE_RANGE,
+              'filterWidgetOptions' => ([
+                  'useWithAddon'=>true,
+                  'presetDropdown'=>true,
+                  'convertFormat'=>true,
+                  'includeMonthsFilter'=>true,
+                  'pluginOptions' => [
+                        'locale' => ['format' => 'd/m/Y'],
+                        'maxDate' => date('d/m/Y'),
+                        'showDropdowns'=>true
+                  ],
+                  'options' => ['placeholder' => Yii::t( 'app', 'Select range' )."..." ],
+                ])
             ],
             [
               'attribute'=>'docref_trans',

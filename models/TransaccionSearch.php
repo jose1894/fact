@@ -45,7 +45,7 @@ class TransaccionSearch extends Transaccion
     public function rules()
     {
         return [
-            [['id_trans', 'tipo_trans', 'numdoc_trans', 'idrefdoc_trans', 'almacen_trans', 'sucursal_trans', 'usuario_trans', 'status_trans',
+            [['id_trans', 'tipo_trans', 'numdoc_trans', 'idrefdoc_trans', 'almacen_trans', 'sucursal_trans', 'status_trans',
                 'id_prod', 'saldo'], 'integer'],
             [['codigo_trans', 'fecha_trans', 'obsv_trans', 'ope_trans', 'seriedocref_trans', 'docref_trans',
                 'id_prod',

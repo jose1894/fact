@@ -28,7 +28,7 @@ use app\controllers\SiteController;
 $disabled = false;
 $disabledPedido = true;
 
-if ( $model->isNewRecord ) {
+if ( $model->isNewRecord  && empty($modelPedido) ) {
   $model->cod_doc = "0000000000";
   $disabledPedido = false;
 } else {
@@ -78,7 +78,7 @@ if ( $model->isNewRecord ) {
                                   'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-users"></i>']],
                                   'initValueText' => $clienteText, // set the initial display text
                                   'options' => ['placeholder' => Yii::t('cliente','Select a customer').'...'],
-                                  //'theme' => Select2::THEME_DEFAULT,
+                                  'theme' => Select2::THEME_DEFAULT,
                                   'pluginOptions' => [
                                       'minimumInputLength' => 3,
                                       'language' => [

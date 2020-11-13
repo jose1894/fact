@@ -39,23 +39,23 @@ class Compra extends \yii\db\ActiveRecord
         return 'compra';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -134,10 +134,11 @@ class Compra extends \yii\db\ActiveRecord
 
     public static function getCompras()
     {
-$sucursal = Yii::$app->user->identity->profiles->sucursal;
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
         $compras = self::find()
-            ->select(['id_compra',"concat(fecha_compra,' | ',cod_compra) cod_compra"])
+            ->select(['id_compra',"concat(fecha_compra,' | ',cod_compra) cod_compra,moneda_compra,moneda.tipo_moneda"])
+            ->joinWith(['monedaCompra'])
             ->where('estatus_compra = :status and sucursal_compra = :sucursal AND afectaalm_compra = 1',[':status' => self::STATUS_INACTIVE, ':sucursal' => $sucursal])
             ->orderBy('cod_compra')
             ->all();
@@ -145,12 +146,15 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
         foreach ($compras as $key => $value) {
             $return[$key]['id_compra'] = $value->id_compra;
             $return[$key]['cod_compra'] = $value->cod_compra;
+            $return[$key]['moneda_compra'] = $value->moneda_compra;
+            $return[$key]['tipo_moneda'] = $value->monedaCompra->tipo_moneda;
 
             foreach ( $value->detalles as $key1 => $value1) {
                 $return[$key]['details'][$key1]['id_prod'] = $value1->prod_cdetalle;
                 $return[$key]['details'][$key1]['des_prod'] = $value1->prodCdetalle->cod_prod.' '.$value1->prodCdetalle->des_prod.' - '.
                                                               $value1->prodCdetalle->umedProd->des_und;
                 $return[$key]['details'][$key1]['cant_detalle'] = $value1->cant_cdetalle;
+                $return[$key]['details'][$key1]['costo_detalle'] = $value1->precio_cdetalle;
             }
         }
         return $return;

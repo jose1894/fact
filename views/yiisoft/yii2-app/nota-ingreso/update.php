@@ -44,44 +44,65 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 $js = '
   $( "#aprobar-ingreso" ).on("click", function(){
     form = $(".nota-ingreso-update form");
-
-    $.ajax({
-      "url": "'.Url::to(['nota-ingreso/aprobar-nota']).'",
-      "method": $( form ).attr( "method" ),
-      "data"   : $( form ).serialize(),
-      "async"  : false,
-      "success": function ( data ){
-          swal(data.title, data.message, data.type);
-          $(".nota-ingreso-update .btn").attr("disabled",true);
-          $(".nota-ingreso-update input").attr("disabled",true);
-          $(".nota-ingreso-update textarea").attr("disabled",true);
-          $(".nota-ingreso-update select").prop("disabled",true);
-          $(".nota-ingreso-update #imprimir").attr("disabled",false);
-          return;
+    swal({
+      title: "' . Yii::t( 'ingreso', 'Entry note') . '",
+      text: "' . Yii::t( 'ingreso','Do you want to approve the entry note?') . '",
+      icon: "warning",
+      buttons: true,
+    }).then( ( willDelete ) => {
+      if ( willDelete ) {
+        $.ajax({
+          "url": "'.Url::to(['nota-ingreso/aprobar-nota']).'",
+          "method": $( form ).attr( "method" ),
+          "data"   : $( form ).serialize(),
+          "async"  : false,
+          "success": function ( data ){
+              swal(data.title, data.message, data.type);
+              $(".nota-ingreso-update .btn").attr("disabled",true);
+              $(".nota-ingreso-update input").attr("disabled",true);
+              $(".nota-ingreso-update textarea").attr("disabled",true);
+              $(".nota-ingreso-update select").prop("disabled",true);
+              $(".nota-ingreso-update #imprimir").attr("disabled",false);
+              return;
+          }
+        });
       }
     });
+
   });
 
   $( "#anular-ingreso" ).on("click", function(){
     form = $(".nota-ingreso-update form");
 
-    $.ajax({
-      "url": "'.Url::to(["nota-ingreso/anular-nota"]).'",
-      "method": $( form ).attr( "method" ),
-      "data"   : $( form ).serialize(),
-      "async"  : false,
-      "success": function ( data ){
-        $(".nota-ingreso-update input").attr("disabled",true);
-        $(".nota-ingres-update select").prop("disabled",true);
-        $(".nota-ingreso-update textarea").attr("disabled",true);
-        $(".nota-ingreso-update button").attr("disabled",true);
-        $(".nota-ingreso-update #imprimir").attr("disabled",false);
-        swal(data.title, data.message, data.type);
+    swal({
+      title: "' . Yii::t( 'ingreso', 'Entry note') . '",
+      text: "' . Yii::t( 'ingreso','Do you want to cancel the entry note?') . '",
+      icon: "warning",
+      buttons: true,
+    }).then( ( willDelete ) => {
+      if ( willDelete ) {
+        $.ajax({
+          "url": "'.Url::to(["nota-ingreso/anular-nota"]).'",
+          "method": $( form ).attr( "method" ),
+          "data"   : $( form ).serialize(),
+          "async"  : false,
+          "success": function ( data ){
+            $(".nota-ingreso-update input").attr("disabled",true);
+            $(".nota-ingreso-update textarea").attr("disabled",true);
+            $(".nota-ingreso-update button").attr("disabled",true);
+            $(".nota-ingreso-update select").prop("disabled",true);
+            $(".nota-ingreso-update #imprimir").attr("disabled",false);
+            swal(data.title, data.message, data.type);
 
-        return;
+            return true;
+
+          }
+        });
 
       }
     });
+
+
   });
 ';
 $this->registerJs($js,View::POS_LOAD);

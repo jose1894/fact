@@ -4,6 +4,7 @@ use kartik\form\ActiveField;
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use app\models\TipoMovimiento;
+use app\models\TipoCambio;
 use app\models\Compra;
 use app\models\Almacen;
 use app\models\Moneda;
@@ -17,10 +18,16 @@ use yii\web\JsExpression;
 /* @var $this yii\web\View */
 /* @var $model app\models\NotaIngreso */
 /* @var $form yii\widgets\ActiveForm */
+
+$disabledActivos = true;
+
 if ( $model->isNewRecord ) {
   $model->codigo_trans = "0000000000";
+  $disabledActivos = false;
+  $model->fecha_trans = date('d/m/Y');
+} else {
+  $model->fecha_trans = date('d/m/Y',strtotime($model->fecha_trans));
 }
-
 $disabled = true;
 
 if ( !$model->status_trans ) {
@@ -32,7 +39,7 @@ $this->registerCss('
   background-color: #d5d5d5;
   opacity: 0.5;
   border-radius: 3px;
-  cursor: not-allowed;
+  cursor: no-drop;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -53,6 +60,7 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
 select[readonly].select2-hidden-accessible + .select2-container .select2-selection__arrow,
 select[readonly].select2-hidden-accessible + .select2-container .select2-selection__clear {
   display: none;
+  cursor: no-drop !important;
 }
 ');
 ?>
@@ -74,11 +82,12 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
               ]) ?>
           </div>
           <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+
             <?= $form->field($model, 'fecha_trans',[
               'addClass' => 'form-control'
               ])->textInput([
                 'disabled' => $disabled,
-                'value' => date('d/m/Y'),
+                'value' => $model->fecha_trans,
                 'readonly' => 'readonly',
                 'style' => ['text-align' => 'right']
                 ]) ?>
@@ -106,6 +115,8 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
                 foreach ($compras as $key => $value) {
                     $arrCompras[$value['id_compra']] = $value['cod_compra'];
                     $arrOptions[$value['id_compra']]['data-details'] = json_encode($value['details']);
+                    $arrOptions[$value['id_compra']]['data-moneda'] = json_encode($value['moneda_compra']);
+                    $arrOptions[$value['id_compra']]['data-tipo_moneda'] = json_encode($value['tipo_moneda']);
                 }
 
                 $compras = [];
@@ -122,7 +133,8 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
                     [
                         'custom' => true,
                         'prompt' => Yii::t('app','Select...'),
-                        'id'=>'notaingreso-tipo_trans'
+                        'id'=>'notaingreso-tipo_trans',
+                        'disabled' => $disabledActivos,
                     ]
             ) ?>
           </div>
@@ -156,7 +168,7 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
                         'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-archive"></i>']],
                         'options' => ['placeholder' => Yii::t('almacen','Select a warehouse').'...'],
                         'theme' => Select2::THEME_DEFAULT,
-                        'disabled' => $disabled,
+                        'disabled' => $disabledActivos,
                         // 'pluginOptions' => [
                         //     'allowClear' => true
                         // ],
@@ -175,6 +187,7 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
                           'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-money"></i>']],
                           'options' => ['placeholder' => Yii::t('moneda','Select a currency').'...'],
                           'theme' => Select2::THEME_DEFAULT,
+                          'disabled' => $disabledActivos,
                   ])?>
             </div>
         </div>
@@ -298,7 +311,7 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
 
                         <div class="col-sm-2 col-xs-12">
                           <?= $form
-                          ->field($modelDetalle,"[{$index}]cant_detalle",[ 'addClass' => 'form-control number-decimals'])
+                          ->field($modelDetalle,"[{$index}]cant_detalle",[ 'addClass' => 'form-control number-integer'])
                           ->textInput([
                             'type' => 'number',
                             'min' => 1,
@@ -338,7 +351,7 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
         <div class="row">
             <div class="form-group" style="float:right">
              <?php if ( !$model->isNewRecord ) { ?>
-                <button type="button" name="button" id="imprimir" data-toggle="modal" class="btn btn-flat btn-primary "><span class="fa fa-print"></span> <?= Yii::t('app', 'Print')?></button>
+                <button type="button" name="button" id="imprimir" data-toggle="modal" class="btn btn-flat btn-primary"><span class="fa fa-print"></span> <?= Yii::t('app', 'Print')?></button>
              <?php } ?>
 
 
@@ -353,6 +366,17 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
 $this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
 ['depends'=>[\yii\web\JqueryAsset::className()],
 'position'=>View::POS_END]);
+
+$this->registerCss("
+select[readonly].select2+.select2-container {
+  pointer-events: none;
+  touch-action: none;
+}
+
+.select2{
+  width: 100%;
+}
+");
 
 $this->registerJsVar( "buttonPrint", "#imprimir" );
 $this->registerJsVar( "frameRpt", "#frame-rpt" );
@@ -370,6 +394,7 @@ if ( !$model->isNewRecord ) {
     if ( compra ) {
         $( ".table-body select[id$=\'prod_detalle\']").attr("readonly", true);
         $( ".table-body input[id$=\'cant_detalle\']").prop(\'readonly\',true);
+        $( ".table-body input[id$=\'costo_detalle\']").prop(\'readonly\',true);
         $( ".table-body .remove-item").prop(\'disabled\',true);
         $( ".add-item").css(\'display\',"none");
     }
@@ -389,6 +414,7 @@ $(".dynamicform_wrapper").on("afterInsert", function(e, item) {
     let row = $(".table-body select").length - 1;
     $( "#notaingresodetalle-" + row + "-prod_detalle" ).val(null).trigger("change");
 });
+
 $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
   if ( confirm("'.Yii::t('producto','Are you sure to delete this product?').'") ) {
     return true;
@@ -399,6 +425,7 @@ $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
 $(".dynamicform_wrapper").on("afterDelete", function(e) {
     console.log("Deleted item!");
 });
+
 $(".dynamicform_wrapper").on("limitReached", function(e, item) {
     alert("Limit reached");
 });
@@ -425,6 +452,8 @@ $( ".table-body" ).on("select2:select","select[id$=\'prod_detalle\']",function()
     swal( "Oops!!!","'. Yii::t('app','Code can´t be repeated, it is already in the list') .'","error" );
     _currSelect.focus();
   }
+
+  setCosts( $( this ).val(), row );
 
   $( "#notaingresodetalle-" + row + "-cant_detalle" ).focus();
 
@@ -456,6 +485,9 @@ $( ".table-body" ).on( "keyup","input[id$=\'costo_detalle\']",function( e ) {
         $( ".add-item" ).trigger( "click" );
         $( "#notasalidadetalle-" + row + "-prod_detalle").focus();
         $( "#notasalidadetalle-" + row + "-prod_detalle").select2("open");
+        $( "#notaingreso-moneda_trans").attr("readonly", true);
+        $( "#notaingreso-almacen_trans").attr("readonly", true);
+
       }
     });
   }
@@ -560,7 +592,10 @@ $( \"#notaingreso-tipo_trans\" ).on(\"change\", function(){
             $(s).html('" . Yii::t('app','Select') . "');
             $('#idrefdoc_trans').append(s);
             $.each(data, function(key, value) {
-                option = '<option value=\"' + value.id_compra + '\" data-details=\'' + JSON.stringify(value.details) + '\'>' + value.cod_compra + '</option>';
+                option = '<option value=\"' + value.id_compra + '\"' +
+                         'data-moneda=\"' + JSON.stringify(value.moneda_compra) + '\"' +
+                         'data-tipo_moneda=\'' + JSON.stringify(value.tipo_moneda) + '\'' +
+                         'data-details=\'' + JSON.stringify(value.details) + '\'>' + value.cod_compra + '</option>';
                 $('#idrefdoc_trans').append(option);
              });
         } );
@@ -578,6 +613,7 @@ $( \"#notaingreso-tipo_trans\" ).on(\"change\", function(){
 
         $( \" .table-body select[id$='prod_detalle']\").prop('readonly',false);
         $( \" .table-body select[id$='cant_detalle']\").prop('readonly',false);
+        $( \" .table-body select[id$='costo_detalle']\").prop('readonly',false);
         $( \" .table-body .delete-item\").prop('disabled',false);
         $( \".table-body select[id$='prod_detalle']\").val(null).change();
     }
@@ -591,6 +627,8 @@ $("#idrefdoc_trans").on("change", function( e ){
     let details =  $(option).data("details");
     let options = [];
 
+    $( "#notaingreso-moneda_trans" ).val( $( option ).data("moneda") ).trigger( "change" );
+    $( "#notaingreso-moneda_trans" ).prop( "readonly", true );
     $( ".table-body" ).empty();
 
     $.each(details, function(i,value){
@@ -605,12 +643,44 @@ $("#idrefdoc_trans").on("change", function( e ){
     $.each(options, function( i,value){
         $( "select#notaingresodetalle-" + i + "-prod_detalle" ).val(value.val()).trigger("change");
         $( "input#notaingresodetalle-" + i + "-cant_detalle" ).val(details[i].cant_detalle);
+        $( "input#notaingresodetalle-" + i + "-costo_detalle" ).val(details[i].costo_detalle);
     });
 
     $( ".table-body select[id$=\'prod_detalle\']").attr("readonly", true);
     $( ".table-body input[id$=\'cant_detalle\']").prop(\'readonly\',true);
+    $( ".table-body input[id$=\'costo_detalle\']").prop(\'readonly\',true);
     $( ".table-body .remove-item").prop(\'disabled\',true);
 });
+
+function setCosts( value = null, row ) {
+  if ( value ) {
+    $.ajax({
+        url:"'.Url::to(['producto/product-costo']).'",
+        data:{
+          id: value,
+        },
+        async: false,
+        success: function( data ) {
+          if ( data.results.length ) {
+            let tipoCambio = '.json_encode(TipoCambio::getTipoCambio()).';
+            let costo = +data.results[ 0 ].costo;
+            let tipoMoneda = data.results[ 0 ].tipo_moneda;
+            let moneda = +data.results[ 0 ].moneda_compra;
+            let tm = $("#notaingreso-moneda_trans option:selected").html().split(" - ")[1];
+            let mon = +$("#notaingreso-moneda_trans option:selected").val();
+
+
+            if ( tipoMoneda !== tm && tm === "E" ) {
+              costo = costo / tipoCambio.valorf_tipoc;
+            }
+
+            costo = parseFloat(  costo  ).toFixed( 2 );
+            $( "#notaingresodetalle-" + row + "-costo_detalle" ).val( costo );
+          }
+        }
+    });
+  }
+}
 ';
 $this->registerJs($js.$jsTrigger.$js2,View::POS_LOAD);
 $this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',

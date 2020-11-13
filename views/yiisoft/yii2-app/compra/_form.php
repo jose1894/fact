@@ -21,9 +21,12 @@ use app\base\Model;
 /* @var $this yii\web\View */
 /* @var $model app\models\Compra */
 /* @var $form yii\widgets\ActiveForm */
+$disabled = false;
 
 if ( $model->isNewRecord ) {
   $model->cod_compra = "0000000000";
+} else {
+  $disabled = true;
 }
 ?>
 
@@ -111,6 +114,7 @@ if ( $model->isNewRecord ) {
                       'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-money"></i>']],
                       'options' => ['placeholder' => Yii::t('moneda','Select a currency').'...'],
                       'theme' => Select2::THEME_DEFAULT,
+                      'disabled' => $disabled,
                       // 'pluginOptions' => [
                       //     'allowClear' => true
                       // ],

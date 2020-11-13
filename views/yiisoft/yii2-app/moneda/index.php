@@ -31,6 +31,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'width' => '5%'
           ],
           'des_moneda',
+          'sunatm_moneda',
+          'abrv_moneda',
           [
             'attribute'=>'tipo_moneda',
             'value' => function($data){

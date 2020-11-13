@@ -19,7 +19,7 @@ class MonedaSearch extends Moneda
     {
         return [
             [['id_moneda', 'status_moneda', 'sucursal_moneda'], 'integer'],
-            [['des_moneda', 'tipo_moneda'], 'safe'],
+            [['des_moneda', 'tipo_moneda','sunatm_moneda','abrv_moneda'], 'safe'],
         ];
     }
 
@@ -68,7 +68,9 @@ $sucursal = Yii::$app->user->identity->profiles->sucursal;
         ]);
 
         $query->andFilterWhere(['like', 'des_moneda', $this->des_moneda])
-            ->andFilterWhere(['like', 'tipo_moneda', $this->tipo_moneda]);
+            ->andFilterWhere(['like', 'tipo_moneda', $this->tipo_moneda])
+            ->andFilterWhere(['like', 'abrv_moneda', $this->abrv_moneda])
+            ->andFilterWhere(['like', 'sunatm_moneda', $this->sunatm_moneda]);
 
         return $dataProvider;
     }

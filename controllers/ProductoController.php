@@ -381,7 +381,7 @@ class ProductoController extends Controller
       $out = ['results' => false];
       $sucursal = SiteController::getSucursal();
 
-      if ( !is_null( $id ) ) {
+      if ( !is_null( $id ) && Yii::$app->request->isAjax ) {
           $tipo_lista = Yii::$app->request->get( 'tipo_listap' );
 
           $query = new Query;
@@ -404,4 +404,36 @@ class ProductoController extends Controller
 
       return $out;
      }
+
+     public function actionProductCosto( $id )
+     {
+
+       \Yii::$app->response->format = Response::FORMAT_JSON;
+       $out = ['results' => false];
+       $sucursal = SiteController::getSucursal();
+
+       if ( !is_null( $id ) && Yii::$app->request->isAjax ) {
+           $tipo_lista = Yii::$app->request->get( 'tipo_listap' );
+
+           $query = new Query;
+           $query->select(['lp.precio_lista as precio', 'p.impuesto_suc as impuesto', 'ult_precio_compra as costo','moneda_compra','tipo_moneda'])
+               ->from(['v_productos as p'])
+               ->join('LEFT JOIN',
+                     'lista_precios lp',
+                     'lp.prod_lista =p.id_prod')
+               ->where('p.status_prod = 1')
+               ->andWhere('p.id_prod = :id',['id' =>  $id])
+               ->andWhere('p.sucursal_prod = :sucursal' ,
+                           [':sucursal' => $sucursal])
+               ->limit(1);
+
+           $command = $query->createCommand();
+           $data = $command->queryAll();
+
+           $out[ 'results' ] = $data;
+           // $out[ 'sql' ] = $command->sql;
+       }
+
+       return $out;
+      }
 }

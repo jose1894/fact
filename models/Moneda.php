@@ -16,6 +16,8 @@ use yii\helpers\ArrayHelper;
  */
 class Moneda extends \yii\db\ActiveRecord
 {
+    const M_NACIONAL = 'N';
+    const M_EXTRANJERA = 'E';
     /**
      * {@inheritdoc}
      */
@@ -24,23 +26,23 @@ class Moneda extends \yii\db\ActiveRecord
         return 'moneda';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -51,7 +53,8 @@ class Moneda extends \yii\db\ActiveRecord
         return [
             [['des_moneda', 'status_moneda', 'tipo_moneda'], 'required'],
             [['status_moneda', 'sucursal_moneda'], 'integer'],
-            [['des_moneda'], 'string', 'max' => 50],
+            [['des_moneda','abrv_moneda'], 'string', 'max' => 50],
+            [['abrv_moneda'], 'string', 'max' => 3],
             [['sunatm_moneda'], 'string', 'max' => 10],
             [['tipo_moneda'], 'string', 'max' => 1],
         ];
@@ -67,6 +70,7 @@ class Moneda extends \yii\db\ActiveRecord
             'des_moneda' => Yii::t('moneda', 'Description'),
             'sunatm_moneda' => Yii::t('moneda', 'SUNAT'),
             'tipo_moneda' => Yii::t('moneda', 'Type'),
+            'abrv_moneda' => Yii::t('moneda', 'Abbreviation'),
             'status_moneda' => Yii::t('moneda', 'Status'),
             'sucursal_moneda' => Yii::t('moneda', 'Sucursal Moneda'),
         ];
@@ -78,9 +82,11 @@ class Moneda extends \yii\db\ActiveRecord
 
       if ( !$nac && !$extr ){
         $monedas = Moneda::find()
-                   ->where('status_moneda = :status and sucursal_moneda = :sucursal',[':status' => 1, ':sucursal' => $sucursal])
+                  ->select(['id_moneda', 'concat(des_moneda, " - ", tipo_moneda) des_moneda'])
+                  ->where('status_moneda = :status and sucursal_moneda = :sucursal',[':status' => 1, ':sucursal' => $sucursal])
                   ->orderBy('des_moneda')
                   ->all();
+
         return  ArrayHelper::map( $monedas, 'id_moneda', 'des_moneda');
       } else if ( $nac && !$extr ) {
 
