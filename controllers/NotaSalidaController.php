@@ -46,9 +46,15 @@ class NotaSalidaController extends Controller
     public function actionIndex()
     {
         $searchModel = new NotaSalidaSearch();
-        $searchModel->status_trans = 0;
+        $searchModel->status_trans = NotaSalida::STATUS_UNAPPROVED;
         $searchModel->ope_trans = NotaSalida::OPE_TRANS;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $dataProvider->setSort([
+            'defaultOrder' => [
+                'fecha_trans' => SORT_DESC
+            ]
+        ]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,

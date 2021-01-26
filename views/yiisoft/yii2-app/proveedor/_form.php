@@ -71,39 +71,6 @@ use yii\helpers\Url;
               ]) ?>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-          <?php
-            $provs = Provincia::find()->where(['status_prov' => 1])
-            ->orderBy('des_prov')
-            ->all();
-            $provs = ArrayHelper::map($provs,'id_prov','des_prov');
-            echo Html::hiddenInput('proveedor-selected_provincia', $model->provi_prove, ['id' => 'proveedor-selected_provincia']);
-          ?>
-          <?= $form->field($model, 'provi_prove',[
-            'addClass' => 'form-control'
-            ])->widget(DepDrop::classname(), [
-                'options' => ['placeholder' => Yii::t('app','Select...')],
-                'type' => DepDrop::TYPE_SELECT2,
-                'select2Options' => [
-                    'language' => Yii::$app->language,
-                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
-                    'options' => ['placeholder' => Yii::t('app','Select')],
-                    'theme' => Select2::THEME_DEFAULT,
-                    'pluginOptions' => ['allowClear' => true],
-                    'pluginEvents' =>[]
-                ],
-                'pluginOptions' => [
-                    'initialize' => true,
-                    'depends' => ['proveedor-pais_prove'],
-                    'url' => Url::to(['/provincia/provincias']),
-                    'loadingText' => Yii::t('provincia','Loading provinces').'...',
-                    'params' => ['proveedor-selected_provincia']
-                ]
-            ]) ?>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
         <?php
         $provs = Departamento::find()->where(['status_depto' => 1])
         ->orderBy('des_depto')
@@ -126,13 +93,46 @@ use yii\helpers\Url;
               ],
               'pluginOptions' => [
                   'initialize' => true,
-                  'depends' => ['proveedor-provi_prove'],
-                  'initDepends' => ['pais_prove'],
+                  'depends' => ['proveedor-pais_prove'],
+                  'initDepends' => ['proveedor-pais_prove'],
                   'url' => Url::to(['/departamento/departamentos']),
                   'loadingText' => Yii::t('departamento','Loading departments').'...',
                   'params' => ['proveedor-selected_depatamento']
               ]
           ])?>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <?php
+          $provs = Provincia::find()->where(['status_prov' => 1])
+          ->orderBy('des_prov')
+          ->all();
+          $provs = ArrayHelper::map($provs,'id_prov','des_prov');
+          echo Html::hiddenInput('proveedor-selected_provincia', $model->provi_prove, ['id' => 'proveedor-selected_provincia']);
+        ?>
+        <?= $form->field($model, 'provi_prove',[
+          'addClass' => 'form-control'
+          ])->widget(DepDrop::classname(), [
+              'options' => ['placeholder' => Yii::t('app','Select...')],
+              'type' => DepDrop::TYPE_SELECT2,
+              'select2Options' => [
+                  'language' => Yii::$app->language,
+                  'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                  'options' => ['placeholder' => Yii::t('app','Select')],
+                  'theme' => Select2::THEME_DEFAULT,
+                  'pluginOptions' => ['allowClear' => true],
+                  'pluginEvents' =>[]
+              ],
+              'pluginOptions' => [
+                  'initialize' => true,
+                  'depends' => ['proveedor-depto_prove'],
+                  'url' => Url::to(['/provincia/provincias']),
+                  'loadingText' => Yii::t('provincia','Loading provinces').'...',
+                  'params' => ['proveedor-selected_provincia']
+              ]
+          ]) ?>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
           <?php
@@ -157,7 +157,7 @@ use yii\helpers\Url;
                 ],
                 'pluginOptions' => [
                     'initialize' => true,
-                    'depends' => ['proveedor-depto_prove'],
+                    'depends' => ['proveedor-provi_prove'],
                     'initDepends' => ['pais_dtto'],
                     'url' => Url::to(['/distrito/distritos']),
                     'loadingText' => Yii::t('departamento','Loading districts').'...',

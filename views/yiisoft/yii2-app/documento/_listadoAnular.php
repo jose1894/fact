@@ -27,7 +27,7 @@ $ultimoDiaMes  = date('d-m-Y');
     <div class="documento-index">
 
         <h1><?= Html::encode($this->title) ?></h1>
-        <?php Pjax::begin(['id' => 'grid']); ?>
+        <?php Pjax::begin(['id' => 'grid', 'timeout' => 3000]); ?>
 
         <?= GridView::widget([
             'dataProvider' => $dataProvider,

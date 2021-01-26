@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use app\models\TipoProducto;
+use app\models\Marca;
 use app\models\TipoListap;
 use app\models\UnidadMedida;
 use yii\helpers\ArrayHelper;
@@ -43,7 +44,7 @@ use kartik\number\NumberControl;
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
         <?php
           $tipos = TipoProducto::find()->where(['status_tpdcto' => 1])
           ->orderBy('desc_tpdcto')
@@ -63,7 +64,28 @@ use kartik\number\NumberControl;
                     ],
             ]) ?>
       </div>
-      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+        <?php
+          $tipos = Marca::find()->where(['status_marca' => 1])
+          ->orderBy('desc_marca')
+          ->all();
+          $tipos=ArrayHelper::map($tipos,'id_marca','desc_marca');
+        ?>
+        <?= $form->field($model, 'marca_prod',[
+          'addClass' => 'form-control'
+          ])->widget(Select2::classname(), [
+                    'data' => $tipos,
+                    'language' => Yii::$app->language,
+                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                    'options' => ['placeholder' => Yii::t('marca','Select a make').'...'],
+                    'theme' => Select2::THEME_DEFAULT,
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+            ]) ?>
+      </div>
+
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
         <?php
           $unidades = UnidadMedida::find()->where(['status_und' => 1])
           ->orderBy('des_und')
@@ -83,7 +105,7 @@ use kartik\number\NumberControl;
                     ],
             ]) ?>
       </div>
-      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
         <?= $form->field($model, 'contenido_prod',[
           'addClass' => 'form-control',
           'addon' => [ 'prepend' => ['content'=>'#']]

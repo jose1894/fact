@@ -21,19 +21,25 @@ use wbraganca\dynamicform\DynamicFormWidget;
 use kartik\select2\Select2;
 use app\base\Model;
 use app\controllers\SiteController;
+use kartik\bs4dropdown\ButtonDropdown;
 
 /* @var $this yii\web\View */
 /* @var $modelPedido app\models\Pedido */
 /* @var $form yii\widgets\ActiveForm */
-$disabled = false;
-$disabledPedido = true;
 
-if ( $model->isNewRecord  && empty($modelPedido) ) {
+if ( $model->isNewRecord && !$modelPedido->isNewRecord ) {
   $model->cod_doc = "0000000000";
+  $disabledPedido = true;
+  $disabled = false;
+} else if ( $model->isNewRecord && $modelPedido->isNewRecord) {
+  $model->cod_doc = "0000000000";
+  $disabled = false;
   $disabledPedido = false;
-} else {
-  $disabled = true;
 }
+// else {
+//   $disabled = true;
+//   $disabledPedido = false;
+// }
 ?>
 <div class="row">
   <h2 class="page-header">
@@ -75,7 +81,9 @@ if ( $model->isNewRecord  && empty($modelPedido) ) {
                                   'language' => Yii::$app->language,
                                   'size' => Select2::SMALL,
                                   'disabled' => $disabledPedido,
-                                  'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-users"></i>']],
+                                  'addon' => [
+                                    'prepend' => ['content'=>'<i class="fa fa-users"></i>'],
+                                  ],
                                   'initValueText' => $clienteText, // set the initial display text
                                   'options' => ['placeholder' => Yii::t('cliente','Select a customer').'...'],
                                   'theme' => Select2::THEME_DEFAULT,
@@ -128,7 +136,8 @@ if ( $model->isNewRecord  && empty($modelPedido) ) {
                         ])->dropDownList( $list,[
                           'custom' => true,
                           'prompt' => Yii::t('app','Select...'),
-                          'disabled' => $disabledPedido,
+                          // 'disabled' => $disabledPedido,
+                          'disabled' => true,
                         ])?>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -136,7 +145,8 @@ if ( $model->isNewRecord  && empty($modelPedido) ) {
                             'addClass' => 'form-control input-sm'
                           ])->textInput([
                             'maxlength' => true,
-                            'disabled'=> $disabledPedido,
+                            // 'disabled'=> $disabledPedido,
+                            'disabled' => true,
                             'style' => ['text-align' => 'right']
                             ]) ?>
                     </div>
@@ -324,7 +334,7 @@ if ( $model->isNewRecord  && empty($modelPedido) ) {
                                 'placeholder' => Yii::t('almacen','Select a warehouse').'...',
                               ],
                               'size' => Select2::SMALL,
-                               'disabled' => true,
+                              'disabled' => $disabledPedido,
                       ])?>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -332,20 +342,23 @@ if ( $model->isNewRecord  && empty($modelPedido) ) {
                   <?php
                     $tipoMovimiento = TipoMovimiento::getTipoMovList(TipoMovimiento::TIPO_SALIDA);
                     echo Html::hiddenInput("Documento[tipomov_doc]", $model::TIPO_FACTURA,['id'=>'Documento-tipo_movimiento']);
+                    // array_unshift($tipoMovimiento,Yii::t('tipo_movimiento', 'Select a type'));
                   ?>
                   <?= Select2::widget([
                         'name' => 'tipo_movimiento',
                         'language' => Yii::$app->language,
                         'data' => $tipoMovimiento,
-                        'value' => $model->almacen_doc,
                         'theme' => Select2::THEME_DEFAULT,
                         'size' => Select2::SMALL,
-                        'disabled' => true,
+                        'disabled' => $disabledPedido,
                         'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-archive"></i>']],
                         'options' => [
                             'placeholder' => Yii::t('tipo_movimiento','Select a type'),
                             'options' => [
-                                $model::TIPO_FACTURA => ['selected' => true],
+                                $model::TIPO_FACTURA => [
+                                  'selected' => $disabledPedido,
+                                  'disabled' => !$disabledPedido,
+                                ],
                             ]
                         ],
                     ]);?>
@@ -353,6 +366,8 @@ if ( $model->isNewRecord  && empty($modelPedido) ) {
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                   <?php
                     $motivoTraslado = MotivoTraslado::getMotivos();
+                    // array_unshift($motivoTraslado,Yii::t('motivo_traslado', 'Select a reason'));
+                    // var_dump($motivoTraslado);exit();
                   ?>
                   <?=  $form->field($model, 'motivo_doc',[
                       'addClass' => 'form-control input-sm',
@@ -364,9 +379,12 @@ if ( $model->isNewRecord  && empty($modelPedido) ) {
                           //'disabled' => true,
                           'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-archive"></i>']],
                           'options' => [
-                              'placeholder' => Yii::t('motivo_traslado','Select a reason'),
+                              'prompt' => Yii::t('motivo_traslado','Select a reason'),
                               'options' => [
-                                $model::MOTIVO_GUIAFACTURA => [ 'selected' => true]
+                                $model::MOTIVO_GUIAFACTURA => [
+                                  'selected' => $disabledPedido,
+                                  'disabled' => !$disabledPedido
+                                ]
                               ]
                           ],
                     ]);?>
@@ -377,7 +395,7 @@ if ( $model->isNewRecord  && empty($modelPedido) ) {
         </div>
       </div>      <!-- Direccion de partida y envío-->
 
-      </div>
+      <!-- </div> -->
 
 
       <?php
@@ -408,14 +426,25 @@ if ( $model->isNewRecord  && empty($modelPedido) ) {
             ]); ?>
 
             <div class="row">
-                <div class="col-sm-8 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
+                <div class="col-sm-7 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
                 <div class="col-sm-4 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
+                <div class="col-sm-1 col-xs-12">
+                  <button type="button"
+                          class="add-item btn btn-success btn-flat btn-md"
+                          style="width:100%"
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title="<?= Yii::t('app','Add item')?>"
+                          <?=$disabled ? 'disabled':''?>>
+                    <i class="fa fa-plus"></i>
+                  </button>
+              </div>
             </div>
             <hr>
             <div class="table-body"><!-- widgetContainer -->
             <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
                     <div class="row detalle-item"><!-- widgetBody -->
-                      <div class="col-sm-8 col-xs-12">
+                      <div class="col-sm-7 col-xs-12">
                       <?php
 
                       $resultsJs = '
@@ -437,20 +466,21 @@ if ( $model->isNewRecord  && empty($modelPedido) ) {
                         }
                         $url = Url::to(['producto/producto-list']);
 
-                        $producto = [];
+                        $productos = Producto::getProductoList();
 
-                        if ( !empty($modelDetalle->prod_pdetalle) )
-                        {
+                        // if ( !empty($modelDetalle->prod_pdetalle) )
+                        // {
                           $producto = Producto::findOne($modelDetalle->prod_pdetalle);
-                        }
+                        // }
 
 
-                        $productos = empty($modelDetalle->prod_pdetalle) ? '' : $producto->cod_prod.' '.$producto->des_prod.' - '.$producto->umedProd->des_und;
+                        // $productos = empty($modelDetalle->prod_pdetalle) ? '' : $producto->cod_prod.' '.$producto->des_prod.' - '.$producto->umedProd->des_und;
                         echo $form->field($modelDetalle, "[{$index}]prod_pdetalle",[
                           'addClass' => 'form-control ',
                           ])->widget(Select2::classname(), [
                             'language' => Yii::$app->language,
-                            'initValueText' => $productos, // set the initial display text
+                            'initValueText' => $producto, // set the initial display text
+                            'data' => $productos,
                             'disabled' => $disabledPedido,
                             'options' => [
                                 'placeholder' => Yii::t('producto','Select a product').'...',
@@ -463,36 +493,37 @@ if ( $model->isNewRecord  && empty($modelPedido) ) {
                                     'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
                                     'inputTooShort' => new JsExpression("function() {  return '".Yii::t('app','Please input {number} or more characters', [ 'number'=> 3 ])."';}"),
                                 ],
-                            'ajax' => [
-                                'url' => $url,
-                                'dataType' => 'json',
-                                'method' => 'POST',
-                                'data' => new JsExpression('function(params) { return {desc:params.term,tipo_listap: $("#pedido-tipo_listap").val()}; }'),
-                                'processResults' => new JsExpression($resultsJs),
-                            ],
-                            'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-                            'templateSelection' => new JsExpression( 'function (repo) { return repo.text; }'),
-                            'templateResult' => new JsExpression('function (producto) {
-                                if (producto.loading) {
-                                    return producto.text;
-                                }
-                               var markup =
-                                        "<div class=\\"row\\">" +
-                                            "<div class=\\"col-sm-4\\">" +
-                                                "<b style=\\"margin-left:5px\\"> " + producto.cod_prod + "</b>" +
-                                            "</div>" +
-                                            "<div class=\\"col-sm-4\\"><b>U.M.:</b> " + producto.des_und + "</div>" +
-                                            "<div class=\\"col-sm-4\\"><b>Stock:</b> " + producto.stock_prod + "</div>" +
-                                        "</div>";
+                            // 'ajax' => [
+                            //     'url' => $url,
+                            //     'dataType' => 'json',
+                            //     'method' => 'POST',
+                            //     'data' => new JsExpression('function(params) { return {desc:params.term,tipo_listap: $("#pedido-tipo_listap").val()}; }'),
+                            //     'processResults' => new JsExpression($resultsJs),
+                            // ],
+                            // 'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                            // 'templateSelection' => new JsExpression( 'function (repo) { return repo.text; }'),
+                            // 'templateResult' => new JsExpression('function (producto) {
+                            //     if (producto.loading) {
+                            //         return producto.text;
+                            //     }
+                            //    var markup =
+                            //             "<div class=\\"row\\">" +
+                            //                 "<div class=\\"col-sm-4\\">" +
+                            //                     "<b style=\\"margin-left:5px\\"> " + producto.cod_prod + "</b>" +
+                            //                 "</div>" +
+                            //                 "<div class=\\"col-sm-4\\"><b>U.M.:</b> " + producto.des_und + "</div>" +
+                            //                 "<div class=\\"col-sm-4\\"><b>Stock:</b> " + producto.stock_prod + "</div>" +
+                            //             "</div>";
+                            //
+                            //     if (producto.des_prod) {
+                            //       markup += "<p>" + producto.des_prod + "</p>";
+                            //     }
+                            //
+                            //     return "<div style=\\"overflow:hidden;\\">" + markup + "</div>";
+                            //
+                            //   }'),
 
-                                if (producto.des_prod) {
-                                  markup += "<p>" + producto.des_prod + "</p>";
-                                }
-
-                                return "<div style=\\"overflow:hidden;\\">" + markup + "</div>";
-
-                            }'),
-                            ],
+                          ],
                         ])->label(false);
 
                         echo Html::activeHiddenInput($modelDetalle, "[{$index}]prod_pdetalle");
@@ -504,6 +535,12 @@ if ( $model->isNewRecord  && empty($modelPedido) ) {
                         ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control input-sm number-integer'])
                         ->textInput(['type' => 'text', 'readonly' => $disabledPedido])
                         ->label(false)?>
+                      </div>
+                      <div class="col-sm-1 col-xs-12">
+                        <button type="button" class="remove-item btn btn-danger btn-flat btn-sm" style="width:100%"
+                        data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Delete item')?>" <?=$disabled ? 'disabled':''?>>
+                          <i class="fa fa-trash"></i>
+                        </button>
                       </div>
                   </div>
             <?php endforeach; ?>
@@ -920,7 +957,6 @@ $( "#submit" ).on( "click", function() {
 ';
 
 Yii::$app->view->registerJs($js,View::POS_END);
-
 
 Yii::$app->view->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
 ['depends'=>[\yii\web\JqueryAsset::className()],

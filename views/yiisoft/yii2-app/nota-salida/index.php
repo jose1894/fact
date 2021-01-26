@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="nota-salida-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(['id' => 'grid']); ?>
+    <?php Pjax::begin(['id' => 'grid', 'timeout' => 3000]); ?>
 
     <p>
         <?= Html::a(Yii::t('salida', 'Create exit note'), ['create'], ['class' => 'btn btn-flat btn-success']) ?>
@@ -38,9 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
               'attribute'=>'fecha_trans',
-              // 'value' => function($data){
-              //      return Yii::$app->formatter->asDate($data->fecha_trans, 'dd/MM/yyyy');
-              // },
               'format' => ['date', 'php:d/m/Y'],
               'filterType' => GridView::FILTER_DATE_RANGE,
               'filterWidgetOptions' => ([
@@ -66,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'value' => function($data){
                    return $data->tipoTrans->des_tipom;
               },
-              'filter'=>TipoMovimiento::getTipoMovList( 'E' ),
+              'filter'=>TipoMovimiento::getTipoMovList( 'S' ),
               'filterType' => GridView::FILTER_SELECT2,
               'filterWidgetOptions' => [
                   'language' => Yii::$app->language,
@@ -95,8 +92,6 @@ $this->params['breadcrumbs'][] = $this->title;
               ],
               'width' => '10%',
             ],
-            //'obsv_trans:ntext',
-
             [
                 'class' => '\kartik\grid\ActionColumn',
                 'headerOptions' => ['style' => 'color:#337ab7'],

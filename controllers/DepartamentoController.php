@@ -253,7 +253,6 @@ class DepartamentoController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
         $out = [];
         $list = Departamento::find()->andWhere(['pais_depto' => $cat_id])->asArray()->all();
-      //  echo $list->createCommand()->getRawSql();
         if (count($list) > 0) {
             foreach ($list as $i => $departamentos) {
                 $out[] = ['id' => $departamentos['id_depto'], 'name' => $departamentos['des_depto']];

@@ -38,23 +38,23 @@ class Producto extends \yii\db\ActiveRecord
         return 'producto';
     }
 
-    public function beforeSave($insert)     
-    {         
-        if (parent::beforeSave($insert)) {             
-            if ($this->isNewRecord) {                 
-                // if it is new record save the current timestamp as created time                 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                // if it is new record save the current timestamp as created time
                 $this->created_by = Yii::$app->user->id;
-                $this->created_at = time();            
+                $this->created_at = time();
                 return true;
-            }                         
-        
-            // if it is new or update record save that timestamp as updated time            
-            $this->updated_at = time();            
-            $this->updated_by = Yii::$app->user->id;
-            return true;         
-        }         
+            }
 
-        return false;   
+            // if it is new or update record save that timestamp as updated time
+            $this->updated_at = time();
+            $this->updated_by = Yii::$app->user->id;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -63,8 +63,8 @@ class Producto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['cod_prod', 'des_prod', 'tipo_prod', 'umed_prod', 'contenido_prod', 'status_prod', ], 'required'],
-            [['tipo_prod', 'umed_prod', 'contenido_prod', 'exctoigv_prod', 'compra_prod', 'venta_prod', 'stockini_prod', 'stockmax_prod', 'stockmin_prod', 'status_prod', 'sucursal_prod'], 'integer'],
+            [['cod_prod', 'des_prod', 'tipo_prod', 'umed_prod', 'contenido_prod', 'status_prod', 'marca_prod' ], 'required'],
+            [['tipo_prod', 'umed_prod', 'contenido_prod', 'marca_prod', 'exctoigv_prod', 'compra_prod', 'venta_prod', 'stockini_prod', 'stockmax_prod', 'stockmin_prod', 'status_prod', 'sucursal_prod'], 'integer'],
             [['cod_prod'], 'string', 'max' => 25],
             [['codfab_prod'], 'string', 'max' => 45],
             [['des_prod'], 'string', 'max' => 70],
@@ -89,6 +89,7 @@ class Producto extends \yii\db\ActiveRecord
             'tipo_prod' => Yii::t('tipo_producto', 'Product type'),
             'umed_prod' => Yii::t('unidad_medida', 'Unit of measurement'),
             'contenido_prod' => Yii::t('producto', 'Content'),
+            'marca_prod' => Yii::t('marca', 'Make'),
             'exctoigv_prod' => Yii::t('producto', 'IGV exemption'),
             'compra_prod' => Yii::t('producto', 'Product for purchase'),
             'venta_prod' => Yii::t('producto', 'Product for sale'),
@@ -111,6 +112,14 @@ class Producto extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getMarca()
+    {
+        return $this->hasOne(Marca::className(), ['id_marca' => 'marca_prod']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getUmedProd()
     {
         return $this->hasOne(UnidadMedida::className(), ['id_und' => 'umed_prod']);
@@ -120,14 +129,14 @@ class Producto extends \yii\db\ActiveRecord
     {
        return $this->hasMany(ListaPrecios::className(), ['prod_lista' => 'id_prod']);
     }
-	
-	public static function getProductoList() 
-	{
-		
-		$productos = Producto::find()
-						->select(['id_prod','concat(rtrim(ltrim(cod_prod)),\' - \',rtrim(ltrim(des_prod))) as des_prod'])
-						->where(['status_prod' => Producto::STATUS_PROD_ACTIVE])->all();
-		
-		return ArrayHelper::map($productos,'id_prod','des_prod');
-	}
+
+		public static function getProductoList()
+		{
+
+			$productos = Producto::find()
+							->select(['id_prod','concat(rtrim(ltrim(cod_prod)),\' - \',rtrim(ltrim(des_prod))) as des_prod'])
+							->where(['status_prod' => Producto::STATUS_PROD_ACTIVE])->all();
+
+			return ArrayHelper::map($productos,'id_prod','des_prod');
+		}
 }

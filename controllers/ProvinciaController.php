@@ -102,7 +102,7 @@ class ProvinciaController extends Controller
                       Yii::$app->response->format = Response::FORMAT_JSON;
                       $return = [
                         'success' => true,
-                        'title' => Yii::t('provincia', 'Estate / Province'),
+                        'title' => Yii::t('provincia', 'Municipality / Province'),
                         'message' => Yii::t('app','Record has been saved successfully!'),
                         'type' => 'success'
                       ];
@@ -113,7 +113,7 @@ class ProvinciaController extends Controller
                   Yii::$app->response->format = Response::FORMAT_JSON;
                   $return = [
                     'success' => false,
-                    'title' => Yii::t('provincia', 'Estate / Province'),
+                    'title' => Yii::t('provincia', 'Municipality / Province'),
                     'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
                     'type' => 'error'
 

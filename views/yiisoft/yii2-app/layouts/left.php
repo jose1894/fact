@@ -77,6 +77,7 @@
                         ['label' => Yii::t('cliente','Customer'), 'url' => ['/cliente'], 'icon' => 'users', 'visible' => Yii::$app->user->can('/cliente/index')],
                         ['label' => Yii::t('proveedor','Supplier'), 'url' => ['/proveedor'], 'icon' => 'suitcase', 'visible' => Yii::$app->user->can('/proveedor/index')],
                         ['label' => Yii::t('producto','Product'), 'url' => ['/producto'], 'icon' => 'tags', 'visible' => Yii::$app->user->can('/producto/index')],
+                        ['label' => Yii::t('marca','Make'), 'url' => ['/marca'], 'icon' => 'tags', 'visible' => Yii::$app->user->can('/marca/index')],
                         ['label' => Yii::t('serie','Numeration'), 'url' => ['/numeracion'], 'icon' => 'tachometer', 'visible' => Yii::$app->user->can('/numeracion/index')],
                         ['label' => Yii::t('motivo_traslado','Transfer reason'), 'url' => ['/motivo-traslado'], 'icon' => 'bookmark', 'visible' => Yii::$app->user->can('/motivo-traslado/index')],
                       ]

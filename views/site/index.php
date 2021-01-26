@@ -16,7 +16,7 @@ $this->title = 'Resumen';
 
 
 $date = DateTime::createFromFormat("d/m/Y", date("d/m/Y"));
-$mes = Yii::t('app',strftime("%B",$date->getTimestamp()))
+$mes = Yii::t('app',strftime("%B",$date->getTimestamp()));
 ?>
 
 
@@ -116,6 +116,7 @@ $mes = Yii::t('app',strftime("%B",$date->getTimestamp()))
 
 
 <?php
+
 
 $ventasFacturas = DocumentoSearch::showVentasDiarias();
 $ventasProformas = PedidoSearch::showVentasProformas();

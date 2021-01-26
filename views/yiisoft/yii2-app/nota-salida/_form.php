@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use app\models\TipoMovimiento;
+use app\models\TipoCambio;
 use app\models\Almacen;
 use app\models\Moneda;
 use app\models\Producto;
@@ -25,6 +26,36 @@ $disabled = true;
 if ( !$model->status_trans ) {
   $disabled = false;
 }
+
+$this->registerCss('
+.disabled-select {
+  background-color: #d5d5d5;
+  opacity: 0.5;
+  border-radius: 3px;
+  cursor: no-drop;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+select[readonly].select2-hidden-accessible + .select2-container {
+  pointer-events: none;
+  touch-action: none;
+}
+
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection {
+  background: #eee;
+  box-shadow: none;
+}
+
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection__arrow,
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection__clear {
+  display: none;
+  cursor: no-drop !important;
+}
+');
 ?>
 
 <div class="nota-ingreso-form">
@@ -64,7 +95,7 @@ if ( !$model->status_trans ) {
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
             <?php
                 $mov = TipoMovimiento::getTipoMovList( $model::OPE_TRANS );
             ?>
@@ -82,7 +113,7 @@ if ( !$model->status_trans ) {
                         // ],
                 ]) ?>
           </div>
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
 
             <?php $almacenes = Almacen::getAlmacenList();?>
 
@@ -101,7 +132,7 @@ if ( !$model->status_trans ) {
 
                 ]) ?>
           </div>
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
               <?php
                 $monedas = Moneda::getMonedasList();
               ?>
@@ -138,7 +169,8 @@ if ( !$model->status_trans ) {
               ]); ?>
 
               <div class="row">
-                  <div class="col-sm-7 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
+                  <div class="col-sm-1 col-xs-12">#</div>
+                  <div class="col-sm-6 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
                   <div class="col-sm-2 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
                   <div class="col-sm-2 col-xs-12"><?= Yii::t( 'salida', 'Cost')?></div>
                   <div class="col-sm-1 col-xs-12">
@@ -153,7 +185,10 @@ if ( !$model->status_trans ) {
               <div class="table-body"><!-- widgetContainer -->
               <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
                       <div class="row detalle-item"><!-- widgetBody -->
-                        <div class="col-sm-7 col-xs-12">
+                        <div class="col-sm-1 col-xs-12 nro">
+                          <?= ( $index + 1 )?>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
                         <?php
                           // necessary for update action.
                           if (!$modelDetalle->isNewRecord) {
@@ -236,7 +271,7 @@ if ( !$model->status_trans ) {
 
                         <div class="col-sm-2 col-xs-12">
                           <?= $form
-                          ->field($modelDetalle,"[{$index}]cant_detalle",[ 'addClass' => 'form-control number-decimals'])
+                          ->field($modelDetalle,"[{$index}]cant_detalle",[ 'addClass' => 'form-control number-integer'])
                           ->textInput([
                             'type' => 'number',
                             'min' => 1,
@@ -308,6 +343,9 @@ $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
 });
 $(".dynamicform_wrapper").on("afterInsert", function(e, item) {
     //console.log("afterInsert");
+    jQuery(".dynamicform_wrapper .nro").each(function(index) {
+        jQuery(this).html(index + 1)
+    });
 });
 $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
   if ( confirm("'.Yii::t('producto','Are you sure to delete this product?').'") ) {
@@ -318,6 +356,9 @@ $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
 
 $(".dynamicform_wrapper").on("afterDelete", function(e) {
     console.log("Deleted item!");
+    jQuery(".dynamicform_wrapper .nro").each(function(index) {
+        jQuery(this).html(index + 1)
+    });
 });
 $(".dynamicform_wrapper").on("limitReached", function(e, item) {
     alert("Limit reached");
@@ -346,6 +387,8 @@ $( ".table-body" ).on("select2:select","select[id$=\'prod_detalle\']",function()
     _currSelect.focus();
   }
 
+  setCosts($( this ).val(), row);
+
   $( "#notasalidadetalle-" + row + "-cant_detalle" ).focus();
 
 });
@@ -355,10 +398,31 @@ $( ".table-body" ).on( "keyup","input[id$=\'cant_detalle\']",function( e ) {
   row = row[ 1 ];
 
   if ( e.keyCode === 13 && $( this ).val() ) {
-    $( "#notaingresodetalle-" + row + "-costo_detalle" ).focus();
+      $( this ).trigger( "blur" );
+    // $( "#notasalidadetalle-" + row + "-costo_detalle" ).focus();
   }
 
 });
+
+$( ".table-body" ).on( "blur", "input[id$=\'cant_detalle\']", function( e ) {
+
+    if ( +$( this ).val() > +$( this ).data( "stock") ) {
+      swal( "Oops!", "' . Yii::t( 'pedido', 'You can´t input a value greather than the avalaible stock'). '", "warning");
+      $( this ).val("");
+      $( this ).focus();
+      $( this ).select();
+      return false;
+    }
+
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+    $( "#notasalidadetalle-" + row + "-costo_detalle" ).focus();
+    $( "#notasalidadetalle-" + row + "-costo_detalle" ).select();
+
+});
+
+
+
 $( ".table-body" ).on( "keyup","input[id$=\'costo_detalle\']",function( e ) {
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
@@ -375,11 +439,12 @@ $( ".table-body" ).on( "keyup","input[id$=\'costo_detalle\']",function( e ) {
         $( ".add-item" ).trigger( "click" );
         $( "#notasalidadetalle-" + row + "-prod_detalle").focus();
         $( "#notasalidadetalle-" + row + "-prod_detalle").select2("open");
+        $( "#notasalida-moneda_trans").attr("readonly", true);
+        $( "#notasalida-almacen_trans").attr("readonly", true);
       }
     });
   }
 });
-
 
 $( "#submit" ).on( "click", function() {
   let form = $( "form#' . $model->formName() . '" );
@@ -458,6 +523,37 @@ $( "body" ).on( "click", buttonCancel, function(){
   $( frameRpt ).attr( "src", "about:blank" );
   $( modalRpt ).modal("hide");
 });
+
+function setCosts( value = null, row ) {
+  if ( value ) {
+    $.ajax({
+        url:"'.Url::to(['producto/product-costo']).'",
+        data:{
+          id: value,
+        },
+        async: false,
+        success: function( data ) {
+          if ( data.results.length ) {
+            let tipoCambio = '.json_encode(TipoCambio::getTipoCambio()).';
+            let costo = +data.results[ 0 ].costo;
+            let tipoMoneda = data.results[ 0 ].tipo_moneda;
+            let moneda = +data.results[ 0 ].moneda_compra;
+            let tm = $("#notasalida-moneda_trans option:selected").html().split(" - ")[1];
+            let mon = +$("#notasalida-moneda_trans option:selected").val();
+            $( "#notasalidadetalle-" + row + "-cant_detalle" ).data( "stock", data.results[ 0 ].stock);
+
+
+            if ( tipoMoneda !== tm && tm === "E" ) {
+              costo = costo / tipoCambio.valorf_tipoc;
+            }
+
+            costo = parseFloat(  costo  ).toFixed( 2 );
+            $( "#notasalidadetalle-" + row + "-costo_detalle" ).val( costo );
+          }
+        }
+    });
+  }
+}
 ';
 $this->registerJs($js.$jsTrigger,View::POS_LOAD);
 

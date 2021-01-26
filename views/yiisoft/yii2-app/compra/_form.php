@@ -172,7 +172,7 @@ if ( $model->isNewRecord ) {
           'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
           'widgetBody' => '.table-body', // required: css class selector
           'widgetItem' => '.detalle-item', // required: css class
-          //'limit' => 10, // the maximum times, an element can be cloned (default 999)
+          'limit' => 60, // the maximum times, an element can be cloned (default 999)
           'min' => 0, // 0 or 1 (default 1)
           'insertButton' => '.add-item', // css class
           'deleteButton' => '.remove-item', // css class
@@ -253,7 +253,7 @@ if ( $model->isNewRecord ) {
               </div>
               <div class="col-sm-1 col-xs-12">
                 <?= $form
-                ->field($modelDetalle,"[{$index}]cant_cdetalle",[ 'addClass' => 'form-control b number-decimals'])
+                ->field($modelDetalle,"[{$index}]cant_cdetalle",[ 'addClass' => 'form-control b number-integer'])
                 ->textInput(['type' => 'number','min' => 0, 'step' => 1, 'placeholder' => Yii::t('compra' , 'Quantity')])
                 ->label(false)?>
               </div>

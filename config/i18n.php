@@ -98,6 +98,14 @@ return [
                 'numeracion' => 'numeracion.php',
             ],
         ],
+        'marca' => [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@app/messages',
+            'sourceLanguage' => 'en-US',
+            'fileMap' => [
+                'marca' => 'marca.php',
+            ],
+        ],
         'moneda' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',
@@ -185,7 +193,7 @@ return [
             'fileMap' => [
               'rpts' => 'rpts.php',
             ],
-        ],        
+        ],
         'salida' => [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => '@app/messages',

@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="serie-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(['id' => 'grid']); ?>
+    <?php Pjax::begin(['id' => 'grid', 'timeout' => 3000]); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>

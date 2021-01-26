@@ -51,6 +51,12 @@ class NotaIngresoController extends Controller
         $searchModel->ope_trans = NotaIngreso::OPE_TRANS;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $dataProvider->setSort([
+            'defaultOrder' => [
+                'fecha_trans' => SORT_DESC
+            ]
+        ]);
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

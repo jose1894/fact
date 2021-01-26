@@ -33,7 +33,8 @@ class NotaSalidaDetalle extends \yii\db\ActiveRecord
         return [
             [['prod_detalle', 'cant_detalle'], 'required'],
             [['trans_detalle', 'prod_detalle'], 'integer'],
-            [['cant_detalle','costo_detalle'],'number','min'=>1],
+            [['cant_detalle'],'number','min'=>1],
+            [['costo_detalle'],'number'],
             [['trans_detalle'], 'exist', 'skipOnError' => true, 'targetClass' => NotaSalida::className(), 'targetAttribute' => ['trans_detalle' => 'id_trans']],
             [['prod_detalle'], 'exist', 'skipOnError' => true, 'targetClass' => Producto::className(), 'targetAttribute' => ['prod_detalle' => 'id_prod']],
         ];
@@ -45,11 +46,11 @@ class NotaSalidaDetalle extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_detalle' => Yii::t('tipo_movimiento', 'Id Detalle'),
-            'trans_detalle' => Yii::t('tipo_movimiento', 'Trans Detalle'),
-            'prod_detalle' => Yii::t('tipo_movimiento', 'Prod Detalle'),
-            'cant_detalle' => Yii::t('tipo_movimiento', 'Cant Detalle'),
-            'cant_detalle' => Yii::t('tipo_movimiento', 'Costo Detalle'),
+            'id_detalle' => Yii::t('salida', 'Code'),
+            'trans_detalle' => Yii::t('salida', 'Trans Detalle'),
+            'prod_detalle' => Yii::t('salida', 'Product'),
+            'cant_detalle' => Yii::t('salida', 'Qtty'),
+            'costo_detalle' => Yii::t('salida', 'Cost'),
         ];
     }
 

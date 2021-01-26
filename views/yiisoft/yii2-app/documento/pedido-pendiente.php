@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="pedido-index">
     <h4><?= Html::encode($this->title) ?></h4>
-    <?php Pjax::begin(['id' => 'grid']); ?>
+    <?php Pjax::begin(['id' => 'grid', 'timeout' => 3000]); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([

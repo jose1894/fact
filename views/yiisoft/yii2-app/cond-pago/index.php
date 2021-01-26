@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="cond-pago-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(['id' => 'grid']); ?>
+    <?php Pjax::begin(['id' => 'grid', 'timeout' => 3000]); ?>
 
     <p>
         <?= Html::a(Yii::t('condicionp', 'Create payment condition'), ['create','asDialog' => 1 ], ['id' => 'create','class' => 'btn btn-success btn-flat']) ?>

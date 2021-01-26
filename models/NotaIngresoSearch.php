@@ -51,12 +51,12 @@ class NotaIngresoSearch extends NotaIngreso
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        
         $this->load($params);
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+            $query->where('0=1');
             return $dataProvider;
         }
 
@@ -70,7 +70,6 @@ class NotaIngresoSearch extends NotaIngreso
         // grid filtering conditions
         $query->andFilterWhere([
             'id_trans' => $this->id_trans,
-            // 'fecha_trans' => $this->fecha_trans,
             'tipo_trans' => $this->tipo_trans,
             'ope_trans' => $this->ope_trans,
             'status_trans' => $this->status_trans,

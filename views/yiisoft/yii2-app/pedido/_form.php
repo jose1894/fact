@@ -363,14 +363,14 @@ if ( $model->isNewRecord ) {
           <?php DynamicFormWidget::end(); ?>
           <hr>
           <table class="table table-fixed table-stripped">
-            <tr>
+            <!--tr>
               <td class="col-xs-6" style="text-align:right;">
                 <?= Yii::t('app', 'Subtotal') ?>
               </td>
               <td class="col-xs-2">
                 <input type="text" id="subtotal1" name="subtotal" readonly class="form-control totales" value="">
               </td>
-            </tr>
+            </tr-->
             <tr>
               <td class="col-xs-6" style="text-align:right;">
                 <?= Yii::t('app', 'Discount') ?>
@@ -478,29 +478,34 @@ $( buttonPrint ).on( "click", function(){
   $( modalRpt ).modal("show");
 });
 
+$( "#pedido-clte_pedido" ).on( "select2:select",function () {
+  $( "#pedido-clte_pedido" ).trigger( "change");
+});
+
 $( "#pedido-clte_pedido" ).on( "change",function () {
   console.log("changed");
   $.ajax({
     url: "'. Url::to(['cliente/cliente-list']).'",
     method: "GET",
-    data:{ id : $(this).val()},
+    data: { id : $(this).val()},
+    async: false,
     success: function( cliente ) {
       console.log("cliente");
       cliente = cliente[ 0 ];
-      let direccion = cliente.direcc_clte ? cliente.direcc_clte : " ",
-          geo = cliente.geo ? cliente.geo : " ",
+      let direccion = cliente ? cliente.direcc_clte : " ",
+          geo = cliente ? cliente.geo : " ",
           //textDirecc = direccion + " " + geo,
           textDirecc = direccion,
-          condp = cliente.condp,
-          vendedor = cliente.vendedor,
-          tpl = cliente.tpl;
+          condp = cliente ? cliente.condp : " ",
+          vendedor = cliente ? cliente.vendedor : " ",
+          tpl = cliente ? cliente.tpl : " ";
 
       $( "#pedido-direccion_pedido" ).val( textDirecc );
 
 	  //$( "#pedido-condp_pedido" ).val( 10 ).trigger( "select2:select" );
 
       if ( !$( "#pedido-condp_pedido" ).val() ) {
-        $( "#pedido-condp_pedido" ).val( condp ).trigger( "select2:select" );
+        $( "#pedido-condp_pedido" ).val( condp ).trigger( "change" );
       }
 
       $( "#pedido-vend_pedido" ).val( vendedor );
@@ -526,8 +531,8 @@ $('select[id$=\"prod_pdetalle\"]').each(function( i ){
 
   let row = $( this ).attr( \"id\" ).split( \"-\" );
   row = row[ 1 ];
-
-  setPrices( $( this ).val(), row,   $( \"#pedido-tipo_listap\" ).val() );
+  let sync = true;
+  setPrices( $( this ).val(), row,   $( \"#pedido-tipo_listap\" ).val() , sync);
   $('#pedidodetalle-' + row + '-descu_pdetalle').trigger( 'change' );
   $('#pedidodetalle-' + row + '-precio_pdetalle').trigger( 'blur' );
 });
@@ -558,8 +563,12 @@ $('#pedido_tipo  input[type="radio"]').iCheck({
   let tipoLista = parseInt( $( "#pedido-tipo_listap" ).val() );
 
   if ( valor ) {
-    setPrices( valor, row, tipoLista);
     $( '#pedidodetalle-' + row + '-cant_pdetalle' ).focus();
+    $( '#pedidodetalle-' + row + '-cant_pdetalle' ).val("");
+    $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val("");
+    $( '#pedidodetalle-' + row + '-precio_pdetalle' ).val("");
+    $( '#pedidodetalle-' + row + '-total_pdetalle' ).val("");
+    setPrices( valor, row, tipoLista);
   }
 
 });
@@ -575,62 +584,83 @@ $( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ) {
 
     if ( precioLista !== precio && precio === 0 ) {
       precio = precioLista;
+      // $( "#pedidodetalle-" + row + "-precio_pdetalle").val( precio );
     }
 
     if ( cant ) {
+      if ( precio ) 
+        if ( descu ) {
+          precio = round( precioLista - (precioLista * ( descu / 100 ) ) );
+          total = ( cant * precio );
+        } else {
+          total = cant * precio;
+        }
 
-      if ( descu ) {
-        total = ( cant * ( precio - (precio * ( descu / 100 ) ) ) );
-      } else {
-        total = cant * precio;
-      }
 
       total = parseFloat(  total  ).toFixed( 2 );
       $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
-
+      $( "#pedidodetalle-" + row + "-precio_pdetalle").val( precio );
       calculateTotals( IMPUESTO );
     }
 });
 
 $( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+    let descu = +$( this ).val();
+    let precioLista = +$( "#pedidodetalle-" + row + "-plista_pdetalle").val();
+    let precio = +$( "#pedidodetalle-" + row + "-precio_pdetalle").val();
+    let cant = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
+
     if ( e.keyCode !== 13 ) {
-      let row = $( this ).attr( "id" ).split( "-" );
-      row = row[ 1 ];
-      let descu = +$( this ).val();
-      let precioLista = +$( "#pedidodetalle-" + row + "-plista_pdetalle").val();
-      let precio = +$( "#pedidodetalle-" + row + "-precio_pdetalle").val();
-      let cant = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
-      let precioDetalle = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
       let total = 0.00;
       let descuento = 0;
       let precioVenta = 0.00;
 
       if ( precioLista !== precio && precio === 0 ) {
-        precio = precioLista;
+          precio = precioLista;
+          // $( "#pedidodetalle-" + row + "-precio_pdetalle").val( precio );
       }
 
       if ( cant ) {
+        if ( precio ) {
+          if ( descu ) {
+            let descuValor = round( precioLista - ( precioLista * ( descu / 100 ) ) );
+            total = ( cant *  descuValor );
+            precioVenta = precioLista - ( precioLista * ( descu / 100 ) );
+            descuento = ( precioLista * ( descu / 100 ) );
+          } else {
+            total = cant * precio;
+            precioVenta = precioLista;
+          }
 
-        if ( descu ) {
-          total = ( cant * ( precio - ( precio * ( descu / 100 ) ) ) );
-          precioVenta = precio - ( precio * ( descu / 100 ) );
-          descuento = ( precio * ( descu / 100 ) );
-        } else {
-          total = cant * precio;
-          precioVenta = precioLista;
+          descuento = parseFloat( descuento ).toFixed( 2 );
+          precioVenta = parseFloat(  precioVenta  ).toFixed( 2 );
+          total = parseFloat(  total  ).toFixed( 2 );
+
+
+          $( "#pedidodetalle-" + row + "-descu_pdetalle").data( "descuento", descuento);
+          $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioVenta );
+          $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
+
+          calculateTotals( IMPUESTO );
         }
-
-        descuento = parseFloat( descuento ).toFixed( 2 );
-        precioVenta = parseFloat(  precioVenta  ).toFixed( 2 );
-        total = parseFloat(  total  ).toFixed( 2 );
-
-        $( "#pedidodetalle-" + row + "-descu_pdetalle").data( "descuento", descuento);
-        $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioVenta );
-        $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
-
-        calculateTotals( IMPUESTO );
       }
+    } else if ( e.keyCode === 13 && descu === 0 ) {
+
+      if ( precioLista !== precio && precio === 0 ) {
+          precio = precioLista;
+          $( "#pedidodetalle-" + row + "-precio_pdetalle").val( precio );
+      }
+
+      let total = parseFloat(  precio * cant  ).toFixed( 2 );
+      precioLista = parseFloat(  precio  ).toFixed( 2 );
+
+      $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
+      $( "#pedidodetalle-" + row + "-precio_pdetalle").val( precioLista );
+
     }
+
 });
 
 $( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ) {
@@ -639,6 +669,8 @@ $( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ) {
     let cant = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
     let precio = +$( this ).val();
     let total = 0;
+
+    $( "#pedidodetalle-" + row + "-descu_pdetalle" ).val( "0.00" );
 
     if ( cant ) {
       total = cant * precio;
@@ -742,7 +774,7 @@ JS
 , VIEW::POS_END);
 
   $jsSave = "
-  function setPrices( value = null, row, tipo_lista ) {
+  function setPrices( value = null, row, tipo_lista, sync = false ) {
     if ( value && +tipo_lista ) {
       $.ajax({
           url:'".Url::to(['producto/product-price'])."',
@@ -750,16 +782,16 @@ JS
             id: value,
             tipo_listap: tipo_lista
           },
-          async: false,
+          async: sync,
           success: function( data ) {
             if ( data.results.length ) {
-              let precioLista = data.results[ 0 ].precio;
-              let impuestoDetalle = data.results[ 0 ].precio - data.results[ 0 ].precio / ( IMPUESTO + 1 );
+              let precioLista = +data.results[ 0 ].precio;
+              let impuestoDetalle = +data.results[ 0 ].precio - +data.results[ 0 ].precio / ( IMPUESTO + 1 );
 
               precioLista = parseFloat(  precioLista  ).toFixed( 2 );
               impuestoDetalle = parseFloat(  impuestoDetalle  ).toFixed( 2 );
 
-              $( '#pedidodetalle-' + row + '-cant_pdetalle' ).data( 'stock', data.results[ 0 ].stock);
+              $( '#pedidodetalle-' + row + '-cant_pdetalle' ).data( 'stock', +data.results[ 0 ].stock);
 
               $( '#pedidodetalle-' + row + '-plista_pdetalle' ).val( precioLista );
               $( '#pedidodetalle-' + row + '-impuesto_pdetalle' ).val( impuestoDetalle );

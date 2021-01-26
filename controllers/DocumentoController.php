@@ -140,7 +140,6 @@ class DocumentoController extends Controller
 
         $sucursal = SiteController::getSucursal();
         $modelNotaSalida->sucursal_trans = $sucursal;
-        // $modelNotaSalida->usuario_trans = Yii::$app->user->id;
         $modelNotaSalida->ope_trans = $modelNotaSalida::OPE_TRANS;
         $num = Numeracion::getNumeracion( NotaSalida::NOTA_SALIDA );
         $codigo = intval( $num[0]['numero_num'] ) + 1;
@@ -151,6 +150,7 @@ class DocumentoController extends Controller
         $modelNotaSalida->codigo_trans  = $codigo;
         $modelNotaSalida->tipo_trans    = Documento::TIPO_PROFORMA;
         $modelNotaSalida->numdoc_trans = $num[0]['id_num'];
+        $modelNotaSalida->moneda_trans = $modelPedido->moneda_pedido;
 
         $modelNotaSalida->almacen_trans = $modelPedido->almacen_pedido;
 
@@ -313,7 +313,7 @@ class DocumentoController extends Controller
             $tipoDoc         = $model->numeracion->tipoDocumento->tipodsunat_tipod;
             $model->valorr_doc = SiteController::getEmpresa()->ruc_empresa ."|". $tipoDoc ."|".$model->tipoDoc->abrv_tipod . $model->numeracion->serie_num . "|";
             $model->valorr_doc .= substr($model->cod_doc,-8) . "|" . $model->totalimp_doc . "|" . $model->total_doc ."|". $model->fecha_doc . "|" . $tipoDocClte . "|" . $docClte ;
-            $model->tipocambio_doc = TipoCambio::getTipoCambio()->valorf_tipoc;
+            $model->tipocambio_doc = TipoCambio::getTipoCambio()['valorf_tipoc'];
 
             try {
               $modelNotaSalida->idrefdoc_trans = $model->id_doc;
@@ -516,6 +516,108 @@ class DocumentoController extends Controller
       $model = new Documento();
       $model->scenario = Documento::SCENARIO_GUIA;
       $modelPedido = new Pedido();
+
+
+
+
+      $post = Yii::$app->request->post();
+      // var_dump($post);exit();
+
+      if ($model->load($post)) {
+        $modelDocumentoDetalle = [new DocumentoDetalle()];
+
+        $documentoDetalle = [];
+        foreach ($post['PedidoDetalle'] as $key => $value) {
+          $documentoDetalle[$key] = ['prod_detalle' => $value['prod_pdetalle'],'cant_detalle' => $value['cant_pdetalle']];
+        }
+
+        $fecha               = explode("/",$model->fecha_doc);
+        $fecha               = $fecha[2]."-".$fecha[1]."-".$fecha[0];
+        $model->fecha_doc    = $fecha;
+        $modelPedido->estatus_pedido = $modelPedido::GUIA_GENERADA;
+        $model->status_doc   = $model::GUIA_GENERADA;
+        $model->almacen_doc  = $modelPedido->almacen_pedido;
+        $model->sucursal_doc = SiteController::getSucursal();
+
+        // validate all models
+        $valid = $model->validate();
+
+        if (!$valid) {
+          if (Yii::$app->request->isAjax) {
+              Yii::$app->response->format = Response::FORMAT_JSON;
+              return
+                  ActiveForm::validate($model);
+          }
+        } else {
+          $numDoc          = Numeracion::getNumeracionById( $model->tipo_doc );
+          $codigoDoc       = (int) $numDoc->numero_num + 1;
+          $id_num          = $numDoc->id_num;
+          $model->tipo_doc = $numDoc->tipo_num;
+
+          $codigoDoc       = str_pad($codigoDoc,10,'0',STR_PAD_LEFT);
+          $model->numeracion_doc = $id_num;
+          $transaction = \Yii::$app->db->beginTransaction();
+
+          try {
+            $model->cod_doc = $codigoDoc;
+            $flag           = $model->save();
+            $flag           = $modelPedido->save() && $flag;
+
+
+            if ( $flag ) {
+              for($i = 0; $i < count($documentoDetalle); $i++) {
+                    $modelDocumentoDetalle                     = new DocumentoDetalle();
+                    $modelDocumentoDetalle->documento_ddetalle = $model->id_doc;
+                    $modelDocumentoDetalle->prod_ddetalle      = $documentoDetalle[$i]['prod_detalle'];
+                    $modelDocumentoDetalle->cant_ddetalle      = $documentoDetalle[$i]['cant_detalle'];
+
+                    $flag = $flag && $modelDocumentoDetalle->save();
+
+                    if ( !($flag) ) {
+                        $transaction->rollBack();
+                        throw new \Exception("Error Processing Request", 1);
+                        break;
+                    }
+                }
+            }
+
+            $numeracion = Numeracion::findOne($id_num);
+            $numeracion->scenario = 'numerar';
+            $numeracion->numero_num = $codigoDoc;
+            $flag = $numeracion->save() && $flag;
+            // var_dump($numeracion->errors);exit();
+
+            if ( $flag ) {
+              $transaction->commit();
+              Yii::$app->response->format = Response::FORMAT_JSON;
+              $return = [
+                'success' => true,
+                'title' => Yii::t('documento', 'Document'),
+                'id' => $model->id_doc,
+                'message' => Yii::t('app','Record has been saved successfully!'),
+                'type' => 'success'
+              ];
+              return $return;
+            } else {
+              throw new \Exception("Error numering the document");
+            }
+          } catch (Exception $e) {
+              $transaction->rollBack();
+              Yii::$app->response->format = Response::FORMAT_JSON;
+              $return = [
+                'success' => false,
+                'title' => Yii::t('salida', 'Exit note'),
+                'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                'type' => 'error'
+              ];
+              return $return;
+          }
+        }
+      }
+
+
+
+
 
       $this->layout = 'justStuff';
       return $this->render('_formGuia', [
@@ -1064,6 +1166,7 @@ class DocumentoController extends Controller
         return $return;
       }
 
+
       $tipoDocs = [Documento::TIPODOC_BOLETA,Documento::TIPODOC_FACTURA,NotaCredito::TIPODOC_NCREDITO];
       $model = $this->findModel( $id );
 
@@ -1098,9 +1201,11 @@ class DocumentoController extends Controller
           $modelPedido->estatus_pedido = Pedido::PEDIDO_ANULADO;                //Anula el pedido
           $modelGuiaRem->status_doc    = Documento::DOCUMENTO_ANULADO;          //Anula la guia de remision
           $notaAjusteDetalle = $model->pedidoDoc->detalles;               //Asigna los items a retornar el stock
+          $modelAjuste->moneda_trans = $modelPedido->moneda_pedido;
       } else if ( $model->tipo_doc === NotaCredito::TIPODOC_NCREDITO ) {
           $modelAjuste   = new NotaSalida();                              //Instancia el modelo para crear la nota de ingreso
           $notaAjusteDetalle = $model->detalles;               //Asigna los items a retornar el stock
+          $modelAjuste->moneda_trans = $model->docAfectado->pedidoDoc->moneda_pedido;          
       }
 
       $model->status_doc           = Documento::DOCUMENTO_ANULADO;          //Anula el Documento
@@ -1133,6 +1238,7 @@ class DocumentoController extends Controller
           $modelAjuste->fecha_trans = $fecha;
           $modelAjuste->codigo_trans = $codigo;
           $modelAjuste->numdoc_trans = $num[0]['id_num'];
+
 
           if ( $model->tipo_doc === Documento::TIPODOC_BOLETA  ||  $model->tipo_doc === Documento::TIPODOC_FACTURA ) {
               $flag = $model->save() && $modelPedido->save() && $modelGuiaRem->save() && $modelAjuste->save() && $flag;

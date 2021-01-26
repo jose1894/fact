@@ -127,7 +127,7 @@ class NotaCreditoController extends Controller
                 $model->tipo_doc        = $post['NotaCredito']['tipod_doc'];
                 $model->almacen_doc     = $post['NotaCredito']['almacen_doc'];
                 $model->condpago_doc     = $post['NotaCredito']['condpago_doc'];
-                $model->tipocambio_doc  = TipoCambio::getTipoCambio()->valorf_tipoc;
+                $model->tipocambio_doc  = TipoCambio::getTipoCambio()['valorf_tipoc'];
                 $model->sucursal_doc    = $documentoAnt->sucursal_doc;
                 $numDoc                 = Numeracion::getNumeracionById( $model->tipo_doc );
 
@@ -412,7 +412,7 @@ class NotaCreditoController extends Controller
           <td> &nbsp;' . $modelNotaCredito->pedidoDoc->cltePedido->nombre_clte . '</td>
         </tr>';
 
-        if ( $modelNotaCredito === NotaCredito::TIPODOC_NCREDITO ) {
+        if ( $modelNotaCredito->tipo_doc === NotaCredito::TIPODOC_NCREDITO ) {
             $header .= '<tr>
                       <td align="right" style="font-weight:bold;">'.Yii::t('cliente','R.U.C.').'</td>
                       <td> &nbsp;' . $modelNotaCredito->pedidoDoc->cltePedido->ruc_clte . '</td>
@@ -439,10 +439,10 @@ $header .= '<tr>
           <td align="center">'.$date.'</td>
           <td align="center">'.$modelNotaCredito->condPago->desc_condp.'</td>
           <td colspan="2" align="center">'.
-              Yii::$app->formatter->asDate($modelNotaCredito->fecha_doc, 'dd/MM/yyyy').' - '.
+              Yii::$app->formatter->asDate($modelNotaCredito->docAfectado->fecha_doc, 'dd/MM/yyyy').' - '.
               $modelNotaCredito->docAfectado->numeracion->tipoDocumento->abrv_tipod.
               $modelNotaCredito->docAfectado->numeracion->serie_num.'-'.
-              $modelNotaCredito->cod_doc.
+              $modelNotaCredito->docAfectado->cod_doc.
               '</td>
         </tr>
       </table>';
@@ -454,6 +454,11 @@ $header .= '<tr>
       $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
       $mpdf->AddPage('P','','','','',10,10,80,10,10,5);
       $mpdf->WriteHtml( $content ); // call mpdf write html
+
+      if ( $modelNotaCredito->status_doc === Documento::DOCUMENTO_ANULADO ) {
+              $mpdf->showWatermarkText = true;
+              $mpdf->WriteHTML('<watermarktext style="color:red" content="' . Yii::t('app','CANCELED') . '" alpha="0.4" />');
+      }
 
       $titulo =  $nroComprobante .'-'.$modelNotaCredito->pedidoDoc->cltePedido->nombre_clte.'.pdf';
 

@@ -61,9 +61,7 @@ class TransaccionSearch extends Transaccion
                 'des_tipod',
                 'ingreso_unidades',
                 'moneda',
-                'precio_compra_ext',
-                'precio_compra_soles',
-                'ingreso_valorizados',
+                'precio',
                 'salidas_unidades',
                 'tipo',
                 'sucursal_trans',
@@ -82,56 +80,6 @@ class TransaccionSearch extends Transaccion
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
-
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
-    // public function search($params)
-    // {
-    //     $query = Transaccion::find();
-    //
-    //     // add conditions that should always apply here
-    //
-    //     $dataProvider = new ActiveDataProvider([
-    //         'query' => $query,
-    //     ]);
-    //
-    //     $this->load($params);
-    //
-    //     if (!$this->validate()) {
-    //         // uncomment the following line if you do not want to return any records when validation fails
-    //         // $query->where('0=1');
-    //         return $dataProvider;
-    //     }
-    //
-    //     // grid filtering conditions
-    //     $query->andFilterWhere([
-    //         'id_trans' => $this->id_trans,
-    //         'fecha_trans' => $this->fecha_trans,
-    //         'tipo_trans' => $this->tipo_trans,
-    //         'numdoc_trans' => $this->numdoc_trans,
-    //         'idrefdoc_trans' => $this->idrefdoc_trans,
-    //         'almacen_trans' => $this->almacen_trans,
-    //         'sucursal_trans' => $this->sucursal_trans,
-    //         'usuario_trans' => $this->usuario_trans,
-    //         'status_trans' => $this->status_trans,
-    //     ]);
-    //
-    //     $query->andFilterWhere(['like', 'codigo_trans', $this->codigo_trans])
-    //         ->andFilterWhere(['like', 'obsv_trans', $this->obsv_trans])
-    //         ->andFilterWhere(['like', 'ope_trans', $this->ope_trans])
-    //         ->andFilterWhere(['like', 'seriedocref_trans', $this->seriedocref_trans])
-    //         ->andFilterWhere(['like', 'docref_trans', $this->docref_trans]);
-    //
-    //     return $dataProvider;
-	// }
-
-
-
 
     public function search($params)
     {
@@ -210,8 +158,6 @@ class TransaccionSearch extends Transaccion
       $query->andFilterWhere(['=', 'id_prod', $this->id_prod])
               ->andFilterWhere(['like', 'des_prod', $this->des_prod])
               ->andFilterWhere(['=', 'tipo_prod', $this->tipo_prod]);
-      //         ->andFilterWhere(['like', 'seriedocref_trans', $this->seriedocref_trans])
-      //         ->andFilterWhere(['like', 'docref_trans', $this->docref_trans]);
 
       return $dataProvider;
     }
@@ -220,69 +166,101 @@ class TransaccionSearch extends Transaccion
     private function searchKardex( $params = [])
     {
       $sucursal = Yii::$app->user->identity->profiles->sucursal;
-      $query = new Query;
-      $query->select('id_prod,
-              cod_prod,
-              des_prod,
-              t.fecha_trans,
-              sub.docref_trans,
-              sub.codigo_trans,
-              sub.ope_trans,
-              id_tipom,
-              des_tipom,
-              id_tipod,
-              des_tipod,
-              ingreso_unidades,
-              moneda,
-              precio_compra_ext,
-              precio_compra_soles,
-              ingreso_valorizados,
-              salidas_unidades,
-              tipo,
-              t.sucursal_trans')
-      ->from(['(
-      select * from salidas_ajustes
-        union
-        select * from salidas_documentos
-        union
-        select * from salidas_proformas
-        union
-        select * from entradas_ajustes
-        union
-        select * from entradas_compras
-        union
-        select * from entradas_documentos
-      ) as sub'])
-      ->join('inner join', 'transaccion t', 't.id_trans = sub.id_trans and t.sucursal_trans = sub.sucursal_trans')
-      ->where(['=','t.sucursal_trans',$sucursal])
-      ->orderBy('t.fecha_trans asc');
-
       $id_prod = !empty($params['TransaccionSearch']['id_prod']) ? $params['TransaccionSearch']['id_prod'] : "";
       $fecha_trans = !empty($params['TransaccionSearch']['fecha_trans']) ? $params['TransaccionSearch']['fecha_trans'] : "";
       $fechaDocInicio = "";
       $fechaDocFin = "";
 
-      if ( !empty($id_prod) ) {
-        $query->andwhere(['=','id_prod',$id_prod]);
-      }
-
       if ( !empty($fecha_trans) ) {
           $fechaDoc = explode(" - ", $fecha_trans);
           $fechaDocInicio = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[0]))->format('Y-m-d');
           $fechaDocFin = \DateTime::createFromFormat('d/m/Y', trim($fechaDoc[1]))->format('Y-m-d');
-          $query->andWhere(['between','t.fecha_trans',$fechaDocInicio,$fechaDocFin]);
       }
 
+      $qrySelect1 ='id_prod,
+      cod_prod,
+      des_prod,
+      t.fecha_trans,
+      sub.docref_trans,
+      sub.codigo_trans,
+      sub.ope_trans,
+      id_tipom,
+      des_tipom,
+      id_tipod,
+      des_tipod,
+      ingreso_unidades,
+      moneda,
+      precio,
+      salidas_unidades,
+      tipo,
+      t.sucursal_trans';
+
+      $qryFrom1 = '
+              select * from salidas_ajustes
+              union
+              select * from salidas_documentos
+              union
+              select * from salidas_proformas
+              union
+              select * from entradas_ajustes
+              union
+              select * from entradas_compras
+              union
+              select * from entradas_documentos';
+
+      $qryWhere1 = "";
+
+      $qrySelect2 = '`id_prod`,
+                    `cod_prod`,
+                    `des_prod`,
+                    \'0000-00-00\' `fecha_trans`,
+                    `docref_trans`,
+                    `codigo_trans`,
+                    `ope_trans`,
+                    `id_tipom`,
+                    `des_tipom`,
+                    `id_tipod`,
+                    `des_tipod`,
+                    `ingreso_unidades`,
+                    `moneda`,
+                    `precio`,
+                    `salidas_unidades`,
+                    \'\' AS `tipo`,
+                    `sucursal_trans`';
+
+      $qryFrom2 = 'stock_inicial';
+
+      $qryWhere2 = '';
+
+      if ( !empty($id_prod) ) {
+        $qryWhere1 .= " AND id_prod = ". $id_prod;
+        $qryWhere2 .= " AND id_prod = ". $id_prod;
+      }
+
+      if ( !empty($fecha_trans) ) {
+         $qryWhere1 .= " AND t.fecha_trans BETWEEN '". $fechaDocInicio . "' AND '" . $fechaDocFin . "'";
+      }
+
+      $query =new Query();
+      $query->select('*')
+            ->from(['(
+                (
+                  SELECT ' . $qrySelect1 . '
+                  FROM (' . $qryFrom1 . ') as sub
+                  INNER JOIN transaccion t ON t.id_trans = sub.id_trans and t.sucursal_trans = sub.sucursal_trans
+                  WHERE t.sucursal_trans = ' . $sucursal . ' ' . $qryWhere1 .'
+                )
+                UNION
+                (
+                  SELECT ' . $qrySelect2 . '
+                  FROM ' . $qryFrom2 . '
+                  WHERE `sucursal_trans` = ' . $sucursal . ' ' . $qryWhere2 . '
+                )
+            ) as t
+            ORDER BY fecha_trans']);
+
+
       if (!empty($id_prod) || !empty($fecha_trans)) {
-        //Subquery fecha minima para stock inicial
-        $queryMinFecha = $this->minFecha($id_prod,$fechaDocInicio,$fechaDocFin,$sucursal);
-        $minFecha = $queryMinFecha->all();
-        $minFecha = $minFecha[0]['minFecha'];
-
-        //Subquery stock inicial
-        $querySinicial = $this->stockInicial($id_prod, $minFecha, $sucursal);
-        $queryFinicial = $this->stockFechaInicial($id_prod, $minFecha, $sucursal)->all();
-
 
         //Subquery saldo anterior
         $queryEntAnteriores = $this->entradasAnteriores($id_prod, $fechaDocInicio, $sucursal);
@@ -294,41 +272,35 @@ class TransaccionSearch extends Transaccion
                                   'vp.id_prod',
                                   'vp.cod_prod',
                                   'vp.des_prod',
-                                  'stock_inicial' => $querySinicial,
                                   'entradas_anteriores' => $queryEntAnteriores,
                                   'salidas_anteriores' => $querySalAnteriores,
                                   'p.stock_prod',
                                   'vp.stock_prod_bruto',
                                 ])
                       ->from(['transaccion t'])
-                      ->join('inner join', 'trans_detalle td', 't.id_trans = td.trans_detalle')
-                      ->join('inner join', 'producto p', 'p.id_prod = td.prod_detalle')
-                      ->join('inner join', 'v_productos vp', 'vp.id_prod = td.prod_detalle')
+                      ->join('left join', 'trans_detalle td', 't.id_trans = td.trans_detalle')
+                      ->join('left join', 'producto p', 'p.id_prod = td.prod_detalle')
+                      ->join('left join', 'v_productos vp', 'vp.id_prod = td.prod_detalle')
                       ->where(['=','vp.id_prod',$id_prod])
                       ->andWhere(['=','t.ope_trans','S'])
                       ->andWhere(['=','t.status_trans',1])
                       ->andWhere(['=','t.sucursal_trans',1]);
 
-        if ( !empty($fechaDocInicio) && !empty($fechaDocFin) ) {
-          $queryMinFecha->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);
-        }
+        // if ( !empty($fechaDocInicio) && !empty($fechaDocFin) ) {
+        //   $queryMinFecha->andWhere(['between','fecha_trans',$fechaDocInicio,$fechaDocFin]);
+        // }
 
-        $queryPrincipal->groupBy('vp.id_prod,vp.cod_prod,vp.des_prod,p.stock_prod,vp.stock_prod_bruto');
+        $queryPrincipal->groupBy('vp.id_prod,vp.cod_prod,vp.des_prod,p.stock_prod,p.stockini_prod,vp.stock_prod_bruto');
 
         $qryPpal = $queryPrincipal->all();
       }
 
-
-      //echo $query->createCommand()->sql;
       $models = $query->all();
-
-      // var_dump($qryPpal);exit();
       $total = 0;
       $data = [];
 
-      if (!empty($qryPpal)) {
-        $total =  $qryPpal[0]['stock_inicial'] + $qryPpal[0]['entradas_anteriores'] - $qryPpal[0]['salidas_anteriores'];
-
+      if ( !empty( $qryPpal ) ) {
+        $total = $qryPpal[0]['entradas_anteriores'] - $qryPpal[0]['salidas_anteriores'];
         $data[] = [
           'id_prod' => '',
           'cod_prod' => trim($qryPpal[0]['cod_prod']),
@@ -340,7 +312,7 @@ class TransaccionSearch extends Transaccion
           'des_tipom' => '',
           'id_tipod' => '',
           'des_tipod' => '',
-          'ingreso_unidades' => $qryPpal[0]['stock_inicial'] + $qryPpal[0]['entradas_anteriores'],
+          'ingreso_unidades' => $qryPpal[0]['entradas_anteriores'],
           'moneda' => '',
           'precio_compra_ext' => '',
           'precio_compra_soles' => '',
@@ -351,14 +323,14 @@ class TransaccionSearch extends Transaccion
           'saldo' => $total,
         ];
       }
-      // var_dump($data);exit();
+
       foreach ($models as $key => $value) {
         // code...
+        $value['fecha_trans'] = $value['fecha_trans'] == '0000-00-00' ? '' : $value['fecha_trans'];
         $total = $total + floatval($value['ingreso_unidades']) - floatval($value['salidas_unidades']);
         $value['saldo'] = $total;
         $data[ $key + 1 ] = $value;
       }
-
 
       $dataProvider = new ArrayDataProvider([
         'allModels' => $data,
@@ -392,7 +364,6 @@ class TransaccionSearch extends Transaccion
           $query->andFilterWhere(['between', 'fecha_trans', $fechaDocInicio, $fechaDocFin]);
       }
 
-
       //grid filtering conditions
       $query->andFilterWhere([
         'id_prod' => $this->id_prod,
@@ -400,8 +371,6 @@ class TransaccionSearch extends Transaccion
 
       return $dataProvider;
     }
-
-
 
     private function minFecha($id_prod = null, $fechaDocInicio = null , $fechaDocFin = null, $sucursal)
     {
@@ -434,7 +403,6 @@ class TransaccionSearch extends Transaccion
       if ( !empty($id_prod) ) {
         $querySinicial->andWhere(['=','prod_detalle',$id_prod]);
       }
-
       return $querySinicial;
     }
 

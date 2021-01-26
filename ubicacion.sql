@@ -1,4 +1,4 @@
-use leophard_dev;
+use leophard_fact;
 create table ubigeo (
 	ubigeo varchar(6),
 	departamento varchar(255),
@@ -30,32 +30,32 @@ group by departamento, cod_dpto, d.des_depto;
 
 -- Cambio la estructura de la tabla de proveedores
 
-ALTER TABLE `leophard_dev`.`proveedor` 
+ALTER TABLE `leophard_fact`.`proveedor` 
 DROP FOREIGN KEY `provee_ibfk_1`,
 DROP FOREIGN KEY `provee_ibfk_2`,
 DROP FOREIGN KEY `provee_ibfk_3`,
 DROP FOREIGN KEY `provee_ibfk_4`;
-ALTER TABLE `leophard_dev`.`proveedor` 
+ALTER TABLE `leophard_fact`.`proveedor` 
 CHANGE COLUMN `pais_prove` `pais_prove` INT(11) NULL COMMENT 'PAIS PROVEEDOR' ,
 CHANGE COLUMN `depto_prove` `depto_prove` INT(11) NULL DEFAULT NULL COMMENT 'DEPARTAMENTO PROVEEDOR' ,
 CHANGE COLUMN `provi_prove` `provi_prove` INT(11) NULL DEFAULT NULL COMMENT 'PROVINCIA PROVEEDOR' ,
 CHANGE COLUMN `dtto_prove` `dtto_prove` INT(11) NULL DEFAULT NULL COMMENT 'DISTRITO PROVEEDOR' ;
-ALTER TABLE `leophard_dev`.`proveedor` 
+ALTER TABLE `leophard_fact`.`proveedor` 
 ADD CONSTRAINT `provee_ibfk_1`
   FOREIGN KEY (`pais_prove`)
-  REFERENCES `leophard_dev`.`pais` (`id_pais`)
+  REFERENCES `leophard_fact`.`pais` (`id_pais`)
   ON UPDATE CASCADE,
 ADD CONSTRAINT `provee_ibfk_2`
   FOREIGN KEY (`provi_prove`)
-  REFERENCES `leophard_dev`.`provincia` (`id_prov`)
+  REFERENCES `leophard_fact`.`provincia` (`id_prov`)
   ON UPDATE CASCADE,
 ADD CONSTRAINT `provee_ibfk_3`
   FOREIGN KEY (`depto_prove`)
-  REFERENCES `leophard_dev`.`departamento` (`id_depto`)
+  REFERENCES `leophard_fact`.`departamento` (`id_depto`)
   ON UPDATE CASCADE,
 ADD CONSTRAINT `provee_ibfk_4`
   FOREIGN KEY (`dtto_prove`)
-  REFERENCES `leophard_dev`.`distrito` (`id_dtto`)
+  REFERENCES `leophard_fact`.`distrito` (`id_dtto`)
   ON UPDATE CASCADE;
 
 -- desvinculo los registros de clientes de las tablas de provincia, departamento y distrito
@@ -65,6 +65,7 @@ update cliente set depto_cte = null,provi_cte = null, dtto_clte = null;
 update proveedor set depto_prove = null,provi_prove = null, dtto_prove = null;
 
 -- modifico tabla de departamento
+ALTER TABLE departamento DROP foreign key prov_depto_ibkf;
 ALTER TABLE `departamento` DROP `prov_depto`;
 ALTER TABLE `departamento` ADD `cod_depto` VARCHAR(2) NULL COMMENT 'CODIGO UBIGEO DEPARTAMENTO' AFTER `id_depto`, ADD UNIQUE (`cod_depto`);
 ALTER TABLE `departamento` CHANGE `pais_depto` `pais_depto` INT(11) NULL;
@@ -83,9 +84,9 @@ insert into departamento (cod_depto,des_depto,pais_depto,status_depto,sucursal_d
 set foreign_key_checks = 1;
 
 -- Modifico la tabla de provincia
-ALTER TABLE `leophard_dev`.`provincia` 
+ALTER TABLE `leophard_fact`.`provincia` 
 DROP FOREIGN KEY `fx_pais_prov`;
-ALTER TABLE `leophard_dev`.`provincia` 
+ALTER TABLE `leophard_fact`.`provincia` 
 DROP COLUMN `pais_prov`,
 ADD COLUMN `cod_prov` VARCHAR(4) NULL DEFAULT 'null' AFTER `id_prov`,
 ADD COLUMN `depto_prov` INT(11) NULL AFTER `des_prov`,
@@ -93,10 +94,10 @@ ADD INDEX `depto_prov` (`depto_prov` ASC),
 ADD INDEX `cod_prov_UNIQUE` (`cod_prov` ASC),
 DROP INDEX `fx_pais_prov_idx` ;
 ;
-ALTER TABLE `leophard_dev`.`provincia` 
+ALTER TABLE `leophard_fact`.`provincia` 
 ADD CONSTRAINT `fk_depto_prov`
   FOREIGN KEY (`depto_prov`)
-  REFERENCES `leophard_dev`.`departamento` (`id_depto`)
+  REFERENCES `leophard_fact`.`departamento` (`id_depto`)
   ON DELETE RESTRICT
   ON UPDATE CASCADE;
   

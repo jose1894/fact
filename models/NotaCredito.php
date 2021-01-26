@@ -166,7 +166,7 @@ class NotaCredito extends \yii\db\ActiveRecord
 		return Documento::find()
 			->where([
 				'id_doc' => $this->docref_doc,
-				'status_doc' => Documento::DOCUMENTO_GENERADO
+				// 'status_doc' => Documento::DOCUMENTO_GENERADO
 			]);
 	}
 }

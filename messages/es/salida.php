@@ -27,7 +27,7 @@ return [
     'Max stock' => 'Stock máximo',
     'Initial stock' => 'Stock inicial',
     'Discount' => 'Descuento',
-    'Qtty' => 'Cant',
+    'Qtty' => 'Cantidad',
     'L. price' => 'Prec. Lista',
     'Tax' => 'I.G.V.',
     'Disc' => 'Desc',
@@ -38,5 +38,10 @@ return [
     'Do you want to issue the document?' => '¿Quieres emitir el documento?',
     'N.Price' => 'P.Neto',
     'G.Price' => 'P.Bruto',
-    'Exit note' => 'Nota de salida'
+    'Exit note' => 'Nota de salida',
+    'Movement type' => 'Tipo de movimiento',
+    'Do you want to approve the exit note?' => '¿Desea aprobar la nota de salida?',
+    'Do you want to cancel the exit note?' => '¿Desea cancelar la nota de salida?',
+    'Exit note has been approved successfully!' => '¡La nota de salida ha sido aprobada exitosamente!',
+    'Exit note has been canceled successfully!' => '¡La nota de salida ha sido anulada exitosamente!',
 ];

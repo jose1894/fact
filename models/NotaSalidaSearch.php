@@ -44,7 +44,7 @@ class NotaSalidaSearch extends NotaSalida
         $sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = NotaSalida::find()
                  ->where('sucursal_trans = :sucursal')
-                 ->andWhere(['not in','tipo_trans', [4] ])
+                 // ->andWhere(['not in','tipo_trans', [4] ])
                  ->addParams([':sucursal' => $sucursal]);
 
         // add conditions that should always apply here
@@ -52,12 +52,12 @@ class NotaSalidaSearch extends NotaSalida
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        
         $this->load($params);
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+            $query->where('0=1');
             return $dataProvider;
         }
 

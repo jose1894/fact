@@ -200,7 +200,7 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
                   'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
                   'widgetBody' => '.table-body', // required: css class selector
                   'widgetItem' => '.detalle-item', // required: css class
-                  //'limit' => 10, // the maximum times, an element can be cloned (default 999)
+                  'limit' => 60, // the maximum times, an element can be cloned (default 999)
                   'min' => 0, // 0 or 1 (default 1)
                   'insertButton' => '.add-item', // css class
                   'deleteButton' => '.remove-item', // css class
@@ -214,7 +214,8 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
               ]); ?>
 
               <div class="row">
-                  <div class="col-sm-7 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
+                  <div class="col-sm-1 col-xs-12">#</div>
+                  <div class="col-sm-6 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
                   <div class="col-sm-2 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
                   <div class="col-sm-2 col-xs-12"><?= Yii::t( 'ingreso', 'Cost')?></div>
                   <div class="col-sm-1 col-xs-12">
@@ -229,7 +230,10 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
               <div class="table-body"><!-- widgetContainer -->
               <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
                       <div class="row detalle-item"><!-- widgetBody -->
-                        <div class="col-sm-7 col-xs-12">
+                        <div class="col-sm-1 col-xs-12 nro">
+                          <?= ( $index + 1 )?>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
                         <?php
                           // necessary for update action.
                           if (!$modelDetalle->isNewRecord) {
@@ -334,7 +338,7 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
                           data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Delete item')?>" <?=$disabled ? 'disabled':''?>>
                             <i class="fa fa-trash"></i>
                           </button>
-                      </div>
+                        </div>
                     </div>
               <?php endforeach; ?>
             </div>
@@ -413,6 +417,10 @@ $(".dynamicform_wrapper").on("afterInsert", function(e, item) {
     });
     let row = $(".table-body select").length - 1;
     $( "#notaingresodetalle-" + row + "-prod_detalle" ).val(null).trigger("change");
+
+    jQuery(".dynamicform_wrapper .nro").each(function(index) {
+        jQuery(this).html(index + 1)
+    });
 });
 
 $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
@@ -424,6 +432,9 @@ $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
 
 $(".dynamicform_wrapper").on("afterDelete", function(e) {
     console.log("Deleted item!");
+    jQuery(".dynamicform_wrapper .nro").each(function(index) {
+        jQuery(this).html(index + 1)
+    });
 });
 
 $(".dynamicform_wrapper").on("limitReached", function(e, item) {
@@ -483,8 +494,8 @@ $( ".table-body" ).on( "keyup","input[id$=\'costo_detalle\']",function( e ) {
         let row = $( ".detalle-item" ).length;
 
         $( ".add-item" ).trigger( "click" );
-        $( "#notasalidadetalle-" + row + "-prod_detalle").focus();
-        $( "#notasalidadetalle-" + row + "-prod_detalle").select2("open");
+        $( "#notaingresodetalle-" + row + "-prod_detalle").focus();
+        $( "#notaingresodetalle-" + row + "-prod_detalle").select2("open");
         $( "#notaingreso-moneda_trans").attr("readonly", true);
         $( "#notaingreso-almacen_trans").attr("readonly", true);
 
@@ -592,9 +603,9 @@ $( \"#notaingreso-tipo_trans\" ).on(\"change\", function(){
             $(s).html('" . Yii::t('app','Select') . "');
             $('#idrefdoc_trans').append(s);
             $.each(data, function(key, value) {
-                option = '<option value=\"' + value.id_compra + '\"' +
-                         'data-moneda=\"' + JSON.stringify(value.moneda_compra) + '\"' +
-                         'data-tipo_moneda=\'' + JSON.stringify(value.tipo_moneda) + '\'' +
+                option = '<option value=\"' + value.id_compra + '\" ' +
+                         'data-moneda=\"' + JSON.stringify(value.moneda_compra) + '\" ' +
+                         'data-tipo_moneda=\"' + value.tipo_moneda + '\" ' +
                          'data-details=\'' + JSON.stringify(value.details) + '\'>' + value.cod_compra + '</option>';
                 $('#idrefdoc_trans').append(option);
              });

@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="departamento-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(['id' => 'grid']); ?>
+    <?php Pjax::begin(['id' => 'grid', 'timeout' => 3000]); ?>
     <p>
         <?= Html::a(Yii::t('departamento', 'Create estate / department'), ['create', 'asDialog' => 1], ['id'=>'create','class' => 'btn btn-flat btn-success']) ?>
     </p>

@@ -45,20 +45,29 @@ $js = "
   $( '#aprobar-salida' ).on('click', function(){
     form = $('.nota-update form');
 
-    $.ajax({
-      'url': '".Url::to(['nota-salida/aprobar-nota'])."',
-      'method': $( form ).attr( 'method' ),
-      'data'   : $( form ).serialize(),
-      'async'  : false,
-      'success': function ( data ){
-        $('.nota-update input').attr('disabled',true);
-        $('.nota-update select').attr('disabled',true);
-        $('.nota-update textarea').attr('disabled',true);
-        $('.nota-update button').attr('disabled',true);
-        $('.nota-update #imprimir').attr('disabled',false);
-        swal(data.title, data.message, data.type);
-        return;
+    swal({
+      title: '" . Yii::t( 'salida', 'Exit note') . "',
+      text: '" . Yii::t( 'salida','Do you want to approve the exit note?') . "',
+      icon: 'warning',
+      buttons: true,
+    }).then( ( willDelete ) => {
+      if ( willDelete ) {
+        $.ajax({
+          'url': '".Url::to(['nota-salida/aprobar-nota'])."',
+          'method': $( form ).attr( 'method' ),
+          'data'   : $( form ).serialize(),
+          'async'  : false,
+          'success': function ( data ){
+            $('.nota-update input').attr('disabled',true);
+            $('.nota-update select').attr('disabled',true);
+            $('.nota-update textarea').attr('disabled',true);
+            $('.nota-update button').attr('disabled',true);
+            $('.nota-update #imprimir').attr('disabled',false);
+            swal(data.title, data.message, data.type);
+            return;
 
+          }
+        });
       }
     });
   });
@@ -66,26 +75,31 @@ $js = "
   $( '#anular-salida' ).on('click', function(){
     form = $('.nota-update form');
 
-    $.ajax({
-      'url': '".Url::to(['nota-salida/anular-nota'])."',
-      'method': $( form ).attr( 'method' ),
-      'data'   : $( form ).serialize(),
-      'async'  : false,
-      'success': function ( data ){
-        $('.nota-update input').attr('disabled',true);
-        $('.nota-update select').prop('disabled',true);
-        $('.nota-update textarea').attr('disabled',true);
-        $('.nota-update button').attr('disabled',true);
-        $('.nota-update #imprimir').attr('disabled',false);
-        swal(data.title, data.message, data.type);
+    swal({
+      title: '" . Yii::t( 'salida', 'Exit note') . "',
+      text: '" . Yii::t( 'salida','Do you want to cancel the exit note?') . "',
+      icon: 'warning',
+      buttons: true,
+    }).then( ( willDelete ) => {
+      if ( willDelete ) {
 
-
-
-        return;
-
+        $.ajax({
+          'url': '" . Url::to(['nota-salida/anular-nota']) . "',
+          'method': $( form ).attr( 'method' ),
+          'data'   : $( form ).serialize(),
+          'async'  : false,
+          'success': function ( data ){
+            $('.nota-update input').attr('disabled',true);
+            $('.nota-update select').prop('disabled',true);
+            $('.nota-update textarea').attr('disabled',true);
+            $('.nota-update button').attr('disabled',true);
+            $('.nota-update #imprimir').attr('disabled',false);
+            swal(data.title, data.message, data.type);
+            return;
+          }
+        });
       }
     });
   });
-
 ";
 $this->registerJs($js,View::POS_LOAD);
