@@ -43,4 +43,5 @@ return [
     'Orders list' => 'Listado de pedidos',
     'U.Price' => 'P.Unitario',
 	  'New orders on' => 'Nuevos pedidos en',
+    'The amount discount is greather than 10%' => 'La cantidad de descuento es superior al 10%'
 ];

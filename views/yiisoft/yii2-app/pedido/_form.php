@@ -227,7 +227,7 @@ if ( $model->isNewRecord ) {
                 <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Price')?></div>
                 <div class="col-sm-2 col-xs-12"><?= Yii::t( 'pedido', 'Total')?></div>
                 <div class="col-sm-1 col-xs-12">
-                  <button type="button" class="add-item btn btn-success btn-flat btn-md" style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"><i class="fa fa-plus"></i></button>
+                  <!--button type="button" class="add-item btn btn-success btn-flat btn-md" style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"><i class="fa fa-plus"></i></button-->
                 </div>
             </div>
             <hr>
@@ -472,7 +472,7 @@ $(".dynamicform_wrapper").on("afterDelete", function(e) {
     });
 });
 $(".dynamicform_wrapper").on("limitReached", function(e, item) {
-    alert("Limit reached");
+    swal( "Oops!!!","' . Yii::t('pedido', 'Limit reached') . '","error" );
 });
 
 $( buttonPrint ).on( "click", function(){
@@ -494,7 +494,7 @@ $( "#pedido-clte_pedido" ).on( "change",function () {
     url: "'. Url::to(['cliente/cliente-list']).'",
     method: "GET",
     data: { id : $(this).val()},
-    async: false,
+    async: true,
     success: function( cliente ) {
       console.log("cliente");
       cliente = cliente[ 0 ];
@@ -594,7 +594,7 @@ $( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ) {
     }
 
     if ( cant ) {
-      if ( precio ) 
+      if ( precio )
         if ( descu ) {
           precio = round( precioLista - (precioLista * ( descu / 100 ) ) );
           total = ( cant * precio );
@@ -686,6 +686,10 @@ $( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ) {
       let descu = ((precio * 100) / precioLista);
 
       descu = round(100 - descu);
+
+      if ( 0 > +descu ) {
+        descu = 0;
+      }
 
       $( "#pedidodetalle-" + row + "-descu_pdetalle" ).val( descu );
 
@@ -936,12 +940,12 @@ JS
     let row = $( this ).attr( 'id' ).split( '-' );
     row = row[ 1 ];
     let descu = +$( '#pedidodetalle-' + row + '-descu_pdetalle').val();
-  
+
     if ( descu > 10 ) {
-  
+
       swal( 'Oops!', '" . Yii::t( 'pedido', 'The amount discount is greather than 10%'). "', 'warning');
-    } 
-  
+    }
+
     calculateTotals( IMPUESTO );
   });
 ";
