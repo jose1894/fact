@@ -360,6 +360,12 @@ if ( $model->isNewRecord ) {
                   </div>
             <?php endforeach; ?>
           </div>
+          <div class="row">
+                <div class="col-sm-11 col-xs-12"></div>
+                <div class="col-sm-1 col-xs-12">
+                  <button type="button" class="add-item btn btn-success btn-flat btn-md" style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>
           <?php DynamicFormWidget::end(); ?>
           <hr>
           <table class="table table-fixed table-stripped">
@@ -667,23 +673,25 @@ $( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];
     let cant = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
+    let precioLista = +$( "#pedidodetalle-" + row + "-plista_pdetalle").val();
     let precio = +$( this ).val();
     let total = 0;
 
-    $( "#pedidodetalle-" + row + "-descu_pdetalle" ).val( "0.00" );
 
     if ( cant ) {
       total = cant * precio;
       total = parseFloat(  total  ).toFixed( 2 );
       $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
 
+      let descu = ((precio * 100) / precioLista);
+
+      descu = round(100 - descu);
+
+      $( "#pedidodetalle-" + row + "-descu_pdetalle" ).val( descu );
+
       calculateTotals( IMPUESTO );
     }
 
-});
-
-$( '.table-body' ).on( 'blur', 'input[id$="precio_pdetalle"]', function( e ) {
-  calculateTotals( IMPUESTO );
 });
 
 $( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ){
@@ -923,7 +931,20 @@ JS
 
 
   });
-  ";
+
+  $( '.table-body' ).on( 'blur', 'input[id$=\"precio_pdetalle\"]', function( e ) {
+    let row = $( this ).attr( 'id' ).split( '-' );
+    row = row[ 1 ];
+    let descu = +$( '#pedidodetalle-' + row + '-descu_pdetalle').val();
+  
+    if ( descu > 10 ) {
+  
+      swal( 'Oops!', '" . Yii::t( 'pedido', 'The amount discount is greather than 10%'). "', 'warning');
+    } 
+  
+    calculateTotals( IMPUESTO );
+  });
+";
 
 $this->registerJs($jsSave,View::POS_END);
 
