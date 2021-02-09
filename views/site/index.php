@@ -128,7 +128,7 @@ $ventasProformas = PedidoSearch::showVentasProformas();
  foreach ($ventasFNC as $key => $value) {
    // code...
    $labelsFNC[] = $value['mesAno'];
-   $dataFNC[] = Yii::$app->formatter->asDecimal($value['total']);
+   $dataFNC[] =  $value['total'];
  }
 
  $dataBNC = ['0.00'];
@@ -136,7 +136,7 @@ $ventasProformas = PedidoSearch::showVentasProformas();
  foreach ($ventasBNC as $key => $value) {
    // code...
    $labelsBNC[] = $value['mesAno'];
-   $dataBNC[] = Yii::$app->formatter->asDecimal($value['total']);
+   $dataBNC[] = $value['total'];
  }
 
 $dataFact = ['0.00'];
@@ -144,12 +144,8 @@ $labelsFact = [date('Y')];
 foreach ($ventasFacturas as $key => $value) {
   // code...
   $labelsFact[] = $value['mesAno'];
-  $dataFact[] = Yii::$app->formatter->asDecimal($value['total']);
+  $dataFact[] = $value['total'];
 }
-
-var_dump($dataFact);exit();
-
-
 
 $dataProf = ['0.00'];
 $labelsProf = [date('Y')];
@@ -157,7 +153,7 @@ $labelsProf = [date('Y')];
 foreach ($ventasProformas as $key => $value) {
   // code...
   $labelsProf[] = $value['mesAno'];
-  $dataProf[] = Yii::$app->formatter->asDecimal($value['total']);
+  $dataProf[] = $value['total'];
 }
 
 
