@@ -12,6 +12,7 @@ use yii\data\ActiveDataProvider;
 class DocumentoSearch extends Documento
 {
     public $cliente;
+    public $vendedor;
     public $tipoDocumento;
     public $docNoEsGuia = true;
     public $anulado = false;
@@ -24,7 +25,7 @@ class DocumentoSearch extends Documento
     {
         return [
             [['id_doc', 'tipo_doc', 'pedido_doc', 'status_doc', 'sucursal_doc','tipomov_doc'], 'integer'],
-            [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc','cliente','tipo_doc','tipomov_doc','tipoDocumento','docNoEsGuia', 'listadoGuia'], 'safe'],
+            [['cod_doc', 'fecha_doc', 'obsv_doc','status_doc','cliente','vendedor','tipo_doc','tipomov_doc','tipoDocumento','docNoEsGuia', 'listadoGuia'], 'safe'],
             //[['cliente'], 'string'],
             [['totalimp_doc', 'totaldsc_doc', 'total_doc'], 'number'],
         ];
@@ -48,6 +49,7 @@ class DocumentoSearch extends Documento
      */
     public function search($params)
     {
+      // var_dump($params);exit();
         $sucursal = Yii::$app->user->identity->profiles->sucursal;
         $query = Documento::find()
                  ->select(['tipo_doc','id_doc','cod_doc','numeracion_doc','fecha_doc','pedido_doc','status_doc','statussunat_doc','totalimp_doc',
@@ -68,6 +70,11 @@ class DocumentoSearch extends Documento
         $dataProvider->sort->attributes['cliente'] = [
             'asc' => ['cliente.nombre_clte' => SORT_ASC],
             'desc' => ['cliente.nombre_clte' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['vendedor'] = [
+            'asc' => ['vendedor.nombre_vend' => SORT_ASC],
+            'desc' => ['vendedor.nombre_vend' => SORT_DESC],
         ];
 
         $dataProvider->sort->attributes['tipoDocumento'] = [
@@ -106,6 +113,7 @@ class DocumentoSearch extends Documento
             'total_doc' => $this->total_doc,
             'sucursal_doc' => $this->sucursal_doc,
             'pedido.clte_pedido' => $this->cliente,
+            'pedido.vend_pedido' => $this->vendedor,
         ]);
 
         $query->andFilterWhere(['like', 'cod_doc', $this->cod_doc])
@@ -184,6 +192,48 @@ class DocumentoSearch extends Documento
                 ->andWhere('fecha_doc between "' . date('Y-m-01') . '" and "' . date('Y-m-d') . '"')
                 ->all();
     } /* fin de funcion showCountFactura*/
+
+    /* Selecciona el conteo total de boletas generadas */
+    public static function showCountBoleta()
+    {
+
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
+        return Documento::find()
+                // ->select( ["COUNT(*) as total"] )
+                ->where('sucursal_doc = :sucursal',[':sucursal' => $sucursal])
+                ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
+                ->andWhere('tipo_doc = :tipo',[':tipo' => Documento::TIPODOC_BOLETA])
+                ->andWhere('fecha_doc between "' . date('Y-m-01') . '" and "' . date('Y-m-d') . '"')
+                ->all();
+    } /* fin de funcion showCountBoleta*/
+
+    /* Selecciona el conteo total de notas de credito generadas */
+    public static function showCountNotaFNC()
+    {
+
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
+        return Documento::find()
+                // ->select( ["COUNT(*) as total"] )
+                ->where('sucursal_doc = :sucursal',[':sucursal' => $sucursal])
+                ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
+                ->andWhere('tipo_doc = :tipo',[':tipo' => Documento::TIPODOC_NCREDITO])
+                ->andWhere('fecha_doc between "' . date('Y-m-01') . '" and "' . date('Y-m-d') . '"')
+                ->all();
+    } /* fin de funcion showCountFNC*/
+
+    /* Selecciona el conteo total de notas de credito generadas */
+    public static function showCountNotaBNC()
+    {
+
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
+        return Documento::find()
+                // ->select( ["COUNT(*) as total"] )
+                ->where('sucursal_doc = :sucursal',[':sucursal' => $sucursal])
+                ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
+                ->andWhere('tipo_doc = :tipo',[':tipo' => Documento::TIPODOC_BNCREDITO])
+                ->andWhere('fecha_doc between "' . date('Y-m-01') . '" and "' . date('Y-m-d') . '"')
+                ->all();
+    } /* fin de funcion showCountBNC*/
 
     /**
      * Creates data provider instance with search query applied
@@ -265,4 +315,36 @@ class DocumentoSearch extends Documento
                 ->asArray()
                 ->all();
     } /* fin de funcion showVentasDiarias*/
+
+    /* Muestra total de notas de credito por dia */
+    public static function showFNCDiarias()
+    {
+
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
+        return Documento::find()
+                ->select( ['month(fecha_doc) mes, concat(year(fecha_doc),"-",month(fecha_doc)) AS `mesAno`,sum(total_doc) AS `total`'] )
+                ->where('sucursal_doc = :sucursal',[':sucursal' => $sucursal])
+                ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
+                ->andWhere(['in','tipo_doc',[Documento::TIPODOC_NCREDITO]])
+                ->andWhere(['=','year(fecha_doc)',date('Y')])
+                ->groupBy('month(fecha_doc),mesAno')
+                ->asArray()
+                ->all();
+    } /* fin de funcion showFNCDiarias*/
+
+    /* Muestra total de notas de credito por dia */
+    public static function showBNCDiarias()
+    {
+
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
+        return Documento::find()
+                ->select( ['month(fecha_doc) mes, concat(year(fecha_doc),"-",month(fecha_doc)) AS `mesAno`,sum(total_doc) * -1 AS `total`'] )
+                ->where('sucursal_doc = :sucursal',[':sucursal' => $sucursal])
+                ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
+                ->andWhere(['in','tipo_doc',[Documento::TIPODOC_BNCREDITO]])
+                ->andWhere(['=','year(fecha_doc)',date('Y')])
+                ->groupBy('month(fecha_doc),mesAno')
+                ->asArray()
+                ->all();
+    } /* fin de funcion showFNCDiarias*/
 }

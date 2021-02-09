@@ -589,7 +589,7 @@ $( "#pedido-clte_pedido" ).on( "select2:select",function () {
         //$( "#documento-tipo_doc" ).trigger( "change" );
 
         if ( !cliente.dni_clte ) {
-          $( "#documento-tipo_doc option" ).each( function( i, v ){            
+          $( "#documento-tipo_doc option" ).each( function( i, v ){
             if ( v.value == 8 ) {
               v.disabled = true;
             }
@@ -824,7 +824,8 @@ function setPrices( value = null, row, tipo_lista ) {
         data:{
           id: value,
           tipo_listap: tipo_lista,
-          id_pedido:' . $modelPedido->id_pedido . '
+          id_pedido:' . $modelPedido->id_pedido . ',
+          async:false,
         },
         success: function( data ) {
           if ( data.results ) {

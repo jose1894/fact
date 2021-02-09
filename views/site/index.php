@@ -18,8 +18,6 @@ $this->title = 'Resumen';
 $date = DateTime::createFromFormat("d/m/Y", date("d/m/Y"));
 $mes = Yii::t('app',strftime("%B",$date->getTimestamp()));
 ?>
-
-
 <div class="site-index" >
         <section class="content">
           <!-- Small boxes (Stat box) -->
@@ -119,25 +117,47 @@ $mes = Yii::t('app',strftime("%B",$date->getTimestamp()));
 
 
 $ventasFacturas = DocumentoSearch::showVentasDiarias();
+$ventasFNC = DocumentoSearch::showFNCDiarias();
+$ventasBNC = DocumentoSearch::showBNCDiarias();
 $ventasProformas = PedidoSearch::showVentasProformas();
 
  // var_dump($ventasProformas);exit();
 
-$dataFact = [];
-$labelsFact = [];
+ $dataFNC = ['0.00'];
+ $labelsFNC = [date('Y')-0];
+ foreach ($ventasFNC as $key => $value) {
+   // code...
+   $labelsFNC[] = $value['mesAno'];
+   $dataFNC[] = Yii::$app->formatter->asDecimal($value['total']);
+ }
+
+ $dataBNC = ['0.00'];
+ $labelsBNC = [date('Y')-0];
+ foreach ($ventasBNC as $key => $value) {
+   // code...
+   $labelsBNC[] = $value['mesAno'];
+   $dataBNC[] = Yii::$app->formatter->asDecimal($value['total']);
+ }
+
+$dataFact = ['0.00'];
+$labelsFact = [date('Y')];
 foreach ($ventasFacturas as $key => $value) {
   // code...
   $labelsFact[] = $value['mesAno'];
-  $dataFact[] = $value['total'];
+  $dataFact[] = Yii::$app->formatter->asDecimal($value['total']);
 }
 
-$dataProf = [];
-$labelsProf = [];
+var_dump($dataFact);exit();
+
+
+
+$dataProf = ['0.00'];
+$labelsProf = [date('Y')];
 
 foreach ($ventasProformas as $key => $value) {
   // code...
   $labelsProf[] = $value['mesAno'];
-  $dataProf[] = $value['total'];
+  $dataProf[] = Yii::$app->formatter->asDecimal($value['total']);
 }
 
 
@@ -168,7 +188,7 @@ $this->registerJs("
         pointColor          : 'rgba(210, 214, 222, 1)',
         pointStrokeColor    : '#c1c7d1',
         pointHighlightFill  : '#fff',
-        pointHighlightStroke: 'rgba(220,220,220,1)',
+        pointHighlightStroke: 'rgba(255,255,255,1)',
         data                : ". json_encode($dataFact)."
       },
       {
@@ -180,6 +200,26 @@ $this->registerJs("
         pointHighlightFill  : '#fff',
         pointHighlightStroke: 'rgba(60,141,188,1)',
         data                : ". json_encode($dataProf)."
+      },
+      {
+        label               : 'Notas de crédito facturas FNC',
+        fillColor           : '#3af1a9c7',
+        strokeColor         : 'rgba(60,141,188,0.8)',
+        pointColor          : '#3af1a9c7',
+        pointStrokeColor    : 'rgba(60,141,188,1)',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(60,141,188,1)',
+        data                : ". json_encode($dataFNC)."
+      },
+      {
+        label               : 'Notas de crédito Boletas BNC',
+        fillColor           : 'rgba(255,255,255,0.9)',
+        strokeColor         : 'rgba(60,141,188,0.8)',
+        pointColor          : 'rgba(255,255,255,0.9)',
+        pointStrokeColor    : 'rgba(60,141,188,1)',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(60,141,188,1)',
+        data                : ". json_encode($dataBNC)."
       },
     ]
   }

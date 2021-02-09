@@ -853,7 +853,7 @@ class DocumentoController extends Controller
 
       if (YII_ENV === "prod") {
         $sunatUser = '20604954241LEOPHARD';
-        $sunatPass = 'Leophard0';
+        $sunatPass = 'Leophar0';
         $endPoint  = SunatEndpoints::FE_PRODUCCION;
       }
 
@@ -879,9 +879,15 @@ class DocumentoController extends Controller
 
       // Cliente
       $client = new Client();
-      $client->setTipoDoc('6')
-          ->setNumDoc($model->pedidoDoc->cltePedido->ruc_clte)
-          ->setRznSocial($model->pedidoDoc->cltePedido->nombre_clte);
+      if ( NotaCredito::TIPODOC_BOLETA == $model->tipo_doc) {
+        $client->setTipoDoc('1')
+                ->setNumDoc($model->pedidoDoc->cltePedido->dni_clte)
+                ->setRznSocial($model->pedidoDoc->cltePedido->nombre_clte);
+      } else if ( NotaCredito::TIPODOC_FACTURA == $model->tipo_doc ) {
+        $client->setTipoDoc('6')
+            ->setNumDoc($model->pedidoDoc->cltePedido->ruc_clte)
+            ->setRznSocial($model->pedidoDoc->cltePedido->nombre_clte);
+      }
 
       // Emisor
       $address = new Address();
@@ -1018,11 +1024,11 @@ class DocumentoController extends Controller
 
       // Cliente
       $client = new Client();
-      if ( NotaCredito::TIPODOC_BNCREDITO ) {
+      if ( NotaCredito::TIPODOC_BNCREDITO == $model->tipo_doc ) {
         $client->setTipoDoc('1')
                 ->setNumDoc($model->pedidoDoc->cltePedido->dni_clte)
                 ->setRznSocial($model->pedidoDoc->cltePedido->nombre_clte);
-      } else if ( NotaCredito::TIPODOC_NCREDITO ) {
+      } else if ( NotaCredito::TIPODOC_NCREDITO == $model->tipo_doc ) {
         $client->setTipoDoc('6')
             ->setNumDoc($model->pedidoDoc->cltePedido->ruc_clte)
             ->setRznSocial($model->pedidoDoc->cltePedido->nombre_clte);
@@ -1205,7 +1211,7 @@ class DocumentoController extends Controller
       } else if ( $model->tipo_doc === NotaCredito::TIPODOC_NCREDITO ) {
           $modelAjuste   = new NotaSalida();                              //Instancia el modelo para crear la nota de ingreso
           $notaAjusteDetalle = $model->detalles;               //Asigna los items a retornar el stock
-          $modelAjuste->moneda_trans = $model->docAfectado->pedidoDoc->moneda_pedido;          
+          $modelAjuste->moneda_trans = $model->docAfectado->pedidoDoc->moneda_pedido;
       }
 
       $model->status_doc           = Documento::DOCUMENTO_ANULADO;          //Anula el Documento

@@ -39,6 +39,7 @@ class Documento extends \yii\db\ActiveRecord
     const TIPODOC_PROFORMA = 7;
     const TIPODOC_BOLETA = 9;
 	  const TIPODOC_NCREDITO = 10;
+	  const TIPODOC_BNCREDITO = 11;
     const TIPODOC_GUIA = 3;
     const INGRESO_ANULACION = 9; //Tipo de operacion para las anulaciones de facturas y boletas INGRESO POR ANULACION
     const SALIDA_ANULACION = 10; //Tipo de operacion para las anulaciones de notas de credito SALIDA POR ANULACION

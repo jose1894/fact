@@ -68,8 +68,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-
-        if (!Yii::$app->user->isGuest) {          
+        if (!Yii::$app->user->isGuest) {
           if (is_null(Yii::$app->user->identity->profiles)) {
             return $this->redirect( ['profile/create','user_id' => Yii::$app->user->id]);
             // return $this->redirect( ['profile/create']);

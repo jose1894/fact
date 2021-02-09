@@ -94,6 +94,8 @@ class ClienteController extends Controller
               $model->sucursal_clte = SiteController::getSucursal();
               $transaction = \Yii::$app->db->beginTransaction();
 
+              $model->ruc_clte = trim($model->ruc_clte);
+
               try {
                       $model->save();
                       $transaction->commit();
@@ -155,7 +157,7 @@ class ClienteController extends Controller
             {
                 $model->sucursal_clte = SiteController::getSucursal();
                 $transaction = \Yii::$app->db->beginTransaction();
-
+                $model->ruc_clte = trim($model->ruc_clte);
                 try {
                         $model->save();
                         $transaction->commit();

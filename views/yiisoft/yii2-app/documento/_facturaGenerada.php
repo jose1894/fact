@@ -148,6 +148,14 @@ $exportConfig = [
             ],
             'columns' => [
                 [
+                    'attribute' => 'vendedor',
+                    'label' => Yii::t('vendedor','Seller'),
+                    'value' => 'pedidoDoc.vendPedido.nombre_vend',
+                    'width' => '18%',
+                    'hAlign' => 'left',
+                    'vAlign' => 'middle',
+                ],
+                [
                   'value' => function ($data) {
                     return $data->numeracion->tipoDocumento->abrv_tipod.$data->numeracion->serie_num;
                   },
@@ -204,17 +212,20 @@ $exportConfig = [
                             'mergeColumns' => [[0,7]], // columns to merge in summary
                             'content' => [             // content to show in each summary cell
                                 1 => 'Summary (' . $model->tipoDoc->des_tipod . ')',
-                                8 => GridView::F_SUM,
-                                9 => GridView::F_SUM,
+                                10 => GridView::F_SUM,
+                                11 => GridView::F_SUM,
+                                12 => GridView::F_SUM,
                             ],
                             'contentFormats' => [      // content reformatting for each summary cell
-                                8 => ['format' => 'number', 'decimals' => 2],
-                                9 => ['format' => 'number', 'decimals' => 2],
+                                10 => ['format' => 'number', 'decimals' => 2],
+                                11 => ['format' => 'number', 'decimals' => 2],
+                                12 => ['format' => 'number', 'decimals' => 2],
                             ],
                             'contentOptions' => [      // content html attributes for each summary cell
                                 1 => ['style' => 'font-variant:small-caps'],
-                                8 => ['style' => 'text-align:right'],
-                                9 => ['style' => 'text-align:right'],
+                                10 => ['style' => 'text-align:right'],
+                                11 => ['style' => 'text-align:right'],
+                                12 => ['style' => 'text-align:right'],
                             ],
                             // html attributes for group summary row
                             'options' => ['class' => 'info table-info','style' => 'font-weight:bold;']
@@ -269,6 +280,7 @@ $exportConfig = [
                   'format' => ['decimal', 2],
                   //'width' => '10%',
                   'hAlign' => 'right',
+                  'pageSummary' => true
                 ],
                 [
                   'attribute' => 'totalimp_doc',
@@ -286,11 +298,9 @@ $exportConfig = [
                     return ($data->status_doc !== Documento::DOCUMENTO_ANULADO) ? ($data->tipo_doc === NotaCredito::TIPODOC_NCREDITO ? -1 * $data->total_doc : $data->total_doc) : '0';
                   },
                   'hAlign' => 'right',
-                  //'width' => '10%',
                   'pageSummary' => true,
                   'format' => ['decimal', 2],
                 ],
-                // 'total_doc',
                 [
                     'class' => '\kartik\grid\ActionColumn',
                     'headerOptions' => ['style' => 'color:#337ab7'],

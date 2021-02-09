@@ -669,6 +669,48 @@ $( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ) {
 
 });
 
+$( '.table-body' ).on( 'blur', 'input[id$="descu_pdetalle"]', function( e ) {
+    let row = $( this ).attr( "id" ).split( "-" );
+    row = row[ 1 ];
+    let descu = +$( this ).val();
+    let precioLista = +$( "#pedidodetalle-" + row + "-plista_pdetalle").val();
+    let precio = +$( "#pedidodetalle-" + row + "-precio_pdetalle").val();
+    let cant = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
+
+    let total = 0.00;
+    let descuento = 0;
+    let precioVenta = 0.00;
+
+    if ( precioLista !== precio && precio === 0 ) {
+        precio = precioLista;
+    }
+
+    if ( cant ) {
+      if ( precio ) {
+        if ( descu ) {
+          let descuValor = round( precioLista - ( precioLista * ( descu / 100 ) ) );
+          total = ( cant *  descuValor );
+          precioVenta = precioLista - ( precioLista * ( descu / 100 ) );
+          descuento = ( precioLista * ( descu / 100 ) );
+        } else {
+          total = cant * precio;
+          precioVenta = precioLista;
+        }
+
+        descuento = parseFloat( descuento ).toFixed( 2 );
+        precioVenta = parseFloat(  precioVenta  ).toFixed( 2 );
+        total = parseFloat(  total  ).toFixed( 2 );
+
+
+        $( "#pedidodetalle-" + row + "-descu_pdetalle").data( "descuento", descuento);
+        $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioVenta );
+        $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
+
+        calculateTotals( IMPUESTO );
+      }
+    }
+});
+
 $( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ) {
     let row = $( this ).attr( "id" ).split( "-" );
     row = row[ 1 ];

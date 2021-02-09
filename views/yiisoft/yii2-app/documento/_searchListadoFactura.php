@@ -5,6 +5,7 @@ use kartik\form\ActiveForm;
 use kartik\daterange\DateRangePicker;
 use kartik\select2\Select2;
 use app\models\Cliente;
+use app\models\Vendedor;
 use app\models\TipoDocumento;
 use app\models\Documento;
 use yii\web\View ;
@@ -52,7 +53,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
           ]) ?>
         </div>
 
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
         <?= $form->field($model, 'status_doc',[
             'addClass' => 'form-control ',
             'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-ticket"></i>']]
@@ -64,7 +65,7 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
           ['prompt' => Yii::t('app','Select...')]) ?>
         </div>
 
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
           <?= $form->field($model, 'tipoDocumento',[
             'addClass' => 'form-control ',
             ])->widget(Select2::classname(), [
@@ -82,14 +83,16 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
               ],
               ]) ?>
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+  </div>
+  <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
           <?= $form->field($model, 'cliente',[
             'addClass' => 'form-control ',
             ])->widget(Select2::classname(), [
               'data' => Cliente::getClienteList(),
               // 'initValueText' => ,
               'language' => Yii::$app->language,
-              'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-ticket"></i>']],
+              'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-user"></i>']],
               'options' => [
                 'placeholder' => Yii::t('cliente','Select a customer').'...',
               ],
@@ -99,6 +102,24 @@ $ultimoDiaMes  = date('dd/MM/yyyy');
                 'multiple' => true
               ],
               ]) ?>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <?= $form->field($model, 'vendedor',[
+          'addClass' => 'form-control ',
+          ])->widget(Select2::classname(), [
+            'data' => Vendedor::getVendedoresList(),
+            // 'initValueText' => ,
+            'language' => Yii::$app->language,
+            'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-user"></i>']],
+            'options' => [
+              'placeholder' => Yii::t('vendedor','Select a seller').'...',
+            ],
+            'theme' => Select2::THEME_DEFAULT,
+            'pluginOptions' => [
+              'allowClear' => true,
+              'multiple' => true
+            ],
+            ]) ?>
   </div>
 </div>
 <div class="form-group">
