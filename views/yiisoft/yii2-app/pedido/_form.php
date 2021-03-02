@@ -319,7 +319,7 @@ if ( $model->isNewRecord ) {
                       <div class="col-sm-1 col-xs-12">
                         <?= $form
                         ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control number-integer'])
-                        ->textInput(['type' => 'text'])
+                        ->textInput(['type' => 'number', 'pattern' => '[0-9]*\.?[0-9]*', 'autocomplete' =>"off"])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-1 col-xs-12">
@@ -340,6 +340,7 @@ if ( $model->isNewRecord ) {
                         <?= $form
                         ->field($modelDetalle,"[{$index}]descu_pdetalle", [ 'addClass' => 'form-control number-decimals'])
                         ->textInput([ 'type'=>'text','width' => '200px'])
+                        ->textInput(['type' => 'number', 'pattern' => '[0-9]*\.?[0-9]*', 'autocomplete' =>"off"])
                         ->label(false)?>
                       </div>
                       <div class="col-sm-1 col-xs-12">
@@ -494,7 +495,7 @@ $( "#pedido-clte_pedido" ).on( "change",function () {
     url: "'. Url::to(['cliente/cliente-list']).'",
     method: "GET",
     data: { id : $(this).val()},
-    async: true,
+    async: false,
     success: function( cliente ) {
       console.log("cliente");
       cliente = cliente[ 0 ];
@@ -637,7 +638,8 @@ $( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ) {
             descuento = ( precioLista * ( descu / 100 ) );
           } else {
             total = cant * precio;
-            precioVenta = precioLista;
+            // precioVenta = precioLista;
+            precioVenta = precio
           }
 
           descuento = parseFloat( descuento ).toFixed( 2 );
@@ -694,7 +696,8 @@ $( '.table-body' ).on( 'blur', 'input[id$="descu_pdetalle"]', function( e ) {
           descuento = ( precioLista * ( descu / 100 ) );
         } else {
           total = cant * precio;
-          precioVenta = precioLista;
+          // precioVenta = precioLista;
+          precioVenta = precio;
         }
 
         descuento = parseFloat( descuento ).toFixed( 2 );
