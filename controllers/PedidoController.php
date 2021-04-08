@@ -9,6 +9,7 @@ use app\models\Almacen;
 use app\models\PedidoDetalle;
 use app\models\PedidoDetalleSearch;
 use app\models\PedidoSearch;
+use app\models\ProductoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -84,8 +85,10 @@ class PedidoController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Pedido();
+          $model = new Pedido();
           $modelsDetalles = [new PedidoDetalle()];
+          $searchModel = new ProductoSearch();
+          $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
           if ($model->load(Yii::$app->request->post())) {
 
@@ -170,6 +173,8 @@ class PedidoController extends Controller
               'model' => $model,
               'modelsDetalles' => (empty($modelsDetalles)) ? [new PedidoDetalle] : $modelsDetalles,
               'IMPUESTO' => SiteController::getImpuesto(),
+              'searchModel' => $searchModel,
+              'dataProvider' => $dataProvider
           ]);
     }
 
@@ -184,6 +189,9 @@ class PedidoController extends Controller
     {
         $model = $this->findModel($id);
         $modelsDetalles = $model->detalles;
+
+        $searchModel = new ProductoSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $tipoPedido = $model->tipo_pedido;
 
@@ -264,7 +272,9 @@ class PedidoController extends Controller
             'model' => $model,
             'modelsDetalles' => (empty($modelsDetalles)) ? [new PedidoDetalle] : $modelsDetalles,
             'IMPUESTO' => SiteController::getImpuesto(),
-            'tipo' => $tipo
+            'tipo' => $tipo,
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel
         ]);
 
     }

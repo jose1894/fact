@@ -1,4 +1,4 @@
-  <table class="table table-stripped" style="font-size:0.65rem;">
+  <table class="table table-stripped" style="font-size:0.6rem;">
     <thead>
       <tr>
         <td class="left mayus bold">#</td>
@@ -12,7 +12,7 @@
         <td class="right bold mayus"><?= Yii::t('pedido','Total')?></td>
       </tr>
     </thead>
-    <tbody style="font-size:0.62rem;">
+    <tbody>
     <?php
       foreach ($pedido->detalles as $key => $value) {
         // code...

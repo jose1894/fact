@@ -139,3 +139,12 @@ input-group.select2-bootstrap-prepend .select2-container--krajee .select2-select
 .site-signup{
   margin: 0 auto;
 }
+
+.text-right {
+  text-align: right;
+}
+
+.row .detalle-item {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+}

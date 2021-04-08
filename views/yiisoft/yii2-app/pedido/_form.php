@@ -13,9 +13,9 @@ use yii\web\JsExpression;
 use kartik\date\DatePicker;
 use kartik\form\ActiveField;
 use yii\web\View ;
-use wbraganca\dynamicform\DynamicFormWidget;
 use kartik\select2\Select2;
 use app\base\Model;
+use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Pedido */
 /* @var $form yii\widgets\ActiveForm */
@@ -196,178 +196,56 @@ if ( $model->isNewRecord ) {
       <!-- Articulos -->
       <div class="row">
         <div class="container-fluid">
-          <?php DynamicFormWidget::begin([
-                'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
-                'widgetBody' => '.table-body', // required: css class selector
-                'widgetItem' => '.detalle-item', // required: css class
-                //'limit' => 10, // the maximum times, an element can be cloned (default 999)
-                'min' => 0, // 0 or 1 (default 1)
-                'insertButton' => '.add-item', // css class
-                'deleteButton' => '.remove-item', // css class
-                'model' => $modelsDetalles[0],
-                'formId' => $model->formName(),
-                'formFields' => [
-                    'id_pdetalle',
-                    'prod_pdetalle',
-                    'cant_pdetalle',
-                    'precio_pdetalle',
-                    'descu_pdetalle',
-                    'impuesto_pdetalle',
-                    'status_pdetalle'
-                ],
-            ]); ?>
-
             <div class="row">
                 <div class="col-sm-1 col-xs-12">#</div>
-                <div class="col-sm-4 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
+                <div class="col-sm-5 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
                 <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
                 <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'L. price')?></div>
                 <!--th class="col-xs-1"><?= Yii::t( 'pedido', 'Tax')?></th-->
                 <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Disc.')?></div>
                 <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Price')?></div>
-                <div class="col-sm-2 col-xs-12"><?= Yii::t( 'pedido', 'Total')?></div>
-                <div class="col-sm-1 col-xs-12">
-                  <!--button type="button" class="add-item btn btn-success btn-flat btn-md" style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"><i class="fa fa-plus"></i></button-->
-                </div>
-            </div>
-            <hr>
-            <div class="table-body"><!-- widgetContainer -->
-            <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
-                    <div class="row detalle-item"><!-- widgetBody -->
-                      <div class="col-sm-1 col-xs-12 nro">
-                        <?= ( $index + 1 )?>
-                      </div>
-                      <div class="col-sm-4 col-xs-12">
-                      <?php
-
-                      $resultsJs = '
-                                  function (data, params) {
-                                    params.page = params.page || 1;
-                                    return {
-                                        results: data.results,
-                                        pagination: {
-                                            more: (params.page * 30) < data.results.length
-                                        }
-                                    };
-                                  }';
-
-                        // necessary for update action.
-                        if (!$modelDetalle->isNewRecord) {
-                            echo Html::activeHiddenInput($modelDetalle, "[{$index}]id_pdetalle");
-                            //$modelSucursal->empresa_suc[$index] = $model->id_empresa;
-                            echo Html::activeHiddenInput($modelDetalle, "[{$index}]pedido_pdetalle");
-                        }
-                        $url = Url::to(['producto/producto-list']);
-
-                        $producto = [];
-
-                        if ( !empty($modelDetalle->prod_pdetalle) )
-                        {
-                          $producto = Producto::findOne($modelDetalle->prod_pdetalle);
-                        }
-
-                        $productos = empty($modelDetalle->prod_pdetalle) ? '' : $producto->cod_prod.' '.$producto->des_prod.' - '.$producto->umedProd->des_und;
-                        echo $form->field($modelDetalle, "[{$index}]prod_pdetalle",[
-                          'addClass' => 'form-control ',
-                          ])->widget(Select2::classname(), [
-                            'language' => Yii::$app->language,
-                            'initValueText' => $productos, // set the initial display text
-                            'options' => ['placeholder' => Yii::t('producto','Select a product').'...'],
-                            'theme' => Select2::THEME_DEFAULT,
-                            'pluginOptions' => [
-                                //'allowClear' => true,
-                                'minimumInputLength' => 4,
-                                'language' => [
-                                    'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
-                                    'inputTooShort' => new JsExpression("function() {  return '".Yii::t('app','Please input {number} or more characters', [ 'number'=> 4 ])."';}"),
-                                ],
-                            'ajax' => [
-                                'url' => $url,
-                                'dataType' => 'json',
-                                'method' => 'POST',
-                                'data' => new JsExpression('function(params) { return {desc:params.term,tipo_listap: $("#pedido-tipo_listap").val()}; }'),
-                                'processResults' => new JsExpression($resultsJs),
-                            ],
-                            'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-                            'templateSelection' => new JsExpression( 'function (repo) { return repo.text; }'),
-                            'templateResult' => new JsExpression('function (producto) {
-                                if (producto.loading) {
-                                    return producto.text;
-                                }
-
-                               var markup =
-                                        "<div class=\\"row\\">" +
-                                            "<div class=\\"col-sm-4\\">" +
-                                                "<b style=\\"margin-left:5px\\"> " + producto.cod_prod + "</b>" +
-                                            "</div>" +
-                                            "<div class=\\"col-sm-4\\"><b>U.M.:</b> " + producto.des_und + "</div>" +
-                                            "<div class=\\"col-sm-4\\"><b>Stock:</b> " + producto.stock_prod + "</div>" +
-                                        "</div>";
-
-                                if (producto.des_prod) {
-                                  markup += "<p>" + producto.des_prod + "</p>";
-                                }
-
-                                return "<div style=\\"overflow:hidden;\\">" + markup + "</div>";
-
-                            }'),
-                            ],
-                        ])->label(false);
-                        ?>
-
-                      </div>
-                      <div class="col-sm-1 col-xs-12">
-                        <?= $form
-                        ->field($modelDetalle,"[{$index}]cant_pdetalle",[ 'addClass' => 'form-control number-integer'])
-                        ->textInput(['type' => 'number', 'pattern' => '[0-9]*\.?[0-9]*', 'autocomplete' =>"off"])
-                        ->label(false)?>
-                      </div>
-                      <div class="col-sm-1 col-xs-12">
-                        <?= $form
-                        ->field($modelDetalle,"[{$index}]plista_pdetalle", [ 'addClass' => 'form-control number-decimals'])
-                        ->textInput([ 'type' => 'text','readonly' => true])
-                        ->label(false)?>
-                      </div>
-                      <!--div class="col-xs-1 col-xs-12">
-                        <?= $form->field($modelDetalle,"[{$index}]impuesto_pdetalle")
-                        ->textInput([
-                          'class' => 'form-control ',
-                          'style' => ['text-align' => 'right'],
-                          'readonly' => true,
-                        ])->label(false)?>
-                      </div-->
-                      <div class="col-sm-1 col-xs-12">
-                        <?= $form
-                        ->field($modelDetalle,"[{$index}]descu_pdetalle", [ 'addClass' => 'form-control number-decimals'])
-                        ->textInput([ 'type'=>'text','width' => '200px'])
-                        ->textInput(['type' => 'number', 'pattern' => '[0-9]*\.?[0-9]*', 'autocomplete' =>"off"])
-                        ->label(false)?>
-                      </div>
-                      <div class="col-sm-1 col-xs-12">
-                        <?= $form
-                        ->field($modelDetalle,"[{$index}]precio_pdetalle",[ 'addClass' => 'form-control number-decimals'])
-                        ->textInput(['type'=>'text','width' => '200px'])
-                        ->label(false)?>
-                      </div>
-                      <div class="col-sm-2 col-xs-12">
-                        <?= $form
-                        ->field($modelDetalle,"[{$index}]total_pdetalle",[ 'addClass' => 'form-control number-decimals'])
-                        ->textInput(['type'=>'text','readonly' => true])
-                        ->label(false)?>
-                      </div>
-                      <div class="col-sm-1 col-xs-12">
-                        <button type="button" class="remove-item btn btn-danger btn-flat btn-sm" style="width:100%" data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Delete item')?>"><i class="fa fa-trash"></i></button>
-                    </div>
-                  </div>
-            <?php endforeach; ?>
-          </div>
-          <div class="row">
-                <div class="col-sm-11 col-xs-12"></div>
+                <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Total')?></div>
                 <div class="col-sm-1 col-xs-12">
                   <button type="button" class="add-item btn btn-success btn-flat btn-md" style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"><i class="fa fa-plus"></i></button>
                 </div>
             </div>
-          <?php DynamicFormWidget::end(); ?>
+            <hr>
+            <div class="table-body"><!-- widgetContainer -->
+              <?php foreach ($modelsDetalles as $index => $modelDetalle): ?>
+                      <div class="row detalle-item"><!-- widgetBody -->
+                        <div class="col-sm-1 col-xs-12 nro">
+                          <?= ( $index + 1 )?>
+                        </div>
+                        <div class="col-sm-5 col-xs-12">
+                        <?= $modelDetalle->productoPdetalle->des_prod ?>
+                        </div>
+                        <div class="col-sm-1 col-xs-12">
+                          <?= $modelDetalle->cant_pdetalle ?>
+                        </div>
+                        <div class="col-sm-1 col-xs-12">
+                          <?= $modelDetalle->plista_pdetalle ?>
+                        </div>
+                        <div class="col-sm-1 col-xs-12">
+                          <?= $modelDetalle->descu_pdetalle ?>
+                        </div>
+                        <div class="col-sm-1 col-xs-12">
+                          <?= $modelDetalle->precio_pdetalle ?>
+                        </div>
+                        <div class="col-sm-1 col-xs-12 text-right">
+                          <?= $modelDetalle->total_pdetalle ?>
+                        </div>
+                        <div class="col-sm-1 col-xs-12">
+                          <button type="button" class="remove-item btn btn-danger btn-flat btn-md" style="width:100%" data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Delete item')?>"><i class="fa fa-trash"></i></button>
+                      </div>
+                    </div>
+              <?php endforeach; ?>
+            </div>
+          <div class="row">
+                <div class="col-sm-11 col-xs-12"></div>
+                <div class="col-sm-1 col-xs-12">
+                  <!-- <button type="button" class="add-item btn btn-success btn-flat btn-md" style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"><i class="fa fa-plus"></i></button> -->
+                </div>
+          </div>
           <hr>
           <table class="table table-fixed table-stripped">
             <!--tr>
@@ -415,18 +293,6 @@ if ( $model->isNewRecord ) {
       </div>
       <!-- Articulos -->
 
-
-      <?php
-      /*
-      * Campos ocultos pero necesarios
-      */
-      // Campo de usuario
-
-      //$form->field($model, 'usuario_pedido')->textInput()
-      //$form->field($model, 'estatus_pedido')->textInput()
-      //$form->field($model, 'sucursal_pedido')->textInput() */
-       ?>
-
        <div class="form-group" style="float:right">
         <?php if ( !$model->isNewRecord ) { ?>
            <button type="button" name="button" id="imprimir" data-toggle="modal" class="btn btn-flat btn-primary "><span class="fa fa-print"></span> <?= Yii::t('app', 'Print')?></button>
@@ -435,126 +301,63 @@ if ( $model->isNewRecord ) {
        </div>
       <?php ActiveForm::end(); ?>
     </div>
-
 </div>
+
+<!-- Modal-->
+  <div class="modal fade modal-wide" id="modal-producto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-dismiss="true" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+          </button>
+          <h4 class="modal-title" id="modal-prod-title"><?= Yii::t('producto', 'Product')?></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row" style="padding:15px">
+
+            <?= Select2::widget( [
+                  'name' => 'select-product',
+                  'data' => Producto::getProductoList(),
+                  'initValueText' => null,
+                  'language' => Yii::$app->language,
+                  'options' => [
+                  				'allowClear' => true,
+                  				'placeholder' => Yii::t('producto','Select a product').'...',
+                  ],
+            			'changeOnReset' => true,
+                  'theme' => Select2::THEME_DEFAULT,
+                  'pluginOptions' => [
+                          'allowClear' => true,
+                  ],
+          ]) ?>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Modal -->
 
 <?php
 
 Yii::$app->view->registerJs('const IMPUESTO = '. $IMPUESTO .' / 100;',  \yii\web\View::POS_HEAD);
-$js = '
-$(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
-    //console.log("beforeInsert");
-});
-$(".dynamicform_wrapper").on("afterInsert", function(e, item) {
-    //console.log("afterInsert");
-    $(item).find("input,textarea,select").each(function(index,element){
-          $(element).val("");
-    });
-    let row = $(".table-body select").length - 1;
-    $( "#pedidodetalle-" + row + "-prod_pdetalle" ).val(null).trigger("change");
-
-    jQuery(".dynamicform_wrapper .nro").each(function(index) {
-        jQuery(this).html(index + 1)
-    });
-});
-$(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
-  if ( confirm("'.Yii::t('producto','Are you sure to delete this product?').'") ) {
-    return true;
-  }
-  return false;
+$this->registerJs('
+', \yii\web\View::POS_READY);
+$js = <<< JS
+$( 'body' ).on('click', '.add-item', function () {
+  $( '#modal-producto' ).modal( {backdrop: 'static', keyboard: false} )
 });
 
-$(".dynamicform_wrapper").on("afterDelete", function(e) {
-    console.log("Deleted item!");
-    calculateTotals( IMPUESTO );
+$("body").on("keyup.yiiGridView", "#table-producto .filters input", function(){
+    $("#table-producto").yiiGridView("applyFilter");
+})
 
-    jQuery(".dynamicform_wrapper .nro").each(function(index) {
-        jQuery(this).html(index + 1)
-    });
-});
-$(".dynamicform_wrapper").on("limitReached", function(e, item) {
-    swal( "Oops!!!","' . Yii::t('pedido', 'Limit reached') . '","error" );
-});
 
-$( buttonPrint ).on( "click", function(){
-  $( frameRpt ).attr( "src", "'.Url::to(['pedido/pedido-rpt', 'id' => $model->id_pedido]).'");
-  $( modalRpt ).modal({
-    backdrop: "static",
-    keyboard: false,
-  });
-  $( modalRpt ).modal("show");
-});
-
-$( "#pedido-clte_pedido" ).on( "select2:select",function () {
-  $( "#pedido-clte_pedido" ).trigger( "change");
-});
-
-$( "#pedido-clte_pedido" ).on( "change",function () {
-  console.log("changed");
-  $.ajax({
-    url: "'. Url::to(['cliente/cliente-list']).'",
-    method: "GET",
-    data: { id : $(this).val()},
-    async: false,
-    success: function( cliente ) {
-      console.log("cliente");
-      cliente = cliente[ 0 ];
-      let direccion = cliente ? cliente.direcc_clte : " ",
-          geo = cliente ? cliente.geo : " ",
-          //textDirecc = direccion + " " + geo,
-          textDirecc = direccion,
-          condp = cliente ? cliente.condp : " ",
-          vendedor = cliente ? cliente.vendedor : " ",
-          tpl = cliente ? cliente.tpl : " ";
-
-      $( "#pedido-direccion_pedido" ).val( textDirecc );
-
-	  //$( "#pedido-condp_pedido" ).val( 10 ).trigger( "select2:select" );
-
-      if ( !$( "#pedido-condp_pedido" ).val() ) {
-        $( "#pedido-condp_pedido" ).val( condp ).trigger( "change" );
-      }
-
-      $( "#pedido-vend_pedido" ).val( vendedor );
-      $( "#pedido-tipo_listap" ).val( tpl );
-      //$( "#pedido-condp_pedido" ).trigger( "select2:select" );
-      $( "#pedido-vend_pedido" ).trigger( "change" );
-
-    }
-  });
-
-});
-';
-
-$jsTrigger = "";
-
-if ( !$model->isNewRecord ){
-  $jsTrigger = "
-console.log('trigger');
-$('#pedido-clte_pedido').trigger('change');
-$('select[id$=\"prod_pdetalle\"]').trigger('change');
-
-$('select[id$=\"prod_pdetalle\"]').each(function( i ){
-
-  let row = $( this ).attr( \"id\" ).split( \"-\" );
-  row = row[ 1 ];
-  let sync = true;
-  setPrices( $( this ).val(), row,   $( \"#pedido-tipo_listap\" ).val() , sync);
-  $('#pedidodetalle-' + row + '-descu_pdetalle').trigger( 'change' );
-  $('#pedidodetalle-' + row + '-precio_pdetalle').trigger( 'blur' );
-});
-  ";
-}
-$this->registerJs($js.$jsTrigger,View::POS_LOAD);
-$this->registerJs(<<<JS
-
-$('#pedido_tipo  input[type="radio"]').iCheck({
-  checkboxClass: 'icheckbox_flat-green',
-  radioClass   : 'iradio_flat-green'
-});
-
-  $( '.table-body' ).on('select2:select',"select[id$='prod_pdetalle']",function() {
-	let _currSelect = $( this );
+$( '#select-producto').on('click', function(){
+  let _currSelect = $( this );
   let row = $( this ).attr( "id" ).split( "-" );
   row = row[ 1 ];
 
@@ -577,433 +380,7 @@ $('#pedido_tipo  input[type="radio"]').iCheck({
     $( '#pedidodetalle-' + row + '-total_pdetalle' ).val("");
     setPrices( valor, row, tipoLista);
   }
-
 });
+JS;
 
-$( '.table-body' ).on( 'keyup', 'input[id$="cant_pdetalle"]', function( e ) {
-    let row = $( this ).attr( "id" ).split( "-" );
-    row = row[ 1 ];
-    let cant = +$( this ).val();
-    let precioLista = +$( "#pedidodetalle-" + row + "-plista_pdetalle").val();
-    let precio = +$( "#pedidodetalle-" + row + "-precio_pdetalle").val();
-    let descu = +$( "#pedidodetalle-" + row + "-descu_pdetalle").val();
-    let total = 0.00;
-
-    if ( precioLista !== precio && precio === 0 ) {
-      precio = precioLista;
-      // $( "#pedidodetalle-" + row + "-precio_pdetalle").val( precio );
-    }
-
-    if ( cant ) {
-      if ( precio )
-        if ( descu ) {
-          precio = round( precioLista - (precioLista * ( descu / 100 ) ) );
-          total = ( cant * precio );
-        } else {
-          total = cant * precio;
-        }
-
-
-      total = parseFloat(  total  ).toFixed( 2 );
-      $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
-      $( "#pedidodetalle-" + row + "-precio_pdetalle").val( precio );
-      calculateTotals( IMPUESTO );
-    }
-});
-
-$( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ) {
-    let row = $( this ).attr( "id" ).split( "-" );
-    row = row[ 1 ];
-    let descu = +$( this ).val();
-    let precioLista = +$( "#pedidodetalle-" + row + "-plista_pdetalle").val();
-    let precio = +$( "#pedidodetalle-" + row + "-precio_pdetalle").val();
-    let cant = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
-
-    if ( e.keyCode !== 13 ) {
-      let total = 0.00;
-      let descuento = 0;
-      let precioVenta = 0.00;
-
-      if ( precioLista !== precio && precio === 0 ) {
-          precio = precioLista;
-          // $( "#pedidodetalle-" + row + "-precio_pdetalle").val( precio );
-      }
-
-      if ( cant ) {
-        if ( precio ) {
-          if ( descu ) {
-            let descuValor = round( precioLista - ( precioLista * ( descu / 100 ) ) );
-            total = ( cant *  descuValor );
-            precioVenta = precioLista - ( precioLista * ( descu / 100 ) );
-            descuento = ( precioLista * ( descu / 100 ) );
-          } else {
-            total = cant * precio;
-            // precioVenta = precioLista;
-            precioVenta = precio
-          }
-
-          descuento = parseFloat( descuento ).toFixed( 2 );
-          precioVenta = parseFloat(  precioVenta  ).toFixed( 2 );
-          total = parseFloat(  total  ).toFixed( 2 );
-
-
-          $( "#pedidodetalle-" + row + "-descu_pdetalle").data( "descuento", descuento);
-          $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioVenta );
-          $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
-
-          calculateTotals( IMPUESTO );
-        }
-      }
-    } else if ( e.keyCode === 13 && descu === 0 ) {
-
-      if ( precioLista !== precio && precio === 0 ) {
-          precio = precioLista;
-          $( "#pedidodetalle-" + row + "-precio_pdetalle").val( precio );
-      }
-
-      let total = parseFloat(  precio * cant  ).toFixed( 2 );
-      precioLista = parseFloat(  precio  ).toFixed( 2 );
-
-      $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
-      $( "#pedidodetalle-" + row + "-precio_pdetalle").val( precioLista );
-
-    }
-
-});
-
-$( '.table-body' ).on( 'blur', 'input[id$="descu_pdetalle"]', function( e ) {
-    let row = $( this ).attr( "id" ).split( "-" );
-    row = row[ 1 ];
-    let descu = +$( this ).val();
-    let precioLista = +$( "#pedidodetalle-" + row + "-plista_pdetalle").val();
-    let precio = +$( "#pedidodetalle-" + row + "-precio_pdetalle").val();
-    let cant = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
-
-    let total = 0.00;
-    let descuento = 0;
-    let precioVenta = 0.00;
-
-    if ( precioLista !== precio && precio === 0 ) {
-        precio = precioLista;
-    }
-
-    if ( cant ) {
-      if ( precio ) {
-        if ( descu ) {
-          let descuValor = round( precioLista - ( precioLista * ( descu / 100 ) ) );
-          total = ( cant *  descuValor );
-          precioVenta = precioLista - ( precioLista * ( descu / 100 ) );
-          descuento = ( precioLista * ( descu / 100 ) );
-        } else {
-          total = cant * precio;
-          // precioVenta = precioLista;
-          precioVenta = precio;
-        }
-
-        descuento = parseFloat( descuento ).toFixed( 2 );
-        precioVenta = parseFloat(  precioVenta  ).toFixed( 2 );
-        total = parseFloat(  total  ).toFixed( 2 );
-
-
-        $( "#pedidodetalle-" + row + "-descu_pdetalle").data( "descuento", descuento);
-        $( "#pedidodetalle-" + row + "-precio_pdetalle" ).val( precioVenta );
-        $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
-
-        calculateTotals( IMPUESTO );
-      }
-    }
-});
-
-$( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ) {
-    let row = $( this ).attr( "id" ).split( "-" );
-    row = row[ 1 ];
-    let cant = +$( "#pedidodetalle-" + row + "-cant_pdetalle").val();
-    let precioLista = +$( "#pedidodetalle-" + row + "-plista_pdetalle").val();
-    let precio = +$( this ).val();
-    let total = 0;
-
-
-    if ( cant ) {
-      total = cant * precio;
-      total = parseFloat(  total  ).toFixed( 2 );
-      $( "#pedidodetalle-" + row + "-total_pdetalle" ).val( total );
-
-      let descu = ((precio * 100) / precioLista);
-
-      descu = round(100 - descu);
-
-      if ( 0 > +descu ) {
-        descu = 0;
-      }
-
-      $( "#pedidodetalle-" + row + "-descu_pdetalle" ).val( descu );
-
-      calculateTotals( IMPUESTO );
-    }
-
-});
-
-$( '.table-body' ).on( 'keyup', 'input[id$="descu_pdetalle"]', function( e ){
-  let row = $( this ).attr( "id" ).split( "-" );
-  row = row[ 1 ];
-
-  if ( e.keyCode === 13 && $( "#pedidodetalle-" + row + "-cant_pdetalle" ).val() ) {
-    $( '#pedidodetalle-' + row + '-precio_pdetalle' ).focus();
-  }
-});
-
-$( '.table-body' ).on( 'keyup', 'input[id$="precio_pdetalle"]', function( e ) {
-  let row = $( this ).attr( "id" ).split( "-" );
-  row = row[ 1 ];
-
-  if ( e.keyCode === 13 && $( this ).val() &&
-       $( "#pedidodetalle-" + row + "-prod_pdetalle").val()  )  {
-
-      swal({
-        title: "¿Deseas agregar un  nuevo item?",
-        icon: "info",
-        buttons: true,
-      }).then( ( willDelete ) => {
-        if ( willDelete ) {
-          let row = $( ".detalle-item" ).length;
-          $( '.add-item' ).trigger( 'click' );
-          $( "#pedidodetalle-" + row + "-prod_pdetalle").focus();
-          $( "#pedidodetalle-" + row + "-prod_pdetalle").select2('open');
-        }
-      });
-  }
-});
-
-$( 'body' ).on( 'click', buttonCancel, function(){
-  $( frameRpt ).attr( 'src', 'about:blank' );
-  $( modalRpt ).modal("hide");
-});
-
-function calculateTotals( IMPUESTO ) {
-  let total = 0,
-      totalImp = 0,
-      precioNeto = 0,
-      subTotal1 = 0,
-      subTotal2 = 0,
-      descuento = 0,
-      desc = 0;
-      subT = 0,
-      totals = {
-        subtotal1: 0,
-        subtotal2: 0,
-        descuento: 0,
-        impuesto: 0,
-        total: 0
-      };
-
-  $( 'input[id$="-total_pdetalle"]' ).each(function (i, element) {
-    let row = $( this ).attr( "id" ).split( "-" );
-    row = row[ 1 ];
-    total += parseFloat(element.value);
-    subT = $( '#pedidodetalle-' + row + '-plista_pdetalle' ).val()  *  $( '#pedidodetalle-' + row + '-cant_pdetalle' ).val() / ( IMPUESTO + 1 ) ;
-    desc = parseFloat( $( '#pedidodetalle-' + row + '-descu_pdetalle' ).data( "descuento" ) * $( '#pedidodetalle-' + row + '-cant_pdetalle' ).val()   / ( IMPUESTO + 1 ) );
-    subTotal1 += subT;
-    descuento += desc;
-  });
-
-  descuento = descuento ? descuento : 0;
-
-  precioNeto = ( total / ( IMPUESTO + 1 ) );
-  totalImp = total - precioNeto;
-  subTotal2 = precioNeto;
-
-  totals.total = parseFloat(  total  ).toFixed( 2 );
-  totals.impuesto = parseFloat( totalImp  ).toFixed( 2 );
-  totals.subtotal1 = parseFloat( subTotal1  ).toFixed( 2 );
-  totals.subtotal2 = parseFloat( subTotal2  ).toFixed( 2 );
-  totals.descuento = parseFloat( descuento  ).toFixed( 2 );
-
-  $( "#subtotal1" ).val( totals.subtotal1 );
-  $( "#subtotal2" ).val( totals.subtotal2 );
-  $( "#impuesto" ).val( totals.impuesto );
-  $( "#total" ).val( totals.total );
-  $( "#descuento" ).val( totals.descuento );
-
-  //return totals;
-}
-
-JS
-, VIEW::POS_END);
-
-  $jsSave = "
-  function setPrices( value = null, row, tipo_lista, sync = false ) {
-    if ( value && +tipo_lista ) {
-      $.ajax({
-          url:'".Url::to(['producto/product-price'])."',
-          data:{
-            id: value,
-            tipo_listap: tipo_lista
-          },
-          async: sync,
-          success: function( data ) {
-            if ( data.results.length ) {
-              let precioLista = +data.results[ 0 ].precio;
-              let impuestoDetalle = +data.results[ 0 ].precio - +data.results[ 0 ].precio / ( IMPUESTO + 1 );
-
-              precioLista = parseFloat(  precioLista  ).toFixed( 2 );
-              impuestoDetalle = parseFloat(  impuestoDetalle  ).toFixed( 2 );
-
-              $( '#pedidodetalle-' + row + '-cant_pdetalle' ).data( 'stock', +data.results[ 0 ].stock);
-
-              $( '#pedidodetalle-' + row + '-plista_pdetalle' ).val( precioLista );
-              $( '#pedidodetalle-' + row + '-impuesto_pdetalle' ).val( impuestoDetalle );
-
-              let descuDetalle = $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( );
-              descuDetalle = descuDetalle ? descuDetalle : 0;
-
-              $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( descuDetalle );
-              //$( '#pedidodetalle-' + row + '-precio_pdetalle' ).val( precioLista );
-            }
-          }
-      });
-    }
-  }
-
-  $( '.table-body' ).on( 'keyup', 'input[id$=\"cant_pdetalle\"]', function( e ) {
-
-    if ( e.keyCode === 13 && $( this ).val() ) {
-      $( this ).trigger( 'blur' );
-    }
-
-
-  });
-
-  $( '.table-body' ).on( 'blur', 'input[id$=\"cant_pdetalle\"]', function( e ) {
-
-      if ( +$( this ).val() > +$( this ).data( 'stock') ) {
-        swal( 'Oops!', '" . Yii::t( 'pedido', 'You can´t input a value greather than the avalaible stock'). "', 'warning');
-        $( this ).val('');
-        $( this ).focus();
-        $( this ).select();
-        return false;
-      }
-
-      let row = $( this ).attr( \"id\" ).split( \"-\" );
-      row = row[ 1 ];
-      $( '#pedidodetalle-' + row + '-descu_pdetalle' ).focus();
-      $( '#pedidodetalle-' + row + '-descu_pdetalle' ).select();
-
-  });
-
-  $( '#submit' ).on( 'click', function() {
-    let form = $( 'form#Pedido' );
-
-    let rows = $('.table-body > .detalle-item').length;
-
-    if ( !rows ) {
-      swal('".Yii::t('pedido','Order')."', '".Yii::t('pedido','The order must have at least one item to be saved')."', 'info');
-      return false;
-    }
-
-    $.ajax( {
-      'url'    : $( form ).attr( 'action' ),
-      'method' : $( form ).attr( 'method' ),
-      'data'   : $( form ).serialize(),
-      'async'  : false,
-      'success': function ( data ) {
-        if ( data.success ) {
-
-
-          if ( $( form ).attr('action').indexOf('create') != -1) {
-            $( form ).trigger( 'reset' );
-            selects = $(form).find('select');
-
-            if ( selects.length ){
-              selects.trigger( 'change' );
-            }
-
-
-            swal({
-              title: '".Yii::t('pedido','Do you want to issue the document?')."',
-              icon: 'info',
-              buttons: true,
-              dangerMode: true,
-            })
-            .then((willIssue) => {
-              if (willIssue) {
-                window.open(
-                  '".Url::to(['pedido/pedido-rpt'])."/' + data.id,
-                  '". Yii::t('pedido','Order')."',
-                  'toolbar=no,' +
-                  'location=no,' +
-                  'statusbar=no,' +
-                  'menubar=no,' +
-                  'resizable=0,' +
-                  'width=800,' +
-                  'height=600,' +
-                  'left = 490,' +
-                  'top=300');
-                swal(data.title, data.message, data.type);
-              }
-            });
-
-            $( '.table-body' ).empty();
-
-            return;
-          }
-
-          if ( data.codigo ) {
-            $( '#pedido-cod_pedido' ).val( data.codigo );
-          }
-
-          swal(data.title, data.message, data.type);
-
-          return;
-        } else {
-          $( form ).yiiActiveForm( 'updateMessages', data);
-        }
-
-      },
-      error: function(data) {
-          let message;
-
-          if ( data.responseJSON ) {
-            let error = data.responseJSON;
-            message =   'Se ha encontrado un error: ' +
-            '\\n\\nCode ' + error.code +
-            '\\n\\nFile: ' + error.file +
-            '\\n\\nLine: ' + error.line +
-            '\\n\\nName: ' + error.name +
-            '\\n Message: ' + error.message;
-          } else {
-              message = data.responseText;
-          }
-
-          swal('Oops!!!',message,'error' );
-      }
-    });
-
-
-  });
-
-  $( '.table-body' ).on( 'blur', 'input[id$=\"precio_pdetalle\"]', function( e ) {
-    let row = $( this ).attr( 'id' ).split( '-' );
-    row = row[ 1 ];
-    let descu = +$( '#pedidodetalle-' + row + '-descu_pdetalle').val();
-
-    if ( descu > 10 ) {
-
-      swal( 'Oops!', '" . Yii::t( 'pedido', 'The amount discount is greather than 10%'). "', 'warning');
-    }
-
-    calculateTotals( IMPUESTO );
-  });
-";
-
-$this->registerJs($jsSave,View::POS_END);
-
-
-$this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/dynamicform.js',
-['depends'=>[\yii\web\JqueryAsset::className()],
-'position'=>View::POS_END]);
-
-$this->registerJsVar( "buttonPrint", "#imprimir" );
-$this->registerJsVar( "frameRpt", "#frame-rpt" );
-$this->registerJsVar( "buttonCancel", ".close-btn" );
-$this->registerJsVar( "modalRpt", "#modal-rpt" );
-echo   $this->render('//site/_modalRpt',[]);
+$this->registerJs($js,View::POS_END);
