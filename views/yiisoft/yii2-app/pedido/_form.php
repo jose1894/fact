@@ -219,19 +219,19 @@ if ( $model->isNewRecord ) {
                         <div class="col-sm-5 col-xs-12">
                         <?= $modelDetalle->productoPdetalle->des_prod ?>
                         </div>
-                        <div class="col-sm-1 col-xs-12">
+                        <div class="col-sm-1 col-xs-12 cantidad">
                           <?= $modelDetalle->cant_pdetalle ?>
                         </div>
-                        <div class="col-sm-1 col-xs-12">
+                        <div class="col-sm-1 col-xs-12 plista">
                           <?= $modelDetalle->plista_pdetalle ?>
                         </div>
-                        <div class="col-sm-1 col-xs-12">
+                        <div class="col-sm-1 col-xs-12 descuento">
                           <?= $modelDetalle->descu_pdetalle ?>
                         </div>
-                        <div class="col-sm-1 col-xs-12">
+                        <div class="col-sm-1 col-xs-12 precio">
                           <?= $modelDetalle->precio_pdetalle ?>
                         </div>
-                        <div class="col-sm-1 col-xs-12 text-right">
+                        <div class="col-sm-1 col-xs-12 total text-right">
                           <?= $modelDetalle->total_pdetalle ?>
                         </div>
                         <div class="col-sm-1 col-xs-12">
@@ -315,22 +315,48 @@ if ( $model->isNewRecord ) {
         </div>
         <div class="modal-body">
           <div class="row" style="padding:15px">
+            <div class="col-lg-5 col-md-5 col-sm-1">
+              <label for="select-producto"><?= Yii::t('producto', 'Product')?></label>
+              <?= Select2::widget( [
+                    'name' => 'select-product',
+                    'data' => Producto::getProductoList(),
+                    'initValueText' => null,
+                    'language' => Yii::$app->language,
+                    'options' => [
+                    				'allowClear' => true,
+                    				'placeholder' => Yii::t('producto','Select a product').'...',
+                            'id' => 'select-producto'
+                    ],
+              			'changeOnReset' => true,
+                    'theme' => Select2::THEME_DEFAULT,
+            ]) ?>
+            <input type="hidden" name="id_prod" value="">
+          </div>
+          <div class="col-lg-1 col-md-1 col-sm-1">
+            <label for="stock"><?= Yii::t('producto', 'Stock')?></label>
+            <?= Html::input('number','stock','', $options=['class'=>'form-control number-integer', 'id' => 'stock', 'maxlength'=>5, 'readonly' => true, 'pattern' => '[0-9]*\.?[0-9]*']) ?>
+          </div>
+          <div class="col-lg-1 col-md-1 col-sm-1">
+            <label for="cantidad"><?= Yii::t('producto', 'Quantity')?></label>
+            <?= Html::input('number','cantidad','', $options=['class'=>'form-control number-integer', 'id' => 'cantidad', 'maxlength'=>5, 'autocomplete' => 'off', 'pattern' => '[0-9]*\.?[0-9]*']) ?>
+          </div>
+          <div class="col-lg-1 col-md-1 col-sm-1">
+            <label for="plista"><?= Yii::t('producto', 'P.Lista')?></label>
+            <?= Html::input('number','plista','', $options=['class'=>'form-control number-integer', 'id' => 'plista', 'readonly' => true, 'autocomplete' => 'off', 'pattern' => '[0-9]*\.?[0-9]*']) ?>
+          </div>
+          <div class="col-lg-1 col-md-1 col-sm-1">
+            <label for="descuento"><?= Yii::t('producto', 'Discount')?></label>
+            <?= Html::input('number','descuento','', $options=['class'=>'form-control number-decimals', 'id' => 'descuento',  'autocomplete' => 'off', 'pattern' => '[0-9]*\.?[0-9]*']) ?>
+          </div>
+          <div class="col-lg-1 col-md-1 col-sm-1">
+            <label for="precio"><?= Yii::t('producto', 'Price')?></label>
+            <?= Html::input('number','precio','', $options=['class'=>'form-control number-decimals', 'id' => 'precio',  'autocomplete' => 'off', 'pattern' => '[0-9]*\.?[0-9]*']) ?>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-1">
+            <label for="total"><?= Yii::t('producto', 'Total')?></label>
+            <?= Html::input('number','total','', $options=['class'=>'form-control number-integer', 'id' => 'total',  'readonly' => true,'autocomplete' => 'off', 'pattern' => '[0-9]*\.?[0-9]*']) ?>
+          </div>
 
-            <?= Select2::widget( [
-                  'name' => 'select-product',
-                  'data' => Producto::getProductoList(),
-                  'initValueText' => null,
-                  'language' => Yii::$app->language,
-                  'options' => [
-                  				'allowClear' => true,
-                  				'placeholder' => Yii::t('producto','Select a product').'...',
-                  ],
-            			'changeOnReset' => true,
-                  'theme' => Select2::THEME_DEFAULT,
-                  'pluginOptions' => [
-                          'allowClear' => true,
-                  ],
-          ]) ?>
           </div>
         </div>
         <div class="modal-footer">
@@ -342,45 +368,204 @@ if ( $model->isNewRecord ) {
 <!-- Modal -->
 
 <?php
-
+$this->registerJsVar( "buttonPrint", "#imprimir" );
 Yii::$app->view->registerJs('const IMPUESTO = '. $IMPUESTO .' / 100;',  \yii\web\View::POS_HEAD);
-$this->registerJs('
-', \yii\web\View::POS_READY);
+$this->registerJs("
+const URI_PPRICE = '".Url::to(['producto/product-price'])."';
+const URI_PRINT = '".Url::to(['pedido/pedido-rpt', 'id' => $model->id_pedido])."';
+const URI_CLIENTE = '". Url::to(['cliente/cliente-list'])."';
+", \yii\web\View::POS_HEAD);
+
+$jsTrigger = "";
+
+if ( !$model->isNewRecord ){
+  $jsTrigger = "
+    console.log('trigger');
+    $('#pedido-clte_pedido').trigger('change');
+  ";
+}
+$this->registerJs($jsTrigger,View::POS_LOAD);
+
 $js = <<< JS
 $( 'body' ).on('click', '.add-item', function () {
   $( '#modal-producto' ).modal( {backdrop: 'static', keyboard: false} )
 });
 
-$("body").on("keyup.yiiGridView", "#table-producto .filters input", function(){
-    $("#table-producto").yiiGridView("applyFilter");
+$( buttonPrint ).on( "click", function(){
+  $( frameRpt ).attr( "src", URI_PRINT );
+  $( modalRpt ).modal({
+    backdrop: "static",
+    keyboard: false,
+  });
+  $( modalRpt ).modal("show");
+});
+
+$( "#pedido-clte_pedido" ).on( "change",function () {
+
+  $.ajax({
+    url: URI_CLIENTE,
+    method: "GET",
+    data: { id : $(this).val()},
+    async: false,
+    success: function( cliente ) {
+      console.log("cliente");
+      cliente = cliente[ 0 ];
+      let direccion = cliente ? cliente.direcc_clte : " ",
+          geo = cliente ? cliente.geo : " ",
+          //textDirecc = direccion + " " + geo,
+          textDirecc = direccion,
+          condp = cliente ? cliente.condp : " ",
+          vendedor = cliente ? cliente.vendedor : " ",
+          tpl = cliente ? cliente.tpl : " ";
+
+      $( "#pedido-direccion_pedido" ).val( textDirecc );
+
+	  //$( "#pedido-condp_pedido" ).val( 10 ).trigger( "select2:select" );
+
+      if ( !$( "#pedido-condp_pedido" ).val() ) {
+        $( "#pedido-condp_pedido" ).val( condp ).trigger( "change" );
+      }
+
+      $( "#pedido-vend_pedido" ).val( vendedor );
+      $( "#pedido-tipo_listap" ).val( tpl );
+      //$( "#pedido-condp_pedido" ).trigger( "select2:select" );
+      $( "#pedido-vend_pedido" ).trigger( "change" );
+
+    }
+  });
+
+});
+
+$( '#cantidad' ).on('keyup', function (ev) {
+  if ( +$('#select-producto').val() ) {
+    let cant = +$(this).val();
+
+    if ( cant ) {
+      let desc = $('#descuento').val();
+      let precioLista = $('#plista').val()
+      calculateProduct(cant, desc, precioLista);
+    }
+  }
 })
 
+function calculateProduct( cant = 0, desc = 0, precioLista = 0) {
 
-$( '#select-producto').on('click', function(){
-  let _currSelect = $( this );
-  let row = $( this ).attr( "id" ).split( "-" );
-  row = row[ 1 ];
+  let total = 0;
 
-  let selects = $("select[id$='prod_pdetalle']");
+  total = cant * precioLista;
 
-  if ( checkDuplicate( _currSelect, row, selects) ) {
-    _currSelect.val( null ).trigger( 'change' );
-    swal( 'Oops!!!',"El código no puede repetirse, ya está en la lista","error" );
-    _currSelect.focus();
-  }
+  return total;
+}
 
-  let valor = parseInt( _currSelect.val() );
-  let tipoLista = parseInt( $( "#pedido-tipo_listap" ).val() );
+
+$( '#select-producto').on('select2:select', function(){
+  // let _currSelect = $( this );
+  // let row = $( this ).attr( "id" ).split( "-" );
+  // row = row[ 1 ];
+  //
+  // let selects = $("select[id$='prod_pdetalle']");
+  //
+  // if ( checkDuplicate( _currSelect, row, selects) ) {
+  //   _currSelect.val( null ).trigger( 'change' );
+  //   swal( 'Oops!!!',"El código no puede repetirse, ya está en la lista","error" );
+  //   _currSelect.focus();
+  // }
+  //
+  // let valor = parseInt( _currSelect.val() );
+  const tipoLista = +$( "#pedido-tipo_listap" ).val();
+
+  const valor = $(this).val();
 
   if ( valor ) {
-    $( '#pedidodetalle-' + row + '-cant_pdetalle' ).focus();
-    $( '#pedidodetalle-' + row + '-cant_pdetalle' ).val("");
-    $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val("");
-    $( '#pedidodetalle-' + row + '-precio_pdetalle' ).val("");
-    $( '#pedidodetalle-' + row + '-total_pdetalle' ).val("");
-    setPrices( valor, row, tipoLista);
+    $( "#cantidad" ).focus();
+    $( "#cantidad" ).val("");
+    $( "#descuento" ).val("");
+    $( "#precio" ).val("");
+    $( "#total" ).val("");
+    setPrices( valor, tipoLista);
   }
 });
+
+function setPrices( value = null, tipo_lista, sync = false ) {
+  if ( value && tipo_lista ) {
+    $.ajax({
+        url: URI_PPRICE,
+        data:{
+          id: value,
+          tipo_listap: tipo_lista
+        },
+        async: sync,
+        success: function( data ) {
+          if ( data.results.length ) {
+            let precioLista = +data.results[ 0 ].precio;
+            let impuestoDetalle = +data.results[ 0 ].precio - +data.results[ 0 ].precio / ( IMPUESTO + 1 );
+
+            precioLista = parseFloat(  precioLista  ).toFixed( 2 );
+            impuestoDetalle = parseFloat(  impuestoDetalle  ).toFixed( 2 );
+
+            $( '#stock' ).val( +data.results[ 0 ].stock);
+
+            $( '#plista' ).val( precioLista );
+            $( '#impuesto' ).val( impuestoDetalle );
+
+            let descuDetalle = $( '#descuento' ).val( );
+            descuDetalle = descuDetalle ? descuDetalle : 0;
+
+            // $( '#pedidodetalle-' + row + '-descu_pdetalle' ).val( descuDetalle );
+            $( '#precio' ).val( descuDetalle );
+            //$( '#pedidodetalle-' + row + '-precio_pdetalle' ).val( precioLista );
+          }
+        }
+    });
+  }
+}
+
+function calculateTotals( IMPUESTO ) {
+  let total = 0,
+      totalImp = 0,
+      precioNeto = 0,
+      subTotal1 = 0,
+      subTotal2 = 0,
+      descuento = 0,
+      desc = 0;
+      subT = 0,
+      totals = {
+        subtotal1: 0,
+        subtotal2: 0,
+        descuento: 0,
+        impuesto: 0,
+        total: 0
+      };
+
+  $( '.detalle-item' ).each(function (i, element) {
+    let row = "." + element.classList.value.split(' ').join('.');
+    total += +$( row + ' .total' )[i].textContent;
+    subT = $( row + ' .plista' )[i].textContent  *  $( row + ' .cantidad' )[i].textContent / ( IMPUESTO + 1 ) ;
+    desc = parseFloat( $( row + ' .descuento' ).data( "descuento" ) * $( row + ' .cantidad' ).val()   / ( IMPUESTO + 1 ) );
+    subTotal1 += subT;
+    descuento += desc;
+  });
+
+  descuento = descuento ? descuento : 0;
+
+  precioNeto = ( total / ( IMPUESTO + 1 ) );
+  totalImp = total - precioNeto;
+  subTotal2 = precioNeto;
+
+  totals.total = parseFloat(  total  ).toFixed( 2 );
+  totals.impuesto = parseFloat( totalImp  ).toFixed( 2 );
+  totals.subtotal1 = parseFloat( subTotal1  ).toFixed( 2 );
+  totals.subtotal2 = parseFloat( subTotal2  ).toFixed( 2 );
+  totals.descuento = parseFloat( descuento  ).toFixed( 2 );
+
+  $( "#subtotal1" ).val( totals.subtotal1 );
+  $( "#subtotal2" ).val( totals.subtotal2 );
+  $( "#impuesto" ).val( totals.impuesto );
+  $( "#total" ).val( totals.total );
+  $( "#descuento" ).val( totals.descuento );
+
+  return totals;
+}
 JS;
 
 $this->registerJs($js,View::POS_END);
