@@ -665,26 +665,26 @@ class DocumentoController extends Controller
       $date = $f->asDate($modelDocumento->fecha_doc, 'php:d/m/Y');
 
       $header = '
-      <table class="datos-cliente" style="margin: 0px 0 15px 0;">
+      <table class="datos-cliente" style="margin: 0px 0 10px 0;">
           <tr>
-              <td width="15%">&nbsp;</td>
-              <td width="25%" class="left">'.$date.'</td>
               <td width="10%">&nbsp;</td>
-              <td width="35%" class="left">'.$date.'</td>
+              <td width="15%" class="left">'.$date.'</td>
+              <td width="10%">&nbsp;</td>
+              <td width="30%" class="left">'.$date.'</td>
               <td width="25%">&nbsp;</td>
           </tr>
       </table>
       <table style="margin: 0px 0 24px 0;">
         <tr>
-          <td class="left" style="padding:3px 100px"> ' . strtoupper(SiteController::getEmpresa()->direcc_empresa) . ' </td>
+          <td class="left" style="padding:3px 120px"> ' . strtoupper(SiteController::getEmpresa()->direcc_empresa) . ' </td>
         </tr>
         <tr>
-          <td class="left " style="padding:3px 100px"> ' . strtoupper($modelDocumento->pedidoDoc->cltePedido->direcc_clte) . ' </td>
+          <td class="left " style="padding:3px 120px"> ' . strtoupper($modelDocumento->pedidoDoc->cltePedido->direcc_clte) . ' </td>
         </tr>
       </table>
-      <table style="margin: 0px 0 0px 0;">
+      <table style="margin: 10px 0 0px 0;">
         <tr>
-          <td  width="80%" class="left celdas" style="padding-left:50px">' . $modelDocumento->pedidoDoc->cltePedido->nombre_clte . '</td>
+          <td  width="80%" class="left celdas" style="padding-left:70px">' . $modelDocumento->pedidoDoc->cltePedido->nombre_clte . '</td>
           <td  width="20%" class="left celdas" >' . $modelDocumento->unidadTransporte->des_utransp  . '</td>
         </tr>
         <tr>
@@ -697,10 +697,10 @@ class DocumentoController extends Controller
       $footer = '
       <table class="datos-cliente" style="margin: 0px 0 55px 0;">
           <tr>
-              <td style="padding-left:50px" class="left">'.$modelDocumento->transportista->des_transp.'</td>
+              <td style="padding-left:70px" class="left">'.$modelDocumento->transportista->des_transp.'</td>
           </tr>
           <tr>
-              <td style="padding-left:50px; padding-top: 5px;" class="left">'.$modelDocumento->transportista->ruc_transp.'</td>
+              <td style="padding-left:70px; padding-top: 5px;" class="left">'.$modelDocumento->transportista->ruc_transp.'</td>
           </tr>
       </table>';
 
@@ -710,7 +710,7 @@ class DocumentoController extends Controller
       //$mpdf->marginTop = 120;
 
       $mpdf->SetHTMLHeader( $header ); // call methods or set any properties
-      $mpdf->AddPage('P','','','','',10,10,100,50,50,12);
+      $mpdf->AddPage('P','','','','',10,10,120,5,67,20);
       $mpdf->WriteHtml( $content ); // call mpdf write html
       $mpdf->SetHTMLFooter( $footer );
       if ( $modelDocumento->status_doc === Documento::DOCUMENTO_ANULADO ) {
