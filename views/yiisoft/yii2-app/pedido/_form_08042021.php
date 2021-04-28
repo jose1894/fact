@@ -476,14 +476,7 @@ $(".dynamicform_wrapper").on("limitReached", function(e, item) {
     swal( "Oops!!!","' . Yii::t('pedido', 'Limit reached') . '","error" );
 });
 
-$( buttonPrint ).on( "click", function(){
-  $( frameRpt ).attr( "src", "'.Url::to(['pedido/pedido-rpt', 'id' => $model->id_pedido]).'");
-  $( modalRpt ).modal({
-    backdrop: "static",
-    keyboard: false,
-  });
-  $( modalRpt ).modal("show");
-});
+
 
 $( "#pedido-clte_pedido" ).on( "select2:select",function () {
   $( "#pedido-clte_pedido" ).trigger( "change");

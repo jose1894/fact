@@ -20,5 +20,6 @@ return [
     'Initial stock' => 'Estock inicial',
     'Select a product' => 'Seleccione un producto',
     'Factory code' => 'Código de fábrica',
-    'Products' => 'Productos'
+    'Products' => 'Productos',
+    'Please select a valid product! Check its price and quantity!' => '¡Por favor seleccione un producto válido! Verifique su precio y cantidad',
 ];
