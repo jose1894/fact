@@ -220,7 +220,6 @@ class PedidoController extends Controller
             $valid = $model->validate();
             $valid = Model::validateMultiple($modelsDetalles) && $valid;
 
-
             if ($valid) {
                 $transaction = \Yii::$app->db->beginTransaction();
 
@@ -265,6 +264,12 @@ class PedidoController extends Controller
                 }
             }
         }
+
+        // echo "<pre>";
+        // print_r($model);
+        // echo "</pre>";
+        // exit();
+
 
         $tipo = ($model->tipo_pedido === Pedido::PEDIDO) ? 'PEDIDO' : ($model->tipo_pedido === Pedido::PROFORMA) ? 'PROFORMA' : 'COTIZACION';
 

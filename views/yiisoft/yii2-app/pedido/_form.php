@@ -208,14 +208,14 @@ if ( $model->isNewRecord ) {
                       <input type="text" id="subtotal1" name="subtotal" readonly class="form-control totales" value="">
                     </td>
                   </tr-->
-                  <tr>
+                  <!-- <tr>
                     <td class="col-xs-3" style="text-align:right;">
                       <?= Yii::t('app', 'Discount') ?>
                     </td>
                     <td class="col-xs-3">
                       <input type="text" id="descuento" name="descuento" readonly class="form-control input-sm  totales" value="">
                     </td>
-                  </tr>
+                  </tr> -->
                   <tr>
                     <td class="col-xs-3" style="text-align:right;">
                       <?= Yii::t('app', 'Subtotal') ?>
@@ -310,25 +310,27 @@ if ( $model->isNewRecord ) {
               <div class="row">
                   <div class="col-sm-1 col-xs-12">#</div>
                   <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
-                  <div class="col-sm-7 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
+                  <div class="col-sm-4 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
                   <!-- <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'L. price')?></div> -->
                   <!--th class="col-xs-1"><?= Yii::t( 'pedido', 'Tax')?></th-->
-                  <!-- <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Disc.')?></div> -->
-                  <!-- <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Price')?></div> -->
+                  <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Disc')?></div>
+                  <div class="col-sm-2 col-xs-12"><?= Yii::t( 'pedido', 'Price')?></div>
                   <div class="col-sm-2 col-xs-12"><?= Yii::t( 'pedido', 'Total')?></div>
                   <div class="col-sm-1 col-xs-12">
                     <!-- <button type="button" class="add-item btn btn-success btn-flat btn-md" style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"><i class="fa fa-plus"></i></button> -->
                   </div>
               </div>
               <hr>
-              <div class="table-body"><!-- widgetContainer -->
+              <div class="table-body" style="overflow-y: scroll; height: 400px"><!-- widgetContainer -->
                 <?php
                 if (!$model->isNewRecord) {
                 foreach ($modelsDetalles as $index => $modelDetalle): ?>
                         <div class="row detalle-item"><!-- widgetBody -->
                           <div class="col-sm-1 col-xs-12">
                             <span class="nro"><?= ( $index + 1 ) ?></span>
+                            <?=  Html::hiddenInput('PedidoDetalle['.$index.'][id_pdetalle]', $modelDetalle->id_pdetalle,['id'=> 'pedidodetalle-'.$index.'-id_pdetalle']); ?>
                             <?=  Html::hiddenInput('PedidoDetalle['.$index.'][prod_pdetalle]', $modelDetalle->prod_pdetalle,['id'=> 'pedidodetalle-'.$index.'-prod_pdetalle']); ?>
+                            <?=  Html::hiddenInput('PedidoDetalle['.$index.'][pedido_pdetalle]', $modelDetalle->pedido_pdetalle,['id'=> 'pedidodetalle-'.$index.'-pedido_pdetalle']); ?>
                           </div>
                           <div class="col-sm-1 col-xs-12">
                             <?= Html::input(
@@ -337,11 +339,11 @@ if ( $model->isNewRecord ) {
                                   $options=['class'=>'form-control input-sm number-integer', 'id' => 'pedidodetalle-'.$index.'-cant_pdetalle', 'maxlength'=>5, 'readonly' => true, 'pattern' => '[0-9]*\.?[0-9]*']
                             ) ?>
                             <?=  Html::hiddenInput('PedidoDetalle['.$index.'][plista_pdetalle]', $modelDetalle->plista_pdetalle,['id'=> 'pedidodetalle-'.$index.'-plista_pdetalle']); ?>
-                            <?=  Html::hiddenInput('PedidoDetalle['.$index.'][descu_pdetalle]', $modelDetalle->descu_pdetalle,['id'=> 'pedidodetalle-'.$index.'-descu_pdetalle']); ?>
-                            <?=  Html::hiddenInput('PedidoDetalle['.$index.'][precio_pdetalle]', $modelDetalle->precio_pdetalle,['id'=> 'pedidodetalle-'.$index.'-precio_pdetalle']); ?>
+                            <?php /*  Html::hiddenInput('PedidoDetalle['.$index.'][descu_pdetalle]', $modelDetalle->descu_pdetalle,['id'=> 'pedidodetalle-'.$index.'-descu_pdetalle']); */ ?>
+                            <!-- <?php /*  Html::hiddenInput('PedidoDetalle['.$index.'][precio_pdetalle]', $modelDetalle->precio_pdetalle,['id'=> 'pedidodetalle-'.$index.'-precio_pdetalle']); */ ?> -->
                             <?=  Html::hiddenInput('PedidoDetalle['.$index.'][impuesto_pdetalle]', $modelDetalle->impuesto_pdetalle,['id'=> 'pedidodetalle-'.$index.'-impuesto_pdetalle']); ?>
                           </div>
-                          <div class="col-sm-7 col-xs-12">
+                          <div class="col-sm-4 col-xs-12">
                             <?= Html::input(
                               'text',
                               'PedidoDetalle['.$index.'][desc_pdetalle]',
@@ -357,20 +359,20 @@ if ( $model->isNewRecord ) {
                                   $options=['class'=>'form-control number-integer', 'id' => 'pedidodetalle-'.$index.'-plista_pdetalle', 'maxlength'=>5, 'readonly' => true, 'pattern' => '[0-9]*\.?[0-9]*']
                             ) */ ?>
                           </div> -->
-                          <!-- <div class="col-sm-1 col-xs-12">
-                            <?php /* Html::input(
+                          <div class="col-sm-1 col-xs-12">
+                            <?=  Html::input(
                                   'text','PedidoDetalle['.$index.'][descu_pdetalle]',
                                   $modelDetalle->descu_pdetalle,
                                   $options=['class'=>'form-control number-integer', 'id' => 'pedidodetalle-'.$index.'-descu_pdetalle', 'maxlength'=>5, 'readonly' => true, 'pattern' => '[0-9]*\.?[0-9]*']
-                            )*/ ?>
-                          </div> -->
-                          <!-- <div class="col-sm-1 col-xs-12">
-                            <?php /* Html::input(
+                            ) ?>
+                          </div>
+                          <div class="col-sm-2 col-xs-12">
+                            <?=  Html::input(
                                   'text','PedidoDetalle['.$index.'][precio_pdetalle]',
                                   $modelDetalle->precio_pdetalle,
                                   $options=['class'=>'form-control number-integer', 'id' => 'pedidodetalle-'.$index.'-precio_pdetalle', 'maxlength'=>5, 'readonly' => true, 'pattern' => '[0-9]*\.?[0-9]*']
-                            ) */ ?>
-                          </div> -->
+                            )  ?>
+                          </div>
                           <div class="col-sm-2 col-xs-12">
                             <?= Html::input(
                                   'text','PedidoDetalle['.$index.'][total_pdetalle]',
@@ -437,6 +439,7 @@ const BTN_ADD = '" . Yii::t('producto','Please select a valid product! Check its
 const MSG_SEND_TITLE = '".Yii::t('pedido','Do you want to issue the document?')."';
 const MSG_TITLE =  '".Yii::t('pedido','Order')."';
 const MSG_DETAIL_VALIDATION = '".Yii::t('pedido','The order must have at least one item to be saved')."';
+const MSG_STOCK = '".Yii::t('pedido','The stock is not enough!')."';
 ", \yii\web\View::POS_HEAD);
 
 $jsTrigger = "";
@@ -457,17 +460,23 @@ $('.sidebar-toggle').trigger('click')
 $( "#btn-agregar" ).on( "click", function() {
   const LINE = $( '.table-body .row.detalle-item' ).length;
   const ID_LINE = LINE + 1;
-  let codprod =  $( "#select-producto" ).val();
+  let codprod =  +$( "#select-producto" ).val();
+  let stock = +$( "#stock-prod" ).val();
   let textProd =  $( "#select-producto option:selected" ).text().trim();
-  let cant =  round($( "#cantidad-prod" ).val());
-  let descuento = !+($( "#descuento-prod" ).val()) ? 0 : +($( "#descuento-prod" ).val());
-  let precio = $( "#precio-prod" ).val();
-  let impuesto = $( "#impuesto-prod" ).val();
-  let precioLista = $( "#plista-prod" ).val();
-  let total = $( "#total-prod" ).val();
+  let cant =  +$( "#cantidad-prod" ).val();
+  let descuento = !+($( "#descuento-prod" ).val()) ? 0 : $( "#descuento-prod" ).val();
+  let precio = +$( "#precio-prod" ).val();
+  let impuesto = +$( "#impuesto-prod" ).val();
+  let precioLista = +$( "#plista-prod" ).val();
+  let total = +$( "#total-prod" ).val();
 
-  if ( !total || !precioLista || !precio || !cant || !codprod) {
-    swal('Oops!', BTN_ADD, 'danger')
+  if ( !total || !precioLista || !precio || !cant || !codprod || !stock) {
+    swal("Oops!", BTN_ADD, "error")
+    return
+  }
+
+  if ( cant > stock ) {
+    swal("Oops!", MSG_STOCK, "error");
     return
   }
 
@@ -479,16 +488,20 @@ $( "#btn-agregar" ).on( "click", function() {
         </div>
         <div class="col-sm-1 col-xs-12">
           <input type="text" id="pedidodetalle-` + LINE + `-cant_pdetalle" class="form-control input-sm number-integer" name="PedidoDetalle[` + LINE + `][cant_pdetalle]" value="` + cant + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
-          <input type="hidden" id="pedidodetalle-` + LINE + `-plista_pdetalle" class="form-control number-integer" name="PedidoDetalle[` + LINE + `][plista_pdetalle]" value="` + precioLista + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
-          <input type="hidden" id="pedidodetalle-` + LINE + `-descu_pdetalle" class="form-control number-integer" name="PedidoDetalle[` + LINE + `][descu_pdetalle]" value="` + descuento + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
-          <input type="hidden" id="pedidodetalle-` + LINE + `-precio_pdetalle" class="form-control number-integer" name="PedidoDetalle[` + LINE + `][precio_pdetalle]" value="` + precio + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
-          <input type="hidden" id="pedidodetalle-` + LINE + `-impuesto_pdetalle" class="form-control number-integer" name="PedidoDetalle[` + LINE + `][impuesto_pdetalle]" value="` + impuesto + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
+          <input type="hidden" id="pedidodetalle-` + LINE + `-plista_pdetalle" class="form-control number-integer" name="PedidoDetalle[` + LINE + `][plista_pdetalle]" value="` + round(precioLista) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
+          <input type="hidden" id="pedidodetalle-` + LINE + `-impuesto_pdetalle" class="form-control number-integer" name="PedidoDetalle[` + LINE + `][impuesto_pdetalle]" value="` + round(impuesto) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
         </div>
-        <div class="col-sm-7 col-xs-12">
+        <div class="col-sm-4 col-xs-12">
           <input type="text" id="pedidodetalle-` + LINE + `-desc_pdetalle" class="form-control input-sm" name="PedidoDetalle[` + LINE + `][desc_pdetalle]" value="` + textProd + `" readonly>
         </div>
+        <div class="col-sm-1 col-xs-12">
+          <input type="text" id="pedidodetalle-` + LINE + `-descu_pdetalle" class="form-control number-integer" name="PedidoDetalle[` + LINE + `][descu_pdetalle]" value="` + round(descuento) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
+        </div>
         <div class="col-sm-2 col-xs-12">
-          <input type="text" id="pedidodetalle-` + LINE + `-total_pdetalle" class="form-control input-sm number-integer" name="PedidoDetalle[` + LINE + `][total_pdetalle]" value="` + total + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
+          <input type="text" id="pedidodetalle-` + LINE + `-precio_pdetalle" class="form-control number-integer" name="PedidoDetalle[` + LINE + `][precio_pdetalle]" value="` + round(precio) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
+        </div>
+        <div class="col-sm-2 col-xs-12">
+          <input type="text" id="pedidodetalle-` + LINE + `-total_pdetalle" class="form-control input-sm number-integer" name="PedidoDetalle[` + LINE + `][total_pdetalle]" value="` + round(total) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
         </div>
         <div class="col-sm-1 col-xs-12">
           <button type="button" class="remove-item btn btn-danger btn-flat btn-sm" data-toggle="tooltip" data-placement="top" title="Delete item"><i class="fa fa-trash"></i></button>
@@ -885,3 +898,17 @@ function calculateTotals( IMPUESTO ) {
 JS;
 
 $this->registerJs($js,View::POS_END);
+
+$this->registerJsVar( "buttonPrint", "#imprimir" );
+$this->registerJsVar( "buttonCreate", "" );
+$this->registerJsVar( "buttonSubmit", "" );
+$this->registerJsVar( "frameRpt", "#frame-rpt" );
+$this->registerJsVar( "frame", "" );
+$this->registerJsVar( "buttonCancel", ".close-btn" );
+$this->registerJsVar( "modalRpt", "#modal-rpt" );
+$this->registerJsVar( "modal", "#modal-rpt" );
+echo   $this->render('//site/_modalRpt',[]);
+
+$this->registerJsFile(Yii::$app->getUrlManager()->getBaseUrl().'/js/app.js',
+['depends'=>[\yii\web\JqueryAsset::className()],
+'position'=>View::POS_END]);
