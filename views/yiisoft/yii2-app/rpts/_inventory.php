@@ -158,6 +158,16 @@ $exportConfig = [
                             'format' => ['decimal',0],
                             'hAlign' => 'right',
                           ],
+                          [
+                            'attribute' => 'precio_lista',
+                            'format' => ['decimal',2],
+                            'hAlign' => 'right',
+                          ],
+                          [
+                            'attribute' => 'total_valorizado',
+                            'format' => ['decimal',2],
+                            'hAlign' => 'right',
+                          ],
                   ]
               ]);?>
         <?php Pjax::end(); ?>

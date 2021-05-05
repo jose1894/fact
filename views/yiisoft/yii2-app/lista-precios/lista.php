@@ -19,8 +19,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(); ?>
-    <?= Html::input('text', 'actualizar-precio', '' ,['id'=>'actualizar-precio','class' => 'number-decimals']) ?>
     <?= Html::checkbox('porcentaje', false, ['label' => 'Porcentaje', 'id'=>'check-porcentaje']) ?>
+    <?= Html::input('text', 'actualizar-precio', '' ,['id'=>'actualizar-precio','class' => 'number-decimals']) ?>
+    <?= Html::checkbox('incremento', false, ['label' => 'Incremento', 'id'=>'check-porcentaje']) ?>
+    <?= Html::checkbox('descuento', false, ['label' => 'Descuento', 'id'=>'check-porcentaje']) ?>
     <?= Html::button('Actualizar', ['id'=>'update','class' => 'btn btn-flat btn-success']) ?>
 
     <?= GridView::widget([
@@ -28,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'pjax' => true,
         'columns' => [
-            //['class' => 'yii\grid\SerialColumn'],            
+            //['class' => 'yii\grid\SerialColumn'],
             ['class' => 'kartik\grid\CheckboxColumn',
             'checkboxOptions' => function ($dataProvider, $key, $index, $column) {
                 return ['value' => $dataProvider->id_lista.'*'.$dataProvider->precio_lista, 'id' => 'check-'.$key];   }
@@ -45,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'pluginEvents' =>[],
                     'options' => ['prompt' => ''],
                 ],
-                //'width' => '20%'       
+                //'width' => '20%'
             ],
             [
                 'attribute'=> 'precio_lista',
@@ -90,7 +92,7 @@ $('#update').click(function(){
             alert('Debe seleccionar la lista de precio que desea actualizar')
         } else {
             var opcion = confirm('Desea actualizar el precio?');
-            if (opcion == true) {            
+            if (opcion == true) {
                 var incremento = parseFloat($('#actualizar-precio').val());
                 var optionPorcentaje = $('#check-porcentaje').prop('checked');
                 var total = 0;
@@ -119,18 +121,18 @@ $('#update').click(function(){
                 $('#actualizar-precio').val('');
                 $('#check-porcentaje').prop('checked',false);
             }
-        }        
+        }
     }
 });
 /**evento para actualizar el precio cuando se escribe en el input*/
 $('#actualizar-precio').on('keyup', function() {
-    var incremento = $(this).val();   
+    var incremento = $(this).val();
     if (incremento !== '') {
         incremento = Number(incremento);
         if ($.isNumeric(incremento)) {
             actualizarPrecioGrid(incremento);
         }
-    }    
+    }
 });
 /**Evento que se activa cuando se selecciona el check de procentaje*/
 $('#check-porcentaje').click(function(){
@@ -145,8 +147,8 @@ $('#check-porcentaje').click(function(){
 
 /**Métod que se activa cuando se escribe en el input para actualizar el precio*/
 function actualizarPrecioGrid(incremento){
-    var optionPorcentaje = $('#check-porcentaje').prop('checked'); 
-    updateDataGrid(optionPorcentaje, incremento);   
+    var optionPorcentaje = $('#check-porcentaje').prop('checked');
+    updateDataGrid(optionPorcentaje, incremento);
 }
 
 /**Este metodo se utiliza cuando se escribe en el input y cuando se seleccion el check de porcentaje*/
@@ -154,7 +156,7 @@ function updateDataGrid(optionPorcentaje, incremento) {
     var total = 0;
     $('.table tr').each(function (i, row) {
         var actualrow = $(row);
-        checkbox = actualrow.find('input').is(':checked');        
+        checkbox = actualrow.find('input').is(':checked');
         if(checkbox) { // si esta seleccionado el check de la fila
             var key = $(this).attr('data-key');
             var precioProd = getPrecioGrid(key);
@@ -163,14 +165,14 @@ function updateDataGrid(optionPorcentaje, incremento) {
                 total = calcularPorcentaje(precioProd,incremento);
             } else {
                 total = round(precioProd + incremento);
-            }  
-            //actualizar fila de precio del producto     
+            }
+            //actualizar fila de precio del producto
             currentRow.find('td:eq(2)').text(total);
          }
     });
 }
-/**Método que retorna el valor del precio, 
- * para esto se toma lo que esta en la propiedad 
+/**Método que retorna el valor del precio,
+ * para esto se toma lo que esta en la propiedad
  * value del check de cada fila del grid*/
 function getPrecioGrid(key) {
     var value = $('#check-'+key).val();
@@ -185,10 +187,10 @@ function calcularPorcentaje(precio, porcentaje){
     var precioPor = 0;
     console.log(precio);
     if(porcentaje <= 100) {
-        precioPor = ((precio* porcentaje)/100);        
-    } 
+        precioPor = ((precio* porcentaje)/100);
+    }
     precioPor = precio + precioPor;
-    return round(precioPor);   
+    return round(precioPor);
 }
-"; 
+";
 $this->registerJs($js,View::POS_LOAD);
