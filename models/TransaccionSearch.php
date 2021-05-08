@@ -107,12 +107,15 @@ class TransaccionSearch extends Transaccion
               stock_asignado,
               stock_prod stock_disponible,
               precio_lista,
-              (stock_prod * precio_lista) total_valorizado
+              (stock_prod * precio_lista) total_valorizado,
+              desc_marca
             ')
       ->from(['v_productos'])
       ->join('inner join','tipo_producto','id_tpdcto = tipo_prod and sucursal_prod = sucursal_tpdcto')
       ->join('inner join','lista_precios','prod_lista = id_prod and sucursal_prod = sucursal_lista')
-      ->where(['=','sucursal_prod',$sucursal]);
+      ->join('inner join','marca','marca_prod = id_marca and sucursal_prod = sucursal_lista')
+      ->where(['=','sucursal_prod',$sucursal])
+      ->orderBy('desc_tpdcto,desc_marca,des_prod,cod_prod');
 
 
       $dataProvider = new ActiveDataProvider([

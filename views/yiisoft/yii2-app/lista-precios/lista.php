@@ -8,6 +8,7 @@ use kartik\grid\GridView;
 use app\models\TipoListap;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
+use kartik\form\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ListaPreciosSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -16,14 +17,32 @@ $this->title = Yii::t('lista_precios', 'Lista Precios');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lista-precios-index">
-
     <h1><?= Html::encode($this->title) ?></h1>
+    <br>
+    <br>
+    <div class="row">
+      <?php $form = ActiveForm::begin([ 'id' => "update-form", 'enableClientScript' => true]); ?>
+      <div class="col-lg-1">
+        <?= Html::checkbox('porcentaje', false, ['label' => 'Porcentaje', 'id'=>'check-porcentaje', 'class' => '']); ?>
+      </div>
+      <div class="col-lg-2">
+        <label for="actualizar-precio">Valor</label>
+        <?= Html::input('text', 'actualizar-precio', '' ,['id'=>'actualizar-precio','class' => 'form-control number-decimals']); ?>
+      </div>
+      <div class="col-lg-2">
+        <?= Html::checkbox('incremento', false, ['label' => 'Incremento', 'id'=>'check-incremento', 'class' => '']); ?>
+      </div>
+      <div class="col-lg-1">
+        <?= Html::checkbox('descuento', false, ['label' => 'Descuento', 'id'=>'check-descuento', 'class' => '']); ?>
+      </div>
+      <div class="col-lg-2">
+        <?= Html::button('Actualizar', ['id'=>'update','class' => 'btn btn-flat btn-success']); ?>
+      </div>
+    <?php ActiveForm::end();?>
+    </div>
+    <br>
+    <br>
     <?php Pjax::begin(); ?>
-    <?= Html::checkbox('porcentaje', false, ['label' => 'Porcentaje', 'id'=>'check-porcentaje']) ?>
-    <?= Html::input('text', 'actualizar-precio', '' ,['id'=>'actualizar-precio','class' => 'number-decimals']) ?>
-    <?= Html::checkbox('incremento', false, ['label' => 'Incremento', 'id'=>'check-porcentaje']) ?>
-    <?= Html::checkbox('descuento', false, ['label' => 'Descuento', 'id'=>'check-porcentaje']) ?>
-    <?= Html::button('Actualizar', ['id'=>'update','class' => 'btn btn-flat btn-success']) ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -33,6 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //['class' => 'yii\grid\SerialColumn'],
             ['class' => 'kartik\grid\CheckboxColumn',
             'checkboxOptions' => function ($dataProvider, $key, $index, $column) {
+
                 return ['value' => $dataProvider->id_lista.'*'.$dataProvider->precio_lista, 'id' => 'check-'.$key];   }
             ],
             [

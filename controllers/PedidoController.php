@@ -185,104 +185,105 @@ class PedidoController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-        $modelsDetalles = $model->detalles;
+     public function actionUpdate($id)
+     {
+           $model = $this->findModel($id);
+           $modelsNewDetalles = [new PedidoDetalle()];
+           $searchModel = new ProductoSearch();
+           $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $searchModel = new ProductoSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+           $tipoPedido = $model->tipo_pedido;
 
-        $tipoPedido = $model->tipo_pedido;
+           if ($model->estatus_pedido != $model::STATUS_INACTIVO){
+               throw new NotFoundHttpException(Yii::t('pedido', 'The requested page does not exist.'));
+               return;
+           }
 
-        if ($model->estatus_pedido != $model::STATUS_INACTIVO){
-            throw new NotFoundHttpException(Yii::t('pedido', 'The requested page does not exist.'));
-            return;
-        }
+           if ($model->load(Yii::$app->request->post())) {
 
-        if ($model->load(Yii::$app->request->post())) {
+             if ( $tipoPedido !== $model->tipo_pedido){
+               $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'cod_pedido', 'pedido', 'tipo_pedido', $model->tipo_pedido );
+               $codigo = $model->cod_pedido;
+             }
 
-            $oldIDs = ArrayHelper::map($modelsDetalles, 'id_pdetalle', 'id_pdetalle');
-            $modelsDetalles = Model::createMultiple(PedidoDetalle::classname(), $modelsDetalles, 'id_pdetalle');
-            Model::loadMultiple($modelsDetalles, Yii::$app->request->post());
-            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsDetalles, 'id_pdetalle', 'id_pdetalle')));
+             // validate all models
+             $valid = $model->validate();
+             // ajax validation
+             if (!$valid){
+                 if (Yii::$app->request->isAjax) {
+                     Yii::$app->response->format = Response::FORMAT_JSON;
+                     return ActiveForm::validate($model);
 
-            //echo '$tipoPedido: '.$tipoPedido;
-            //echo '$model->tipo_pedido '.$model->tipo_pedido;
+                 }
+             } else {
+                 $transaction = \Yii::$app->db->beginTransaction();
 
+                 try {
+                           if ($flag = $model->save(false)) {
+                             PedidoDetalle::deleteAll(['pedido_pdetalle' => $model->id_pedido]);
+                             $modelsNewDetalles = Model::createMultiple(PedidoDetalle::classname());
+                             Model::loadMultiple($modelsNewDetalles, Yii::$app->request->post());
 
-            if ( $tipoPedido !== $model->tipo_pedido){
-              $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'cod_pedido', 'pedido', 'tipo_pedido', $model->tipo_pedido );
-              $codigo = $model->cod_pedido;
-            }
+                             print_r($modelsNewDetalles);exit();
+                             $valid = Model::validateMultiple($modelsNewDetalles);
 
-            // validate all models
-            $valid = $model->validate();
-            $valid = Model::validateMultiple($modelsDetalles) && $valid;
+                             if (!$valid){
+                                 if (Yii::$app->request->isAjax) {
+                                     Yii::$app->response->format = Response::FORMAT_JSON;
+                                     return ActiveForm::validateMultiple($modelsNewDetalles);
+                                 }
+                              }
 
-            if ($valid) {
-                $transaction = \Yii::$app->db->beginTransaction();
+                             foreach ($modelsNewDetalles as $modelDetalle) {
+                                 $modelDetalle->pedido_pdetalle = $model->id_pedido;
+                                 if (! ($flag = $modelDetalle->save(false))) {
+                                     $transaction->rollBack();
+                                     throw new \Exception("Error Processing Request", 1);
+                                     break;
+                                 }
+                             }
+                         }
+                         //return $this->redirect(['view', 'id' => $model->id_empresa]);
+                         if ($flag) {
+                           $transaction->commit();
 
-                try {
-                    if ($flag = $model->save(false)) {
-                        if (!empty($deletedIDs)) {
-                            PedidoDetalle::deleteAll(['id_pdetalle' => $deletedIDs]);
-                        }
-                        foreach ($modelsDetalles as $modelDetalle) {
-                            $modelDetalle->pedido_pdetalle = $model->id_pedido;
-                            if (! ($flag = $modelDetalle->save(false))) {
-                                $transaction->rollBack();
-                                break;
-                            }
-                        }
-                    }
-                    if ($flag) {
-                        $model->save();
-                        $transaction->commit();
-                        //return $this->redirect(['view', 'id' => $model->id_empresa]);
-                        Yii::$app->response->format = Response::FORMAT_JSON;
-                        $return = [
-                          'success' => true,
-                          'title' => Yii::t('pedido', 'Order'),
-                          'message' => Yii::t('app','Record saved successfully!'),
-                          'type' => 'success',
-                          //'codigo' => $codigo,
-                        ];
-                        return $return;
-                    }
-                } catch (Exception $e) {
-                    $transaction->rollBack();
-                    Yii::$app->response->format = Response::FORMAT_JSON;
-                    $return = [
-                      'success' => false,
-                      'title' => Yii::t('empresa', 'Company'),
-                      'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
-                      'type' => 'error'
+                           Yii::$app->response->format = Response::FORMAT_JSON;
+                           $return = [
+                             'success' => true,
+                             'title' => Yii::t('pedido', 'Order'),
+                             'id' => $model->id_pedido,
+                             'message' => Yii::t('app','Record has been saved successfully!'),
+                             'type' => 'success'
+                           ];
+                           return $return;
+                         }
 
-                    ];
-                    return $return;
-                }
-            }
-        }
+                 } catch (Exception $e) {
+                     $transaction->rollBack();
+                     Yii::$app->response->format = Response::FORMAT_JSON;
+                     $return = [
+                       'success' => false,
+                       'title' => Yii::t('pedido', 'Order'),
+                       'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                       'type' => 'error'
+                     ];
+                     return $return;
+                 }
+             }
+           }
 
-        // echo "<pre>";
-        // print_r($model);
-        // echo "</pre>";
-        // exit();
-
-
-        $tipo = ($model->tipo_pedido === Pedido::PEDIDO) ? 'PEDIDO' : ($model->tipo_pedido === Pedido::PROFORMA) ? 'PROFORMA' : 'COTIZACION';
-
-        return $this->render('update', [
-            'model' => $model,
-            'modelsDetalles' => (empty($modelsDetalles)) ? [new PedidoDetalle] : $modelsDetalles,
-            'IMPUESTO' => SiteController::getImpuesto(),
-            'tipo' => $tipo,
-            'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel
-        ]);
-
-    }
+           $model->moneda_pedido = Moneda::findOne(['status_moneda' => 1, 'tipo_moneda' => 'N']);
+           $model->almacen_pedido = Almacen::findOne(['status_almacen' => 1]);
+           //$model->tipo_pedido = 0;
+           $model->usuario_pedido = Yii::$app->user->id;
+           return $this->render('create', [
+               'model' => $model,
+               'modelsDetalles' => (empty($modelsDetalles)) ? [new PedidoDetalle] : $modelsDetalles,
+               'IMPUESTO' => SiteController::getImpuesto(),
+               'searchModel' => $searchModel,
+               'dataProvider' => $dataProvider
+           ]);
+     }
 
     /**
      * Deletes an existing Pedido model.

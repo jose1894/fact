@@ -35,7 +35,7 @@ if ( $model->isNewRecord ) {
   <div class="container-fluid">
     <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true]); ?>
     <div class="row">
-      <div class="col-lg-4 col-md-4">
+      <div class="col-lg-5 col-md-5">
         <div class="box box-success">
           <div class="box-header with-border">
             <h3 class="box-title">
@@ -251,13 +251,13 @@ if ( $model->isNewRecord ) {
             </div>
           </div>
       </div>
-      <div class="col-lg-8 col-md-8">
+      <div class="col-lg-7 col-md-7">
         <!-- Articulos -->
         <div class="row">
           <div class="container-fluid">
               <div class="row">
-                <div class="row" style="padding:15px">
-                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+                <div class="row" style="padding:5px">
+                    <div class="col-lg-4 col-md-5 col-sm-5 col-xs-12">
                       <label for="select-producto"><?= Yii::t('producto', 'Product')?></label>
                       <?= Select2::widget( [
                             'name' => 'select-product',
@@ -290,7 +290,7 @@ if ( $model->isNewRecord ) {
                     <label for="descuento"><?= Yii::t('pedido', 'Disc')?></label>
                     <?= Html::input('text','descuento','', $options=['class'=>'form-control input-sm number-decimals', 'id' => 'descuento-prod',  'autocomplete' => 'off', 'pattern' => '[0-9]*\.?[0-9]*']) ?>
                   </div>
-                  <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                     <label for="precio"><?= Yii::t('pedido', 'Price')?></label>
                     <?= Html::input('text','precio','', $options=['class'=>'form-control input-sm number-decimals', 'id' => 'precio-prod',  'autocomplete' => 'off', 'pattern' => '[0-9]*\.?[0-9]*']) ?>
                   </div>
@@ -526,14 +526,14 @@ $( 'body' ).on('click', '.remove-item', function () {
 
     $.each( $('.detalle-item'), function(index, value){
         $(value).find('.nro').text(index + 1)
-        $(value).find('input[id$="prod_pdetalle"]').prop('id','pedidodetalle-' + index + '-prod_pdetalle')
-        $(value).find('input[id$="cant_pdetalle"]').prop('id','pedidodetalle-' + index + '-cant_pdetalle')
-        $(value).find('input[id$="plista_pdetalle"]').prop('id','pedidodetalle-' + index + '-plista_pdetalle')
-        $(value).find('input[id$="descu_pdetalle"]').prop('id','pedidodetalle-' + index + '-descu_pdetalle')
-        $(value).find('input[id$="precio_pdetalle"]').prop('id','pedidodetalle-' + index + '-precio_pdetalle')
-        $(value).find('input[id$="impuesto_pdetalle"]').prop('id','pedidodetalle-' + index + '-impuesto_pdetalle')
-        $(value).find('input[id$="total_pdetalle"]').prop('id','pedidodetalle-' + index + '-total_pdetalle')
-
+        $(value).find('input[id$="prod_pdetalle"]').attr('id','pedidodetalle-' + index + '-prod_pdetalle')
+        $(value).find('input[id$="cant_pdetalle"]').attr('id','pedidodetalle-' + index + '-cant_pdetalle')
+        $(value).find('input[id$="plista_pdetalle"]').attr('id','pedidodetalle-' + index + '-plista_pdetalle')
+        $(value).find('input[id$="descu_pdetalle"]').attr('id','pedidodetalle-' + index + '-descu_pdetalle')
+        $(value).find('input[id$="precio_pdetalle"]').attr('id','pedidodetalle-' + index + '-precio_pdetalle')
+        $(value).find('input[id$="impuesto_pdetalle"]').attr('id','pedidodetalle-' + index + '-impuesto_pdetalle')
+        $(value).find('input[id$="total_pdetalle"]').attr('id','pedidodetalle-' + index + '-total_pdetalle')
+        $(value).find('input[id$="pedido_pdetalle"]').attr('id','pedidodetalle-' + index + '-pedido_pdetalle')
     })
 
     calculateTotals( IMPUESTO );

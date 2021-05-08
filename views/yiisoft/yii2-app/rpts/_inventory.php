@@ -144,6 +144,10 @@ $exportConfig = [
                             'label' => Yii::t('producto','Description'),
                           ],
                           [
+                            'attribute' => 'desc_marca',
+                            'label' => Yii::t('marca','Make'),
+                          ],
+                          [
                             'attribute' => 'stock_total',
                             'format' => ['decimal',0],
                             'hAlign' => 'right',
