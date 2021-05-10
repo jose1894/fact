@@ -517,6 +517,7 @@ $( "#btn-agregar" ).on( "click", function() {
   $( "#total-prod" ).val("");
   $( "#select-producto").val(null).trigger('change');
   $( "#select-producto").focus();
+  $( "#select-producto").select2('open');
   $( "#btn-agregar").prop('disabled',true);
   calculateTotals( IMPUESTO );
 });
@@ -526,14 +527,26 @@ $( 'body' ).on('click', '.remove-item', function () {
 
     $.each( $('.detalle-item'), function(index, value){
         $(value).find('.nro').text(index + 1)
+        $(value).find('input[id$="id_pdetalle"]').attr('id','pedidodetalle-' + index + '-id_pdetalle')
+        $(value).find('input[id$="id_pdetalle"]').attr('name','PedidoDetalle[' + index + '][id_pdetalle]')
+        $(value).find('input[id$="desc_pdetalle"]').attr('id','pedidodetalle-' + index + '-desc_pdetalle')
+        $(value).find('input[id$="desc_pdetalle"]').attr('name','PedidoDetalle[' + index + '][desc_pdetalle]')
         $(value).find('input[id$="prod_pdetalle"]').attr('id','pedidodetalle-' + index + '-prod_pdetalle')
+        $(value).find('input[id$="prod_pdetalle"]').attr('name','PedidoDetalle[' + index + '][prod_pdetalle]')
         $(value).find('input[id$="cant_pdetalle"]').attr('id','pedidodetalle-' + index + '-cant_pdetalle')
+        $(value).find('input[id$="cant_pdetalle"]').attr('name','PedidoDetalle[' + index + '][cant_pdetalle]')
         $(value).find('input[id$="plista_pdetalle"]').attr('id','pedidodetalle-' + index + '-plista_pdetalle')
+        $(value).find('input[id$="plista_pdetalle"]').attr('name','PedidoDetalle[' + index + '][plista_pdetalle]')
         $(value).find('input[id$="descu_pdetalle"]').attr('id','pedidodetalle-' + index + '-descu_pdetalle')
+        $(value).find('input[id$="descu_pdetalle"]').attr('name','PedidoDetalle[' + index + '][descu_pdetalle]')
         $(value).find('input[id$="precio_pdetalle"]').attr('id','pedidodetalle-' + index + '-precio_pdetalle')
+        $(value).find('input[id$="precio_pdetalle"]').attr('name','PedidoDetalle[' + index + '][precio_pdetalle]')
         $(value).find('input[id$="impuesto_pdetalle"]').attr('id','pedidodetalle-' + index + '-impuesto_pdetalle')
+        $(value).find('input[id$="impuesto_pdetalle"]').attr('name','PedidoDetalle[' + index + '][impuesto_pdetalle]')
         $(value).find('input[id$="total_pdetalle"]').attr('id','pedidodetalle-' + index + '-total_pdetalle')
+        $(value).find('input[id$="total_pdetalle"]').attr('name','PedidoDetalle[' + index + '][total_pdetalle]')
         $(value).find('input[id$="pedido_pdetalle"]').attr('id','pedidodetalle-' + index + '-pedido_pdetalle')
+        $(value).find('input[id$="pedido_pdetalle"]').attr('name','PedidoDetalle[' + index + '][pedido_pdetalle]')
     })
 
     calculateTotals( IMPUESTO );
@@ -644,6 +657,7 @@ $( '#descuento-prod' ).on('blur', function (e) {
 $( '#precio-prod' ).on('keyup', function (e) {
   if ( e.keyCode === 13 && +$( this ).val()
       && +$('#select-producto').val() && +$('#cantidad-prod').val() )  {
+        $( "#btn-agregar" ).focus();
       return
   }
 

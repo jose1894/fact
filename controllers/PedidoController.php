@@ -188,7 +188,12 @@ class PedidoController extends Controller
      public function actionUpdate($id)
      {
            $model = $this->findModel($id);
-           $modelsNewDetalles = [new PedidoDetalle()];
+           // $modelsNewDetalles = [new PedidoDetalle()];
+           $modelsDetalles = $model->detalles;
+
+           $post = Yii::$app->request->post();
+           // print_r($post['PedidoDetalle']);exit();
+
            $searchModel = new ProductoSearch();
            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -200,6 +205,14 @@ class PedidoController extends Controller
            }
 
            if ($model->load(Yii::$app->request->post())) {
+             $transaction = \Yii::$app->db->beginTransaction();
+             $modelsNewDetalles = [new PedidoDetalle()];
+
+             $modelsNewDetalles = Model::createMultiple(PedidoDetalle::classname());
+             Model::loadMultiple($modelsNewDetalles, Yii::$app->request->post());
+
+             PedidoDetalle::deleteAll(['pedido_pdetalle' => $model->id_pedido]);
+
 
              if ( $tipoPedido !== $model->tipo_pedido){
                $model->cod_pedido = AutoIncrement::getAutoIncrementPad( 'cod_pedido', 'pedido', 'tipo_pedido', $model->tipo_pedido );
@@ -216,17 +229,10 @@ class PedidoController extends Controller
 
                  }
              } else {
-                 $transaction = \Yii::$app->db->beginTransaction();
 
                  try {
                            if ($flag = $model->save(false)) {
-                             PedidoDetalle::deleteAll(['pedido_pdetalle' => $model->id_pedido]);
-                             $modelsNewDetalles = Model::createMultiple(PedidoDetalle::classname());
-                             Model::loadMultiple($modelsNewDetalles, Yii::$app->request->post());
-
-                             print_r($modelsNewDetalles);exit();
                              $valid = Model::validateMultiple($modelsNewDetalles);
-
                              if (!$valid){
                                  if (Yii::$app->request->isAjax) {
                                      Yii::$app->response->format = Response::FORMAT_JSON;
