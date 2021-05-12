@@ -51,90 +51,90 @@ class ListaPreciosController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
-        }
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+    // public function actionView($id)
+    // {
+    //     if (Yii::$app->request->get('asDialog'))
+    //     {
+    //       $this->layout = 'justStuff';
+    //     }
+    //     return $this->render('view', [
+    //         'model' => $this->findModel($id),
+    //     ]);
+    // }
 
     /**
      * Creates a new ListaPrecios model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
-        $model = new ListaPrecios();
-        if (Yii::$app->request->get('asDialog'))
-        {
-          $this->layout = 'justStuff';
-
-
-
-          if ($model->load(Yii::$app->request->post())) {
-
-            $valid = $model->validate();
-
-            // ajax validation
-            if (!$valid)
-            {
-                if (Yii::$app->request->isAjax) {
-                    Yii::$app->response->format = Response::FORMAT_JSON;
-                    return ActiveForm::validate($model);
-
-                }
-            }
-            else
-            {
-                $model->sucursal_lista = SiteController::getSucursal();
-                $transaction = \Yii::$app->db->beginTransaction();
-                try {
-                        $model->save();
-                        $transaction->commit();
-                        Yii::$app->response->format = Response::FORMAT_JSON;
-                        $return = [
-                          'success' => true,
-                          'title' => Yii::t('tipo_listap', 'List price type'),
-                          'message' => Yii::t('app','Record has been saved successfully!'),
-                          'type' => 'success'
-                        ];
-                        return $return;
-
-                } catch (Exception $e) {
-                    $transaction->rollBack();
-                    Yii::$app->response->format = Response::FORMAT_JSON;
-                    $return = [
-                      'success' => false,
-                      'title' => Yii::t('tipo_listap', 'List price type'),
-                      'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
-                      'type' => 'error'
-
-                    ];
-                    return $return;
-                }
-            }
-          }
-
-          return $this->render('create', [
-              'model' => $model,
-          ]);
-        }
-        else
-        {
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id_prov]);
-            }
-
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
+    // public function actionCreate()
+    // {
+    //     $model = new ListaPrecios();
+    //     if (Yii::$app->request->get('asDialog'))
+    //     {
+    //       $this->layout = 'justStuff';
+    //
+    //
+    //
+    //       if ($model->load(Yii::$app->request->post())) {
+    //
+    //         $valid = $model->validate();
+    //
+    //         // ajax validation
+    //         if (!$valid)
+    //         {
+    //             if (Yii::$app->request->isAjax) {
+    //                 Yii::$app->response->format = Response::FORMAT_JSON;
+    //                 return ActiveForm::validate($model);
+    //
+    //             }
+    //         }
+    //         else
+    //         {
+    //             $model->sucursal_lista = SiteController::getSucursal();
+    //             $transaction = \Yii::$app->db->beginTransaction();
+    //             try {
+    //                     $model->save();
+    //                     $transaction->commit();
+    //                     Yii::$app->response->format = Response::FORMAT_JSON;
+    //                     $return = [
+    //                       'success' => true,
+    //                       'title' => Yii::t('tipo_listap', 'List price type'),
+    //                       'message' => Yii::t('app','Record has been saved successfully!'),
+    //                       'type' => 'success'
+    //                     ];
+    //                     return $return;
+    //
+    //             } catch (Exception $e) {
+    //                 $transaction->rollBack();
+    //                 Yii::$app->response->format = Response::FORMAT_JSON;
+    //                 $return = [
+    //                   'success' => false,
+    //                   'title' => Yii::t('tipo_listap', 'List price type'),
+    //                   'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+    //                   'type' => 'error'
+    //
+    //                 ];
+    //                 return $return;
+    //             }
+    //         }
+    //       }
+    //
+    //       return $this->render('create', [
+    //           'model' => $model,
+    //       ]);
+    //     }
+    //     else
+    //     {
+    //         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+    //             return $this->redirect(['view', 'id' => $model->id_prov]);
+    //         }
+    //
+    //         return $this->render('create', [
+    //             'model' => $model,
+    //         ]);
+    //     }
+    // }
 
     /**
      * Updates an existing ListaPrecios model.
@@ -143,72 +143,72 @@ class ListaPreciosController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-        if ( Yii::$app->request->get( 'asDialog' ) )
-        {
-          $this->layout = "justStuff";
-
-          if ($model->load(Yii::$app->request->post())) {
-
-              $valid = $model->validate();
-
-              // ajax validation
-              if (!$valid)
-              {
-                  if (Yii::$app->request->isAjax) {
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      return ActiveForm::validate($model);
-
-                  }
-              }
-              else
-              {
-                  $model->sucursal_lista = SiteController::getSucursal();
-                  $transaction = \Yii::$app->db->beginTransaction();
-
-                  try {
-                          $model->save();
-                          $transaction->commit();
-                          Yii::$app->response->format = Response::FORMAT_JSON;
-                          $return = [
-                            'success' => true,
-                            'title' => Yii::t('tipo_listap', 'List price type'),
-                            'message' => Yii::t('app','Record has been saved successfully!'),
-                            'type' => 'success'
-                          ];
-                          return $return;
-                  } catch (Exception $e) {
-                      $transaction->rollBack();
-                      Yii::$app->response->format = Response::FORMAT_JSON;
-                      $return = [
-                        'success' => false,
-                        'title' => Yii::t('tipo_listap', 'List price type'),
-                        'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
-                        'type' => 'error'
-
-                      ];
-                      return $return;
-                  }
-              }
-          }
-
-          return $this->render('update', [
-              'model' => $model,
-          ]);
-        }
-        else
-        {
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              return $this->redirect(['view', 'id' => $model->id_prov]);
-          }
-
-          return $this->render('update', [
-              'model' => $model,
-          ]);
-        }
-    }
+    // public function actionUpdate($id)
+    // {
+    //     $model = $this->findModel($id);
+    //     if ( Yii::$app->request->get( 'asDialog' ) )
+    //     {
+    //       $this->layout = "justStuff";
+    //
+    //       if ($model->load(Yii::$app->request->post())) {
+    //
+    //           $valid = $model->validate();
+    //
+    //           // ajax validation
+    //           if (!$valid)
+    //           {
+    //               if (Yii::$app->request->isAjax) {
+    //                   Yii::$app->response->format = Response::FORMAT_JSON;
+    //                   return ActiveForm::validate($model);
+    //
+    //               }
+    //           }
+    //           else
+    //           {
+    //               $model->sucursal_lista = SiteController::getSucursal();
+    //               $transaction = \Yii::$app->db->beginTransaction();
+    //
+    //               try {
+    //                       $model->save();
+    //                       $transaction->commit();
+    //                       Yii::$app->response->format = Response::FORMAT_JSON;
+    //                       $return = [
+    //                         'success' => true,
+    //                         'title' => Yii::t('tipo_listap', 'List price type'),
+    //                         'message' => Yii::t('app','Record has been saved successfully!'),
+    //                         'type' => 'success'
+    //                       ];
+    //                       return $return;
+    //               } catch (Exception $e) {
+    //                   $transaction->rollBack();
+    //                   Yii::$app->response->format = Response::FORMAT_JSON;
+    //                   $return = [
+    //                     'success' => false,
+    //                     'title' => Yii::t('tipo_listap', 'List price type'),
+    //                     'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+    //                     'type' => 'error'
+    //
+    //                   ];
+    //                   return $return;
+    //               }
+    //           }
+    //       }
+    //
+    //       return $this->render('update', [
+    //           'model' => $model,
+    //       ]);
+    //     }
+    //     else
+    //     {
+    //       if ($model->load(Yii::$app->request->post()) && $model->save()) {
+    //           return $this->redirect(['view', 'id' => $model->id_prov]);
+    //       }
+    //
+    //       return $this->render('update', [
+    //           'model' => $model,
+    //       ]);
+    //     }
+    // }
 
     public function actionUpdateListaPrecios() //da error porque asi es cuando son GET
     {
@@ -216,23 +216,23 @@ class ListaPreciosController extends Controller
         $band = true;
 
         $transaction = \Yii::$app->db->beginTransaction();
-        
+
         try {
             foreach($post['dataPreciosAct'] as $key => $value) {
                 $model = $this->findModel($value['idLista']);
                 $model->precio_lista=$value['precioActual'];
-                $band = $model->save() && $band;                
+                $band = $model->save() && $band;
             }
 
             if ( $band ) {
-                
+
                 $transaction->commit();
                 //return $this->redirect(['view', 'id' => $model->id_empresa]);
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 $return = [
                     'success' => true,
-                    'title' => Yii::t('app', 'List price'),
-                    'message' => Yii::t('app','Record saved successfully!'),
+                    'title' => Yii::t('lista_precios', 'List prices'),
+                    'message' => Yii::t('lista_precios','List prices updated successfully!'),
                     'type' => 'success',
                     //'codigo' => $codigo,
                 ];
@@ -244,7 +244,7 @@ class ListaPreciosController extends Controller
             $return = [
                 'success' => false,
                 'title' => Yii::t('app', 'List price'),
-                'message' => Yii::t('app','Record couldn´t be saved!') . " \nError: ". $e->errorMessage(),
+                'message' => Yii::t('app','List prices couldn´t be updated!') . " \nError: ". $e->errorMessage(),
                 'type' => 'error'
 
             ];
@@ -260,15 +260,15 @@ class ListaPreciosController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-        if (Yii::$app->request->isAjax) {
-             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-             return  true;
-         }
-        return $this->redirect(['index']);
-    }
+    // public function actionDelete($id)
+    // {
+    //     $this->findModel($id)->delete();
+    //     if (Yii::$app->request->isAjax) {
+    //          Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    //          return  true;
+    //      }
+    //     return $this->redirect(['index']);
+    // }
 
     /**
      * Finds the ListaPrecios model based on its primary key value.

@@ -80,6 +80,7 @@
                         ['label' => Yii::t('marca','Make'), 'url' => ['/marca'], 'icon' => 'tags', 'visible' => Yii::$app->user->can('/marca/index')],
                         ['label' => Yii::t('serie','Numeration'), 'url' => ['/numeracion'], 'icon' => 'tachometer', 'visible' => Yii::$app->user->can('/numeracion/index')],
                         ['label' => Yii::t('motivo_traslado','Transfer reason'), 'url' => ['/motivo-traslado'], 'icon' => 'bookmark', 'visible' => Yii::$app->user->can('/motivo-traslado/index')],
+                        ['label' => Yii::t('lista_precios','List prices'), 'url' => ['/lista-precios'], 'icon' => 'list', 'visible' => Yii::$app->user->can('/lista-precios/index')],
                       ]
                     ],
                     ['label' => Yii::t('tipo_cambio', 'Exchange'), 'icon' => 'money', 'url' => ['/tipo-cambio/'], 'visible' => Yii::$app->user->can('/tipo-cambio/index')],

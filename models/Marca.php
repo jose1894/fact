@@ -15,6 +15,9 @@ use yii\helpers\ArrayHelper;
  */
 class Marca extends \yii\db\ActiveRecord
 {
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACACTIVE = 0;
+
     /**
      * {@inheritdoc}
      */
@@ -73,5 +76,21 @@ class Marca extends \yii\db\ActiveRecord
     public function getProductos()
     {
         return $this->hasMany(Producto::className(), ['marca_prod' => 'id_marca']);
+    }
+
+    public static function getMarcaList( )
+    {
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
+
+        $condicion = ['status_marca = :status and sucursal_marca = :sucursal', [':status' => self::STATUS_ACTIVE, ':sucursal' => $sucursal]];
+
+
+        $marca = self::find()
+            ->select(['id_marca','desc_marca'])
+            ->where($condicion[0], $condicion[1])
+            ->orderBy('desc_marca')
+            ->all();
+
+        return  ArrayHelper::map( $marca, 'id_marca', 'desc_marca');
     }
 }

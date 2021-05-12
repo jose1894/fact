@@ -466,7 +466,8 @@ $( "#btn-agregar" ).on( "click", function() {
   let cant =  +$( "#cantidad-prod" ).val();
   let descuento = !+($( "#descuento-prod" ).val()) ? 0 : $( "#descuento-prod" ).val();
   let precio = +$( "#precio-prod" ).val();
-  let impuesto = +$( "#impuesto-prod" ).val();
+  // let impuesto = +$( "#impuesto-prod" ).val();
+  let impuesto = IMPUESTO * 100;
   let precioLista = +$( "#plista-prod" ).val();
   let total = +$( "#total-prod" ).val();
 

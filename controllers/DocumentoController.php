@@ -857,6 +857,7 @@ class DocumentoController extends Controller
         $endPoint  = SunatEndpoints::FE_PRODUCCION;
       }
 
+
       $model = Documento::find()
                            ->where('id_doc = :id',[':id' => $id])
                            ->andWhere(['tipo_doc' => [
@@ -879,11 +880,11 @@ class DocumentoController extends Controller
 
       // Cliente
       $client = new Client();
-      if ( NotaCredito::TIPODOC_BOLETA == $model->tipo_doc) {
+      if ( Documento::TIPODOC_BOLETA == $model->tipo_doc) {
         $client->setTipoDoc('1')
                 ->setNumDoc($model->pedidoDoc->cltePedido->dni_clte)
                 ->setRznSocial($model->pedidoDoc->cltePedido->nombre_clte);
-      } else if ( NotaCredito::TIPODOC_FACTURA == $model->tipo_doc ) {
+      } else if ( Documento::TIPODOC_FACTURA == $model->tipo_doc ) {
         $client->setTipoDoc('6')
             ->setNumDoc($model->pedidoDoc->cltePedido->ruc_clte)
             ->setRznSocial($model->pedidoDoc->cltePedido->nombre_clte);
