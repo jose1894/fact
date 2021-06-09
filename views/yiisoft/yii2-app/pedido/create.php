@@ -10,18 +10,18 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('pedido', 'Pedidos'), 'url' 
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="pedido-create">
-  <!-- <div class="box box-success">
+  <div class="box box-success">
     <div class="box-header with-border">
-      <h3 class="box-title"> -->
-        <?php /* Html::encode($this->title) */?>
-      <!-- </h3>
+      <h3 class="box-title">
+        <?= Html::encode($this->title) ?>
+      </h3>
     </div>
-    <div class="box-body"> -->
+    <div class="box-body">
     <?= $this->render('_form', [
         'model' => $model,
         'modelsDetalles' => $modelsDetalles,
-        'IMPUESTO' => $IMPUESTO,
+        'IMPUESTO' => $IMPUESTO
     ]) ?>
-    <!-- </div>
-  </div> -->
+    </div>
+  </div>
 </div>

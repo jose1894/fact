@@ -363,14 +363,14 @@ if ( $model->isNewRecord ) {
                             <?=  Html::input(
                                   'text','PedidoDetalle['.$index.'][descu_pdetalle]',
                                   $modelDetalle->descu_pdetalle,
-                                  $options=['class'=>'form-control number-integer', 'id' => 'pedidodetalle-'.$index.'-descu_pdetalle', 'maxlength'=>5, 'readonly' => true, 'pattern' => '[0-9]*\.?[0-9]*']
+                                  $options=['class'=>'form-control input-sm number-integer', 'id' => 'pedidodetalle-'.$index.'-descu_pdetalle', 'maxlength'=>5, 'readonly' => true, 'pattern' => '[0-9]*\.?[0-9]*']
                             ) ?>
                           </div>
                           <div class="col-sm-2 col-xs-12">
                             <?=  Html::input(
                                   'text','PedidoDetalle['.$index.'][precio_pdetalle]',
                                   $modelDetalle->precio_pdetalle,
-                                  $options=['class'=>'form-control number-integer', 'id' => 'pedidodetalle-'.$index.'-precio_pdetalle', 'maxlength'=>5, 'readonly' => true, 'pattern' => '[0-9]*\.?[0-9]*']
+                                  $options=['class'=>'form-control input-sm number-integer', 'id' => 'pedidodetalle-'.$index.'-precio_pdetalle', 'maxlength'=>5, 'readonly' => true, 'pattern' => '[0-9]*\.?[0-9]*']
                             )  ?>
                           </div>
                           <div class="col-sm-2 col-xs-12">
@@ -496,10 +496,10 @@ $( "#btn-agregar" ).on( "click", function() {
           <input type="text" id="pedidodetalle-` + LINE + `-desc_pdetalle" class="form-control input-sm" name="PedidoDetalle[` + LINE + `][desc_pdetalle]" value="` + textProd + `" readonly>
         </div>
         <div class="col-sm-1 col-xs-12">
-          <input type="text" id="pedidodetalle-` + LINE + `-descu_pdetalle" class="form-control number-integer" name="PedidoDetalle[` + LINE + `][descu_pdetalle]" value="` + round(descuento) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
+          <input type="text" id="pedidodetalle-` + LINE + `-descu_pdetalle" class="form-control input-sm number-integer" name="PedidoDetalle[` + LINE + `][descu_pdetalle]" value="` + round(descuento) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
         </div>
         <div class="col-sm-2 col-xs-12">
-          <input type="text" id="pedidodetalle-` + LINE + `-precio_pdetalle" class="form-control number-integer" name="PedidoDetalle[` + LINE + `][precio_pdetalle]" value="` + round(precio) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
+          <input type="text" id="pedidodetalle-` + LINE + `-precio_pdetalle" class="form-control input-sm number-integer" name="PedidoDetalle[` + LINE + `][precio_pdetalle]" value="` + round(precio) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
         </div>
         <div class="col-sm-2 col-xs-12">
           <input type="text" id="pedidodetalle-` + LINE + `-total_pdetalle" class="form-control input-sm number-integer" name="PedidoDetalle[` + LINE + `][total_pdetalle]" value="` + round(total) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">

@@ -1,11 +1,11 @@
 /*!
- * bootstrap-fileinput v5.1.2
+ * bootstrap-fileinput v5.2.1
  * http://plugins.krajee.com/file-input
  *
  * Krajee default styling for bootstrap-fileinput.
  *
  * Author: Kartik Visweswaran
- * Copyright: 2014 - 2020, Kartik Visweswaran, Krajee.com
+ * Copyright: 2014 - 2021, Kartik Visweswaran, Krajee.com
  *
  * Licensed under the BSD-3-Clause
  * https://github.com/kartik-v/bootstrap-fileinput/blob/master/LICENSE.md
@@ -200,6 +200,10 @@
 .file-preview-image {
     font: 40px Impact, Charcoal, sans-serif;
     color: #008000;
+    width:auto;
+    height:auto;
+    max-width:100%;
+    max-height:100%;
 }
 
 .krajee-default.file-preview-frame {
@@ -241,19 +245,14 @@
 }
 
 .krajee-default .file-preview-text {
-    display: block;
     color: #428bca;
     border: 1px solid #ddd;
-    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
     outline: none;
-    padding: 8px;
     resize: none;
 }
 
 .krajee-default .file-preview-html {
     border: 1px solid #ddd;
-    padding: 8px;
-    overflow: auto;
 }
 
 .krajee-default .file-other-icon {
@@ -363,11 +362,11 @@
     opacity: 0.3;
 }
 
-.file-zoom-dialog .btn-prev {
+.file-zoom-dialog .btn-kv-prev {
     left: 1px;
 }
 
-.file-zoom-dialog .btn-next {
+.file-zoom-dialog .btn-kv-next {
     right: 1px;
 }
 
@@ -557,4 +556,8 @@
     background-color: #d9edf7;
     border-color: #17a2b8;
     box-shadow: none !important;
+}
+
+.file-preview .kv-zoom-cache {
+    display: none;
 }

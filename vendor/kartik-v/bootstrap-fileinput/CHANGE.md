@@ -1,6 +1,93 @@
 Change Log: `bootstrap-fileinput`
 =================================
 
+## version 5.2.1
+
+**Date**: 19-May-2021
+
+- (enh #1705): Enhance reset of file caption title.
+- (enh #1705): Corrections to image resizing.
+- (enh #1704): Enhance and fix CDN to use jsDelivr.
+
+## version 5.2.0
+
+**Date**: 06-May-2021
+
+- (enh #1674): Enhancements to add support for Bootstrap v5.
+    - Major release to support Bootstrap version 5.x
+    - Bootstrap version is auto detected with this release if the bootstrap javascript library is loaded
+    - Additional flexibility is provided to developer to override a specific bootstrap version by setting `$.fn.fileinputBsVersion`
+    - There is an existing issue for MODAL dialog initialization in Bootstrap library v5.x. Refer the [issue reported](https://github.com/twbs/bootstrap/issues/33840#issuecomment-833462016) at the Bootstrap 5.x library repo with a workaround.
+- (enh #1699): Update Danish Translations.
+- (enh #1698): Tab index ordering enhancements.
+  - fix tab order breaking after file caption highlight 
+  - added new property `tabIndexConfig` for configuration of tab indices for each section 
+    which defaults to (null value means no tabindex property will be set for that section) 
+~~~
+    tabIndexConfig: {
+        caption: 500,
+        browse: 500,
+        remove: 500,
+        upload: 500,
+        cancel: null,
+        pause: null,
+        modal: -1
+    }
+~~~
+- (enh #1693): Add Latvian Translations.
+- (enh #1690): Add Uzbek Cyrillic Translations.
+- (enh #1647, #1679, #1695): Correct success file thumbs init.
+
+## version 5.1.5
+
+**Date**: 03-Mar-2021
+
+- (enh #1687, #1688): Allow error history to be displayed for resumable uploads.
+    - new boolean property `resumableUploadOptions.retainErrorHistory`
+- (enh #1683): Better correct CSP Buffer Stash using CSSStyleDeclaration.
+- (enh #1681): Update Turkish Translations.
+- (bug #1678): Resumable upload error handling fixes
+    - new boolean property `resumableUploadOptions.skipErrorsAndProceed`
+    - new event `filemaxretries`
+
+## version 5.1.4
+
+**Date**: 12-Jan-2021
+
+- (enh #1672): Add namespace control on bootstrap modal show trigger to avoid interaction with other plugins.
+- (bug #1671): Correct upload button behavior in file thumbnail footer.
+- (enh #1664): Enhance upload stats and add bitrate update delay.
+- (enh #1663): Correct upload bitrate.
+- (enh #1657, #1659): Update Hungarian Translations.
+- (bug #1656): Correct error in `_getThumbFileId`.
+- (bug #1652): Correct thumb parsing error for events when `showPreview` is false.
+- (enh #1651): Pass file id in `fileuploaded` event for non-resumable ajax async uploads.
+- (enh #1650): Update Ukranian Translations.
+- (bug #1649): Correct image size validation.
+- (enh #1648): New plugin method `getFilesSize` to return sum of bytes of all files.
+- (enh #1645): Update Polish Translations.
+- (bug #1123): Fix clickable zone behavior on file validation error.
+
+## version 5.1.3
+
+**Date**: 24-Oct-2020
+
+- (enh #1644): Fix problem with outlook deleting email after drag and drop.
+- (enh #1643): Update Arabic Translations.
+- (enh #1640): Update Greek Translations.
+- (enh #1639): Update Greek Translations.
+- (enh #1638): Correct zoom cache to prevent duplicate thumb frames display.
+- (enh #1637): Remove dependency on DOM Purify Plugin.
+- (enh #1636): Enhance preview for PDF, Text & HTML.
+- (enh #1635): Enhance Text & HTML files initial preview to be read as links.
+- (bug #1632): Correct preview for plain text content.
+- (bug #1631): Correct modal dialog `aria-labelledby` binding.
+- (enh #1630): New `preProcessUpload` callback that can convert / encrypt file content before upload.
+- (enh #1627): Add bootstrap 4 progress bar animation.
+- (enh #1625): Default `minFileSize` to -1 to allow zero byte files to be uploaded.
+- (enh #1617): Better encoded file id generation.
+- (enh #1612, #1614): Remove unsupported script-inline from template and CSP buffer.
+
 ## version 5.1.2
 
 **Date**: 15-Jul-2020

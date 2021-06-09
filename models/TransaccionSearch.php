@@ -111,9 +111,9 @@ class TransaccionSearch extends Transaccion
               desc_marca
             ')
       ->from(['v_productos'])
-      ->join('LEFT join','tipo_producto','id_tpdcto = tipo_prod and sucursal_prod = sucursal_tpdcto')
-      ->join('inner join','lista_precios','prod_lista = id_prod and sucursal_prod = sucursal_lista')
-      ->join('LEFT join','marca','marca_prod = id_marca and sucursal_prod = sucursal_lista')
+      ->join('left join','tipo_producto','id_tpdcto = tipo_prod and sucursal_prod = sucursal_tpdcto')
+      ->join('left join','lista_precios','prod_lista = id_prod and sucursal_prod = sucursal_lista')
+      ->join('left join','marca','marca_prod = id_marca and sucursal_prod = sucursal_lista')
       ->where(['=','sucursal_prod',$sucursal])
       ->orderBy('desc_tpdcto,desc_marca,des_prod,cod_prod');
 

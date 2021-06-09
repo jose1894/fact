@@ -14,18 +14,18 @@ $this->params['breadcrumbs'][] = ['label' => $model->cod_pedido . " - " . $tipo 
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="pedido-update">
-  <!-- <div class="box box-success">
+  <div class="box box-success">
     <div class="box-header with-border">
       <h3 class="box-title">
         <?= Html::encode($this->title) ?>
       </h3>
     </div>
-    <div class="box-body"> -->
+    <div class="box-body">
     <?= $this->render('_form', [
         'model' => $model,
         'modelsDetalles' => $modelsDetalles,
-        'IMPUESTO' => $IMPUESTO,
+        'IMPUESTO' => $IMPUESTO
     ]) ?>
-    <!-- </div>
-  </div> -->
+    </div>
+  </div>
 </div>

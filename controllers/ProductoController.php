@@ -191,6 +191,7 @@ class ProductoController extends Controller
 
                         foreach ($modelsListaP as $modelListaP) {
                             $modelListaP->prod_lista = $model->id_prod;
+                            $modelListaP->sucursal_lista = SiteController::getSucursal();
                             if (! ($flag = $modelListaP->save(false))) {
                                 $transaction->rollBack();
                                 break;
@@ -417,7 +418,7 @@ class ProductoController extends Controller
 
            $query = new Query;
            $query->select([
-                 'lp.precio_lista as precio', 
+                 'lp.precio_lista as precio',
                  'p.impuesto_suc as impuesto',
                  'ult_precio_compra as costo',
                  'moneda_compra',

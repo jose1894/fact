@@ -1,11 +1,8 @@
 ``format_time``
 ===============
 
-.. versionadded:: 2.12
-    The ``format_time`` filter was added in Twig 2.12.
-
 The ``format_time`` filter formats a time. It behaves in the exact same way as
-the ``format_datetime`` filter, but without the date.
+the :doc:`format_datetime<format_datetime>` filter, but without the date.
 
 .. note::
 
@@ -14,10 +11,15 @@ the ``format_datetime`` filter, but without the date.
 
     .. code-block:: bash
 
-        $ composer req twig/intl-extra
+        $ composer require twig/intl-extra
 
-    Then, use the ``twig/extra-bundle`` on Symfony projects or add the extension
-    explicitly on the Twig environment::
+    Then, on Symfony projects, install the ``twig/extra-bundle``:
+
+    .. code-block:: bash
+
+        $ composer require twig/extra-bundle
+
+    Otherwise, add the extension explicitly on the Twig environment::
 
         use Twig\Extra\Intl\IntlExtension;
 
@@ -30,3 +32,5 @@ Arguments
 * ``locale``: The locale
 * ``timeFormat``: The time format
 * ``pattern``: A date time pattern
+* ``timezone``: The date timezone
+* ``calendar``: The calendar (Gregorian by default)

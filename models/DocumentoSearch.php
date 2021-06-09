@@ -147,7 +147,7 @@ class DocumentoSearch extends Documento
 
 
         if ( $this->anulado ) {
-            $query->andFilterWhere(['=', 'statussunat_doc',-1]);
+            $query->andFilterWhere(['<>', 'statussunat_doc',0]);
             $query->andFilterWhere(['<>', 'status_doc',Documento::DOCUMENTO_ANULADO]);
 
             $noEsTipoDoc = "";
@@ -338,7 +338,7 @@ class DocumentoSearch extends Documento
 
         $sucursal = Yii::$app->user->identity->profiles->sucursal;
         return Documento::find()
-                ->select( ['month(fecha_doc) mes, concat(year(fecha_doc),"-",month(fecha_doc)) AS `mesAno`,sum(total_doc) * -1 AS `total`'] )
+                ->select( ['month(fecha_doc) mes, concat(year(fecha_doc),"-",month(fecha_doc)) AS `mesAno`,sum(total_doc) AS `total`'] )
                 ->where('sucursal_doc = :sucursal',[':sucursal' => $sucursal])
                 ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
                 ->andWhere(['in','tipo_doc',[Documento::TIPODOC_BNCREDITO]])
