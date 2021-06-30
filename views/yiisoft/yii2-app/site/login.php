@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Url;
+use yii\captcha\Captcha;
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
@@ -51,6 +52,13 @@ $fieldOptions2 = [
                   ->field($model, 'password', $fieldOptions2)
                   ->label(false)
                   ->passwordInput(['placeholder' => $model->getAttributeLabel('password')]) ?>
+
+              <?= $form->field($model, 'captcha')->widget(Captcha::className()) ?>
+              
+              <?= $form->field($model, 'rememberMe')->checkbox([
+                    'template' => "<div class=\"col-lg-1 col-lg-3\">{input}</div>\n<div class=\"col-lg-3\"> {label} </div>\n<div class=\"col-lg-8\">{error}</div>",
+                ]) ?>
+
 
               <div class="row">
                   <!-- <div class="col-xs-8">

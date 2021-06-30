@@ -30,6 +30,7 @@ class Producto extends \yii\db\ActiveRecord
 {
 	const STATUS_PROD_ACTIVE = 1;
 	const STATUS_PROD_INACTIVE = 0;
+    public $image;
 	/**
      * {@inheritdoc}
      */
@@ -68,11 +69,14 @@ class Producto extends \yii\db\ActiveRecord
             [['cod_prod'], 'string', 'max' => 25],
             [['codfab_prod'], 'string', 'max' => 45],
             [['des_prod'], 'string', 'max' => 70],
+            [['image_prod'], 'string', 'max' => 255],
+            [['deslarg_prod'], 'string'],
             [['cod_prod'], 'unique'],
             [['compra_prod','venta_prod'], 'default', 'value' => 1],
             [['stockmin_prod','stockmax_prod'], 'default', 'value' => 0],
             [['tipo_prod'], 'exist', 'skipOnError' => true, 'targetClass' => TipoProducto::className(), 'targetAttribute' => ['tipo_prod' => 'id_tpdcto']],
             [['umed_prod'], 'exist', 'skipOnError' => true, 'targetClass' => UnidadMedida::className(), 'targetAttribute' => ['umed_prod' => 'id_und']],
+            [['image'], 'file', 'extensions'=>'jpg, gif, png'],
         ];
     }
 
@@ -82,10 +86,12 @@ class Producto extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_prod' => Yii::t('producto', 'Id'),
+            'id_prod' => Yii::t('producto', 'Id'),            
+            'image' => Yii::t('producto', 'Imagen'),            
             'cod_prod' => Yii::t('producto', 'Code'),
             'codfab_prod' => Yii::t('producto', 'Factory code'),
             'des_prod' => Yii::t('producto', 'Description'),
+            'deslarg_prod' => Yii::t('producto', 'Large description'),
             'tipo_prod' => Yii::t('tipo_producto', 'Product type'),
             'umed_prod' => Yii::t('unidad_medida', 'Unit of measurement'),
             'contenido_prod' => Yii::t('producto', 'Content'),
@@ -96,6 +102,7 @@ class Producto extends \yii\db\ActiveRecord
             'stockini_prod' => Yii::t('producto', 'Initial stock'),
             'stockmax_prod' => Yii::t('producto', 'Max Stock'),
             'stockmin_prod' => Yii::t('producto', 'Min Stock'),
+            'image_prod' => Yii::t('producto', 'Image'),
             'status_prod' => Yii::t('producto', 'Status'),
             'sucursal_prod' => Yii::t('producto', 'Sucursal Prod'),
         ];
@@ -130,13 +137,13 @@ class Producto extends \yii\db\ActiveRecord
        return $this->hasMany(ListaPrecios::className(), ['prod_lista' => 'id_prod']);
     }
 
-		public static function getProductoList()
-		{
+    public static function getProductoList()
+    {
 
-			$productos = Producto::find()
-							->select(['id_prod','concat(rtrim(ltrim(cod_prod)),\' - \',rtrim(ltrim(des_prod))) as des_prod'])
-							->where(['status_prod' => Producto::STATUS_PROD_ACTIVE])->all();
+        $productos = Producto::find()
+                        ->select(['id_prod','concat(rtrim(ltrim(cod_prod)),\' - \',rtrim(ltrim(des_prod))) as des_prod'])
+                        ->where(['status_prod' => Producto::STATUS_PROD_ACTIVE])->all();
 
-			return ArrayHelper::map($productos,'id_prod','des_prod');
-		}
+        return ArrayHelper::map($productos,'id_prod','des_prod');
+    }
 }

@@ -301,9 +301,9 @@ $this->registerJs($js,View::POS_LOAD);
                       $id = $model->id_empresa;
                       $nombreEmpresa = str_replace(' ', '_', $model->nombre_empresa);
                       $carpeta = $id.'_'.$nombreEmpresa;
-                      $realpath = Yii::$app->basePath.'/web/uploads/companies/'.$carpeta.'/certs/';
-                      $url = Url::to('@web/uploads/companies/'.$carpeta.'/certs/');
-                      $url = !realpath($realpath.$model->cert_empresa) ?  '': $url.$model->cert_empresa;
+                      $realpath = Yii::$app->basePath.'/data/uploads/companies/'.$carpeta.'/certs/';
+                      // $url = Url::to('@web/uploads/companies/'.$carpeta.'/certs/');
+                      // $url = !realpath($realpath.$model->cert_empresa) ?  '': $url.$model->cert_empresa;
                       $hint = is_file($realpath.$model->cert_empresa);
 
                   ?>
@@ -312,7 +312,7 @@ $this->registerJs($js,View::POS_LOAD);
                     'addon' => [
                       'prepend' => [
                           ['content' => '<i class="fa fa-certificate"></i>'],
-                          ['content' => ($hint) ? '<i class="fa fa-check"></i>' : ''],
+                          ['content' => ($hint) ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>'],
                       ],
                     ]
                     //   'prepend' => [
@@ -320,22 +320,32 @@ $this->registerJs($js,View::POS_LOAD);
                     // ]
                     ])->widget( FileInput::classname(),[
                       'pluginOptions' => [
-                            [
-                              'initialPreview' => $url,
-                            ],
+                            // [
+                            //   'initialPreview' => $url,
+                            // ],
                            'showPreview' => false,
                            'showCaption' => true,
                            'showRemove' => true,
                            'showUpload' => false,
+                           'removeLabel' => '',
                            'options' => ['accept' => 'pem,crt,der']
                        ]
-                 ]) ?>
+                 ])->hint(($hint) ? '<span style="color:green">'.Yii::t('empresa','Has an active digital certificate').'</span>' : '<span style="color:red">'.Yii::t('empresa','Does not have an active digital certificate').'</span>') ?>
                 </div>
                 <div class="col-lg-12">
                   <?= $form->field($model, 'passcrtsol_empresa',[
                     'addClass' => 'form-control ',
                     'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-key"></i>']]
                     ])->input(['placeholder' => Yii::t("empresa","Input a SUNAT certificate password ")."..."]) ?>
+                </div>
+                <div class="col-lg-12">
+                  <?= $form->field($model, 'modesunat_empresa',[
+                    'addClass' => 'form-control ',
+                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-cog"></i>']]
+                    ])->dropDownList([
+                                      '0' => Yii::t('empresa','Development'),
+                                      '1' => Yii::t('empresa','Production'),
+                                    ],['prompt' => Yii::t("empresa","Select a mode")."..."]) ?>
                 </div>
                 <div class="col-lg-12">
                   <?= $form->field($model, 'skin_empresa',[
@@ -430,3 +440,9 @@ $this->registerJs($js,View::POS_LOAD);
 
       <?php ActiveForm::end(); ?>
 </div>
+
+<?php 
+$this->registerCss('div.required label.control-label:after {
+  content: " *";
+  color: red;
+}');

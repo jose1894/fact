@@ -35,7 +35,7 @@ if ( $model->isNewRecord ) {
   <div class="container-fluid">
     <?php $form = ActiveForm::begin([ 'id' => $model->formName(), 'enableClientScript' => true]); ?>
     <div class="row">
-      <div class="col-lg-5 col-md-5">
+      <div class="col-lg-4 col-md-4">
         <div class="box box-success">
           <div class="box-header with-border">
             <h3 class="box-title">
@@ -251,13 +251,13 @@ if ( $model->isNewRecord ) {
             </div>
           </div>
       </div>
-      <div class="col-lg-7 col-md-7">
+      <div class="col-lg-8 col-md-8">
         <!-- Articulos -->
         <div class="row">
           <div class="container-fluid">
               <div class="row">
-                <div class="row" style="padding:5px">
-                    <div class="col-lg-4 col-md-5 col-sm-5 col-xs-12">
+                <div class="row" style="">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                       <label for="select-producto"><?= Yii::t('producto', 'Product')?></label>
                       <?= Select2::widget( [
                             'name' => 'select-product',
@@ -283,7 +283,7 @@ if ( $model->isNewRecord ) {
                     <?= Html::input('text','cantidad','', $options=['class'=>'form-control input-sm number-integer', 'id' => 'cantidad-prod', 'maxlength'=>5, 'autocomplete' => 'off', 'pattern' => '[0-9]*\.?[0-9]*']) ?>
                   </div>
                   <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
-                    <label for="plista"><?= Yii::t('pedido', 'P. Lista')?></label>
+                    <label for="plista"><?= Yii::t('pedido', 'P.Lista')?></label>
                     <?= Html::input('text','plista','', $options=['class'=>'form-control input-sm number-integer', 'id' => 'plista-prod', 'readonly' => true, 'autocomplete' => 'off', 'pattern' => '[0-9]*\.?[0-9]*']) ?>
                   </div>
                   <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
@@ -294,7 +294,7 @@ if ( $model->isNewRecord ) {
                     <label for="precio"><?= Yii::t('pedido', 'Price')?></label>
                     <?= Html::input('text','precio','', $options=['class'=>'form-control input-sm number-decimals', 'id' => 'precio-prod',  'autocomplete' => 'off', 'pattern' => '[0-9]*\.?[0-9]*']) ?>
                   </div>
-                  <div class="col-lg-2 col-md-2 col-sm-1 col-xs-12">
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                     <label for="total"><?= Yii::t('pedido', 'Total')?></label>
                     <?= Html::input('text','total','', $options=['class'=>'form-control input-sm number-integer', 'id' => 'total-prod',  'readonly' => true,'autocomplete' => 'off', 'pattern' => '[0-9]*\.?[0-9]*']) ?>
                   </div>
@@ -311,10 +311,10 @@ if ( $model->isNewRecord ) {
                   <div class="col-sm-1 col-xs-12">#</div>
                   <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Qtty')?></div>
                   <div class="col-sm-4 col-xs-12"><?= Yii::t( 'pedido', 'Product')?></div>
-                  <!-- <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'L. price')?></div> -->
+                  <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'P.Lista')?></div>
                   <!--th class="col-xs-1"><?= Yii::t( 'pedido', 'Tax')?></th-->
                   <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Disc')?></div>
-                  <div class="col-sm-2 col-xs-12"><?= Yii::t( 'pedido', 'Price')?></div>
+                  <div class="col-sm-1 col-xs-12"><?= Yii::t( 'pedido', 'Price')?></div>
                   <div class="col-sm-2 col-xs-12"><?= Yii::t( 'pedido', 'Total')?></div>
                   <div class="col-sm-1 col-xs-12">
                     <!-- <button type="button" class="add-item btn btn-success btn-flat btn-md" style="width:100%"  data-toggle="tooltip" data-placement="top" title="<?= Yii::t('app','Add item')?>"><i class="fa fa-plus"></i></button> -->
@@ -337,28 +337,26 @@ if ( $model->isNewRecord ) {
                                   'text','PedidoDetalle['.$index.'][cant_pdetalle]',
                                   $modelDetalle->cant_pdetalle,
                                   $options=['class'=>'form-control input-sm number-integer', 'id' => 'pedidodetalle-'.$index.'-cant_pdetalle', 'maxlength'=>5, 'readonly' => true, 'pattern' => '[0-9]*\.?[0-9]*']
-                            ) ?>
-                            <?=  Html::hiddenInput('PedidoDetalle['.$index.'][plista_pdetalle]', $modelDetalle->plista_pdetalle,['id'=> 'pedidodetalle-'.$index.'-plista_pdetalle']); ?>
+                            ) ?>                            
                             <?php /*  Html::hiddenInput('PedidoDetalle['.$index.'][descu_pdetalle]', $modelDetalle->descu_pdetalle,['id'=> 'pedidodetalle-'.$index.'-descu_pdetalle']); */ ?>
                             <!-- <?php /*  Html::hiddenInput('PedidoDetalle['.$index.'][precio_pdetalle]', $modelDetalle->precio_pdetalle,['id'=> 'pedidodetalle-'.$index.'-precio_pdetalle']); */ ?> -->
                             <?=  Html::hiddenInput('PedidoDetalle['.$index.'][impuesto_pdetalle]', $modelDetalle->impuesto_pdetalle,['id'=> 'pedidodetalle-'.$index.'-impuesto_pdetalle']); ?>
                           </div>
                           <div class="col-sm-4 col-xs-12">
-                            <?= Html::input(
-                              'text',
+                            <?= Html::textarea(
                               'PedidoDetalle['.$index.'][desc_pdetalle]',
                               trim($modelDetalle->productoPdetalle->cod_prod.'-'.$modelDetalle->productoPdetalle->des_prod),
                               $options=['class'=>'form-control input-sm',
                               'id' => 'pedidodetalle-' .$index. '-desc_pdetalle' ,
                               'readonly' => true,]) ?>
                             </div>
-                          <!-- <div class="col-sm-1 col-xs-12">
-                            <?php /* Html::input(
+                          <div class="col-sm-1 col-xs-12">
+                            <?= Html::input(
                                   'text','PedidoDetalle['.$index.'][plista_pdetalle]',
                                   $modelDetalle->plista_pdetalle,
-                                  $options=['class'=>'form-control number-integer', 'id' => 'pedidodetalle-'.$index.'-plista_pdetalle', 'maxlength'=>5, 'readonly' => true, 'pattern' => '[0-9]*\.?[0-9]*']
-                            ) */ ?>
-                          </div> -->
+                                  $options=['class'=>'form-control input-sm number-integer', 'id' => 'pedidodetalle-'.$index.'-plista_pdetalle', 'maxlength'=>5, 'readonly' => true, 'pattern' => '[0-9]*\.?[0-9]*']
+                            )  ?>
+                          </div>
                           <div class="col-sm-1 col-xs-12">
                             <?=  Html::input(
                                   'text','PedidoDetalle['.$index.'][descu_pdetalle]',
@@ -366,7 +364,7 @@ if ( $model->isNewRecord ) {
                                   $options=['class'=>'form-control input-sm number-integer', 'id' => 'pedidodetalle-'.$index.'-descu_pdetalle', 'maxlength'=>5, 'readonly' => true, 'pattern' => '[0-9]*\.?[0-9]*']
                             ) ?>
                           </div>
-                          <div class="col-sm-2 col-xs-12">
+                          <div class="col-sm-1 col-xs-12">
                             <?=  Html::input(
                                   'text','PedidoDetalle['.$index.'][precio_pdetalle]',
                                   $modelDetalle->precio_pdetalle,
@@ -488,17 +486,19 @@ $( "#btn-agregar" ).on( "click", function() {
           <input type="hidden" id="pedidodetalle-` + LINE + `-prod_pdetalle" name="PedidoDetalle[` + LINE + `][prod_pdetalle]" value="` + codprod + `">
         </div>
         <div class="col-sm-1 col-xs-12">
-          <input type="text" id="pedidodetalle-` + LINE + `-cant_pdetalle" class="form-control input-sm number-integer" name="PedidoDetalle[` + LINE + `][cant_pdetalle]" value="` + cant + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
-          <input type="hidden" id="pedidodetalle-` + LINE + `-plista_pdetalle" class="form-control number-integer" name="PedidoDetalle[` + LINE + `][plista_pdetalle]" value="` + round(precioLista) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
+          <input type="text" id="pedidodetalle-` + LINE + `-cant_pdetalle" class="form-control input-sm number-integer" name="PedidoDetalle[` + LINE + `][cant_pdetalle]" value="` + cant + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">          
           <input type="hidden" id="pedidodetalle-` + LINE + `-impuesto_pdetalle" class="form-control number-integer" name="PedidoDetalle[` + LINE + `][impuesto_pdetalle]" value="` + round(impuesto) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
         </div>
         <div class="col-sm-4 col-xs-12">
-          <input type="text" id="pedidodetalle-` + LINE + `-desc_pdetalle" class="form-control input-sm" name="PedidoDetalle[` + LINE + `][desc_pdetalle]" value="` + textProd + `" readonly>
+          <textarea id="pedidodetalle-` + LINE + `-desc_pdetalle" class="form-control input-sm" name="PedidoDetalle[` + LINE + `][desc_pdetalle]" readonly>` + textProd + `</textarea>
+        </div>
+        <div class="col-sm-1 col-xs-12">
+          <input type="text" id="pedidodetalle-` + LINE + `-plista_pdetalle" class="form-control input-sm" name="PedidoDetalle[` + LINE + `][plista_pdetalle]" value="` + round(precioLista) + `" readonly>
         </div>
         <div class="col-sm-1 col-xs-12">
           <input type="text" id="pedidodetalle-` + LINE + `-descu_pdetalle" class="form-control input-sm number-integer" name="PedidoDetalle[` + LINE + `][descu_pdetalle]" value="` + round(descuento) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
         </div>
-        <div class="col-sm-2 col-xs-12">
+        <div class="col-sm-1 col-xs-12">
           <input type="text" id="pedidodetalle-` + LINE + `-precio_pdetalle" class="form-control input-sm number-integer" name="PedidoDetalle[` + LINE + `][precio_pdetalle]" value="` + round(precio) + `" readonly="" maxlength="5" pattern="[0-9]*\.?[0-9]*">
         </div>
         <div class="col-sm-2 col-xs-12">

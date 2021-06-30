@@ -14,6 +14,8 @@ use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\ActiveForm;
 use yii\db\Query;
+use yii\web\UploadedFile;
+use yii\helpers\FileHelper;
 
 /**
  * ProductoController implements the CRUD actions for Producto model.
@@ -77,8 +79,7 @@ class ProductoController extends Controller
         $this->layout = "justStuff";
 
         if ($model->load(Yii::$app->request->post())) {
-
-
+            $imageNew = UploadedFile::getInstance($model, 'image');
             $modelsListaP = Model::createMultiple(ListaPrecios::classname(),[],'id_lista');
             Model::loadMultiple($modelsListaP, Yii::$app->request->post());
 
@@ -104,13 +105,44 @@ class ProductoController extends Controller
                 try {
                     if ($flag = $model->save(false)) {
                         foreach ($modelsListaP as $modelListaP) {
-                            $modelListaP->prod_lista = $model->id_prod;
+                            $modelListaP->prod_lista = $model->id_prod;                            
+                            $modelListaP->sucursal_lista = SiteController::getSucursal();
                             if (! ($flag = $modelListaP->save(false))) {
                                 $transaction->rollBack();
                                 break;
                             }
                         }
                     }
+
+                    if ($imageNew) {
+                        $empresa = SiteController::getEmpresa();
+                        $id = $empresa->id_empresa;
+                        $nombreEmpresa = str_replace(' ', '_', $empresa->nombre_empresa);
+                        $carpeta = $id.'_'.$nombreEmpresa;
+                        Yii::$app->params['uploadPath'] = Yii::$app->basePath.'/web/uploads/companies/'.$carpeta.'/productos/';
+
+                        $fileName = $imageNew->name;
+                        $model->image = $fileName;
+                        $ext = explode(".", $fileName);
+                        $ext = end($ext);
+
+                        /**Se verifica si existe el directorio donde se guardara la iamgen */
+                        if (!is_dir(Yii::$app->params['uploadPath'])) {
+                            /**se crea el directorio donde se guardara la imagen y se da permiso de acceso */
+                            if ( !FileHelper::createDirectory(Yii::$app->params['uploadPath'],0777,true)) {
+                              $transaction->rollBack();
+                              throw new \Exception("Error creating folder ". Yii::$app->params['uploadPath'], 1);
+                            }
+                        }
+
+                        // generate a unique file name
+                        $avatar = Yii::$app->security->generateRandomString().".{$ext}";
+                        $path = Yii::$app->params['uploadPath']. $avatar;
+                        $imageNew->saveAs($path);
+                        $model->image_prod = '/uploads/companies/'.$carpeta.'/productos/'.$avatar;
+                        $flag = $model->save(false) && $flag;
+                    }
+
                     if ($flag) {
                         $transaction->commit();
 
@@ -158,6 +190,7 @@ class ProductoController extends Controller
         $this->layout = "justStuff";
 
         if ($model->load(Yii::$app->request->post())) {
+            $imageNew = UploadedFile::getInstance($model, 'image');
 
             $oldIDs = ArrayHelper::map($modelsListaP, 'id_lista', 'id_lista');
             $modelsListaP = Model::createMultiple(ListaPrecios::classname(), $modelsListaP,'id_lista');
@@ -185,9 +218,9 @@ class ProductoController extends Controller
 
                 try {
                     if ($flag = $model->save(false)) {
-                      if (!empty($deletedIDs)) {
-                          ListaPrecios::deleteAll(['id_lista' => $deletedIDs]);
-                      }
+                        if (!empty($deletedIDs)) {
+                            ListaPrecios::deleteAll(['id_lista' => $deletedIDs]);
+                        }
 
                         foreach ($modelsListaP as $modelListaP) {
                             $modelListaP->prod_lista = $model->id_prod;
@@ -197,6 +230,43 @@ class ProductoController extends Controller
                                 break;
                             }
                         }
+
+                        // si carga nueva imagen
+                        if ($imageNew) {
+                            //Si carga imagen nueva
+                            $empresa = SiteController::getEmpresa();
+                            $id = $empresa->id_empresa;
+                            $nombreEmpresa = str_replace(' ', '_', $empresa->nombre_empresa);
+                            $carpeta = $id.'_'.$nombreEmpresa;
+                            Yii::$app->params['uploadPath'] = Yii::$app->basePath.'/web/uploads/companies/'.$carpeta.'/productos/';
+  
+                            $fileName = $imageNew->name;
+                            $model->image = $fileName;
+                            $ext = explode(".", $fileName);
+                            $ext = end($ext);
+  
+                            /**Se verifica si existe el directorio donde se guardara la iamgen */
+                            if (!is_dir(Yii::$app->params['uploadPath'])) {
+                                /**se crea el directorio donde se guardara la imagen y se da permiso de acceso */
+                                if ( !FileHelper::createDirectory(Yii::$app->params['uploadPath'],0777,true)) {
+                                  $transaction->rollBack();
+                                  throw new \Exception("Error creating folder ". Yii::$app->params['uploadPath'], 1);
+                                }
+                            }
+  
+                            if ( $model->image_prod ) {
+                              if ( is_file(Yii::$app->params['uploadPath'].$model->image_prod) ) {
+                                unlink(Yii::$app->params['uploadPath'].$model->image_prod);
+                              }
+                            }
+  
+                            // generate a unique file name
+                            $avatar = Yii::$app->security->generateRandomString().".{$ext}";
+                            $path = Yii::$app->params['uploadPath']. $avatar;
+                            $imageNew->saveAs($path);
+                            $model->image_prod = '/uploads/companies/'.$carpeta.'/productos/'.$avatar;
+                            $flag = $model->save(false) && $flag;
+                          }
                     }
                     if ($flag) {
                         $transaction->commit();

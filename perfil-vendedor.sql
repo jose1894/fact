@@ -1,0 +1,2 @@
+ALTER TABLE `profile` ADD `es_vendedor` INT NOT NULL DEFAULT '0' AFTER `sucursal`, ADD `vendedor` INT NULL AFTER `es_vendedor`;
+ALTER TABLE `profile` ADD FOREIGN KEY (`vendedor`) REFERENCES `vendedor`(`id_vendedor`) ON DELETE CASCADE ON UPDATE CASCADE;

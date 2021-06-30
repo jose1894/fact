@@ -19,6 +19,11 @@ use kartik\select2\Select2;
 
 $this->title = Yii::t('pedido', 'Order');
 $this->params['breadcrumbs'][] = $this->title;
+
+$filterVendedor = (
+                    Yii::$app->user->identity->profiles->es_vendedor && 
+                    Yii::$app->user->can('Vendedor')
+                  ) ? true : false;
 ?>
 <div class="pedido-index">
     <h1><?= Html::encode($this->title) ?></h1>
@@ -96,6 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
                   'theme' => Select2::THEME_DEFAULT,
                   'pluginOptions' => ['allowClear' => true],
                   'pluginEvents' =>[],
+                  'disabled' => $filterVendedor,
                   'options' => ['prompt' => ''],
               ],
               'width' => '10%'

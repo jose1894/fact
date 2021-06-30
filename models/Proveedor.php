@@ -87,13 +87,14 @@ class Proveedor extends \yii\db\ActiveRecord
             'nombre_prove' => Yii::t('proveedor', 'Name'),
             'direcc_prove' => Yii::t('proveedor', 'Address'),
             'pais_prove' => Yii::t('pais', 'Country'),
-            'depto_prove' => Yii::t('departamento', 'Department / County / Municipality'),
-            'provi_prove' => Yii::t('provincia', 'Estate / Province'),
+            'depto_prove' => Yii::t('departamento', 'Estate / Department'),
+            'provi_prove' => Yii::t('provincia', 'Municipality / Province'),
             'dtto_prove' => Yii::t('distrito', 'District / Parish'),
             'tlf_prove' => Yii::t('proveedor', 'Phone'),
             'tipo_prove' => Yii::t('proveedor', 'Type'),
             'status_prove' => Yii::t('proveedor', 'Status'),
             'sucursal_prove' => Yii::t('proveedor', 'Sucursal Prove'),
+            
         ];
     }
 

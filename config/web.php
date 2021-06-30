@@ -118,8 +118,8 @@ $config = [
           'authManager' => [
               'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\PhpManager'
               'defaultRoles' => [
-                // 'Invitado'
-              //   'Usuarios','Administradores', 'SuperSU'
+                'Invitado'
+                //'Usuarios','Administradores', 'SuperSU'
               ],
           ]
     ],
@@ -140,7 +140,7 @@ $config = [
                  'assignment' => [
                     'class' => 'mdm\admin\controllers\AssignmentController',
                     'userClassName' => 'app\models\User',
-                    'idField' => 'user_id',
+                    'idField' => 'id',
                     'usernameField' => 'username',
                     'extraColumns' => [
                         [

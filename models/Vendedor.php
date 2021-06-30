@@ -99,12 +99,16 @@ class Vendedor extends \yii\db\ActiveRecord
 
     public static function getVendedoresList()
     {
-      $sucursal = Yii::$app->user->identity->profiles->sucursal;
+        if (!Yii::$app->user->identity->profiles) {
+            return;
+        }
+        
+        $sucursal = Yii::$app->user->identity->profiles->sucursal;
 
-      $vendedores = Vendedor::find()
-                    ->where('estatus_vend = :status and sucursal_vend = :sucursal',[':status' => 1,':sucursal' => $sucursal])
-                    ->orderBy('nombre_vend')
-                    ->all();
-      return ArrayHelper::map($vendedores,'id_vendedor','nombre_vend');
+        $vendedores = Vendedor::find()
+                        ->where('estatus_vend = :status and sucursal_vend = :sucursal',[':status' => 1,':sucursal' => $sucursal])
+                        ->orderBy('nombre_vend')
+                        ->all();
+        return ArrayHelper::map($vendedores,'id_vendedor','nombre_vend');
     }
 }

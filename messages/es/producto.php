@@ -22,4 +22,5 @@ return [
     'Factory code' => 'Código de fábrica',
     'Products' => 'Productos',
     'Please select a valid product! Check its price and quantity!' => '¡Por favor seleccione un producto válido! Verifique su precio y cantidad',
+    'Large description' => 'Descripción larga'
 ];

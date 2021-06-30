@@ -6,7 +6,9 @@ use kartik\select2\Select2;
 use kartik\depdrop\DepDrop;
 use app\models\Empresa;
 use app\models\Sucursal;
+use app\models\Vendedor;
 use yii\helpers\Url;
+use kartik\checkbox\CheckboxX;
 
 
 /* @var $this yii\web\View */
@@ -43,7 +45,7 @@ if ( $user_id !== 0 )  {
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                 <?php $empresas = Empresa::empresaList();?>
                 <?= $form
                     ->field($model, 'empresa')
@@ -61,7 +63,7 @@ if ( $user_id !== 0 )  {
                       // ],
               ]) ?>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
               <?php
               //$sucursales = Sucursal::getSucursalesList( $model->empresa );
               echo Html::hiddenInput('profile-selected_empresa', $model->sucursal, ['id' => 'profile-selected_empresa']);
@@ -87,6 +89,34 @@ if ( $user_id !== 0 )  {
                     ]
                 ])?>
             </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                <label for="">Es vendedor</label>
+                <?php echo $form->field($model, 'es_vendedor')->widget(CheckboxX::classname(), [
+                    // 'initInputType' => CheckboxX::INPUT_CHECKBOX,
+                    // 'autoLabel' => true,
+                    'pluginOptions'=>['threeState'=>false]
+                ])->label(false); ?>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <?php $vendedores = Vendedor::getVendedoresList();?>
+              <?= $form->field($model, 'vendedor',[
+                'addClass' => 'form-control'
+                ])->widget(Select2::classname(), [
+                    'data' => $vendedores,
+                    'initValueText' => $model->vendedor,
+                    'language' => Yii::$app->language,
+                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-user"></i>']],
+                    'options' => [
+                      'placeholder' => Yii::t('empresa','Select').'...',                      
+                    ],
+                    'theme' => Select2::THEME_DEFAULT,
+                    // 'pluginOptions' => [
+                    //     'allowClear' => true
+                    // ],
+            ])?>
+            </div>
         </div>
         <div class="form-group">
             <?= Html::submitButton(Yii::t('profile', 'Save'), ['class' => 'btn btn-success']) ?>
@@ -95,3 +125,11 @@ if ( $user_id !== 0 )  {
     <?php ActiveForm::end(); ?>
     </div>
 </div>
+<?php
+$js = <<< JS
+
+$( "#profile-es_vendedor" ).change(function(){    
+    debugger;
+    $( "#profile-vendedor" ).attr("disabled", this.checked);
+});
+JS;

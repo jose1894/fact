@@ -63,7 +63,7 @@ class Empresa extends \yii\db\ActiveRecord
              [['id_empresa', 'nombre_empresa', 'estatus_empresa', 'ruc_empresa',
                'tipopers_empresa','pais_empresa','depto_empresa', 'prov_empresa',
                'dtto_empresa'], 'required'],
-             [['id_empresa', 'estatus_empresa', 'tipopers_empresa'], 'integer'],
+             [['id_empresa', 'estatus_empresa', 'tipopers_empresa', 'modesunat_empresa'], 'integer'],
              [['direcc_empresa'], 'string'],
              [['nombre_empresa', 'tlf_empresa','movil_empresa'], 'string', 'max' => 150],
              [['usuariosol_empresa', 'passsol_empresa','passcrtsol_empresa','cert_empresa'], 'string', 'max' => 255],
@@ -104,6 +104,7 @@ class Empresa extends \yii\db\ActiveRecord
              'passsol_empresa' => Yii::t('empresa','SUNAT password'),
              'passcrtsol_empresa' => Yii::t('empresa','SUNAT certificate password'),
              'skin_empresa' => Yii::t('empresa','Skin'),
+             'modesunat_empresa' => Yii::t('empresa', 'SUNAT mode'),
          ];
      }
 
@@ -114,22 +115,22 @@ class Empresa extends \yii\db\ActiveRecord
 
     public function getPaisEmpresa()
     {
-       return $this->hasOne(Pais::className(), ['pais_empresa' => 'id_pais']);
+       return $this->hasOne(Pais::className(), ['id_pais' => 'pais_empresa']);
     }
 
     public function getDeptoEmpresa()
     {
-       return $this->hasOne(Departamento::className(), ['dpto_empresa' => 'id_depto']);
+       return $this->hasOne(Departamento::className(), ['id_depto' => 'depto_empresa']);
     }
 
     public function getProvEmpresa()
     {
-       return $this->hasOne(Provincia::className(), ['prov_empresa' => 'id_prov']);
+       return $this->hasOne(Provincia::className(), ['id_prov' => 'prov_empresa']);
     }
 
     public function getDttoEmpresa()
     {
-       return $this->hasOne(Distrito::className(), ['dtto_empresa' => 'id_dtto']);
+       return $this->hasOne(Distrito::className(), ['id_dtto' => 'dtto_empresa']);
     }
 
     public static function empresaList()

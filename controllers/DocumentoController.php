@@ -842,6 +842,8 @@ class DocumentoController extends Controller
     }
 
     function actionAjaxGenFactXml( $id ){
+      $empresa = SiteController::getEmpresa();
+
       $sunatUser = "20604954241MODDATOS";
       $sunatPass = "moddatos";
       $endPoint  = SunatEndpoints::FE_BETA;
@@ -850,13 +852,11 @@ class DocumentoController extends Controller
         throw new \Exception("Error Processing Request");
       }
 
-
-      if (YII_ENV === "prod") {
-        $sunatUser = '20604954241LEOPHARD';
-        $sunatPass = 'Leophar0';
+      if (YII_ENV === "prod" && $empresa->modesunat_empresa) {
+        $sunatUser = trim($empresa->ruc_empresa).trim($empresa->usuariosol_empresa);
+        $sunatPass = trim($empresa->passsol_empresa);
         $endPoint  = SunatEndpoints::FE_PRODUCCION;
       }
-
 
       $model = Documento::find()
                            ->where('id_doc = :id',[':id' => $id])
@@ -868,14 +868,14 @@ class DocumentoController extends Controller
               ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
               ->one();
 
-
-      $empresa = SiteController::getEmpresa();
       $IMPUESTO = SiteController::getImpuesto();
 
+      $nombreEmpresa = str_replace(' ', '_', $empresa->nombre_empresa);
+      $carpeta = $empresa->id_empresa.'_'.$nombreEmpresa;
 
       $see = new See();
       $see->setService($endPoint);
-      $see->setCertificate(file_get_contents('../C19110619915.pem'));
+      $see->setCertificate(file_get_contents('../data/uploads/companies/'.$carpeta.'/certs/'.$empresa->cert_empresa));
       $see->setCredentials($sunatUser, $sunatPass);
 
       // Cliente
@@ -892,12 +892,12 @@ class DocumentoController extends Controller
 
       // Emisor
       $address = new Address();
-      $address->setUbigueo('150132')
-          ->setDepartamento('LIMA')
-          ->setProvincia('LIMA')
-          ->setDistrito('SAN JUAN DE LURIGANCHO')
+      $address->setUbigueo($empresa->dttoEmpresa->cod_dtto)
+          ->setDepartamento(strtoupper(trim($empresa->deptoEmpresa->des_depto)))
+          ->setProvincia(strtoupper(trim($empresa->provEmpresa->des_prov)))
+          ->setDistrito(strtoupper(trim($empresa->dttoEmpresa->des_dtto)))
           ->setUrbanizacion('NONE')
-          ->setDireccion('JR. LAS ALCAPARRAS NRO. 467 URB. LAS FLORES - LIMA LIMA SAN JUAN DE LURIGANCHO');
+          ->setDireccion(strtoupper(trim($empresa->direcc_empresa)));
 
       $company = new Company();
       $company->setRuc( $empresa->ruc_empresa )
@@ -994,13 +994,19 @@ class DocumentoController extends Controller
     }
 
 	function actionAjaxGenNoteXml( $id ){
+      $empresa = SiteController::getEmpresa();
+
       $sunatUser = "20604954241MODDATOS";
       $sunatPass = "moddatos";
       $endPoint  = SunatEndpoints::FE_BETA;
 
-      if (YII_ENV === "prod") {
-        $sunatUser = '20604954241LEOPHARD';
-        $sunatPass = 'Leophard0';
+      if( !Yii::$app->request->isAjax ) {
+        throw new \Exception("Error Processing Request");
+      }
+
+      if (YII_ENV === "prod" && $empresa->modesunat_empresa) {
+        $sunatUser = trim($empresa->ruc_empresa).trim($empresa->usuariosol_empresa);
+        $sunatPass = trim($empresa->passsol_empresa);
         $endPoint  = SunatEndpoints::FE_PRODUCCION;
       }
 
@@ -1013,14 +1019,15 @@ class DocumentoController extends Controller
                            ->andWhere(['status_doc' => [Documento::DOCUMENTO_GENERADO]])
                            ->one();
 
-
-      $empresa = SiteController::getEmpresa();
       $IMPUESTO = SiteController::getImpuesto();
+      
+      $nombreEmpresa = str_replace(' ', '_', $empresa->nombre_empresa);
+      $carpeta = $empresa->id_empresa.'_'.$nombreEmpresa;
 
 
       $see = new See();
       $see->setService($endPoint);
-      $see->setCertificate(file_get_contents('../C19110619915.pem'));
+      $see->setCertificate(file_get_contents('../data/uploads/companies/'.$carpeta.'/certs/'.$empresa->cert_empresa));
       $see->setCredentials($sunatUser, $sunatPass);
 
       // Cliente
@@ -1037,12 +1044,12 @@ class DocumentoController extends Controller
 
       // Emisor
       $address = new Address();
-      $address->setUbigueo('150132')
-          ->setDepartamento('LIMA')
-          ->setProvincia('LIMA')
-          ->setDistrito('SAN JUAN DE LURIGANCHO')
+      $address->setUbigueo($empresa->dttoEmpresa->cod_dtto)
+          ->setDepartamento(strtoupper(trim($empresa->deptoEmpresa->des_depto)))
+          ->setProvincia(strtoupper(trim($empresa->provEmpresa->des_prov)))
+          ->setDistrito(strtoupper(trim($empresa->dttoEmpresa->des_dtto)))
           ->setUrbanizacion('NONE')
-          ->setDireccion('JR. LAS ALCAPARRAS NRO. 467 URB. LAS FLORES - LIMA LIMA SAN JUAN DE LURIGANCHO');
+          ->setDireccion(strtoupper(trim($empresa->direcc_empresa)));
 
       $company = new Company();
       $company->setRuc( $empresa->ruc_empresa )

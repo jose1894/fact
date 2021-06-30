@@ -17,4 +17,10 @@ return [
     'Company' => 'Empresa',
     'Loading branches' => 'Cargando sucursales',
     'Select a company' => 'Seleccione una empresa',
+    'Has an active digital certificate' => 'Posee certificado digital activo',
+    'Does not have an active digital certificate' => 'No posee certificado digital activo',
+    'SUNAT mode' => 'Modo SUNAT',
+    'Development' => 'Desarrollo',
+    'Production' => 'Producción',
+    'Select a mode' => 'Seleccione un modo'
 ];

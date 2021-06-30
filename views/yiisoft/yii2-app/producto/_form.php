@@ -15,7 +15,8 @@ use kartik\checkbox\CheckboxX;
 use wbraganca\dynamicform\DynamicFormWidget;
 use app\base\Model;
 use kartik\number\NumberControl;
-
+use app\controllers\SiteController;
+use kartik\widgets\FileInput;
 
 
 /* @var $this yii\web\View */
@@ -44,73 +45,107 @@ use kartik\number\NumberControl;
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <?php
-          $tipos = TipoProducto::find()->where(['status_tpdcto' => 1])
-          ->orderBy('desc_tpdcto')
-          ->all();
-          $tipos=ArrayHelper::map($tipos,'id_tpdcto','desc_tpdcto');
-        ?>
-        <?= $form->field($model, 'tipo_prod',[
-          'addClass' => 'form-control'
-          ])->widget(Select2::classname(), [
-                    'data' => $tipos,
-                    'language' => Yii::$app->language,
-                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
-                    'options' => ['placeholder' => Yii::t('tipo_producto','Select a type').'...'],
-                    'theme' => Select2::THEME_DEFAULT,
-                    'pluginOptions' => [
-                        'allowClear' => true
+      <div class="col-sm-6 col-xs-12">  
+            <?php
+                $empresa = SiteController::getEmpresa();
+                $id = $empresa->id_empresa;
+                $nombreEmpresa = str_replace(' ', '_', $empresa->nombre_empresa);
+                $carpeta = $id.'_'.$nombreEmpresa;
+                $realpath = Yii::$app->basePath.'/data/uploads/companies/'.$carpeta.'/';
+                $url = Url::to(Yii::$app->basePath.'/data/uploads/companies/'.$carpeta.'/');
+                //var_dump($realpath.$model->image_empresa);exit();
+                $url = $model->image_prod;
+                //$url = !realpath($realpath.$model->image_empresa) ?  Url::to('@web/uploads/companies/no-logo.jpg') : $url.$model->image_empresa;
+            ?>
+            <?= $form->field($model, 'image',[
+                  'addClass' => 'form-control ',
+                  'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-image"></i>']]
+               ])->widget( FileInput::classname(),[
+                  'pluginOptions' => [
+                    'initialPreview'=>[
+                      $url,
                     ],
-            ]) ?>
+                    'initialPreviewAsData'=>true,
+                    'showUpload' => false,
+                    'browseLabel' => '',
+                    'removeLabel' => '',
+                    'mainClass' => 'input-group-lg',
+                    'options' => ['accept' => 'image/*']
+                ]
+            ])?>    
       </div>
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <?php
-          $tipos = Marca::find()->where(['status_marca' => 1])
-          ->orderBy('desc_marca')
-          ->all();
-          $tipos=ArrayHelper::map($tipos,'id_marca','desc_marca');
-        ?>
-        <?= $form->field($model, 'marca_prod',[
-          'addClass' => 'form-control'
-          ])->widget(Select2::classname(), [
-                    'data' => $tipos,
-                    'language' => Yii::$app->language,
-                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
-                    'options' => ['placeholder' => Yii::t('marca','Select a make').'...'],
-                    'theme' => Select2::THEME_DEFAULT,
-                    'pluginOptions' => [
-                        'allowClear' => true
-                    ],
-            ]) ?>
+      <div class="col-sm-6 col-xs-12">  
+        <?= $form->field($model, 'deslarg_prod')->textarea(['rows' => 19])?>
       </div>
-
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <?php
-          $unidades = UnidadMedida::find()->where(['status_und' => 1])
-          ->orderBy('des_und')
-          ->all();
-          $unidades = ArrayHelper::map($unidades,'id_und','des_und');
-        ?>
-        <?= $form->field($model, 'umed_prod',[
-          'addClass' => 'form-control'
-          ])->widget(Select2::classname(), [
-                    'data' => $unidades,
-                    'language' => Yii::$app->language,
-                    'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
-                    'options' => ['placeholder' => Yii::t('unidad_medida','Select a unit').'...'],
-                    'theme' => Select2::THEME_DEFAULT,
-                    'pluginOptions' => [
-                        'allowClear' => true
-                    ],
-            ]) ?>
-      </div>
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <?= $form->field($model, 'contenido_prod',[
-          'addClass' => 'form-control',
-          'addon' => [ 'prepend' => ['content'=>'#']]
-          ])->textInput( ['type' => 'number','style'=>'text-align:right'] ) ?>
-      </div>
+    </div>
+    
+    <div class="row">     
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <?php
+              $tipos = TipoProducto::find()->where(['status_tpdcto' => 1])
+              ->orderBy('desc_tpdcto')
+              ->all();
+              $tipos=ArrayHelper::map($tipos,'id_tpdcto','desc_tpdcto');
+            ?>
+            <?= $form->field($model, 'tipo_prod',[
+              'addClass' => 'form-control'
+              ])->widget(Select2::classname(), [
+                        'data' => $tipos,
+                        'language' => Yii::$app->language,
+                        'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                        'options' => ['placeholder' => Yii::t('tipo_producto','Select a type').'...'],
+                        'theme' => Select2::THEME_DEFAULT,
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                ]) ?>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <?php
+              $tipos = Marca::find()->where(['status_marca' => 1])
+              ->orderBy('desc_marca')
+              ->all();
+              $tipos=ArrayHelper::map($tipos,'id_marca','desc_marca');
+            ?>
+            <?= $form->field($model, 'marca_prod',[
+              'addClass' => 'form-control'
+              ])->widget(Select2::classname(), [
+                        'data' => $tipos,
+                        'language' => Yii::$app->language,
+                        'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                        'options' => ['placeholder' => Yii::t('marca','Select a make').'...'],
+                        'theme' => Select2::THEME_DEFAULT,
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                ]) ?>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <?php
+              $unidades = UnidadMedida::find()->where(['status_und' => 1])
+              ->orderBy('des_und')
+              ->all();
+              $unidades = ArrayHelper::map($unidades,'id_und','des_und');
+            ?>
+            <?= $form->field($model, 'umed_prod',[
+              'addClass' => 'form-control'
+              ])->widget(Select2::classname(), [
+                        'data' => $unidades,
+                        'language' => Yii::$app->language,
+                        'addon' => [ 'prepend' => ['content'=>'<i class="fa fa-check"></i>']],
+                        'options' => ['placeholder' => Yii::t('unidad_medida','Select a unit').'...'],
+                        'theme' => Select2::THEME_DEFAULT,
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                ]) ?>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <?= $form->field($model, 'contenido_prod',[
+              'addClass' => 'form-control',
+              'addon' => [ 'prepend' => ['content'=>'#']]
+              ])->textInput( ['type' => 'number','style'=>'text-align:right'] ) ?>
+          </div>
     </div>
 
     <div class="row">

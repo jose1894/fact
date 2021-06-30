@@ -21,7 +21,7 @@ vendor
 
 
 #config
-config
+config/db.php
 
 #xml
 xml/response/**

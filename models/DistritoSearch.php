@@ -71,6 +71,7 @@ class DistritoSearch extends Distrito
             'depto_dtto' => $this->depto_dtto,
             'status_dtto' => $this->status_dtto,
             'sucursal_dtto' => $this->sucursal_dtto,
+            'cod_dtto' => $this->cod_dtto,
         ]);
 
         $query->andFilterWhere(['like', 'des_dtto', $this->des_dtto]);

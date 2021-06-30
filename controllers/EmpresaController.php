@@ -140,7 +140,7 @@ class EmpresaController extends Controller
                             $id = $model->id_empresa;
                             $nombreEmpresa = str_replace(' ', '_', $model->nombre_empresa);
                             $carpeta = $id.'_'.$nombreEmpresa;
-                            Yii::$app->params['uploadPath'] = '/uploads/companies/'.$carpeta.'/certs/';
+                            Yii::$app->params['uploadPath'] = '/data/companies/'.$carpeta.'/certs/';
 
                             $fileName = $cert->name;
                             $model->cert = $fileName;
@@ -271,7 +271,7 @@ class EmpresaController extends Controller
                           $id = $model->id_empresa;
                           $nombreEmpresa = str_replace(' ', '_', $model->nombre_empresa);
                           $carpeta = $id.'_'.$nombreEmpresa;
-                          Yii::$app->params['uploadPath'] = Yii::$app->basePath.'/web/uploads/companies/'.$carpeta.'/';
+                          Yii::$app->params['uploadPath'] = Yii::$app->basePath.'/data/uploads/companies/'.$carpeta.'/';
 
                           $fileName = $imageNew->name;
                           $model->image = $fileName;
@@ -307,7 +307,7 @@ class EmpresaController extends Controller
                           $id = $model->id_empresa;
                           $nombreEmpresa = str_replace(' ', '_', $model->nombre_empresa);
                           $carpeta = $id.'_'.$nombreEmpresa;
-                          Yii::$app->params['uploadPath'] = Yii::$app->basePath.'/web/uploads/companies/'.$carpeta.'/certs/';
+                          Yii::$app->params['uploadPath'] = Yii::$app->basePath.'/data/uploads/companies/'.$carpeta.'/certs/';
 
                           $fileName = $cert->name;
                           $model->image = $fileName;

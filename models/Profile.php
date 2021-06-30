@@ -53,8 +53,8 @@ class Profile extends \yii\db\ActiveRecord
         return [
             [['user_id', 'empresa', 'sucursal'], 'integer'],
             [['user_id', 'nombre', 'apellido','empresa', 'sucursal'], 'required'],
+            [['es_vendedor', 'vendedor'], 'integer'],
             [['nombre', 'apellido'], 'string', 'max' => 50],
-
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -69,6 +69,8 @@ class Profile extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'nombre' => 'Nombre',
             'apellido' => 'Apellido',
+            'es_vendedor' => 'Es Vendedor',
+            'vendedor' => Yii::t('vendedor', 'Seller'),
             'empresa' => Yii::t('empresa','Company'),
             'sucursal' => Yii::t('sucursal','Branch office'),
         ];
@@ -88,6 +90,14 @@ class Profile extends \yii\db\ActiveRecord
     public function getEmpresa0()
     {
         return $this->hasOne(Empresa::className(), ['id_empresa' => 'empresa']);
+    }
+
+        /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getVendedor()
+    {
+        return $this->hasOne(Vendedor::className(), ['id_vendedor' => 'vendedor']);
     }
 
     /**
